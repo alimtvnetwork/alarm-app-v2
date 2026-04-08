@@ -1,6 +1,6 @@
 # Personalization
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -10,13 +10,25 @@
 
 ## Keywords
 
-`personalization`, `themes`, `quotes`, `streak`, `music`, `skins`
+`personalization`, `themes`, `quotes`, `streak`, `music`, `skins`, `native`
 
 ---
 
 ## Description
 
-Visual customization, motivational features, and engagement tools.
+Visual customization, motivational features, and engagement tools. All preferences persisted in SQLite `settings` table; streak data in `alarm_events`.
+
+---
+
+## Native Implementation
+
+| Aspect | Web (Previous) | Native (Tauri) |
+|--------|---------------|----------------|
+| Theme/skin storage | localStorage | SQLite `settings` table |
+| Custom backgrounds | CSS background-image | Native file picker + app data directory |
+| Streak data | localStorage | SQLite `alarm_events` table queries |
+| Music integration | Web Audio API | Native audio APIs / OS media frameworks |
+| Quote storage | Bundled JSON | SQLite or bundled asset file |
 
 ---
 
@@ -25,19 +37,21 @@ Visual customization, motivational features, and engagement tools.
 ### Themes & Skins (P2)
 
 - Beyond light/dark: gradient, minimal, retro, nature-inspired
-- Custom accent color picker
+- Custom accent color picker — persisted in SQLite `settings`
 - Clock font style options: digital, analog, minimal
-- Custom background images
+- Custom background images — selected via native file dialog (`tauri-plugin-dialog`), copied to app data directory
 
 ### Motivational Quotes on Dismiss (P2)
 
 - After alarm dismissal, display a daily motivational quote
-- Curated library, rotates daily
-- Users can save favorites or add custom quotes
+- Curated library bundled as JSON asset, rotates daily
+- Users can save favorites or add custom quotes — stored in SQLite
+- IPC: `get_daily_quote`, `save_favorite_quote`, `add_custom_quote`
 
 ### Wake-Up Streak Tracker (P2)
 
 - Count consecutive days waking on time (dismissed without excessive snoozing)
+- Calculated from SQLite `alarm_events` table (dismiss timestamps, snooze counts)
 - Calendar view with streak visualization
 - Streak resets if snooze limit exceeded
 - Gamification: badges for milestones (7 days, 30 days, 100 days)
@@ -45,12 +59,15 @@ Visual customization, motivational features, and engagement tools.
 ### Music Service Integration (P3)
 
 - Connect Spotify, Apple Music, or YouTube Music
+- Native HTTP client (Rust `reqwest`) — no CORS restrictions
+- OAuth flow via system browser + deep link callback
 - Use any song/playlist as alarm sound
-- Gradual volume increase applied to music playback
+- Gradual volume increase applied to music playback via native audio
 
 ### Shared / Group Alarms (P3)
 
 - Share alarm via link or code
+- Requires optional network feature — uses Rust HTTP client
 - Group members all get the same alarm
 - Useful for coordinating group activities
 
@@ -63,3 +80,4 @@ Visual customization, motivational features, and engagement tools.
 | Theme System | `./09-theme-system.md` |
 | Design System | `../01-fundamentals/02-design-system.md` |
 | Analytics | `./13-analytics.md` |
+| Tauri Architecture | `../01-fundamentals/06-tauri-architecture-and-framework-comparison.md` |

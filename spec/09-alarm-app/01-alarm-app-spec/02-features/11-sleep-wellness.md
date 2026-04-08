@@ -1,6 +1,6 @@
 # Sleep & Wellness
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -10,13 +10,25 @@
 
 ## Keywords
 
-`sleep`, `bedtime`, `wellness`, `calculator`, `mood`, `ambient`
+`sleep`, `bedtime`, `wellness`, `calculator`, `mood`, `ambient`, `native`, `audio`
 
 ---
 
 ## Description
 
-Sleep and wellness features including bedtime reminders, sleep cycle calculator, mood logging, and ambient sleep sounds.
+Sleep and wellness features including bedtime reminders, sleep cycle calculator, mood logging, and ambient sleep sounds. All state persisted in SQLite; audio via native playback (Rust `rodio`); notifications via OS-native APIs.
+
+---
+
+## Native Implementation
+
+| Aspect | Web (Previous) | Native (Tauri) |
+|--------|---------------|----------------|
+| Bedtime notification | Browser Notification API | `tauri-plugin-notification` (OS-native) |
+| Ambient audio | Web Audio API | Rust `rodio` crate (native playback) |
+| Sleep data storage | localStorage | SQLite `settings` + `alarm_events` tables |
+| Accelerometer (sleep tracking) | `DeviceMotionEvent` | CoreMotion (iOS) / SensorManager (Android) |
+| Auto-stop timer | `setTimeout` (throttled in background) | Rust `tokio::time` (reliable background timer) |
 
 ---
 
@@ -24,9 +36,10 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 
 ### Bedtime Reminder (P2)
 
-- User sets target bedtime (e.g., 11:00 PM)
-- Notification 15–30 minutes before (configurable)
-- Optional: enable "Do Not Disturb" mode or play ambient sounds
+- User sets target bedtime (e.g., 11:00 PM) — stored in SQLite `settings` table
+- OS-native notification 15–30 minutes before (configurable)
+- Optional: play ambient sounds automatically at bedtime
+- Rust background thread monitors bedtime schedule (not affected by WebView throttling)
 
 ### Sleep Duration Calculator (P2)
 
@@ -34,6 +47,7 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 - Output: optimal bedtimes based on 90-minute sleep cycles
 - Example: "To wake at 6:30 AM, go to sleep at 11:00 PM (5 cycles) or 9:30 PM (6 cycles)"
 - Reverse mode: given bedtime, suggest alarm times
+- Pure frontend calculation — no IPC needed
 
 ### Sleep Quality / Mood Logging (P2)
 
@@ -41,19 +55,23 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
   - Quality: 1–5 stars
   - Mood: 😴 😐 😊 😁
   - Optional notes (free text)
-- Data stored for analytics
+- Data stored in SQLite `alarm_events` table for analytics
+- IPC: `log_sleep_quality { alarmId, quality, mood, notes }`
 
 ### Ambient / White Noise Sleep Sounds (P2)
 
 - Sound player: rain, ocean, forest, white noise, brown noise, fan, fireplace
-- Auto-stop timer: 30 min, 1 hour, until alarm
+- Audio played via Rust `rodio` — not Web Audio API
+- Auto-stop timer: 30 min, 1 hour, until alarm — Rust background timer (reliable)
 - Plays alongside or separate from alarm sounds
+- IPC: `play_ambient { sound, durationMin }`, `stop_ambient`
 
 ### Sleep Cycle Tracking (P3)
 
-- Uses accelerometer to estimate sleep phases
+- **Mobile only** (iOS / Android) — hidden on desktop
+- Uses native accelerometer: CoreMotion (iOS), SensorManager (Android)
 - Alarm window (e.g., 6:00–6:30 AM) — ring during lightest phase
-- Requires `DeviceMotionEvent` permission
+- Rust processes sensor data and determines optimal wake time
 
 ---
 
@@ -63,3 +81,5 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 |-----------|----------|
 | Analytics | `./13-analytics.md` |
 | Sound & Vibration | `./05-sound-and-vibration.md` |
+| Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
+| Tauri Architecture | `../01-fundamentals/06-tauri-architecture-and-framework-comparison.md` |
