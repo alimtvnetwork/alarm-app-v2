@@ -1,6 +1,6 @@
 # Alarm App Spec
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** Active  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
@@ -10,7 +10,7 @@
 
 ## Keywords
 
-`alarm`, `app`, `specification`, `features`, `architecture`
+`alarm`, `app`, `specification`, `features`, `architecture`, `tauri`, `cross-platform`, `native`
 
 ---
 
@@ -28,7 +28,7 @@
 
 ## Purpose
 
-Complete application specification for the Alarm App. Organized into fundamentals (architecture, data model, design), features (all functional specs), and app issues (bugs, fixes, retrospectives).
+Complete application specification for the Alarm App — a cross-platform native application targeting macOS first, then Windows, Linux, iOS, and Android. Organized into fundamentals (architecture, data model, design, platform strategy), features (all functional specs), and app issues (bugs, fixes, retrospectives).
 
 ---
 
@@ -36,14 +36,17 @@ Complete application specification for the Alarm App. Organized into fundamental
 
 | Technology | Purpose |
 |------------|---------|
-| React 18 | UI framework |
-| Vite 5 | Build tool |
+| Tauri 2.x | Native app framework (Rust backend + WebView frontend) |
+| Rust | Backend logic — alarm engine, audio, notifications, storage |
+| React 18 | UI framework (runs in OS WebView) |
+| Vite 5 | Frontend build tool |
 | TypeScript 5 | Type safety |
 | Tailwind CSS v3 | Styling |
 | shadcn/ui | Component library |
-| Web Audio API | Alarm sound playback |
-| Notification API | System notifications |
-| localStorage | Data persistence |
+| SQLite | Data persistence (via Tauri plugin) |
+| Native Audio | Alarm sound playback (Rust crate / OS API) |
+| OS Notifications | System notifications (Tauri notification plugin) |
+| System Tray | Menu bar / tray integration (Tauri tray plugin) |
 
 ---
 
@@ -66,10 +69,12 @@ AlarmGroup {
   enabled: boolean
 }
 
-Storage keys:
-  "alarms" → Alarm[]
-  "alarm-groups" → AlarmGroup[]
-  "theme" → "light" | "dark" | "system"
+Storage: SQLite database (via Tauri SQL plugin)
+Tables:
+  alarms        → Alarm records
+  alarm_groups  → AlarmGroup records
+  settings      → Key-value config (theme, preferences)
+  snooze_state  → Active snooze tracking
 ```
 
 ---
@@ -81,7 +86,7 @@ Storage keys:
 | **P0 — Must Have** | Alarm CRUD, Labels, Snooze, Repeat Schedule, Sound Selection, Dark Mode, Clock Display |
 | **P1 — Should Have** | Gradual Volume, Quick Alarm, Countdown Display, Vibration, Math Challenge, Groups, Export/Import |
 | **P2 — Nice to Have** | Bedtime Reminder, Sleep Calculator, Streak Tracker, Shake/Type Challenges, Themes |
-| **P3 — Future** | Weather Briefing, Location Alarms, Webhooks, Analytics, Music Integration, PWA |
+| **P3 — Future** | Weather Briefing, Location Alarms, Webhooks, Analytics, Music Integration, iOS/Android |
 
 ---
 
@@ -89,7 +94,7 @@ Storage keys:
 
 | # | Module | Description |
 |---|--------|-------------|
-| 01 | [Fundamentals](./01-fundamentals/00-overview.md) | Architecture, data model, design system, web constraints |
+| 01 | [Fundamentals](./01-fundamentals/00-overview.md) | Architecture, data model, design system, platform strategy |
 | 02 | [Features](./02-features/00-overview.md) | All feature specifications |
 | 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking, fixes, retrospectives |
 
