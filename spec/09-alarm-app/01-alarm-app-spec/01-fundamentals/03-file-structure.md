@@ -1,6 +1,6 @@
 # File Structure
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** None
