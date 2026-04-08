@@ -1,6 +1,6 @@
 # Alarm Clock App — Complete Feature Overview
 
-A comprehensive reference of 67 features across 10 categories for a native cross-platform alarm clock application.
+A comprehensive reference of 75 features across 10 categories for a native cross-platform alarm clock application.
 
 ## 1. Core Features
 
@@ -8,32 +8,41 @@ A comprehensive reference of 67 features across 10 categories for a native cross
 Create one or multiple alarms with a specific time (hour and minute). The foundation of any alarm clock app.
 
 ### 1.2 Recurring / Repeating Alarms
-Schedule alarms to repeat on specific days of the week (e.g., weekdays only, weekends only, custom days).
+Schedule alarms with flexible repeat patterns: once, daily, weekly (select days), custom interval (every N hours/days), or cron expression (power users).
 
-### 1.3 Snooze
-Temporarily dismiss an alarm for a short interval (e.g., 5, 10, or 15 minutes) before it rings again.
+### 1.3 Date-Specific Alarms
+Fire on a specific calendar date and time (e.g., 2026-12-25 at 08:00). Auto-disables after firing.
 
-### 1.4 Alarm On/Off Toggle
+### 1.4 Snooze
+Temporarily dismiss an alarm with per-alarm configurable interval (1–30 minutes) and maximum snooze count (0–10). When max reached, only dismiss is available.
+
+### 1.5 Alarm On/Off Toggle
 Quickly enable or disable individual alarms without deleting them.
 
-### 1.5 Alarm Label / Name
+### 1.6 Alarm Label / Name
 Assign a custom name or note to each alarm (e.g., "Take medication", "Morning workout").
 
-### 1.6 Multiple Alarm Support
+### 1.7 Multiple Alarm Support
 Maintain a list of saved alarms, each with independent settings.
 
-### 1.7 Delete Alarms
-Remove alarms that are no longer needed.
+### 1.8 Soft-Delete with Undo
+Deleting an alarm shows a 5-second undo toast. Permanent removal only after undo window expires.
+
+### 1.9 Duplicate Alarm
+One-click clone of any alarm with new UUID and "(Copy)" label suffix.
+
+### 1.10 Auto-Dismiss
+Optional auto-stop after N minutes (1–60) if alarm is unacknowledged. Configurable per alarm.
 
 ---
 
 ## 2. Sound & Vibration
 
 ### 2.1 Custom Alarm Tones
-Choose from a library of built-in sounds or load custom audio files as the alarm tone (via native file dialog).
+Choose from 10 built-in sounds or select any local `.mp3`/`.wav`/`.ogg` file via native file dialog.
 
 ### 2.2 Gradual Volume Increase
-Start the alarm quietly and gradually increase volume over a set period to avoid a jarring wake-up. Implemented via native audio gain control (Rust `rodio`).
+Start the alarm quietly and gradually increase volume over 15, 30, or 60 seconds. Implemented via native audio gain control (Rust `rodio`). Configurable per alarm.
 
 ### 2.3 Vibration Mode
 Trigger device vibration alongside or instead of an audible alarm. Mobile only — uses native haptics (CoreHaptics on iOS, Vibrator on Android). Not available on desktop.
@@ -125,6 +134,9 @@ Gradually brighten the screen (or connected smart lights) before the alarm to si
 ### 5.7 Holiday / Public Holiday Awareness
 Automatically skip alarms on public holidays or user-defined days off.
 
+### 5.8 Missed Alarm Recovery
+On app launch and system wake, detect all missed alarms (where `nextFireTime < now`) and surface "Missed Alarm" notifications immediately. Critical reliability feature for desktop.
+
 ---
 
 ## 6. Display & Clock
@@ -177,10 +189,10 @@ Run several independent countdown timers simultaneously.
 Choose from light, dark, or custom color themes for the entire app. Preferences in SQLite `settings`.
 
 ### 8.2 System Tray / Menu Bar Widget
-Native system tray icon showing the next alarm time with quick controls (toggle, snooze, dismiss).
+Native system tray icon showing the next alarm time on hover, imminent badge (<5 min), with quick controls (toggle, snooze, dismiss, new alarm, disable all).
 
 ### 8.3 Alarm Groups / Folders
-Organize alarms into categories (e.g., "Work", "Gym", "Medication"). Stored in SQLite `alarm_groups` table.
+Organize alarms into color-coded categories (e.g., "Work", "Gym", "Medication"). Drag-and-drop alarms between groups. Stored in SQLite `alarm_groups` table.
 
 ### 8.4 Alarm Profiles
 Save and switch between sets of alarms (e.g., "Weekday Schedule", "Vacation Mode").
@@ -192,7 +204,13 @@ Display an inspiring quote each morning when the alarm goes off.
 Show a summary of weather, calendar, news headlines, and to-dos upon dismissing the alarm.
 
 ### 8.7 Accessibility Options
-High contrast mode, large text, voice control, and screen reader support.
+WCAG 2.1 AA: full keyboard navigation, screen reader support (ARIA labels), 4.5:1 contrast ratio, `prefers-reduced-motion` support, high-contrast mode, large text.
+
+### 8.8 Keyboard Shortcuts
+Platform-aware shortcuts: ⌘/Ctrl+N (new), Space (toggle), Delete (soft-delete), S (snooze), Enter/Esc (dismiss), ⌘/Ctrl+D (duplicate), ⌘/Ctrl+I/E (import/export).
+
+### 8.9 i18n / Internationalization
+All user-facing strings in locale files. Language selector in settings. i18n-ready architecture with `i18next`.
 
 ---
 
@@ -221,7 +239,7 @@ Connect with smart bulbs (Hue, LIFX), smart speakers, or coffee machines to trig
 Set, modify, or dismiss alarms using voice commands. Uses native speech recognition API.
 
 ### 10.4 Backup / Cloud Sync
-Save alarm settings to the cloud and sync across multiple devices. Export/import via native file dialogs for local backup.
+Save alarm settings to the cloud and sync across multiple devices. Export/import via native file dialogs (JSON, CSV, iCal) for local backup.
 
 ### 10.5 Do Not Disturb Scheduling
 Automatically enable DND mode during sleep hours and disable it at alarm time. Integrates with native OS DND APIs.
@@ -233,7 +251,7 @@ Dedicated reminders tied to alarm times for taking pills, drinking water, or oth
 Flash the device screen or camera LED as a visual alarm — useful for hearing-impaired users.
 
 ### 10.8 Missed Alarm Notifications
-If you somehow sleep through an alarm, send persistent follow-up OS notifications.
+If you somehow sleep through an alarm, send persistent follow-up OS notifications. Powered by `nextFireTime` persistence and system wake detection.
 
 ### 10.9 Battery-Aware Alarms
 Warn the user if battery is low and the alarm might not fire; optionally reduce background tasks. Native battery API.
@@ -247,17 +265,17 @@ All core alarm functionality works without an internet connection. SQLite storag
 
 | Category | Feature Count |
 |---|---|
-| Core Features | 7 |
+| Core Features | 10 |
 | Sound & Vibration | 6 |
 | Dismiss Methods | 8 |
 | Sleep & Wellness | 7 |
-| Smart & Contextual | 7 |
+| Smart & Contextual | 8 |
 | Display & Clock | 8 |
 | Timer & Stopwatch | 4 |
-| Personalization & UX | 7 |
+| Personalization & UX | 9 |
 | Social & Sharing | 3 |
 | Advanced / Unique | 10 |
-| **Total** | **67** |
+| **Total** | **75** |
 
 ---
 

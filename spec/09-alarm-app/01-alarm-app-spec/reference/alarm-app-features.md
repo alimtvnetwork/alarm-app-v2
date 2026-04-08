@@ -8,16 +8,20 @@ A comprehensive guide to all possible features for a modern cross-platform nativ
 
 | Feature | Description | Complexity |
 |---------|-------------|------------|
-| **Multiple Alarms** | Create, edit, and delete multiple independent alarms | Low |
+| **Multiple Alarms** | Create, edit, duplicate, and soft-delete multiple independent alarms | Low |
 | **On/Off Toggle** | Quickly enable or disable individual alarms without deleting them | Low |
-| **Repeat Schedule** | Set alarms to repeat on specific days (e.g., weekdays, weekends, custom days) | Low |
+| **Repeat Patterns** | Schedule alarms: once, daily, weekly (select days), custom interval, or cron expression | Medium |
+| **Date-Specific Alarms** | Fire on a specific calendar date (e.g., 2026-12-25 at 08:00) | Low |
 | **Alarm Labels** | Assign custom names/labels to each alarm for easy identification | Low |
-| **Snooze** | Dismiss temporarily and re-trigger after a default interval (e.g., 5 minutes) | Low |
-| **Sound Selection** | Choose from a library of alarm tones, ringtones, or notification sounds | Low |
+| **Snooze** | Dismiss temporarily with per-alarm configurable duration (1–30 min) and max snooze count (0–10) | Low |
+| **Sound Selection** | Choose from 10 built-in tones or select any local `.mp3`/`.wav`/`.ogg` file | Low |
 | **Volume Control** | Set the alarm volume independently from device volume | Low |
 | **12/24-Hour Format** | Toggle between 12-hour (AM/PM) and 24-hour time display | Low |
 | **Alarm Preview** | "Time until alarm" indicator showing how long until the next alarm fires | Low |
 | **Vibration** | Trigger device vibration alongside or instead of sound (mobile: native haptics; desktop: N/A) | Low |
+| **Soft-Delete with Undo** | Delete sets `deletedAt` timestamp; 5-second undo toast before permanent removal | Low |
+| **Duplicate Alarm** | One-click clone of any alarm with new UUID and "(Copy)" label suffix | Low |
+| **Auto-Dismiss** | Optional auto-stop after N minutes (1–60) if alarm is unacknowledged | Low |
 
 ---
 
@@ -25,22 +29,36 @@ A comprehensive guide to all possible features for a modern cross-platform nativ
 
 | Feature | Description | Complexity |
 |---------|-------------|------------|
-| **Gradual Wake-Up** | Alarm volume increases slowly over a set period (e.g., 30 seconds to 2 minutes) | Medium |
-| **Custom Snooze Duration** | Allow users to set their preferred snooze interval (1–30 minutes) | Low |
+| **Gradual Wake-Up** | Alarm volume increases slowly over a set period (15, 30, or 60 seconds) | Medium |
+| **Custom Snooze Duration** | Per-alarm snooze interval (1–30 minutes) and max snooze count | Low |
 | **Bedtime Reminder** | Notify the user when it's time to go to bed based on their wake-up alarm and desired sleep duration | Medium |
 | **Sleep Duration Calculator** | Given a desired wake-up time, suggest optimal bedtime based on 90-minute sleep cycles | Medium |
-| **Alarm Groups** | Organize alarms into groups (e.g., "Work", "Gym", "Weekend") for batch management | Medium |
+| **Alarm Groups** | Organize alarms into color-coded groups (e.g., "Work", "Gym", "Weekend") for batch management | Medium |
+| **Drag-and-Drop** | Drag alarms between groups; reorder within the alarm list | Medium |
 | **Quick Alarm / Timer** | Set a one-off alarm for "X minutes from now" without configuring a full alarm | Low |
 | **Countdown Display** | Show a live countdown timer to the next scheduled alarm | Low |
-| **Alarm History** | Log of past alarms: when they fired, how long before dismissal, snooze count | Medium |
+| **Alarm History** | Persistent log of past alarms: when they fired, dismissed, snoozed, or missed — filterable and CSV-exportable | Medium |
+| **Keyboard Shortcuts** | Full keyboard navigation: ⌘/Ctrl+N (new), Space (toggle), S (snooze), Enter/Esc (dismiss), etc. | Medium |
 
 ---
 
 ## 3. Advanced Features
 
-### 3.1 Dismissal Challenges
+### 3.1 Missed Alarm Recovery (Critical)
 
-Force the user to complete a task before the alarm can be dismissed — prevents sleepy "dismiss" taps.
+Desktop computers sleep and shut down — alarms must never be silently lost.
+
+| Aspect | Implementation |
+|--------|---------------|
+| **nextFireTime persistence** | Every enabled alarm stores precomputed `nextFireTime` in SQLite |
+| **App launch check** | Query `WHERE next_fire_time < now AND enabled = 1` → fire missed alarm notifications |
+| **System wake detection** | macOS: `NSWorkspace.didWakeNotification`, Windows: `WM_POWERBROADCAST`, Linux: `systemd-logind` |
+| **30-second tick** | Background Rust thread checks every 30 seconds |
+| **Guarantee** | If computer was off 6 AM–9 AM with 7 AM alarm → user sees "Missed: 7:00 AM" at 9 AM |
+
+### 3.2 Dismissal Challenges
+
+Force the user to complete a task before the alarm can be dismissed.
 
 | Challenge Type | Description | Complexity |
 |----------------|-------------|------------|
@@ -52,7 +70,7 @@ Force the user to complete a task before the alarm can be dismissed — prevents
 | **Memory Game** | Complete a short memory or pattern-matching game | Medium |
 | **Steps Counter** | Walk a certain number of steps before the alarm stops (mobile only — native pedometer) | High |
 
-### 3.2 Smart & Social Features
+### 3.3 Smart & Social Features
 
 | Feature | Description | Complexity |
 |---------|-------------|------------|
@@ -62,7 +80,7 @@ Force the user to complete a task before the alarm can be dismissed — prevents
 | **Location-Based Alarm** | Trigger an alarm when arriving at or leaving a specific location (native GPS/geofencing) | High |
 | **Spotify/Music Integration** | Use a song from a music service as the alarm sound (native HTTP — no CORS) | Medium |
 
-### 3.3 Sleep Analytics
+### 3.4 Sleep Analytics
 
 | Feature | Description | Complexity |
 |---------|-------------|------------|
@@ -95,10 +113,11 @@ Force the user to complete a task before the alarm can be dismissed — prevents
 | **Analog Clock Face** | Display time as an analog clock in addition to digital | Medium |
 | **Animations & Transitions** | Smooth animations for alarm creation, toggling, and dismissal | Low |
 | **Haptic Feedback** | Subtle vibration feedback on interactions (mobile only — native haptics) | Low |
-| **Accessibility (a11y)** | Screen reader support, keyboard navigation, high-contrast mode, ARIA labels | Medium |
+| **Accessibility (a11y)** | WCAG 2.1 AA: screen reader support, keyboard navigation, 4.5:1 contrast, ARIA labels, `prefers-reduced-motion` | Medium |
 | **Responsive Design** | Fully responsive layout optimized for mobile, tablet, and desktop | Low |
-| **System Tray / Menu Bar** | Native system tray icon with quick alarm controls and next alarm display | Medium |
-| **Drag & Drop Reorder** | Reorder alarms via drag-and-drop | Medium |
+| **System Tray / Menu Bar** | Native system tray icon with quick controls, next alarm on hover, imminent badge (<5 min) | Medium |
+| **Drag & Drop Reorder** | Reorder alarms and drag between groups | Medium |
+| **i18n / Internationalization** | All strings in locale files; language selector in settings; i18n-ready architecture | Medium |
 
 ---
 
@@ -119,6 +138,7 @@ Building the alarm app as a **native cross-platform application** (Tauri 2.x) pr
 | **Wake Lock** | Native power management API | Wake Lock API — limited support |
 | **Auto-Update** | Built-in Tauri updater plugin | Not applicable |
 | **Storage** | SQLite — structured, queryable, unlimited | localStorage — 5MB limit, string-only |
+| **System Wake Detection** | OS power events (macOS/Windows/Linux) | Not available |
 
 ### Recommended Native Technologies
 
@@ -131,28 +151,49 @@ Building the alarm app as a **native cross-platform application** (Tauri 2.x) pr
 | **tauri-plugin-notification** | OS-native notifications |
 | **tauri-plugin-sql** | SQLite database integration |
 | **tauri-plugin-dialog** | Native file open/save dialogs |
+| **tauri-plugin-global-shortcut** | System-wide keyboard shortcuts |
 | **tauri-plugin-updater** | Auto-update mechanism |
+| **i18next** | Frontend internationalization |
 
 ---
 
-## 7. Recommended MVP Feature Set
+## 7. Import / Export
 
-For a strong first version, consider this balanced feature set:
+| Format | Import | Export | Notes |
+|--------|--------|--------|-------|
+| JSON | ✅ | ✅ | Primary format. Full fidelity — all fields preserved. |
+| CSV | ✅ | ✅ | Flat format for spreadsheet users. One row per alarm. |
+| iCal (.ics) | ✅ | ✅ | Interop with Google Calendar, Apple Calendar, Outlook. |
+
+- Export scope: individual alarms, groups, or "Export All"
+- Import preview before applying; duplicate handling: skip / overwrite / rename
+- Native file dialogs via `tauri-plugin-dialog`
+
+---
+
+## 8. Recommended MVP Feature Set
 
 ### ✅ MVP (Version 1.0)
 
-- Multiple alarms with create/edit/delete
+- Multiple alarms with create/edit/delete (soft-delete with undo)
+- Duplicate alarm
 - On/off toggle
-- Repeat schedule (select days)
+- Repeat patterns (once, daily, weekly, interval)
+- Date-specific alarms
 - Alarm labels
-- Snooze with custom duration
-- Sound selection (built-in tones)
+- Snooze with per-alarm duration and max count
+- Sound selection (10 built-in tones + custom files)
 - Gradual wake-up (volume fade-in)
+- Auto-dismiss
 - 12/24-hour format toggle
 - Dark theme (default) with accent color
 - Time-until-alarm preview
+- Missed alarm recovery (app launch + system wake)
+- Keyboard shortcuts
 - System tray / menu bar integration
+- Accessibility (WCAG 2.1 AA)
 - SQLite persistence
+- JSON export/import
 
 ### 🚀 Version 2.0 Candidates
 
@@ -161,8 +202,10 @@ For a strong first version, consider this balanced feature set:
 - Bedtime reminders
 - Motivational quotes
 - Weather preview
-- Alarm history & basic sleep stats
-- Alarm groups
+- Alarm history & filterable log with CSV export
+- Alarm groups (color-coded, drag-and-drop)
+- CSV + iCal export/import
+- i18n (2-3 additional languages)
 
 ### 🔮 Future / Stretch Goals
 
@@ -170,10 +213,33 @@ For a strong first version, consider this balanced feature set:
 - Smart alarm (sleep cycle — mobile)
 - Alarm routines
 - Full sleep analytics dashboard
+- Cloud sync
+- World clock / multiple time zones
+- Stopwatch & timer / Pomodoro
+- Voice assistant integration
+- Calendar overlay
+- OS widgets
 - Auto-update
 - Shared/social alarms
 - iOS & Android release
 
 ---
 
-*Generated for the Alarm App project — use this document to plan and prioritize features.*
+## Summary Table
+
+| Category | Feature Count |
+|---|---|
+| Core Features | 14 |
+| Intermediate Features | 10 |
+| Dismissal Challenges | 7 |
+| Smart & Social | 5 |
+| Sleep Analytics | 4 |
+| Engagement & Lifestyle | 6 |
+| UX & Design | 10 |
+| Native Platform Capabilities | 10 |
+| Import / Export | 3 |
+| **Total** | **~190+** |
+
+---
+
+*Generated for the Alarm App project v1.2.0 — use this document to plan and prioritize features.*
