@@ -1,6 +1,6 @@
 # Alarm App Spec
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Status:** Active  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
@@ -56,25 +56,42 @@ Complete application specification for the Alarm App — a cross-platform native
 Alarm {
   id: string (uuid)
   time: string (HH:MM, 24h)
+  date: string | null (YYYY-MM-DD, for date-specific alarms)
   label: string
   enabled: boolean
-  recurringDays: number[] (0=Sun..6=Sat, empty = one-time)
+  repeat: RepeatPattern (once|daily|weekly|interval|cron)
   groupId: string | null
   snoozeDurationMin: number (default 5)
+  maxSnoozeCount: number (default 3, 0 = disabled)
+  soundFile: string (built-in key or custom file path)
+  gradualVolume: boolean
+  autoDismissMin: number (0 = disabled)
+  nextFireTime: string | null (precomputed)
+  deletedAt: string | null (soft-delete)
+  createdAt / updatedAt: ISO timestamps
+}
+
+RepeatPattern {
+  type: "once" | "daily" | "weekly" | "interval" | "cron"
+  daysOfWeek: number[] (for weekly)
+  intervalMinutes: number (for interval)
+  cronExpression: string (for cron)
 }
 
 AlarmGroup {
   id: string (uuid)
   name: string
+  color: string (hex)
   enabled: boolean
 }
 
 Storage: SQLite database (via Tauri SQL plugin)
 Tables:
-  alarms        → Alarm records
-  alarm_groups  → AlarmGroup records
-  settings      → Key-value config (theme, preferences)
+  alarms        → Alarm records (with soft-delete, nextFireTime)
+  alarm_groups  → AlarmGroup records (with color)
+  settings      → Key-value config (theme, locale, defaults)
   snooze_state  → Active snooze tracking
+  alarm_events  → Alarm history log (fired, snoozed, dismissed, missed)
 ```
 
 ---
@@ -83,10 +100,10 @@ Tables:
 
 | Priority | Features |
 |----------|----------|
-| **P0 — Must Have** | Alarm CRUD, Labels, Snooze, Repeat Schedule, Sound Selection, Dark Mode, Clock Display |
-| **P1 — Should Have** | Gradual Volume, Quick Alarm, Countdown Display, Vibration, Math Challenge, Groups, Export/Import |
-| **P2 — Nice to Have** | Bedtime Reminder, Sleep Calculator, Streak Tracker, Shake/Type Challenges, Themes |
-| **P3 — Future** | Weather Briefing, Location Alarms, Webhooks, Analytics, Music Integration, iOS/Android |
+| **P0 — Must Have** | Alarm CRUD (soft-delete, duplicate, drag-drop), Snooze (per-alarm max), Repeat Patterns (daily/weekly/interval/cron), Sound Selection (built-in + custom), Dark Mode, Clock Display, Missed Alarm Recovery, Auto-Dismiss |
+| **P1 — Should Have** | Gradual Volume, Keyboard Shortcuts, Groups (color-coded), Export/Import (JSON/CSV/iCal), Accessibility (WCAG 2.1 AA), Math Challenge |
+| **P2 — Nice to Have** | Alarm History Log (filterable, CSV export), Bedtime Reminder, Sleep Calculator, Streak Tracker, Shake/Type Challenges, Themes, i18n |
+| **P3 — Future** | Analytics Reports, Weather Briefing, Location Alarms, Webhooks, Music Integration, Cloud Sync, World Clock, Stopwatch/Timer, Pomodoro, Voice Assistant, Calendar Overlay, OS Widgets, iOS/Android |
 
 ---
 
