@@ -1,6 +1,6 @@
 # Alarm CRUD
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -27,7 +27,7 @@ Users can create new alarms by setting a time (hour and minute), edit existing a
 - [ ] User can delete an alarm with confirmation
 - [ ] User can toggle an alarm on/off without opening the edit form
 - [ ] Alarm list shows all alarms sorted by time within each group
-- [ ] All changes persist to localStorage immediately
+- [ ] All changes persist to SQLite immediately via Tauri IPC commands
 - [ ] Empty state shown when no alarms exist
 
 ---
@@ -43,7 +43,7 @@ Users can create new alarms by setting a time (hour and minute), edit existing a
 
 ## Hook
 
-`useAlarms` — Provides CRUD operations, toggle, localStorage sync.
+`useAlarms` — Provides CRUD operations, toggle, SQLite sync via Tauri `invoke()` commands.
 
 ---
 

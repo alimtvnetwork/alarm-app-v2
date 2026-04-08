@@ -14,12 +14,12 @@ type: feature
 5. ✅ Update `03-file-structure.md` — add src-tauri/, Rust modules, IPC flow
 6. ✅ Update `01-fundamentals/00-overview.md` — keywords, purpose, doc inventory
 
-### Phase 2: Feature Spec Updates (P1)
-7. Update `02-features/03-alarm-firing.md` — setInterval → Rust thread, Web Audio → native, Notification API → OS
-8. Update `02-features/05-sound-and-vibration.md` — Web Audio API → native, navigator.vibrate → native haptics
-9. Update `02-features/04-snooze-system.md` — localStorage → SQLite, "page refresh" → "app restart"
-10. Update `02-features/01-alarm-crud.md` — localStorage references
-11. Update `02-features/12-smart-features.md` — PWA → System Tray, Web Speech → native, browser → native
+### Phase 2: Feature Spec Updates (P1) ✅ DONE
+7. ✅ Update `03-alarm-firing.md` — Rust background thread, native audio, OS notifications, missed alarm handling
+8. ✅ Update `05-sound-and-vibration.md` — native audio, platform-specific vibration/haptics
+9. ✅ Update `04-snooze-system.md` — SQLite snooze_state table, Tauri IPC, app restart persistence
+10. ✅ Update `01-alarm-crud.md` — SQLite + Tauri invoke() for all CRUD
+11. ✅ Update `12-smart-features.md` — native speech/location/HTTP, system tray enhancements, removed PWA
 
 ### Phase 3: Secondary Feature Spec Updates (P2)
 12. Update `02-features/06-dismissal-challenges.md` — DeviceMotionEvent → native accelerometer
@@ -39,7 +39,6 @@ type: feature
 22. Update all consistency reports
 
 ### Status
-- Phase 1 completed: All 6 core spec files updated for native/Tauri
-- Old `04-web-api-constraints.md` deleted, replaced by `04-platform-constraints.md`
-- Platform strategy doc: `01-fundamentals/05-platform-strategy.md`
-- Issues doc: `03-app-issues/01-web-to-native-migration.md`
+- Phase 1 completed: All 6 core spec files updated
+- Phase 2 completed: All 5 P1 feature specs updated
+- Awaiting user approval for Phase 3
