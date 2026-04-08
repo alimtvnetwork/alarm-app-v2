@@ -39,7 +39,8 @@ Core architectural decisions, data model definitions, design system tokens, file
 | 01 | `01-data-model.md` | Alarm and AlarmGroup interfaces, storage keys, validation rules |
 | 02 | `02-design-system.md` | Color palette, typography, spacing, component styling |
 | 03 | `03-file-structure.md` | Source file organization and component hierarchy |
-| 04 | `04-web-api-constraints.md` | Browser API limitations and mitigations |
+| 04 | `04-web-api-constraints.md` | Browser API limitations and mitigations (legacy — to be replaced by platform-constraints) |
+| 05 | `05-platform-strategy.md` | Cross-platform framework comparison and rollout strategy |
 | 99 | `99-consistency-report.md` | Folder health check |
 
 ---
