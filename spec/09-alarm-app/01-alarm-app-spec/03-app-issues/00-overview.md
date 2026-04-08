@@ -36,9 +36,8 @@ Bug tracking, fixes, and retrospectives for the Alarm App. New issues are docume
 
 | # | File | Description |
 |---|------|-------------|
+| 01 | `01-web-to-native-migration.md` | All web-app references that must be updated for native cross-platform |
 | 99 | `99-consistency-report.md` | Folder health check |
-
-_No issues logged yet._
 
 ---
 
