@@ -1,5 +1,7 @@
 # Alarm Clock App — Complete Feature Overview
 
+A comprehensive reference of 67 features across 10 categories for a native cross-platform alarm clock application.
+
 ## 1. Core Features
 
 ### 1.1 Set Alarms
@@ -28,22 +30,22 @@ Remove alarms that are no longer needed.
 ## 2. Sound & Vibration
 
 ### 2.1 Custom Alarm Tones
-Choose from a library of built-in sounds or upload your own audio file as the alarm tone.
+Choose from a library of built-in sounds or load custom audio files as the alarm tone (via native file dialog).
 
 ### 2.2 Gradual Volume Increase
-Start the alarm quietly and gradually increase volume over a set period to avoid a jarring wake-up.
+Start the alarm quietly and gradually increase volume over a set period to avoid a jarring wake-up. Implemented via native audio gain control (Rust `rodio`).
 
 ### 2.3 Vibration Mode
-Trigger device vibration alongside or instead of an audible alarm — useful in quiet environments.
+Trigger device vibration alongside or instead of an audible alarm. Mobile only — uses native haptics (CoreHaptics on iOS, Vibrator on Android). Not available on desktop.
 
 ### 2.4 Music / Spotify Integration
-Wake up to a playlist, radio station, or a specific song from a music streaming service.
+Wake up to a playlist, radio station, or a specific song from a music streaming service. Native HTTP client (no CORS restrictions) for OAuth and API calls.
 
 ### 2.5 Text-to-Speech Alarm
-Have the alarm read out the time, weather, or your schedule instead of playing a tone.
+Have the alarm read out the time, weather, or your schedule instead of playing a tone. Uses native speech synthesis API.
 
 ### 2.6 Nature / Ambient Sounds
-Offer calming sounds (rain, ocean waves, birds) as alarm tones for a gentler wake-up.
+Offer calming sounds (rain, ocean waves, birds) as alarm tones for a gentler wake-up. Audio via Rust `rodio` with auto-stop timer.
 
 ---
 
@@ -56,10 +58,10 @@ Simple swipe gesture to turn off the alarm.
 Require solving a math problem before the alarm can be dismissed — prevents sleeping through.
 
 ### 3.3 Shake to Dismiss
-Physically shake the device a certain number of times to turn off the alarm.
+Physically shake the device a certain number of times to turn off the alarm. Mobile only — uses native accelerometer (CoreMotion on iOS, SensorManager on Android).
 
 ### 3.4 QR Code / Barcode Scan
-Require scanning a specific QR code (e.g., on your bathroom mirror) to dismiss.
+Require scanning a specific QR code (e.g., on your bathroom mirror) to dismiss. Uses native camera API.
 
 ### 3.5 Photo Match Dismiss
 Take a photo that matches a pre-set reference photo (e.g., your coffee machine) to dismiss.
@@ -71,42 +73,42 @@ Type a specific phrase or sentence to dismiss the alarm.
 Solve a small puzzle, memory game, or pattern to turn off the alarm.
 
 ### 3.8 Step Counter Dismiss
-Walk a set number of steps before the alarm stops.
+Walk a set number of steps before the alarm stops. Mobile only — uses native pedometer API.
 
 ---
 
 ## 4. Sleep & Wellness
 
 ### 4.1 Bedtime Reminder
-Notify you when it's time to go to sleep based on your desired wake-up time and recommended sleep duration.
+Notify you when it's time to go to sleep based on your desired wake-up time and recommended sleep duration. Uses OS-native notifications.
 
 ### 4.2 Sleep Cycle Tracking
-Monitor sleep phases (light, deep, REM) using device sensors and wake you during the lightest phase within a window.
+Monitor sleep phases (light, deep, REM) using native motion sensors (mobile only) and wake you during the lightest phase within a window.
 
 ### 4.3 Sleep Quality Score
-Provide a daily sleep quality rating based on duration, movement, and consistency.
+Provide a daily sleep quality rating based on duration, movement, and consistency. Data stored in SQLite.
 
 ### 4.4 Sleep Statistics & History
-Track and visualize sleep patterns over days, weeks, and months with charts and graphs.
+Track and visualize sleep patterns over days, weeks, and months with charts and graphs. All data in SQLite `alarm_events` table.
 
 ### 4.5 Sleep Sounds / White Noise
-Play soothing sounds while falling asleep, with an auto-off timer.
+Play soothing sounds while falling asleep, with an auto-off timer. Native audio via Rust `rodio` (reliable background playback).
 
 ### 4.6 Power Nap Timer
 Set a quick countdown timer optimized for short naps (15, 20, 30 minutes).
 
 ### 4.7 Sleep Notes / Journal
-Log how you feel each morning, note factors affecting sleep (caffeine, exercise, stress).
+Log how you feel each morning, note factors affecting sleep (caffeine, exercise, stress). Stored in SQLite.
 
 ---
 
 ## 5. Smart & Contextual Features
 
 ### 5.1 Smart Alarm (Optimal Wake Window)
-Set a wake-up window (e.g., 6:30–7:00) and let the app choose the best moment based on sleep cycle analysis.
+Set a wake-up window (e.g., 6:30–7:00) and let the app choose the best moment based on sleep cycle analysis. Mobile only — requires native motion sensors.
 
 ### 5.2 Weather Integration
-Display current weather and forecast when the alarm goes off to help plan your day.
+Display current weather and forecast when the alarm goes off to help plan your day. Native HTTP client (no CORS).
 
 ### 5.3 Calendar Integration
 Show upcoming events and meetings alongside the alarm so you know your schedule immediately.
@@ -115,7 +117,7 @@ Show upcoming events and meetings alongside the alarm so you know your schedule 
 Calculate commute time based on real-time traffic and adjust alarm time or notify you if you need to leave earlier.
 
 ### 5.5 Location-Based Alarms
-Trigger alarms when arriving at or leaving a specific location (geo-fencing).
+Trigger alarms when arriving at or leaving a specific location (geo-fencing). Uses native GPS/location services.
 
 ### 5.6 Sunrise Simulation
 Gradually brighten the screen (or connected smart lights) before the alarm to simulate a natural sunrise.
@@ -131,16 +133,16 @@ Automatically skip alarms on public holidays or user-defined days off.
 Show the current time in a large, easy-to-read digital format.
 
 ### 6.2 Analog Clock Display
-Option for a traditional analog clock face.
+Option for a traditional analog clock face (SVG-based).
 
 ### 6.3 Night Mode / Bedside Mode
 Dim the display with dark colors for use as a bedside clock without disturbing sleep.
 
 ### 6.4 Always-On Display
-Keep the clock visible at all times with minimal brightness.
+Keep the clock visible at all times with minimal brightness. Uses native power management API to prevent sleep.
 
 ### 6.5 Customizable Clock Themes
-Choose different clock faces, fonts, colors, and background styles.
+Choose different clock faces, fonts, colors, and background styles. Preferences stored in SQLite `settings` table.
 
 ### 6.6 World Clock / Multiple Time Zones
 Display the time in multiple cities or time zones simultaneously.
@@ -172,13 +174,13 @@ Run several independent countdown timers simultaneously.
 ## 8. Personalization & UX
 
 ### 8.1 Themes & Skins
-Choose from light, dark, or custom color themes for the entire app.
+Choose from light, dark, or custom color themes for the entire app. Preferences in SQLite `settings`.
 
-### 8.2 Widget Support
-Home screen widget showing the next alarm time or a mini clock.
+### 8.2 System Tray / Menu Bar Widget
+Native system tray icon showing the next alarm time with quick controls (toggle, snooze, dismiss).
 
 ### 8.3 Alarm Groups / Folders
-Organize alarms into categories (e.g., "Work", "Gym", "Medication").
+Organize alarms into categories (e.g., "Work", "Gym", "Medication"). Stored in SQLite `alarm_groups` table.
 
 ### 8.4 Alarm Profiles
 Save and switch between sets of alarms (e.g., "Weekday Schedule", "Vacation Mode").
@@ -213,16 +215,16 @@ Notify a designated person if you snooze too many times or miss an alarm.
 Use machine learning to learn your sleep patterns and suggest the ideal alarm time.
 
 ### 10.2 Smart Home Integration
-Connect with smart bulbs (Hue, LIFX), smart speakers, or coffee machines to trigger actions at alarm time.
+Connect with smart bulbs (Hue, LIFX), smart speakers, or coffee machines to trigger actions at alarm time. Native HTTP/MQTT — no CORS.
 
 ### 10.3 Voice Assistant Integration
-Set, modify, or dismiss alarms using voice commands (e.g., "Hey app, set alarm for 7 AM").
+Set, modify, or dismiss alarms using voice commands. Uses native speech recognition API.
 
 ### 10.4 Backup / Cloud Sync
-Save alarm settings to the cloud and sync across multiple devices.
+Save alarm settings to the cloud and sync across multiple devices. Export/import via native file dialogs for local backup.
 
 ### 10.5 Do Not Disturb Scheduling
-Automatically enable DND mode during sleep hours and disable it at alarm time.
+Automatically enable DND mode during sleep hours and disable it at alarm time. Integrates with native OS DND APIs.
 
 ### 10.6 Medication / Habit Reminders
 Dedicated reminders tied to alarm times for taking pills, drinking water, or other habits.
@@ -231,13 +233,13 @@ Dedicated reminders tied to alarm times for taking pills, drinking water, or oth
 Flash the device screen or camera LED as a visual alarm — useful for hearing-impaired users.
 
 ### 10.8 Missed Alarm Notifications
-If you somehow sleep through an alarm, send persistent follow-up notifications.
+If you somehow sleep through an alarm, send persistent follow-up OS notifications.
 
 ### 10.9 Battery-Aware Alarms
-Warn the user if battery is low and the alarm might not fire; optionally reduce background tasks.
+Warn the user if battery is low and the alarm might not fire; optionally reduce background tasks. Native battery API.
 
 ### 10.10 Offline Mode
-Ensure all core alarm functionality works without an internet connection.
+All core alarm functionality works without an internet connection. SQLite storage, native audio, native notifications — fully offline-capable by default.
 
 ---
 
