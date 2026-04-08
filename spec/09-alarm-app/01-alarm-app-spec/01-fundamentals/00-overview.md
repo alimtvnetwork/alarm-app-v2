@@ -39,8 +39,9 @@ Core architectural decisions, data model definitions, design system tokens, file
 | 01 | `01-data-model.md` | Alarm and AlarmGroup interfaces, SQLite schema, validation rules |
 | 02 | `02-design-system.md` | Color palette, typography, spacing, component styling |
 | 03 | `03-file-structure.md` | Source file organization — frontend (React) and backend (Rust) |
-| 04 | `04-platform-constraints.md` | Cross-platform native constraints and mitigations (replaces web-api-constraints) |
-| 05 | `05-platform-strategy.md` | Framework comparison, recommendation (Tauri 2.x), rollout strategy |
+| 04 | `04-platform-constraints.md` | Cross-platform native constraints and mitigations |
+| 05 | `05-platform-strategy.md` | Legacy platform strategy (see 06 for comprehensive version) |
+| 06 | `06-tauri-architecture-and-framework-comparison.md` | Tauri architecture (Rust backend, IPC, plugins, build pipeline) + cross-platform framework comparison with scoring |
 
 ---
 
