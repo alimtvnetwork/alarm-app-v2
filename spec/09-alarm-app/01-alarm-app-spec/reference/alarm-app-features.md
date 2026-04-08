@@ -1,6 +1,6 @@
 # Alarm App — Complete Feature Overview
 
-A comprehensive guide to all possible features for a modern digital alarm application.
+A comprehensive guide to all possible features for a modern cross-platform native alarm application (Tauri 2.x — macOS, Windows, Linux, iOS, Android).
 
 ---
 
@@ -17,7 +17,7 @@ A comprehensive guide to all possible features for a modern digital alarm applic
 | **Volume Control** | Set the alarm volume independently from device volume | Low |
 | **12/24-Hour Format** | Toggle between 12-hour (AM/PM) and 24-hour time display | Low |
 | **Alarm Preview** | "Time until alarm" indicator showing how long until the next alarm fires | Low |
-| **Vibration** | Trigger device vibration alongside or instead of sound (browser support varies) | Low |
+| **Vibration** | Trigger device vibration alongside or instead of sound (mobile: native haptics; desktop: N/A) | Low |
 
 ---
 
@@ -46,30 +46,30 @@ Force the user to complete a task before the alarm can be dismissed — prevents
 |----------------|-------------|------------|
 | **Math Puzzle** | Solve a math problem (difficulty: easy → hard) to dismiss | Medium |
 | **QR/Barcode Scan** | Scan a specific QR code (e.g., placed in the bathroom) to dismiss | High |
-| **Shake to Dismiss** | Shake the device a set number of times to dismiss | Medium |
+| **Shake to Dismiss** | Shake the device a set number of times to dismiss (mobile only — native accelerometer) | Medium |
 | **Typing Challenge** | Type a displayed sentence or phrase accurately | Medium |
 | **Photo Match** | Take a photo of a specific location or object to dismiss | High |
 | **Memory Game** | Complete a short memory or pattern-matching game | Medium |
-| **Steps Counter** | Walk a certain number of steps before the alarm stops | High |
+| **Steps Counter** | Walk a certain number of steps before the alarm stops (mobile only — native pedometer) | High |
 
 ### 3.2 Smart & Social Features
 
 | Feature | Description | Complexity |
 |---------|-------------|------------|
-| **Smart Alarm (Sleep Cycle)** | Wake the user during their lightest sleep phase within a time window (requires device sensors or estimation) | High |
+| **Smart Alarm (Sleep Cycle)** | Wake the user during their lightest sleep phase within a time window (mobile: native motion sensors) | High |
 | **Alarm Routines** | Chain multiple actions after alarm dismissal: show weather → play music → open a checklist | High |
 | **Shared/Social Alarms** | Create alarms shared with friends or family; everyone gets notified | High |
-| **Location-Based Alarm** | Trigger an alarm when arriving at or leaving a specific location | High |
-| **Spotify/Music Integration** | Use a song from a music service as the alarm sound | Medium |
+| **Location-Based Alarm** | Trigger an alarm when arriving at or leaving a specific location (native GPS/geofencing) | High |
+| **Spotify/Music Integration** | Use a song from a music service as the alarm sound (native HTTP — no CORS) | Medium |
 
 ### 3.3 Sleep Analytics
 
 | Feature | Description | Complexity |
 |---------|-------------|------------|
-| **Sleep Statistics** | Track sleep duration, consistency, and quality over time with charts | High |
+| **Sleep Statistics** | Track sleep duration, consistency, and quality over time with charts (SQLite storage) | High |
 | **Sleep Score** | Calculate a daily sleep score based on duration, consistency, and snooze usage | High |
 | **Weekly/Monthly Reports** | Summarized sleep reports with trends and recommendations | High |
-| **Export Data** | Export sleep data as CSV or PDF for personal records | Medium |
+| **Export Data** | Export sleep data as CSV or PDF via native file dialog | Medium |
 
 ---
 
@@ -78,7 +78,7 @@ Force the user to complete a task before the alarm can be dismissed — prevents
 | Feature | Description | Complexity |
 |---------|-------------|------------|
 | **Motivational Quotes** | Display an inspiring quote on the alarm screen each morning | Low |
-| **Weather Preview** | Show current weather and forecast when the alarm fires or on the home screen | Medium |
+| **Weather Preview** | Show current weather and forecast when the alarm fires (native HTTP API) | Medium |
 | **Morning News Headlines** | Display top news headlines on the alarm/dismiss screen | Medium |
 | **Daily Checklist** | Show a customizable morning routine checklist after alarm dismissal | Medium |
 | **Habit Tracker Integration** | Mark morning habits as complete (e.g., "Drank water", "Stretched") | Medium |
@@ -90,42 +90,48 @@ Force the user to complete a task before the alarm can be dismissed — prevents
 
 | Feature | Description | Complexity |
 |---------|-------------|------------|
-| **Dark / Light Theme** | Toggle between dark and light modes; auto-detect system preference | Low |
+| **Dark / Light Theme** | Toggle between dark and light modes; auto-detect OS preference (native appearance events) | Low |
 | **Custom Accent Colors** | Let users pick their preferred accent/highlight color | Low |
 | **Analog Clock Face** | Display time as an analog clock in addition to digital | Medium |
 | **Animations & Transitions** | Smooth animations for alarm creation, toggling, and dismissal | Low |
-| **Haptic Feedback** | Subtle vibration feedback on interactions (browser support varies) | Low |
+| **Haptic Feedback** | Subtle vibration feedback on interactions (mobile only — native haptics) | Low |
 | **Accessibility (a11y)** | Screen reader support, keyboard navigation, high-contrast mode, ARIA labels | Medium |
 | **Responsive Design** | Fully responsive layout optimized for mobile, tablet, and desktop | Low |
-| **PWA / Installable** | Progressive Web App support — installable on home screen, works offline | Medium |
+| **System Tray / Menu Bar** | Native system tray icon with quick alarm controls and next alarm display | Medium |
 | **Drag & Drop Reorder** | Reorder alarms via drag-and-drop | Medium |
 
 ---
 
-## 6. Web-Specific Considerations
+## 6. Native Platform Capabilities
 
-Building an alarm app as a **web application** comes with unique constraints and opportunities:
+Building the alarm app as a **native cross-platform application** (Tauri 2.x) provides direct access to OS-level capabilities:
 
-### Browser API Limitations
+### Native Advantages over Web
 
-| Concern | Details |
-|---------|---------|
-| **Background Execution** | Browsers throttle or suspend background tabs. Alarms may not fire reliably if the tab is inactive. **Mitigation:** Use Service Workers, Web Workers, or the Notification API. |
-| **Audio Autoplay** | Most browsers block audio autoplay without user interaction. **Mitigation:** Request user interaction on first visit; use the Web Audio API. |
-| **Vibration API** | Supported on Android Chrome but NOT on iOS Safari or most desktop browsers. |
-| **Wake Lock API** | Prevents the screen from dimming/locking. Useful for bedside clock mode. Limited browser support. |
-| **Notification API** | Allows system-level notifications even when the tab is not focused. Requires user permission. |
+| Capability | Native (Tauri) | Web App Limitation |
+|------------|----------------|-------------------|
+| **Background Execution** | Rust background thread — reliable, never throttled | Browsers throttle/suspend background tabs |
+| **Audio Playback** | Native audio (`rodio`) — no autoplay restrictions | Web Audio API blocked without user gesture |
+| **Vibration / Haptics** | CoreHaptics (iOS), Vibrator (Android) | navigator.vibrate — no iOS support |
+| **Notifications** | OS-native, persistent, actionable | Browser notifications — permission-gated, less reliable |
+| **System Tray** | Menu bar icon with controls | Not available in browsers |
+| **File Access** | Native file dialogs, direct read/write | Sandboxed, limited to downloads |
+| **Wake Lock** | Native power management API | Wake Lock API — limited support |
+| **Auto-Update** | Built-in Tauri updater plugin | Not applicable |
+| **Storage** | SQLite — structured, queryable, unlimited | localStorage — 5MB limit, string-only |
 
-### Recommended Web Technologies
+### Recommended Native Technologies
 
 | Technology | Use Case |
 |------------|----------|
-| **Service Workers** | Background alarm scheduling and push notifications |
-| **Web Audio API** | Reliable audio playback with volume control and fade-in effects |
-| **IndexedDB / localStorage** | Persistent alarm storage without a backend |
-| **Notification API** | System notifications for alarm triggers |
-| **PWA Manifest** | Make the app installable on mobile and desktop |
-| **Wake Lock API** | Keep screen on for bedside/clock mode |
+| **Tauri 2.x** | Cross-platform runtime (macOS, Windows, Linux, iOS, Android) |
+| **Rust Backend** | Alarm engine, audio, storage, notifications |
+| **SQLite** | Persistent structured data storage |
+| **rodio** | Cross-platform audio playback |
+| **tauri-plugin-notification** | OS-native notifications |
+| **tauri-plugin-sql** | SQLite database integration |
+| **tauri-plugin-dialog** | Native file open/save dialogs |
+| **tauri-plugin-updater** | Auto-update mechanism |
 
 ---
 
@@ -145,7 +151,8 @@ For a strong first version, consider this balanced feature set:
 - 12/24-hour format toggle
 - Dark theme (default) with accent color
 - Time-until-alarm preview
-- Responsive design
+- System tray / menu bar integration
+- SQLite persistence
 
 ### 🚀 Version 2.0 Candidates
 
@@ -155,15 +162,17 @@ For a strong first version, consider this balanced feature set:
 - Motivational quotes
 - Weather preview
 - Alarm history & basic sleep stats
+- Alarm groups
 
 ### 🔮 Future / Stretch Goals
 
 - QR code dismiss
-- Smart alarm (sleep cycle estimation)
+- Smart alarm (sleep cycle — mobile)
 - Alarm routines
 - Full sleep analytics dashboard
-- PWA with offline support
+- Auto-update
 - Shared/social alarms
+- iOS & Android release
 
 ---
 
