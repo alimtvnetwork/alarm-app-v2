@@ -1,0 +1,319 @@
+# Tauri Architecture & Cross-Platform Framework Comparison
+
+**Version:** 1.0.0  
+**Updated:** 2026-04-08  
+**AI Confidence:** High  
+**Ambiguity:** Low
+
+---
+
+## Keywords
+
+`tauri`, `rust`, `architecture`, `ipc`, `plugins`, `build`, `framework`, `comparison`, `native`, `cross-platform`
+
+---
+
+## Purpose
+
+Detailed Tauri 2.x architecture for the Alarm App — Rust backend design, IPC command system, plugin integration, build pipeline — plus a comprehensive cross-platform framework comparison with pros, cons, and recommendation rationale.
+
+---
+
+## Part 1: Tauri Architecture
+
+### System Architecture
+
+```
+┌─────────────────────────────────────────────────┐
+│                 Frontend (WebView)               │
+│      React 18 + Vite 5 + Tailwind + shadcn/ui   │
+│              TypeScript UI Layer                 │
+├─────────────────────────────────────────────────┤
+│              Tauri IPC Bridge                    │
+│       invoke() / emit() / listen()               │
+├─────────────────────────────────────────────────┤
+│              Backend (Rust Core)                 │
+│  ┌───────────┐ ┌───────────┐ ┌────────────────┐ │
+│  │  Alarm    │ │  Audio    │ │   Storage      │ │
+│  │  Engine   │ │  Manager  │ │   (SQLite)     │ │
+│  ├───────────┤ ├───────────┤ ├────────────────┤ │
+│  │  Notif.   │ │  System   │ │   Config       │ │
+│  │  Manager  │ │  Tray     │ │   Manager      │ │
+│  ├───────────┤ ├───────────┤ ├────────────────┤ │
+│  │  Snooze   │ │  Power    │ │   Export /     │ │
+│  │  Tracker  │ │  Manager  │ │   Import       │ │
+│  └───────────┘ └───────────┘ └────────────────┘ │
+├─────────────────────────────────────────────────┤
+│             Operating System APIs                │
+│    macOS / Windows / Linux / iOS / Android        │
+└─────────────────────────────────────────────────┘
+```
+
+### Rust Backend Modules
+
+| Module | Responsibility | Key Crates / APIs |
+|--------|---------------|-------------------|
+| **Alarm Engine** | 1-second interval timer, time matching, missed alarm detection | `tokio`, `chrono` |
+| **Audio Manager** | Sound playback, volume ramp, looping, stop | `rodio`, Core Audio (macOS), AAudio (Android) |
+| **Notification Manager** | OS-native notifications for alarm firing, bedtime reminders | `tauri-plugin-notification` |
+| **Storage (SQLite)** | CRUD for alarms, groups, settings, snooze state, analytics events | `tauri-plugin-sql` (SQLite) |
+| **System Tray** | Menu bar icon, quick alarm toggle, next alarm display | `tauri-plugin-system-tray` |
+| **Config Manager** | Read/write settings table, theme preference, sound preferences | SQLite `settings` table |
+| **Snooze Tracker** | Active snooze state, countdown, auto-fire on expiry | SQLite `snooze_state` table |
+| **Power Manager** | Prevent sleep during alarm, wake from sleep | Platform power APIs |
+| **Export/Import** | JSON serialization, file dialog, merge/replace logic | `tauri-plugin-dialog`, `serde_json` |
+
+### IPC Command Registry
+
+All frontend ↔ backend communication uses Tauri's `invoke()` system.
+
+#### Alarm Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `create_alarm` | FE → BE | `CreateAlarmPayload` | `Alarm` |
+| `update_alarm` | FE → BE | `UpdateAlarmPayload` | `Alarm` |
+| `delete_alarm` | FE → BE | `{ id: string }` | `void` |
+| `get_alarms` | FE → BE | `void` | `Alarm[]` |
+| `toggle_alarm` | FE → BE | `{ id: string, enabled: boolean }` | `void` |
+
+#### Group Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `create_group` | FE → BE | `{ name: string }` | `AlarmGroup` |
+| `update_group` | FE → BE | `{ id: string, name: string }` | `AlarmGroup` |
+| `delete_group` | FE → BE | `{ id: string }` | `void` |
+| `get_groups` | FE → BE | `void` | `AlarmGroup[]` |
+| `toggle_group` | FE → BE | `{ id: string, enabled: boolean }` | `void` |
+
+#### Alarm Firing Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `dismiss_alarm` | FE → BE | `{ alarmId: string }` | `void` |
+| `snooze_alarm` | FE → BE | `{ alarmId: string, durationMin: number }` | `SnoozeState` |
+| `cancel_snooze` | FE → BE | `{ alarmId: string }` | `void` |
+| `get_snooze_state` | FE → BE | `void` | `SnoozeState[]` |
+
+#### System Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `get_settings` | FE → BE | `void` | `Settings` |
+| `update_setting` | FE → BE | `{ key: string, value: string }` | `void` |
+| `export_data` | FE → BE | `void` | `string` (file path) |
+| `import_data` | FE → BE | `{ mode: "merge" \| "replace" }` | `ImportResult` |
+| `get_next_alarm` | FE → BE | `void` | `NextAlarmInfo \| null` |
+
+#### Events (Backend → Frontend)
+
+| Event | Direction | Payload | Purpose |
+|-------|-----------|---------|---------|
+| `alarm-fired` | BE → FE | `{ alarmId: string, alarm: Alarm }` | Trigger alarm overlay UI |
+| `snooze-expired` | BE → FE | `{ alarmId: string }` | Re-trigger alarm after snooze |
+| `missed-alarm` | BE → FE | `{ alarmId: string, scheduledTime: string }` | Show missed alarm notification |
+| `theme-changed` | BE → FE | `{ theme: "light" \| "dark" }` | OS appearance change detected |
+| `tray-action` | BE → FE | `{ action: string, alarmId?: string }` | User clicked tray menu item |
+
+### Plugin Integration
+
+| Plugin | Version | Purpose | Platform |
+|--------|---------|---------|----------|
+| `tauri-plugin-sql` | 2.x | SQLite database | All |
+| `tauri-plugin-notification` | 2.x | OS notifications | All |
+| `tauri-plugin-dialog` | 2.x | File open/save dialogs | Desktop |
+| `tauri-plugin-shell` | 2.x | Open URLs, system commands | Desktop |
+| `tauri-plugin-updater` | 2.x | Auto-update mechanism | Desktop |
+| `tauri-plugin-os` | 2.x | OS detection, platform info | All |
+| `tauri-plugin-process` | 2.x | App lifecycle, restart | All |
+
+### Build Pipeline
+
+| Stage | Tool | Output |
+|-------|------|--------|
+| Frontend build | `vite build` | Optimized HTML/CSS/JS bundle |
+| Rust compile | `cargo build --release` | Native binary |
+| Bundle | `tauri build` | Platform installer |
+| macOS | `tauri build --target universal-apple-darwin` | `.dmg` / `.app` |
+| Windows | `tauri build --target x86_64-pc-windows-msvc` | `.msi` / `.exe` |
+| Linux | `tauri build --target x86_64-unknown-linux-gnu` | `.deb` / `.AppImage` |
+| iOS | `tauri ios build` | `.ipa` |
+| Android | `tauri android build` | `.apk` / `.aab` |
+
+### Code Signing & Distribution
+
+| Platform | Signing | Distribution |
+|----------|---------|-------------|
+| macOS | Apple Developer ID + notarization | DMG, Homebrew Cask |
+| Windows | Code signing certificate (EV recommended) | MSI, winget |
+| Linux | GPG signing | APT repo, Flathub, Snap |
+| iOS | Apple Developer Program | App Store |
+| Android | Keystore signing | Google Play, F-Droid |
+
+### Security Model
+
+| Layer | Protection |
+|-------|-----------|
+| IPC permissions | `tauri.conf.json` allowlist — only declared commands accessible |
+| File system | Scoped access — app data directory only |
+| Network | No outbound by default — explicit allowlist for update checks |
+| Rust memory | No buffer overflows, use-after-free, or data races |
+| SQLite | Parameterized queries — no SQL injection |
+| Updates | Signed update manifests — no tampering |
+
+---
+
+## Part 2: Cross-Platform Framework Comparison
+
+### Overview Matrix
+
+| Criterion | **Tauri 2.x** | **Electron** | **Wails** | **Flutter** | **Go + CEF** | **Fyne** |
+|-----------|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Backend Language** | Rust | JavaScript/Node | Go | Dart | Go | Go |
+| **Frontend** | Web (React/Vue) | Web (React/Vue) | Web (React/Vue) | Dart widgets | Web (React/Vue) | Go widgets |
+| **macOS** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Windows** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Linux** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **iOS** | ✅ (v2) | ❌ | ❌ | ✅ | ❌ | ⚠️ Basic |
+| **Android** | ✅ (v2) | ❌ | ❌ | ✅ | ❌ | ⚠️ Basic |
+| **Bundle Size** | ~3–10 MB | ~150–300 MB | ~8–15 MB | ~15–30 MB | ~150+ MB | ~10–20 MB |
+| **Memory Usage** | ~30–80 MB | ~150–500 MB | ~40–100 MB | ~80–150 MB | ~200+ MB | ~30–60 MB |
+| **Native Feel** | High (OS WebView) | Medium (Chromium) | High (OS WebView) | Custom rendering | Medium (Chromium) | Custom rendering |
+| **Ecosystem Maturity** | Growing (stable v2) | Very mature | Moderate | Very mature | Low-level | Moderate |
+| **System Tray** | ✅ Built-in | ✅ | ✅ | ⚠️ Plugin | Manual | ⚠️ Limited |
+| **OS Notifications** | ✅ Native plugin | ✅ (node) | ✅ | ✅ | Manual | ⚠️ Limited |
+| **Auto-Update** | ✅ Built-in plugin | ✅ (electron-updater) | ⚠️ Manual | ⚠️ Manual | ❌ | ❌ |
+| **Code Signing** | ✅ Supported | ✅ Supported | ✅ Supported | ✅ Supported | Manual | ❌ |
+| **Alarm Reliability** | ★★★★★ | ★★★☆☆ | ★★★★☆ | ★★★★☆ | ★★★☆☆ | ★★★☆☆ |
+
+### Detailed Pros & Cons
+
+#### Tauri 2.x (Rust + Web Frontend) — ✅ RECOMMENDED
+
+| Pros | Cons |
+|------|------|
+| Smallest bundle size (~3–10 MB) | Rust learning curve for backend logic |
+| Lowest memory footprint (~30–80 MB) | WebView rendering inconsistencies across OS |
+| Full mobile support in v2 (iOS + Android) | Mobile plugin ecosystem still maturing |
+| Uses OS-native WebView (no bundled browser) | Dependent on OS WebView quality (Safari/WebKit on macOS) |
+| Rust memory safety — no crashes, no data races | Debugging Rust requires separate tooling (rust-analyzer, LLDB) |
+| Existing React/Vite/Tailwind frontend reusable | Smaller community than Electron (but growing fast) |
+| Rich plugin ecosystem (notifications, tray, SQL, updater) | Some advanced native APIs need custom Rust code |
+| Background threads in Rust — reliable alarm timers | Compiling Rust is slower than JS/Go |
+| Granular IPC permission model — strong security | — |
+| Active development, backed by CrabNebula | — |
+
+#### Electron (JavaScript/Node + Chromium)
+
+| Pros | Cons |
+|------|------|
+| Most mature ecosystem, largest community | Massive bundle (~150–300 MB per app) |
+| Consistent rendering (ships own Chromium) | Extremely high memory usage (~150–500 MB) |
+| Easiest for web developers (JS/Node everywhere) | **No mobile support** — desktop only |
+| Battle-tested: VS Code, Slack, Discord, Figma | Ships entire Chromium = slow cold startup |
+| Vast npm ecosystem | Significant battery drain on laptops |
+| Excellent documentation and tooling | Background timers throttled by Chromium (alarm reliability risk) |
+| electron-builder for packaging/signing | Over-engineered for a simple alarm app |
+| — | Security concerns (Node.js in renderer process) |
+
+#### Wails (Go + Web Frontend)
+
+| Pros | Cons |
+|------|------|
+| Go backend — simple, fast, excellent stdlib | **No mobile support** — desktop only |
+| Small bundles (~8–15 MB) | Smaller ecosystem than Tauri/Electron |
+| Uses OS-native WebView | Less mature plugin system |
+| Clean IPC model | Fewer contributors and community resources |
+| Familiar for Go developers | WebView rendering inconsistencies |
+| Simple build pipeline | No built-in auto-update mechanism |
+| — | No system tray plugin (manual implementation) |
+
+#### Flutter (Dart)
+
+| Pros | Cons |
+|------|------|
+| Best mobile support (iOS + Android, very mature) | **Requires full frontend rewrite in Dart** (no React reuse) |
+| Beautiful custom UI via Skia rendering | Dart language — not widely adopted outside Flutter |
+| Single codebase: desktop + mobile | Custom rendering = not truly native OS look & feel |
+| Google-backed, very active community | Desktop support less mature than mobile |
+| Hot reload for rapid development | Larger bundles than Tauri (~15–30 MB) |
+| Material Design + Cupertino widgets built-in | System tray support via community plugins only |
+| — | Background execution more complex than Rust threads |
+
+#### Go + CEF (Chromium Embedded Framework)
+
+| Pros | Cons |
+|------|------|
+| Full Chromium rendering control | Massive bundle (~150+ MB, same as Electron) |
+| Go backend performance | **No mobile support** |
+| Flexible embedding options | Complex build and packaging pipeline |
+| — | Very high memory usage (~200+ MB) |
+| — | Tiny community, minimal documentation |
+| — | Manual implementation needed for tray, notifications, updates |
+| — | Chromium throttles background timers |
+
+#### Fyne (Pure Go)
+
+| Pros | Cons |
+|------|------|
+| Pure Go — no web tech, no JavaScript | Custom widget look — **not native appearance** |
+| Small binary, low memory (~30–60 MB) | Very limited mobile support |
+| Consistent UI across platforms | Smallest ecosystem of all options |
+| Simple API for basic apps | Limited system tray support |
+| — | No auto-update mechanism |
+| — | Far fewer UI widgets than web-based frameworks |
+| — | No audio library integration |
+
+### Alarm App–Specific Scoring
+
+| Factor | Tauri | Electron | Wails | Flutter | Go+CEF | Fyne |
+|--------|:-----:|:--------:|:-----:|:-------:|:------:|:----:|
+| Platform coverage (5 OS) | 10 | 6 | 6 | 10 | 6 | 7 |
+| Frontend reuse (React) | 10 | 10 | 10 | 0 | 10 | 0 |
+| Bundle size | 10 | 2 | 8 | 7 | 2 | 8 |
+| Memory efficiency | 10 | 3 | 8 | 6 | 2 | 9 |
+| Alarm timer reliability | 10 | 5 | 8 | 7 | 5 | 7 |
+| Native integration (tray, notif) | 9 | 8 | 7 | 6 | 4 | 4 |
+| Audio playback control | 9 | 7 | 7 | 7 | 7 | 3 |
+| Ecosystem & community | 7 | 10 | 5 | 9 | 2 | 4 |
+| Security model | 10 | 5 | 7 | 8 | 4 | 6 |
+| **Total (out of 90)** | **85** | **56** | **66** | **60** | **42** | **48** |
+
+### Recommendation Summary
+
+| Rank | Framework | Score | Best For |
+|------|-----------|-------|----------|
+| 🥇 1st | **Tauri 2.x** | 85/90 | This project — full platform coverage, React reuse, smallest footprint, reliable Rust timers |
+| 🥈 2nd | Wails | 66/90 | Desktop-only Go projects, if mobile not needed |
+| 🥉 3rd | Flutter | 60/90 | Mobile-first projects willing to rewrite UI in Dart |
+| 4th | Electron | 56/90 | Teams requiring maximum ecosystem maturity, desktop-only |
+| 5th | Fyne | 48/90 | Simple Go utility apps, no audio/tray needs |
+| 6th | Go + CEF | 42/90 | Niche use cases requiring full Chromium control |
+
+**Tauri 2.x wins decisively** for the Alarm App because it uniquely combines: React frontend reuse, all 5 target platforms, smallest resource footprint, and Rust's reliable background threading for alarm timers.
+
+---
+
+## Rollout Strategy
+
+| Phase | Platform | Scope | Timeline |
+|-------|----------|-------|----------|
+| Phase 1 | macOS desktop | Full feature set | First release |
+| Phase 2 | Windows + Linux desktop | Adapt platform-specific code | Second release |
+| Phase 3 | iOS + Android mobile | Mobile-specific UI, haptics, sensors | Third release |
+
+---
+
+## Cross-References
+
+| Reference | Location |
+|-----------|----------|
+| Data Model | `./01-data-model.md` |
+| Design System | `./02-design-system.md` |
+| File Structure | `./03-file-structure.md` |
+| Platform Constraints | `./04-platform-constraints.md` |
+| Platform Strategy (legacy) | `./05-platform-strategy.md` |
+| Alarm Firing | `../02-features/03-alarm-firing.md` |
+| Sound & Vibration | `../02-features/05-sound-and-vibration.md` |
+| Smart Features | `../02-features/12-smart-features.md` |
