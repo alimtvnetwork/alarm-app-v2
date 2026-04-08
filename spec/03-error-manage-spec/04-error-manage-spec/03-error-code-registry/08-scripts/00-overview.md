@@ -38,8 +38,6 @@ Error code registry automation scripts.
 |------|
 | 99-consistency-report.md |
 
-
-| 99-consistency-report.md |
 ---
 
 ## Cross-References

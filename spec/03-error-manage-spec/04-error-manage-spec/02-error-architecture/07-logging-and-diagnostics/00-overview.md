@@ -40,9 +40,6 @@ Logging infrastructure and diagnostic tooling.
 | 02-session-based-logging.md |
 | 99-consistency-report.md |
 
-| 01-react-execution-logger.md |
-| 02-session-based-logging.md |
-| 99-consistency-report.md |
 ---
 
 ## Cross-References

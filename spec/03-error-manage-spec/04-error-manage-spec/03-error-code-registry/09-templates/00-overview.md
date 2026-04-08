@@ -39,8 +39,6 @@ Error code registry templates.
 | 01-error-codes-template.md |
 | 99-consistency-report.md |
 
-| 01-error-codes-template.md |
-| 99-consistency-report.md |
 ---
 
 ## Cross-References

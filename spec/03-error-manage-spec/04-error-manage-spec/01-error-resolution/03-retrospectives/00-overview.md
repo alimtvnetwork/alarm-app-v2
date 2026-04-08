@@ -42,11 +42,6 @@ Post-incident retrospectives and lessons learned.
 | 04-activation-endpoint-mismatch.md |
 | 99-consistency-report.md |
 
-| 01-health-endpoint-mismatch.md |
-| 02-retry-debounce-dedup-fixes.md |
-| 03-zip-finalization-before-return.md |
-| 04-activation-endpoint-mismatch.md |
-| 99-consistency-report.md |
 ---
 
 ## Cross-References

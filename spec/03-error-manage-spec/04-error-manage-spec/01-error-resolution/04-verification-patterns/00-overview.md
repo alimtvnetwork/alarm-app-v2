@@ -39,8 +39,6 @@ Verification and validation patterns.
 | 01-frontend-backend-sync.md |
 | 99-consistency-report.md |
 
-| 01-frontend-backend-sync.md |
-| 99-consistency-report.md |
 ---
 
 ## Cross-References
