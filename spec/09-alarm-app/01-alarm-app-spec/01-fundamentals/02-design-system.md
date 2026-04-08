@@ -93,5 +93,5 @@ Defines visual design tokens, color palettes, typography, and component styling 
 
 | Reference | Location |
 |-----------|----------|
-| Global Design System | `../../06-design-system/00-overview.md` |
+| Global Design System | `../../../06-design-system/00-overview.md` |
 | Theme Feature | `../02-features/09-theme-system.md` |
