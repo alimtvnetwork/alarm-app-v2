@@ -26,7 +26,7 @@ Documents platform-specific constraints and mitigations for the Alarm App as a c
 | Issue | Detail |
 |-------|--------|
 | **Problem** | The alarm engine must run reliably even when the app window is minimized or unfocused. |
-| **Mitigation** | Rust backend runs a dedicated background thread with a 1-second check interval. Not subject to browser tab throttling. |
+| **Mitigation** | Rust backend runs a dedicated background thread with a **30-second check interval**. Not subject to browser tab throttling. Snooze expiry uses exact `tokio::time::sleep_until()` — no polling. |
 | **macOS** | App remains active via `LSBackgroundOnly` or system tray presence. May require "Background App Refresh" entitlement for future mobile. |
 | **Future (mobile)** | iOS/Android require platform-specific background task APIs (BGTaskScheduler, AlarmManager). |
 
