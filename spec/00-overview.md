@@ -1,7 +1,7 @@
 # Specification Root
 
 **Version:** 1.0.0  
-**Updated:** 2026-04-05  
+**Updated:** 2026-04-08  
 **AI Confidence:** Production-Ready  
 **Ambiguity:** None
 
@@ -25,6 +25,7 @@ Root index for the entire specification tree. Each top-level folder contains a d
 | 06 | [Design System](./06-design-system/00-overview.md) | Theme variables, typography, spacing, and component patterns |
 | 07 | [Docs Viewer UI](./07-docs-viewer-ui/00-overview.md) | Specification viewer React application |
 | 08 | [Code Block System](./08-code-block-system/00-overview.md) | Rich code block rendering — syntax highlighting, interactions, styling |
+| 09 | [Alarm App](./09-alarm-app/00-overview.md) | Warm, minimal alarm clock web app — alarms, groups, themes, sleep tools |
 
 ---
 
