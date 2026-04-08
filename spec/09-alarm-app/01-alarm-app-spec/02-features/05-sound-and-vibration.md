@@ -1,6 +1,6 @@
 # Sound & Vibration
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -10,17 +10,17 @@
 
 ## Keywords
 
-`sound`, `audio`, `vibration`, `volume`, `fade-in`, `tone`, `native`
+`sound`, `audio`, `vibration`, `volume`, `fade-in`, `tone`, `native`, `custom-sound`
 
 ---
 
 ## Description
 
-Each alarm can have a different alarm sound from a built-in library. Volume can increase gradually (fade-in) for a gentler wake-up. Vibration is independently toggleable per alarm.
+Each alarm has its own sound selection — either from the built-in library (8-10 tones) or a custom local audio file (`.mp3`, `.wav`, `.ogg`). Volume can increase gradually (fade-in). Vibration is independently toggleable per alarm on supported platforms.
 
 ---
 
-## Sound Library
+## Sound Library (Built-In)
 
 | ID | Name | Category |
 |----|------|----------|
@@ -32,6 +32,19 @@ Each alarm can have a different alarm sound from a built-in library. Volume can 
 | `rain-gentle` | Gentle Rain | Nature |
 | `birds-morning` | Morning Birds | Nature |
 | `ocean-wave` | Ocean Wave | Nature |
+| `urgent-siren` | Urgent Siren | Digital |
+| `soft-piano` | Soft Piano | Gentle |
+
+---
+
+## Custom Sound Files
+
+- User can select any local `.mp3`, `.wav`, or `.ogg` file as an alarm sound
+- File selection via `tauri-plugin-dialog` open dialog (filter: audio files)
+- IPC command: `invoke("set_custom_sound", { alarmId, filePath })`
+- The file path is stored in `soundFile` field on the alarm
+- Built-in sounds use a key (e.g., `"classic-beep"`); custom sounds store the absolute file path
+- Preview plays the selected file via Rust audio backend before confirming
 
 ---
 
@@ -59,7 +72,9 @@ Each alarm can have a different alarm sound from a built-in library. Volume can 
 ## Acceptance Criteria
 
 - [ ] Sound preview button plays selected sound briefly (via Rust audio backend)
-- [ ] Each alarm stores its own sound selection
+- [ ] Each alarm stores its own sound selection (built-in key or file path)
+- [ ] User can select a custom local audio file via native file dialog
+- [ ] Custom sound file path persists in SQLite
 - [ ] Gradual volume works via native audio volume ramp
 - [ ] Vibration fires on supported platforms (mobile) when enabled
 - [ ] Vibration toggle hidden on desktop platforms
@@ -72,3 +87,4 @@ Each alarm can have a different alarm sound from a built-in library. Volume can 
 |-----------|----------|
 | Alarm Firing | `./03-alarm-firing.md` |
 | Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
+| Data Model | `../01-fundamentals/01-data-model.md` |

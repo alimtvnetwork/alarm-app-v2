@@ -1,6 +1,6 @@
 # Features
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Status:** Active  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
@@ -45,11 +45,13 @@ All feature specifications for the Alarm App (Tauri 2.x native application), org
 | 07 | `07-alarm-groups.md` | P1 | Group CRUD, master toggle, SQLite persistence |
 | 08 | `08-clock-display.md` | P0 | Analog SVG + digital clock, countdown |
 | 09 | `09-theme-system.md` | P0 | Dark/light/system theme (OS appearance events) |
-| 10 | `10-export-import.md` | P1 | JSON export/import via native file dialog |
+| 10 | `10-export-import.md` | P1 | JSON/CSV/iCal export/import via native file dialog |
 | 11 | `11-sleep-wellness.md` | P2 | Bedtime reminder, sleep calculator, mood logging, native audio |
 | 12 | `12-smart-features.md` | P3 | System tray, location alarms, webhooks, native APIs |
-| 13 | `13-analytics.md` | P3 | SQLite alarm_events table, wake-up history, trends |
+| 13 | `13-analytics.md` | P2/P3 | Alarm history log (filterable, CSV export), analytics reports |
 | 14 | `14-personalization.md` | P2/P3 | Themes, quotes, streak tracker, native music integration |
+| 15 | `15-keyboard-shortcuts.md` | P1 | Full keyboard shortcut system (global + in-app) |
+| 16 | `16-accessibility-and-nfr.md` | P0/P1 | WCAG 2.1 AA, performance budgets, i18n, offline-first |
 | 99 | `99-consistency-report.md` | — | Folder health check |
 
 ---

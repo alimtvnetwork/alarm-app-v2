@@ -1,85 +1,118 @@
-# Analytics
+# Analytics & Alarm History
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** Low  
-**Priority:** P3 — Future
+**Priority:** P2 (History) / P3 (Reports)
 
 ---
 
 ## Keywords
 
-`analytics`, `history`, `snooze`, `trends`, `reports`, `statistics`
+`analytics`, `history`, `log`, `snooze`, `trends`, `reports`, `statistics`, `filter`, `csv-export`
 
 ---
 
 ## Description
 
-Tracking and visualization of wake-up patterns, snooze habits, and sleep duration trends.
+Persistent log of every alarm event (fired, snoozed, dismissed, missed) with filtering, search, and CSV export. Plus visualization of wake-up patterns, snooze habits, and sleep trends.
 
 ---
 
-## Features
+## Alarm History Log (P2)
 
-### Wake-Up History (P3)
+### Features
+
+- Persistent log of every alarm event stored in `alarm_events` SQLite table
+- Each event records: type, fired time, dismissed time, snooze count, challenge type/time
+- **Filterable by:**
+  - Date range (start/end date pickers)
+  - Alarm group
+  - Event type (fired, snoozed, dismissed, missed)
+  - Specific alarm
+- **Sortable by:** date (newest/oldest), alarm label, snooze count
+- **Exportable as CSV** via native save dialog
+
+### IPC Commands
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `get_alarm_history` | `{ filter: HistoryFilter }` | `AlarmEvent[]` |
+| `export_history_csv` | `{ filter: HistoryFilter }` | `string` (file path) |
+| `clear_history` | `{ before?: string }` | `{ deleted: number }` |
+
+### HistoryFilter
+
+```typescript
+interface HistoryFilter {
+  startDate?: string;    // ISO 8601
+  endDate?: string;      // ISO 8601
+  groupId?: string;
+  alarmId?: string;
+  eventType?: "fired" | "snoozed" | "dismissed" | "missed";
+  sortBy?: "date" | "label" | "snoozeCount";
+  sortOrder?: "asc" | "desc";
+}
+```
+
+---
+
+## Analytics Reports (P3)
+
+### Wake-Up History
 
 - Calendar/timeline showing every alarm fired
 - Data: fire time, dismiss time, snooze count, challenge completion time
 - Filter by date range, alarm, or group
 
-### Snooze Frequency Report (P3)
+### Snooze Frequency Report
 
 - Charts: snooze frequency, average duration, worst offender alarms
 - Trends over time (weekly/monthly)
 - Goal: help users break snooze habits
 
-### Sleep Duration Trends (P3)
+### Sleep Duration Trends
 
 - If bedtime reminders are used, calculate nightly sleep duration
 - Weekly/monthly averages with trend lines
 - Highlight unusually short or long nights
 
-### Challenge Performance Stats (P3)
+### Challenge Performance Stats
 
 - Average solve time per challenge type
 - Accuracy rate, improvement trends
-- Leaderboard-style gamification
 
 ---
 
 ## Data Storage
 
-Analytics data stored in a dedicated SQLite table:
-
 ```sql
 CREATE TABLE alarm_events (
   id TEXT PRIMARY KEY,
   alarm_id TEXT REFERENCES alarms(id) ON DELETE SET NULL,
-  fired_at TEXT NOT NULL,         -- ISO 8601
-  dismissed_at TEXT,              -- ISO 8601
+  type TEXT NOT NULL,               -- fired|snoozed|dismissed|missed
+  fired_at TEXT NOT NULL,           -- ISO 8601
+  dismissed_at TEXT,                -- ISO 8601
   snooze_count INTEGER NOT NULL DEFAULT 0,
   challenge_type TEXT,
   challenge_solve_time_sec REAL,
-  sleep_quality INTEGER,          -- 1-5
-  mood TEXT
+  sleep_quality INTEGER,            -- 1-5
+  mood TEXT,
+  timestamp TEXT NOT NULL            -- ISO 8601 event occurrence
 );
 ```
 
-TypeScript interface (frontend):
-```typescript
-interface AlarmEvent {
-  id: string;
-  alarmId: string;
-  firedAt: string;       // ISO 8601
-  dismissedAt: string;   // ISO 8601
-  snoozeCount: number;
-  challengeType?: string;
-  challengeSolveTimeSec?: number;
-  sleepQuality?: number; // 1-5
-  mood?: string;
-}
-```
+---
+
+## Acceptance Criteria
+
+- [ ] All alarm events (fired, snoozed, dismissed, missed) logged automatically
+- [ ] History view filterable by date range, group, event type, and alarm
+- [ ] History sortable by date, label, snooze count
+- [ ] History exportable as CSV via native save dialog
+- [ ] History clearable (all or before a date)
+- [ ] Analytics reports show snooze trends and wake-up patterns
 
 ---
 
@@ -91,3 +124,4 @@ interface AlarmEvent {
 | Snooze System | `./04-snooze-system.md` |
 | Dismissal Challenges | `./06-dismissal-challenges.md` |
 | Data Model | `../01-fundamentals/01-data-model.md` |
+| Export/Import | `./10-export-import.md` |
