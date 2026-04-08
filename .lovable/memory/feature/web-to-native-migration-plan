@@ -1,0 +1,45 @@
+---
+name: Web-to-Native Migration Plan
+description: Atomic task plan to migrate Alarm App spec from web app to cross-platform native (Tauri 2.x)
+type: feature
+---
+
+## Atomic Task Plan — Web-to-Native Migration
+
+### Phase 1: Core Spec Updates (P0) ✅ DONE
+1. ✅ Update `spec/09-alarm-app/00-overview.md` — keywords, purpose, native references
+2. ✅ Update `spec/09-alarm-app/01-alarm-app-spec/00-overview.md` — tech stack, data model, P3
+3. ✅ Rewrite `04-web-api-constraints.md` → `04-platform-constraints.md` — native OS constraints
+4. ✅ Update `01-data-model.md` — localStorage → SQLite schema, tables
+5. ✅ Update `03-file-structure.md` — add src-tauri/, Rust modules, IPC flow
+6. ✅ Update `01-fundamentals/00-overview.md` — keywords, purpose, doc inventory
+
+### Phase 2: Feature Spec Updates (P1)
+7. Update `02-features/03-alarm-firing.md` — setInterval → Rust thread, Web Audio → native, Notification API → OS
+8. Update `02-features/05-sound-and-vibration.md` — Web Audio API → native, navigator.vibrate → native haptics
+9. Update `02-features/04-snooze-system.md` — localStorage → SQLite, "page refresh" → "app restart"
+10. Update `02-features/01-alarm-crud.md` — localStorage references
+11. Update `02-features/12-smart-features.md` — PWA → System Tray, Web Speech → native, browser → native
+
+### Phase 3: Secondary Feature Spec Updates (P2)
+12. Update `02-features/06-dismissal-challenges.md` — DeviceMotionEvent → native accelerometer
+13. Update `02-features/07-alarm-groups.md` — localStorage references
+14. Update `02-features/08-clock-display.md` — localStorage reference
+15. Update `02-features/09-theme-system.md` — localStorage reference
+16. Update `02-features/13-analytics.md` — localStorage → SQLite
+
+### Phase 4: New Documents (P1)
+17. Create `01-fundamentals/06-tauri-architecture.md` — Rust backend, IPC, plugin system, build pipeline
+18. Update `02-features/00-overview.md` if any feature descriptions change
+
+### Phase 5: Reference & Cleanup (P3)
+19. Update `reference/alarm-app-features.md` — "browser support varies" → "platform support varies"
+20. Update `reference/alarm-clock-features.md` — review for browser references
+21. Run full cross-reference validation across all 30+ files
+22. Update all consistency reports
+
+### Status
+- Phase 1 completed: All 6 core spec files updated for native/Tauri
+- Old `04-web-api-constraints.md` deleted, replaced by `04-platform-constraints.md`
+- Platform strategy doc: `01-fundamentals/05-platform-strategy.md`
+- Issues doc: `03-app-issues/01-web-to-native-migration.md`
