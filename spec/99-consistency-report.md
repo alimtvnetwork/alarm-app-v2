@@ -1,7 +1,7 @@
 # Consistency Report: Spec Root
 
-**Version:** 1.0.0  
-**Generated:** 2026-04-05  
+**Version:** 1.1.0  
+**Generated:** 2026-04-08  
 **Health Score:** 100/100 (A+)
 
 ---
@@ -29,6 +29,8 @@
 | `05-seedable-config-architecture/` | ✅ | ✅ |
 | `06-design-system/` | ✅ | ✅ |
 | `07-docs-viewer-ui/` | ✅ | ✅ |
+| `08-code-block-system/` | ✅ | ✅ |
+| `09-alarm-app/` | ✅ | ✅ |
 
 ---
 
@@ -45,3 +47,4 @@
 | Date | Version | Action |
 |------|---------|--------|
 | 2026-04-05 | 1.0.0 | Initial root consistency report |
+| 2026-04-08 | 1.1.0 | Added `09-alarm-app/` module |
