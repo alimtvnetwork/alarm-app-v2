@@ -1,6 +1,6 @@
 # Clock Display
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -34,7 +34,7 @@ The home screen features a live analog clock (SVG) with smooth-animated hands an
 
 - `HH:MM:SS` format using Outfit font at 4rem
 - Current date and day of week below in Figtree
-- 12/24-hour format toggle (persisted to localStorage)
+- 12/24-hour format toggle (persisted to `settings` SQLite table)
 
 ---
 
@@ -53,7 +53,7 @@ The home screen features a live analog clock (SVG) with smooth-animated hands an
 - [ ] Digital time updates every second
 - [ ] Date and day of week displayed
 - [ ] Countdown shows time to next alarm
-- [ ] 12/24-hour toggle persists
+- [ ] 12/24-hour toggle persists across app restarts
 
 ---
 

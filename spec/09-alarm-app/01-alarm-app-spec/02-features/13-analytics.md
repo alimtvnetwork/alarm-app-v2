@@ -1,6 +1,6 @@
 # Analytics
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -50,9 +50,26 @@ Tracking and visualization of wake-up patterns, snooze habits, and sleep duratio
 
 ## Data Storage
 
-All analytics data stored in localStorage under `alarm-analytics`:
+Analytics data stored in a dedicated SQLite table:
+
+```sql
+CREATE TABLE alarm_events (
+  id TEXT PRIMARY KEY,
+  alarm_id TEXT REFERENCES alarms(id) ON DELETE SET NULL,
+  fired_at TEXT NOT NULL,         -- ISO 8601
+  dismissed_at TEXT,              -- ISO 8601
+  snooze_count INTEGER NOT NULL DEFAULT 0,
+  challenge_type TEXT,
+  challenge_solve_time_sec REAL,
+  sleep_quality INTEGER,          -- 1-5
+  mood TEXT
+);
+```
+
+TypeScript interface (frontend):
 ```typescript
 interface AlarmEvent {
+  id: string;
   alarmId: string;
   firedAt: string;       // ISO 8601
   dismissedAt: string;   // ISO 8601
@@ -73,3 +90,4 @@ interface AlarmEvent {
 | Sleep & Wellness | `./11-sleep-wellness.md` |
 | Snooze System | `./04-snooze-system.md` |
 | Dismissal Challenges | `./06-dismissal-challenges.md` |
+| Data Model | `../01-fundamentals/01-data-model.md` |

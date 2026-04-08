@@ -1,6 +1,6 @@
 # Dismissal Challenges
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -10,7 +10,7 @@
 
 ## Keywords
 
-`challenge`, `dismiss`, `math`, `shake`, `typing`, `anti-oversleep`
+`challenge`, `dismiss`, `math`, `shake`, `typing`, `anti-oversleep`, `native`
 
 ---
 
@@ -43,7 +43,10 @@ Optional challenges that must be completed before an alarm can be dismissed. Pre
 
 - Shake device 20–50 times (configurable)
 - Progress bar shows shake count
-- Uses `DeviceMotionEvent` — feature-detected
+- **Desktop:** Not available — option hidden (no accelerometer)
+- **Mobile (iOS):** CoreMotion accelerometer data via native API
+- **Mobile (Android):** SensorManager accelerometer via native API
+- Feature-detected at runtime; option hidden on unsupported platforms
 
 ### Typing Challenge (P2)
 
@@ -55,12 +58,15 @@ Optional challenges that must be completed before an alarm can be dismissed. Pre
 
 - Register a QR code location (bathroom mirror, kitchen)
 - Scan to dismiss — forces physical movement
-- Requires camera access
+- **Desktop:** Uses webcam via native camera access
+- **Mobile:** Uses native camera API
 
 ### Step Counter (P3)
 
 - Walk 20–50 steps before dismissal
-- Uses `DeviceMotionEvent` for step estimation
+- **Desktop:** Not available — option hidden
+- **Mobile (iOS):** CMPedometer via CoreMotion
+- **Mobile (Android):** Step detector sensor via SensorManager
 - Real-time progress display
 
 ---
@@ -85,3 +91,4 @@ interface AlarmChallenge {
 |-----------|----------|
 | Alarm Firing | `./03-alarm-firing.md` |
 | Alarm CRUD | `./01-alarm-crud.md` |
+| Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
