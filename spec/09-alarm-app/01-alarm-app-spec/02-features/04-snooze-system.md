@@ -1,6 +1,6 @@
 # Snooze System
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -39,17 +39,18 @@ interface SnoozeState {
 }
 ```
 
-Stored in localStorage under `snooze-state`. Cleared on dismiss.
+Stored in the `snooze_state` SQLite table. Cleared on dismiss.
 
 ---
 
 ## Behavior
 
-1. User taps "Snooze" → audio stops, overlay closes
-2. `snoozeCount` increments, `nextFireTime` set to now + duration
-3. Firing loop checks `snooze-state` alongside regular alarms
-4. When snooze limit reached, "Snooze" button is hidden — only "Dismiss" remains
-5. Remaining snooze count displayed: "Snooze (2 remaining)"
+1. User taps "Snooze" → frontend calls `invoke("snooze_alarm", { alarmId, duration })`
+2. Rust backend stops audio, writes snooze state to SQLite
+3. `snoozeCount` increments, `snooze_until` set to now + duration
+4. Rust alarm engine checks `snooze_state` table alongside regular alarms
+5. When snooze limit reached, "Snooze" button is hidden — only "Dismiss" remains
+6. Remaining snooze count displayed: "Snooze (2 remaining)"
 
 ---
 
@@ -58,8 +59,8 @@ Stored in localStorage under `snooze-state`. Cleared on dismiss.
 - [ ] Snooze delays alarm by configured duration
 - [ ] Snooze count displayed on overlay
 - [ ] Snooze button hidden when limit reached
-- [ ] Snooze state persists across page refresh
-- [ ] Dismissing clears snooze state
+- [ ] Snooze state persists across app restart
+- [ ] Dismissing clears snooze state from SQLite
 
 ---
 
