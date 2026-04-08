@@ -1,6 +1,6 @@
 # Export / Import
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -10,65 +10,95 @@
 
 ## Keywords
 
-`export`, `import`, `json`, `backup`, `merge`, `replace`, `native`, `file-dialog`
+`export`, `import`, `json`, `csv`, `ical`, `ics`, `backup`, `merge`, `replace`, `native`, `file-dialog`, `duplicate-handling`
 
 ---
 
 ## Description
 
-Users can export all alarms and groups as a JSON file for backup, and import from a JSON file to restore or transfer data. Uses native file dialogs via Tauri (not browser download/upload).
+Users can export alarms and groups in multiple formats (JSON, CSV, iCal) and import from any supported format. Uses native file dialogs via Tauri. Includes duplicate handling, schema validation, and import preview.
+
+---
+
+## Supported Formats
+
+| Format | Import | Export | Notes |
+|--------|--------|--------|-------|
+| JSON | ✅ | ✅ | Primary format. Full fidelity — all fields preserved. |
+| CSV | ✅ | ✅ | Flat format for spreadsheet users. One row per alarm. |
+| iCal (.ics) | ✅ | ✅ | Interop with Google Calendar, Apple Calendar, Outlook. |
 
 ---
 
 ## Native Implementation
 
-| Aspect | Web (Previous) | Native (Tauri) |
-|--------|---------------|----------------|
-| Export | Blob download via anchor tag | `tauri-plugin-dialog` save dialog → Rust writes file |
-| Import | `<input type="file">` | `tauri-plugin-dialog` open dialog → Rust reads & validates |
-| Data source | localStorage | SQLite database |
+| Aspect | Implementation |
+|--------|---------------|
+| Export | `tauri-plugin-dialog` save dialog → Rust serializes & writes file |
+| Import | `tauri-plugin-dialog` open dialog → Rust reads, validates & applies |
+| Data source | SQLite database |
 
 ### IPC Commands
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `export_data` | `void` | `string` (saved file path) |
-| `import_data` | `{ mode: "merge" \| "replace" }` | `ImportResult` |
-
-### Rust Backend Flow
-
-**Export:**
-1. Query all rows from `alarms` and `alarm_groups` tables
-2. Serialize to JSON with `serde_json`
-3. Open native save dialog (`tauri-plugin-dialog`)
-4. Write file to user-selected path
-5. Return file path to frontend
-
-**Import:**
-1. Open native file dialog (filter: `*.json`)
-2. Read and parse file with `serde_json`
-3. Validate against expected schema
-4. On valid: apply merge or replace mode
-5. Return `ImportResult { imported: usize, skipped: usize, errors: Vec<String> }`
+| `export_data` | `{ format: "json" \| "csv" \| "ics", scope: "all" \| "selected", alarmIds?: string[] }` | `string` (saved file path) |
+| `import_data` | `{ mode: "merge" \| "replace" }` | `ImportPreview` |
+| `confirm_import` | `{ previewId: string, mode: "merge" \| "replace", duplicateAction: "skip" \| "overwrite" \| "rename" }` | `ImportResult` |
 
 ---
 
 ## Export
 
-- Single button opens native save dialog
-- Default filename: `alarm-backup-YYYY-MM-DD.json`
-- File contains: `{ alarms: Alarm[], groups: AlarmGroup[], exportedAt: string, version: string }`
+- Export scope: individual alarms, selected group, or "Export All"
+- Default filenames:
+  - JSON: `alarm-backup-YYYY-MM-DD.json`
+  - CSV: `alarm-export-YYYY-MM-DD.csv`
+  - iCal: `alarms-YYYY-MM-DD.ics`
+- JSON file contains: `{ alarms: Alarm[], groups: AlarmGroup[], exportedAt: string, version: string }`
+- CSV columns: `id, time, date, label, enabled, repeat_type, repeat_days, group_name, sound_file, snooze_duration, max_snooze_count`
+- iCal: each alarm becomes a `VEVENT` with `RRULE` for repeat patterns
 
 ---
 
 ## Import
 
-- Button opens native file picker (`.json` filter)
-- Validates structure against expected schema
-- On valid file, prompt user:
-  - **Merge** — Add imported alarms alongside existing (skip duplicates by `id`)
-  - **Replace** — Clear all existing data, load from file
-- On invalid file: show error toast with specific issue
+### Step 1: File Selection & Validation
+
+- Button opens native file picker (filter by selected format)
+- Rust reads and validates file against expected schema
+- On invalid file: return errors immediately
+
+### Step 2: Import Preview
+
+- Show preview table of what will be imported: alarm count, group count, any issues
+- Highlight duplicates (matched by `id`)
+
+### Step 3: Duplicate Handling
+
+| Action | Behavior |
+|--------|----------|
+| **Skip** | Keep existing alarm, ignore imported duplicate |
+| **Overwrite** | Replace existing alarm with imported version |
+| **Rename** | Import as new alarm with "(Imported)" appended to label |
+
+### Step 4: Apply
+
+- **Merge** — Add imported alarms alongside existing (handle duplicates per user choice)
+- **Replace** — Clear all existing data, load from file (with confirmation dialog)
+
+---
+
+## Import Result
+
+```typescript
+interface ImportResult {
+  imported: number;
+  skipped: number;
+  overwritten: number;
+  errors: string[];
+}
+```
 
 ---
 
@@ -76,22 +106,26 @@ Users can export all alarms and groups as a JSON file for backup, and import fro
 
 | Check | Rule |
 |-------|------|
-| File format | Valid JSON |
-| Required fields | `alarms` array, `groups` array |
-| Alarm structure | Each alarm has required fields from data model |
+| File format | Valid JSON / CSV / iCal syntax |
+| Required fields | Alarms have all required fields from data model |
 | Group references | `groupId` values reference valid groups in the file |
+| Time format | Valid `HH:MM` format |
+| Repeat pattern | Valid `RepeatPattern` type and fields |
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] Export opens native save dialog and writes valid JSON
-- [ ] Import opens native file picker with `.json` filter
-- [ ] Import validates file structure before applying
-- [ ] Merge mode adds new alarms, skips existing by ID
-- [ ] Replace mode clears existing data before loading
+- [ ] Export supports JSON, CSV, and iCal formats
+- [ ] Export allows selecting individual alarms, groups, or all
+- [ ] Import supports JSON, CSV, and iCal formats
+- [ ] Import shows preview before applying
+- [ ] Duplicate handling: skip, overwrite, or rename
+- [ ] Merge mode adds new alarms alongside existing
+- [ ] Replace mode clears existing data (with confirmation)
 - [ ] Invalid files show descriptive error toast
 - [ ] Import preserves all alarm settings
+- [ ] iCal export generates valid `VEVENT`s with `RRULE`
 - [ ] Works offline (no network dependency)
 
 ---
