@@ -1,6 +1,6 @@
 # Alarm App Spec
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Status:** Active  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
@@ -113,7 +113,8 @@ Tables:
 |---|--------|-------------|
 | 01 | [Fundamentals](./01-fundamentals/00-overview.md) | Architecture, data model, design system, platform strategy |
 | 02 | [Features](./02-features/00-overview.md) | All feature specifications |
-| 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking, fixes, retrospectives |
+| 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking, fixes, retrospectives (32 issues) |
+| 98 | [Changelog](./98-changelog.md) | Version history and change log |
 
 ---
 
