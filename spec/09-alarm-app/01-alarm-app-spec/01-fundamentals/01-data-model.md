@@ -48,12 +48,14 @@ interface Alarm {
 
 ### RepeatPattern
 
+**Cron Parsing Library (Rust):** `croner` crate — MIT licensed, lightweight, supports standard 5-field cron + extensions.
+
 ```typescript
 interface RepeatPattern {
   type: "once" | "daily" | "weekly" | "interval" | "cron";
   daysOfWeek: number[];       // 0=Sun..6=Sat (for "weekly" type)
   intervalMinutes: number;    // For "interval" type (e.g., every 120 min)
-  cronExpression: string;     // For "cron" type (advanced users)
+  cronExpression: string;     // For "cron" type — parsed by `croner` crate
 }
 ```
 
@@ -217,6 +219,37 @@ The `nextFireTime` field is precomputed by the Rust backend whenever an alarm is
 1. On create/edit: compute based on `time`, `date`, and `repeat` pattern
 2. On fire: advance to next occurrence (or set null if one-time)
 3. On app launch / system wake: query `WHERE next_fire_time < now AND enabled = 1 AND deleted_at IS NULL`
+
+---
+
+## DST & Timezone Handling Rules
+
+Alarms store **local time** (`HH:MM`) as the user-facing value. `nextFireTime` is computed as an absolute UTC timestamp for comparison. The following rules apply:
+
+### DST Transition — Spring Forward
+
+If the target local time is **skipped** during DST (e.g., 2:30 AM when clocks jump from 2:00 → 3:00):
+- Fire at the **next valid minute** after the transition (i.e., 3:00 AM)
+- Log the adjustment in `alarm_events` with a note
+
+### DST Transition — Fall Back
+
+If the target local time **occurs twice** during fall-back:
+- Fire on the **first occurrence only**
+- Do not fire again at the repeated hour
+
+### Timezone Change (Travel)
+
+When the system timezone changes:
+1. Listen for OS timezone change event
+2. Recalculate `nextFireTime` for **all enabled alarms** using the new timezone
+3. Alarms always fire at the configured **local time** in the user's current timezone
+
+### Implementation
+
+- Use `chrono-tz` crate for IANA timezone resolution
+- Store system timezone in `settings` table (key: `system_timezone`, value: IANA string e.g. `"Asia/Kuala_Lumpur"`)
+- On each 30s alarm check, compare `nextFireTime` (UTC) against `Utc::now()`
 
 ---
 

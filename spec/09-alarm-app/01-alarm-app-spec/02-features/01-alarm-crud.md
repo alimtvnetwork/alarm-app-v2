@@ -57,11 +57,14 @@ Users can create new alarms by setting a time (hour and minute), optional date, 
 
 ## Drag-and-Drop Between Groups
 
+**Library:** `@dnd-kit/core` + `@dnd-kit/sortable` (actively maintained, accessible, lightweight)
+
 - Alarms can be dragged between groups in the alarm list
 - Drop target highlights the target group
 - On drop: updates `groupId` in SQLite
 - IPC command: `invoke("move_alarm_to_group", { alarmId, groupId })`
 - Null `groupId` = "Ungrouped" section
+- **Keyboard alternative:** `Ctrl+Shift+↑/↓` to move alarm between groups (WCAG 2.1 AA compliance via `dnd-kit` keyboard sensor)
 
 ---
 
