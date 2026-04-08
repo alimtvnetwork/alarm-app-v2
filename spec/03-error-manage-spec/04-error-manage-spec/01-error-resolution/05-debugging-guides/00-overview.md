@@ -41,10 +41,6 @@ Debugging procedures and troubleshooting guides.
 | 03-debugging-typescript.md |
 | 99-consistency-report.md |
 
-| 01-debugging-php.md |
-| 02-debugging-go.md |
-| 03-debugging-typescript.md |
-| 99-consistency-report.md |
 ---
 
 ## Cross-References
