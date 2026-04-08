@@ -1,6 +1,6 @@
 # File Structure
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -69,7 +69,7 @@ src-tauri/                    — Backend (Rust)
       player.rs               — Native audio playback (platform-specific)
       gradual_volume.rs       — Volume fade-in logic
     storage/
-      db.rs                   — SQLite connection + migrations
+      db.rs                   — SQLite connection + migrations (via `refinery` crate)
       models.rs               — Rust structs matching DB schema
     notifications/
       mod.rs                  — OS notification dispatch
@@ -78,7 +78,9 @@ src-tauri/                    — Backend (Rust)
 
   tauri.conf.json             — App config, permissions, window settings
   Cargo.toml                  — Rust dependencies
-  migrations/                 — SQLite migration files
+  migrations/                 — SQLite migration files (numbered SQL, managed by `refinery`)
+    V1__initial_schema.sql    — Tables: alarms, alarm_groups, settings, snooze_state, alarm_events
+    V2__*.sql                 — Future schema changes (sequential numbering)
   icons/                      — App icons (macOS .icns, Windows .ico, etc.)
 ```
 

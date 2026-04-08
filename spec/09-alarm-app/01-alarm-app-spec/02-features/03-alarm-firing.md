@@ -35,7 +35,7 @@ When the current time matches an enabled alarm's `nextFireTime`, the alarm fires
    - `daily` → advance by 24 hours
    - `weekly` → advance to next matching day
    - `interval` → advance by `intervalMinutes`
-   - `cron` → compute next from cron expression
+   - `cron` → compute next from cron expression (via `croner` crate)
 
 ---
 
