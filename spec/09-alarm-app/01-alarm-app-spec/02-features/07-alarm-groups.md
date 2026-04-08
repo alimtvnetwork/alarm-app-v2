@@ -1,6 +1,6 @@
 # Alarm Groups
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -37,13 +37,13 @@ Alarms can be organized into named groups (e.g., "Workday", "Weekend", "Gym"). G
 
 When a group is disabled:
 1. Save each alarm's current `enabled` state to a map: `{ [alarmId]: boolean }`
-2. Set all member alarms to `enabled: false`
+2. Set all member alarms to `enabled = 0` in SQLite
 
 When a group is re-enabled:
 1. Restore each alarm's `enabled` state from the saved map
 2. Clear the saved map
 
-Stored as `group-toggle-state` in localStorage.
+Toggle state saved in the `settings` SQLite table under key `group-toggle-state`.
 
 ---
 
@@ -62,7 +62,7 @@ Stored as `group-toggle-state` in localStorage.
 - [ ] Assign alarms to groups during create/edit
 - [ ] Master toggle disables/enables all group alarms
 - [ ] Deleting group preserves alarms (moved to ungrouped)
-- [ ] Groups persist in localStorage
+- [ ] Groups persist in SQLite database
 
 ---
 

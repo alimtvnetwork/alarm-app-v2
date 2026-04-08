@@ -1,6 +1,6 @@
 # Theme System
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -26,17 +26,17 @@ Full dark/light theme toggle with system preference auto-detection. The dark mod
 |------|----------|
 | `light` | Warm cream palette |
 | `dark` | Warm charcoal palette |
-| `system` | Follow `prefers-color-scheme` media query |
+| `system` | Follow OS appearance setting |
 
 ---
 
 ## Implementation
 
 - `useTheme` hook manages state
-- Theme stored in localStorage key `theme`
-- Applies `.dark` class to `<html>` element
+- Theme stored in `settings` SQLite table under key `theme`
+- Applies `.dark` class to root element
 - CSS variables in `index.css` swap between palettes
-- System mode uses `matchMedia('(prefers-color-scheme: dark)')` listener
+- System mode listens to OS appearance change events (e.g., `prefers-color-scheme` in WebView, or Tauri window theme event)
 
 ---
 
@@ -53,7 +53,7 @@ Full dark/light theme toggle with system preference auto-detection. The dark mod
 
 - [ ] Theme toggle switches between light, dark, system
 - [ ] System mode follows OS preference
-- [ ] Theme persists across page refreshes
+- [ ] Theme persists across app restarts
 - [ ] All components properly themed (no hardcoded colors)
 - [ ] Smooth transition between themes (150ms)
 

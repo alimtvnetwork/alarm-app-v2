@@ -21,12 +21,12 @@ type: feature
 10. ✅ Update `01-alarm-crud.md` — SQLite + Tauri invoke() for all CRUD
 11. ✅ Update `12-smart-features.md` — native speech/location/HTTP, system tray enhancements, removed PWA
 
-### Phase 3: Secondary Feature Spec Updates (P2)
-12. Update `02-features/06-dismissal-challenges.md` — DeviceMotionEvent → native accelerometer
-13. Update `02-features/07-alarm-groups.md` — localStorage references
-14. Update `02-features/08-clock-display.md` — localStorage reference
-15. Update `02-features/09-theme-system.md` — localStorage reference
-16. Update `02-features/13-analytics.md` — localStorage → SQLite
+### Phase 3: Secondary Feature Spec Updates (P2) ✅ DONE
+12. ✅ Update `06-dismissal-challenges.md` — DeviceMotionEvent → native accelerometer/pedometer per platform
+13. ✅ Update `07-alarm-groups.md` — localStorage → SQLite settings table
+14. ✅ Update `08-clock-display.md` — localStorage → SQLite settings table
+15. ✅ Update `09-theme-system.md` — localStorage → SQLite, OS appearance events
+16. ✅ Update `13-analytics.md` — localStorage → SQLite alarm_events table with schema
 
 ### Phase 4: New Documents (P1)
 17. Create `01-fundamentals/06-tauri-architecture.md` — Rust backend, IPC, plugin system, build pipeline
@@ -41,4 +41,5 @@ type: feature
 ### Status
 - Phase 1 completed: All 6 core spec files updated
 - Phase 2 completed: All 5 P1 feature specs updated
-- Awaiting user approval for Phase 3
+- Phase 3 completed: All 5 P2 feature specs updated
+- Awaiting user approval for Phase 4
