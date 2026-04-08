@@ -1,6 +1,6 @@
 # Fundamentals
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** Active  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
@@ -10,7 +10,7 @@
 
 ## Keywords
 
-`architecture`, `data-model`, `design`, `web-api`, `file-structure`
+`architecture`, `data-model`, `design`, `platform`, `file-structure`, `tauri`, `native`
 
 ---
 
@@ -28,7 +28,7 @@
 
 ## Purpose
 
-Core architectural decisions, data model definitions, design system tokens, file structure, and web platform constraints for the Alarm App.
+Core architectural decisions, data model definitions, design system tokens, file structure, platform strategy, and cross-platform constraints for the Alarm App (Tauri 2.x native application).
 
 ---
 
@@ -36,12 +36,11 @@ Core architectural decisions, data model definitions, design system tokens, file
 
 | # | File | Description |
 |---|------|-------------|
-| 01 | `01-data-model.md` | Alarm and AlarmGroup interfaces, storage keys, validation rules |
+| 01 | `01-data-model.md` | Alarm and AlarmGroup interfaces, SQLite schema, validation rules |
 | 02 | `02-design-system.md` | Color palette, typography, spacing, component styling |
-| 03 | `03-file-structure.md` | Source file organization and component hierarchy |
-| 04 | `04-web-api-constraints.md` | Browser API limitations and mitigations (legacy — to be replaced by platform-constraints) |
-| 05 | `05-platform-strategy.md` | Cross-platform framework comparison and rollout strategy |
-| 99 | `99-consistency-report.md` | Folder health check |
+| 03 | `03-file-structure.md` | Source file organization — frontend (React) and backend (Rust) |
+| 04 | `04-platform-constraints.md` | Cross-platform native constraints and mitigations (replaces web-api-constraints) |
+| 05 | `05-platform-strategy.md` | Framework comparison, recommendation (Tauri 2.x), rollout strategy |
 
 ---
 

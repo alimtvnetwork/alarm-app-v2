@@ -1,6 +1,6 @@
 # Data Model
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -9,13 +9,13 @@
 
 ## Keywords
 
-`data-model`, `types`, `interfaces`, `storage`, `validation`
+`data-model`, `types`, `interfaces`, `storage`, `validation`, `sqlite`
 
 ---
 
 ## Purpose
 
-Defines all TypeScript interfaces, localStorage keys, and validation rules for the Alarm App.
+Defines all TypeScript interfaces, SQLite schema, and validation rules for the Alarm App.
 
 ---
 
@@ -64,14 +64,50 @@ interface AlarmSound {
 
 ---
 
-## Storage Keys
+## SQLite Schema
+
+### Tables
+
+```sql
+CREATE TABLE alarms (
+  id TEXT PRIMARY KEY,
+  time TEXT NOT NULL,
+  label TEXT NOT NULL DEFAULT '',
+  enabled INTEGER NOT NULL DEFAULT 1,
+  recurring_days TEXT NOT NULL DEFAULT '[]',  -- JSON array
+  group_id TEXT REFERENCES alarm_groups(id) ON DELETE SET NULL,
+  snooze_duration_min INTEGER NOT NULL DEFAULT 5,
+  sound_id TEXT NOT NULL DEFAULT 'default',
+  vibration_enabled INTEGER NOT NULL DEFAULT 0,
+  gradual_volume INTEGER NOT NULL DEFAULT 0,
+  gradual_volume_duration_sec INTEGER NOT NULL DEFAULT 30,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE alarm_groups (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  enabled INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE TABLE settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+CREATE TABLE snooze_state (
+  alarm_id TEXT PRIMARY KEY REFERENCES alarms(id) ON DELETE CASCADE,
+  snooze_until TEXT NOT NULL,  -- ISO 8601 timestamp
+  snooze_count INTEGER NOT NULL DEFAULT 1
+);
+```
+
+### Settings Keys
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `alarms` | `Alarm[]` | All saved alarms |
-| `alarm-groups` | `AlarmGroup[]` | All alarm groups |
 | `theme` | `"light" \| "dark" \| "system"` | Theme preference |
-| `snooze-state` | `SnoozeState \| null` | Active snooze tracking |
 
 ---
 
@@ -98,5 +134,6 @@ When `recurringDays` is empty, the alarm fires once and auto-disables (`enabled:
 
 | Reference | Location |
 |-----------|----------|
-| Web API Constraints | `./04-web-api-constraints.md` |
+| Platform Strategy | `./05-platform-strategy.md` |
+| Platform Constraints | `./04-platform-constraints.md` |
 | Export/Import Feature | `../02-features/10-export-import.md` |

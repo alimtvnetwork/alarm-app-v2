@@ -211,6 +211,6 @@ Documents the cross-platform framework evaluation, comparison, and rollout strat
 | Data Model | `./01-data-model.md` |
 | Design System | `./02-design-system.md` |
 | File Structure | `./03-file-structure.md` |
-| Web API Constraints (legacy) | `./04-web-api-constraints.md` |
+| Platform Constraints | `./04-platform-constraints.md` |
 | Alarm Firing | `../02-features/03-alarm-firing.md` |
 | Sound & Vibration | `../02-features/05-sound-and-vibration.md` |

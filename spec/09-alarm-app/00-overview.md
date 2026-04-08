@@ -1,6 +1,6 @@
 # Alarm App
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** Active  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
@@ -10,7 +10,7 @@
 
 ## Keywords
 
-`alarm`, `clock`, `timer`, `sleep`, `wake-up`, `pwa`, `web-app`
+`alarm`, `clock`, `timer`, `sleep`, `wake-up`, `native`, `cross-platform`, `tauri`, `desktop`, `mobile`
 
 ---
 
@@ -28,7 +28,7 @@
 
 ## Purpose
 
-Specification module for a warm, minimal alarm clock web application built with React, Vite, and Tailwind CSS. Features analog + digital clock, alarm management with groups, export/import, dark/light themes, dismissal challenges, sleep & wellness tools, and alarm firing with audio notifications.
+Specification module for a warm, minimal alarm clock native application built with Tauri 2.x (Rust backend) and React + Vite + Tailwind CSS (frontend). Targets macOS first, then Windows, Linux, iOS, and Android. Features analog + digital clock, alarm management with groups, export/import, dark/light themes, dismissal challenges, sleep & wellness tools, and alarm firing with native audio and OS notifications.
 
 ---
 
