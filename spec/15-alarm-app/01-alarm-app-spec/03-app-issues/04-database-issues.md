@@ -37,14 +37,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 80% |
-| **Status** | Open |
+| **Likelihood** | 80% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** Every fire, snooze, dismiss, and miss creates a row. No retention policy, no archival, no purge command.
 
 **Root Cause:** Missing data lifecycle management.
 
-**Suggested Fix:** Add `settings` key `event_retention_days` (default 90). Background cleanup task purges events older than retention period on app startup.
+**Resolution:** Added event retention policy to `01-fundamentals/01-data-model.md` v1.5.0 with `event_retention_days` setting (default 90), startup purge function in Rust, and `idx_events_timestamp` index for efficient deletion.
 
 ---
 

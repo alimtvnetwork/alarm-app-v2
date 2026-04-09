@@ -37,14 +37,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Low |
-| **Likelihood** | 80% |
-| **Status** | Open |
+| **Likelihood** | 80% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** Spec says "linearly to 100%" but `rodio` volume control is amplitude-linear, not perceptually linear. Gradual volume will sound wrong.
 
 **Root Cause:** No perceptual audio curve specified.
 
-**Suggested Fix:** Apply logarithmic volume curve: `perceived_volume = amplitude^(1/3)`. Implement in `gradual_volume.rs` as a lookup table.
+**Resolution:** Added quadratic volume curve algorithm (`t²`) with 100ms update interval to `02-features/05-sound-and-vibration.md` v1.3.0. Includes complete `gradual_volume.rs` Rust implementation.
 
 ---
 
@@ -101,14 +101,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 65% |
-| **Status** | Open |
+| **Likelihood** | 65% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** If snooze duration is 1 minute and check interval is 30s, snooze-expired event could fire up to 30s late.
 
 **Root Cause:** Coarse check interval for snooze.
 
-**Suggested Fix:** Don't poll for snooze. Use `tokio::time::sleep_until(snooze_expiry)` per active snooze — exact-time triggering, no polling delay.
+**Resolution:** Snooze now uses exact-time `tokio::time::sleep_until(snooze_expiry)` per active snooze instead of polling. Added to `02-features/04-snooze-system.md` v1.3.0 with Rust implementation and crash recovery strategy.
 
 ---
 
@@ -117,14 +117,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 60% |
-| **Status** | Open |
+| **Likelihood** | 60% → 0% |
+| **Status** | ✅ Resolved |
 
-**Description:** "After 5 seconds, Rust backend permanently removes the row" — no timer mechanism specified. `tokio::spawn`? Background thread? What if app crashes during the 5s window?
+**Description:** "After 5 seconds, Rust backend permanently removes the row" — no timer mechanism specified.
 
 **Root Cause:** Missing implementation detail.
 
-**Suggested Fix:** Use `tokio::spawn` with `tokio::time::sleep(Duration::from_secs(5))`. On app startup, run a cleanup pass for any rows with `deletedAt` older than 5 seconds (crash recovery).
+**Resolution:** Added `tokio::spawn` + `sleep(5s)` timer and startup cleanup pass to `02-features/01-alarm-crud.md` v1.5.0 with complete Rust implementation for both timer and crash recovery.
 
 ---
 
@@ -133,14 +133,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 55% |
-| **Status** | Open |
+| **Likelihood** | 55% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** Alarm engine writes `alarm_events` + updates `nextFireTime` while user may be saving an edit. Single-writer SQLite will queue one, potentially causing UI lag.
 
 **Root Cause:** No write-ahead logging or async write strategy specified.
 
-**Suggested Fix:** Enable SQLite WAL mode (`PRAGMA journal_mode=WAL`). This allows concurrent reads during writes. Add to migration init script.
+**Resolution:** Added WAL mode (`PRAGMA journal_mode=WAL`) and `busy_timeout=5000` to `01-fundamentals/01-data-model.md` v1.5.0 under "SQLite WAL Mode" section, integrated into startup Step 4.
 
 ---
 

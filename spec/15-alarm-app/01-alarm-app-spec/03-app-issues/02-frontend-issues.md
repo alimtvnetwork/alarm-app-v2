@@ -21,14 +21,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 70% |
-| **Status** | Open |
+| **Likelihood** | 70% → 0% |
+| **Status** | ✅ Resolved |
 
-**Description:** Toggling a group off disables all alarms. Toggling back on enables ALL alarms, even those the user had manually disabled. No "previous state" tracking exists.
+**Description:** Toggling a group off disables all alarms. Toggling back on enables ALL alarms, even those the user had manually disabled.
 
 **Root Cause:** Missing `previousEnabled` field or separate tracking mechanism.
 
-**Suggested Fix:** Add `previousEnabled: boolean` field to `alarms` table. On group disable, save current `enabled` state to `previousEnabled`. On group re-enable, restore from `previousEnabled`.
+**Resolution:** Added `previous_enabled` column to `alarms` table in `01-fundamentals/01-data-model.md` v1.5.0. Defined complete disable/enable group flow with edge cases in `02-features/07-alarm-groups.md` v1.2.0.
 
 ---
 

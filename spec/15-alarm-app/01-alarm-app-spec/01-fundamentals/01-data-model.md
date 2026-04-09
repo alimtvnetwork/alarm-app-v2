@@ -1,10 +1,10 @@
 # Data Model
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**Resolves:** DB-MIGRATE-001
+**Resolves:** DB-MIGRATE-001, BE-CONCUR-001, DB-GROWTH-001, FE-STATE-001
 
 ---
 
@@ -113,6 +113,7 @@ CREATE TABLE alarms (
   date TEXT,                                        -- YYYY-MM-DD or NULL
   label TEXT NOT NULL DEFAULT '',
   enabled INTEGER NOT NULL DEFAULT 1,
+  previous_enabled INTEGER,                          -- Saved state for group toggle (FE-STATE-001)
   repeat_type TEXT NOT NULL DEFAULT 'once',          -- once|daily|weekly|interval|cron
   repeat_days_of_week TEXT NOT NULL DEFAULT '[]',    -- JSON array
   repeat_interval_minutes INTEGER NOT NULL DEFAULT 0,
@@ -164,6 +165,44 @@ CREATE TABLE alarm_events (
 );
 ```
 
+### SQLite WAL Mode (Resolves BE-CONCUR-001)
+
+The alarm engine writes `alarm_events` and updates `nextFireTime` while the user may be saving edits. Without WAL, single-writer SQLite queues writes and causes UI lag.
+
+```sql
+-- Run at startup Step 4 (after migrations)
+PRAGMA journal_mode=WAL;
+PRAGMA busy_timeout=5000;  -- Wait up to 5s for locks instead of failing immediately
+```
+
+**Why WAL?** Write-Ahead Logging allows concurrent reads during writes. The alarm engine and UI can operate simultaneously without blocking.
+
+### Event Retention Policy (Resolves DB-GROWTH-001)
+
+The `alarm_events` table grows unbounded. A retention policy purges old events on startup.
+
+```rust
+// Run at startup Step 8 (after missed alarm check)
+pub async fn purge_old_events(pool: &SqlitePool) {
+    let retention_days: i64 = get_setting(pool, "event_retention_days")
+        .await
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(90);
+
+    let cutoff = Utc::now() - chrono::Duration::days(retention_days);
+
+    let result = sqlx::query("DELETE FROM alarm_events WHERE timestamp < ?")
+        .bind(cutoff.to_rfc3339())
+        .execute(pool).await;
+
+    if let Ok(r) = result {
+        tracing::info!(deleted = r.rows_affected(), retention_days, "Purged old alarm events");
+    }
+}
+```
+
+**Settings key:** `event_retention_days` (default: `90`). Configurable in Settings UI.
+
 ### Settings Keys
 
 | Key | Type | Description |
@@ -175,6 +214,7 @@ CREATE TABLE alarm_events (
 | `auto_launch` | `"true" \| "false"` | Start on system boot |
 | `minimize_to_tray` | `"true" \| "false"` | Keep running when window closed |
 | `language` | `string` | i18n locale code (default: "en") |
+| `event_retention_days` | `number` | Days to keep alarm_events (default: 90) |
 
 ---
 
