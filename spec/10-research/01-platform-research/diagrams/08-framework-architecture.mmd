@@ -1,0 +1,39 @@
+%% Framework Architecture Comparison
+%% How Electron vs Tauri vs Wails work internally
+
+flowchart TD
+    TITLE["FRAMEWORK ARCHITECTURE COMPARISON\nHow each framework renders your app"]
+
+    TITLE --> ELECT["ELECTRON"]
+    TITLE --> TAURI_F["TAURI"]
+    TITLE --> WAILS_F["WAILS"]
+
+    %% Electron
+    ELECT --> E_UI["Your Frontend Code\nReact / Vue / Svelte"]
+    E_UI --> E_CHROME["Bundled Chromium Browser\n150 MB shipped with every app\nSame engine as Google Chrome"]
+    E_CHROME --> E_IPC["IPC: ipcMain / ipcRenderer\nMessage passing between processes"]
+    E_IPC --> E_BACK["Node.js Backend Process\nFull npm ecosystem access"]
+    E_BACK --> E_OS["OS APIs via Node.js\nfs, child_process, etc."]
+
+    ELECT --> E_NOTE["Electron Key Facts\n- Bundle: 150-300 MB\n- RAM: 150-500 MB\n- Ships entire Chrome browser\n- Consistent rendering everywhere\n- Largest ecosystem: VS Code, Slack\n- Security risk: full Node.js access\n- No mobile support"]
+
+    %% Tauri
+    TAURI_F --> T_UI["Your Frontend Code\nReact / Vue / Svelte\nSame code as Electron"]
+    T_UI --> T_WV["OS Native WebView\n0 MB extra added\nmacOS: WKWebView\nWindows: WebView2 (Edge)\nLinux: webkit2gtk"]
+    T_WV --> T_IPC["IPC: invoke() / emit() / listen()\nType-safe async calls"]
+    T_IPC --> T_BACK["Rust Backend Process\ntokio async runtime"]
+    T_BACK --> T_OS["OS APIs via Rust crates\nNative system calls"]
+
+    TAURI_F --> T_NOTE["Tauri Key Facts\n- Bundle: 3-10 MB (30x smaller)\n- RAM: 20-40 MB (5x less)\n- No browser shipped\n- Uses OS built-in WebView\n- Trade-off: slight rendering diffs\n- Must learn Rust\n- Mobile support: iOS + Android"]
+
+    %% Wails
+    WAILS_F --> W_UI["Your Frontend Code\nReact / Vue / Svelte\nSame code as above"]
+    W_UI --> W_WV["OS Native WebView\n0 MB extra (same as Tauri)"]
+    W_WV --> W_IPC["IPC: Auto-gen TS Bindings\nGo structs become TS types"]
+    W_IPC --> W_BACK["Go Backend Process\ngoroutines + stdlib"]
+    W_BACK --> W_OS["OS APIs via Go packages"]
+
+    WAILS_F --> W_NOTE["Wails Key Facts\n- Bundle: 8-15 MB\n- RAM: 30-50 MB\n- Same WebView approach as Tauri\n- Go is easier to learn than Rust\n- Auto-generates TypeScript types\n- Desktop only: no mobile\n- Smaller community"]
+
+    %% Bottom comparison
+    TITLE --> COMPARE["QUICK COMPARISON\n\nSize: Tauri 5MB < Wails 10MB < Electron 200MB\nRAM: Tauri 30MB < Wails 40MB < Electron 300MB\nLearn: Electron 1wk < Wails 2wk < Tauri 3wk\nMobile: Tauri only\nEcosystem: Electron >> Tauri > Wails"]

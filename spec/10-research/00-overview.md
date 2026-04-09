@@ -39,16 +39,34 @@ A `diagrams/` folder contains visual architecture and comparison diagrams in Mer
 ```
 10-research/
 ├── 00-overview.md              ← This file
-├── diagrams/                   ← Mermaid diagrams (.mmd)
-│   ├── 01-framework-scoring.mmd
-│   ├── 02-tauri-architecture.mmd
-│   └── 03-development-velocity.mmd
-└── 01-platform-research/       ← Cross-platform framework research
+├── diagrams/                   ← Legacy (kept for reference)
+├── 01-platform-research/
+│   ├── 00-overview.md
+│   ├── 01-framework-comparison.md
+│   ├── ...
+│   └── diagrams/
+│       ├── 01-framework-scoring.mmd
+│       ├── 02-tauri-architecture.mmd
+│       ├── 03-development-velocity.mmd
+│       ├── 07-pwa-feasibility.mmd
+│       ├── 08-framework-architecture.mmd
+│       └── images/              ← Rendered PNGs
+└── 02-game-development/
     ├── 00-overview.md
-    ├── 01-framework-comparison.md
-    ├── 02-development-velocity.md
-    └── 03-recommendation.md
+    ├── 01-engine-comparison.md
+    ├── ...
+    └── diagrams/
+        ├── 04-engine-scoring.mmd
+        ├── 05-game-decision-flow.mmd
+        ├── 06-language-ecosystem-map.mmd
+        └── images/              ← Rendered PNGs
 ```
+
+---
+
+## Diagram Convention
+
+Each research subfolder has its own `diagrams/` folder with an `images/` subfolder. Diagrams use mind-map style with annotation nodes explaining WHY, benchmarks, trade-offs, and when to avoid. Clear over clever — self-explanatory without reading the full spec.
 
 ---
 
@@ -58,16 +76,6 @@ A `diagrams/` folder contains visual architecture and comparison diagrams in Mer
 |---|------|-------------|
 | 01 | [Platform Research](./01-platform-research/00-overview.md) | Cross-platform desktop + mobile framework evaluation — Tauri, Electron, Wails, Flutter, Go+CEF, Fyne |
 | 02 | [Game Development](./02-game-development/00-overview.md) | Game engines, languages, custom engines, genre/platform recommendations |
-
----
-
-## Diagrams
-
-| File | Description |
-|------|-------------|
-| [Framework Scoring](./diagrams/01-framework-scoring.mmd) | Radar chart comparing 6 frameworks across 9 criteria |
-| [Tauri Architecture](./diagrams/02-tauri-architecture.mmd) | System architecture for Tauri 2.x applications |
-| [Development Velocity](./diagrams/03-development-velocity.mmd) | Timeline comparison of framework development speed |
 
 ---
 

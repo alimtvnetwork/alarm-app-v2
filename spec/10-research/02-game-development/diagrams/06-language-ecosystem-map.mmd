@@ -1,0 +1,41 @@
+%% Language to Game Dev Ecosystem Map
+%% What tools exist per language with annotations
+
+flowchart TD
+    TITLE["GAME DEV LANGUAGE ECOSYSTEM MAP\nWhat tools are available in each language?"]
+
+    TITLE --> CPP["C++\nIndustry Standard"]
+    TITLE --> RUST["Rust\nEmerging Favorite"]
+    TITLE --> CS["C#\nMost Accessible"]
+    TITLE --> GD["GDScript\nGodot Only"]
+    TITLE --> GO["Go\n2D Only"]
+    TITLE --> JS["JavaScript\nBrowser Games"]
+    TITLE --> DART["Dart\nMobile Games"]
+
+    %% C++
+    CPP --> CPP_TOOLS["Available Tools\n- Engines: Unreal 5, custom\n- Rendering: Vulkan, DX12, OpenGL\n- Physics: Bullet, Jolt, PhysX\n- Audio: FMOD, Wwise\n- ECS: EnTT, flecs"]
+    CPP --> CPP_NOTE["C++ Assessment\n- Pros: fastest performance, industry standard\n- Pros: most libraries available\n- Cons: memory unsafe, complex syntax\n- Cons: slow compilation times\n- Learning: 6-12 months to be productive\n- Best for: AAA, engine development\n- Used by: Unreal, most AAA studios"]
+
+    %% Rust
+    RUST --> RUST_TOOLS["Available Tools\n- Engines: Bevy, Fyrox\n- Rendering: wgpu, vulkano\n- Physics: Rapier (excellent)\n- Audio: kira, rodio\n- ECS: Bevy ECS, hecs"]
+    RUST --> RUST_NOTE["Rust Assessment\n- Pros: memory safe, C++ speed\n- Pros: modern tooling (cargo)\n- Pros: wgpu = WebGPU + native\n- Cons: steep learning curve\n- Cons: smaller game ecosystem\n- Learning: 3-6 months\n- Best for: custom engines, safety-critical\n- Growing fast: Bevy community doubling yearly"]
+
+    %% C#
+    CS --> CS_TOOLS["Available Tools\n- Engines: Unity, Godot, MonoGame\n- Physics: Unity Physics, BEPUphysics\n- Audio: Unity Audio, FMOD\n- ECS: Unity DOTS, Arch"]
+    CS --> CS_NOTE["C# Assessment\n- Pros: easiest to learn\n- Pros: Unity has biggest ecosystem\n- Pros: garbage collected, less crashes\n- Cons: GC pauses can cause stutters\n- Cons: Unity licensing concerns\n- Learning: 2-4 months\n- Best for: indie devs, mobile games\n- Most jobs: Unity C# developers"]
+
+    %% GDScript
+    GD --> GD_TOOLS["Available Tools\n- Everything built into Godot 4\n- Physics, rendering, audio, UI\n- Animation, tilemap, particles\n- No external dependencies needed"]
+    GD --> GD_NOTE["GDScript Assessment\n- Pros: Python-like, very easy\n- Pros: tightly integrated with editor\n- Pros: fastest prototyping\n- Cons: only works in Godot\n- Cons: slower than C++/Rust/C#\n- Learning: 1-2 weeks\n- Best for: beginners, rapid prototypes\n- Can use C# in Godot too"]
+
+    %% Go
+    GO --> GO_TOOLS["Available Tools\n- Engine: Ebitengine (2D only)\n- Rendering: go-gl (OpenGL)\n- Audio: Oto, beep\n- Limited 3D options"]
+    GO --> GO_NOTE["Go Assessment\n- Pros: simple language, fast compile\n- Pros: Ebitengine is elegant for 2D\n- Cons: no serious 3D engine\n- Cons: GC not ideal for games\n- Cons: small game dev community\n- Learning: 2-4 weeks\n- Best for: 2D games, game jams\n- Not recommended for: 3D or large games"]
+
+    %% JavaScript
+    JS --> JS_TOOLS["Available Tools\n- 2D: Phaser 3, PixiJS\n- 3D: Three.js, Babylon.js\n- Physics: Matter.js, Cannon-es\n- Audio: Web Audio API, Howler.js"]
+    JS --> JS_NOTE["JavaScript Assessment\n- Pros: runs in every browser\n- Pros: largest developer population\n- Pros: zero install for players\n- Cons: performance ceiling\n- Cons: no native OS access\n- Learning: already known by most devs\n- Best for: browser games, casual\n- Three.js: 90K+ GitHub stars"]
+
+    %% Dart
+    DART --> DART_TOOLS["Available Tools\n- Engine: Flutter Flame (2D only)\n- Built on Flutter framework\n- Hot reload for fast iteration"]
+    DART --> DART_NOTE["Dart Assessment\n- Pros: Flutter's hot reload\n- Pros: easy cross-platform mobile\n- Cons: Flame is 2D only\n- Cons: small game community\n- Cons: not designed for games\n- Learning: 2-4 weeks\n- Best for: mobile casual 2D games\n- Avoid for: anything beyond simple 2D"]
