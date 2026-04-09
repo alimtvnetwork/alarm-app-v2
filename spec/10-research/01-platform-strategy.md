@@ -473,12 +473,13 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 
 | Reference | Location |
 |-----------|----------|
-| Data Model | `../01-fundamentals/01-data-model.md` |
-| Design System | `../01-fundamentals/02-design-system.md` |
-| File Structure | `../01-fundamentals/03-file-structure.md` |
-| Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
-| Platform Strategy (legacy) | `../01-fundamentals/05-platform-strategy.md` |
-| Tauri Architecture (legacy) | `../01-fundamentals/06-tauri-architecture-and-framework-comparison.md` |
-| Alarm Firing | `../02-features/03-alarm-firing.md` |
-| Sound & Vibration | `../02-features/05-sound-and-vibration.md` |
+| Data Model | `../09-alarm-app/01-alarm-app-spec/01-fundamentals/01-data-model.md` |
+| Design System | `../09-alarm-app/01-alarm-app-spec/01-fundamentals/02-design-system.md` |
+| File Structure | `../09-alarm-app/01-alarm-app-spec/01-fundamentals/03-file-structure.md` |
+| Platform Constraints | `../09-alarm-app/01-alarm-app-spec/01-fundamentals/04-platform-constraints.md` |
+| Platform Strategy (legacy) | `../09-alarm-app/01-alarm-app-spec/01-fundamentals/05-platform-strategy.md` |
+| Tauri Architecture (legacy) | `../09-alarm-app/01-alarm-app-spec/01-fundamentals/06-tauri-architecture-and-framework-comparison.md` |
+| Alarm Firing | `../09-alarm-app/01-alarm-app-spec/02-features/03-alarm-firing.md` |
+| Sound & Vibration | `../09-alarm-app/01-alarm-app-spec/02-features/05-sound-and-vibration.md` |
+| Smart Features | `../09-alarm-app/01-alarm-app-spec/02-features/12-smart-features.md` |
 | Smart Features | `../02-features/12-smart-features.md` |
