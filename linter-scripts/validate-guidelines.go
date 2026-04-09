@@ -441,7 +441,7 @@ func checkMagicNumbers(lines []string, path string, lang string) []Violation {
 
 	exempt := map[string]bool{
 		"0": true, "1": true, "-1": true, "0.0": true, "1.0": true, "100": true,
-		"2": true, "404": true,
+		"2": true,
 	}
 
 	for i, line := range lines {

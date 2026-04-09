@@ -26,6 +26,8 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       echo "Usage: $0 [-d] [--path <dir>] [--max-lines <n>] [--json]"
       echo "  -d    Skip validation (git pull only)"
+      echo ""
+      echo "Windows: use linter-scripts/run.ps1 instead."
       exit 0
       ;;
     *) echo "Unknown option: $1"; exit 1 ;;
