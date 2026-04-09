@@ -41,7 +41,7 @@ Core architectural decisions, data model definitions, design system tokens, file
 | 03 | `03-file-structure.md` | Source file organization — frontend (React) and backend (Rust) |
 | 04 | `04-platform-constraints.md` | Cross-platform native constraints and mitigations |
 | 05 | `05-platform-strategy.md` | Legacy platform strategy (superseded by `10-research/01-platform-strategy.md`) |
-| 06 | `06-tauri-architecture-and-framework-comparison.md` | Legacy Tauri architecture (superseded by `10-research/01-platform-strategy.md`) |
+| 06 | `06-tauri-architecture-and-framework-comparison.md` | Tauri 2.x architecture — Rust backend, IPC commands, plugin system, build pipeline, framework comparison |
 
 ---
 
