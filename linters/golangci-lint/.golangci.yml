@@ -19,15 +19,18 @@ linters:
     - err113          # CODE-RED-005: No fmt.Errorf (forces wrapping) [renamed from goerr113]
     - funlen          # CODE-RED-004: Max function length
     - gocognit        # Cognitive complexity (supports nesting detection)
+    - gocritic        # Opinionated style: nesting, boolean patterns
+    - dupl            # DRY: duplicate code detection
 
     # ── Style enforcement ─────────────────────────────────────────
     - gofmt           # Standard formatting
-    - goimports       # Import ordering
+    - goimports       # Import ordering (3-group convention)
     - revive          # Extensible linter with custom rules
     - goconst         # CODE-RED-003: Detect magic strings
     - predeclared     # Catch shadowed built-ins
     - unconvert       # Remove unnecessary type conversions
     - whitespace      # STYLE-001/003: Blank line rules
+    - nolintlint      # Enforce nolint justifications — no silent suppressions
 
     # ── Error handling ────────────────────────────────────────────
     - errcheck        # Ensure errors are handled
@@ -49,7 +52,7 @@ linters-settings:
   funlen:
     # CODE-RED-004: Max 15 lines per function
     lines: 15
-    statements: 15
+    statements: 10  # Spec: max 10 statements per function
 
   cyclop:
     # Keep cyclomatic complexity low
@@ -61,8 +64,25 @@ linters-settings:
 
   goconst:
     # CODE-RED-003: Flag repeated strings (magic strings)
-    min-len: 2
+    min-len: 3       # Spec: min 3 chars (avoids flagging "id", "ok")
     min-occurrences: 2
+
+  dupl:
+    # DRY: flag duplicated code blocks
+    threshold: 100
+
+  errcheck:
+    # Catch unchecked error returns including blank identifiers
+    check-blank: true
+
+  goimports:
+    # 3-group import convention: stdlib / external / project-local
+    local-prefixes: project/
+
+  nolintlint:
+    # Require explanation on every //nolint suppression
+    require-explanation: true
+    require-specific: true
 
   revive:
     rules:
@@ -74,7 +94,7 @@ linters-settings:
           - []  # denyList
 
       # STYLE-002: No else after return
-      - name: early-return
+      - name: superfluous-else
         severity: error
 
       # CODE-RED-010: No boolean parameters

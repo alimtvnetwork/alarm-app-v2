@@ -84,6 +84,8 @@
   <rule ref="Squiz.NamingConventions.ValidFunctionName"/>
 
   <!-- No unused variables -->
+  <!-- Requires: composer require --dev slevomat/coding-standard -->
+  <!-- Docs: https://github.com/slevomat/coding-standard -->
   <rule ref="SlevomatCodingStandard.Variables.UnusedVariable" />
 
   <!-- ═══════════════════════════════════════════════════════════════ -->

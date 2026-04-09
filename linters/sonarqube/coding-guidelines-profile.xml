@@ -5,7 +5,7 @@
   Import this profile in SonarQube: Quality Profiles → Create → Restore Profile
   
   Maps CODE RED rules to SonarQube built-in rules where possible.
-  For rules without direct SonarQube equivalents, use the Python/Go validator scripts.
+  For rules without direct SonarQube equivalents, use the Go validator scripts.
 -->
 <profile>
   <name>Coding Guidelines - CODE RED</name>
@@ -21,6 +21,19 @@
         <parameter>
           <key>threshold</key>
           <value>5</value>
+        </parameter>
+      </parameters>
+    </rule>
+
+    <!-- CODE-RED-001: Nesting depth (direct enforcement) -->
+    <rule>
+      <repositoryKey>go</repositoryKey>
+      <key>go:S134</key>
+      <priority>BLOCKER</priority>
+      <parameters>
+        <parameter>
+          <key>max</key>
+          <value>1</value>
         </parameter>
       </parameters>
     </rule>
@@ -51,10 +64,31 @@
       </parameters>
     </rule>
 
-    <!-- STYLE-002: No else after return -->
+    <!-- CODE-RED-002 / Boolean: Return boolean expression directly instead of if/else -->
+    <rule>
+      <repositoryKey>go</repositoryKey>
+      <key>go:S1126</key>
+      <priority>MAJOR</priority>
+    </rule>
+
+    <!-- CODE-RED-001 alt: Collapsible if statements → flatten nested ifs -->
+    <rule>
+      <repositoryKey>go</repositoryKey>
+      <key>go:S1066</key>
+      <priority>CRITICAL</priority>
+    </rule>
+
+    <!-- DRY: Identical code branches -->
     <rule>
       <repositoryKey>go</repositoryKey>
       <key>go:S1871</key>
+      <priority>MAJOR</priority>
+    </rule>
+
+    <!-- DRY: Identical functions -->
+    <rule>
+      <repositoryKey>go</repositoryKey>
+      <key>go:S4144</key>
       <priority>MAJOR</priority>
     </rule>
 
