@@ -149,9 +149,9 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 70% |
-| **Status** | Open |
-| **Fail %** | 50% |
+| **Likelihood** | 70% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 50% → 5% |
 
 **Description:** If two alarms fire at the same time (within the same 30s check), the spec says "only one overlay at a time" but doesn't define queue behavior. AI will likely render multiple overlays or drop the second alarm.
 
@@ -165,7 +165,7 @@
 - Queue indicator: "2 more alarms pending" badge on overlay
 - All queued alarms log `fired` event immediately (not when overlay shows)
 
-**Resolution Plan:** Update `02-features/03-alarm-firing.md` with a "Simultaneous Alarms" section defining FIFO queue, overlay sequencing, and event logging rules.
+**Resolution:** Added "Simultaneous Alarms (Queue System)" section to `02-features/03-alarm-firing.md` v1.3.0 with FIFO queue rules, `AlarmQueue` Rust struct, overlay sequencing, badge UI, and edge case table.
 
 ---
 
@@ -174,9 +174,9 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 65% |
-| **Status** | Open |
-| **Fail %** | 40% |
+| **Likelihood** | 65% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 40% → 5% |
 
 **Description:** The spec defines individual features but not the initialization order. AI may initialize components in wrong order (e.g., alarm engine before DB, tray before settings loaded).
 
@@ -194,7 +194,7 @@
 9. Start WebView / render React UI
 10. Update tray with next alarm time
 
-**Resolution Plan:** Create `01-fundamentals/10-startup-sequence.md` with the ordered initialization steps, error handling at each stage, and a startup state diagram.
+**Resolution:** Created `01-fundamentals/07-startup-sequence.md` with 9-step ordered initialization, parallel init via `tokio::join!`, error handling per step, and startup time budget (<750ms).
 
 ---
 

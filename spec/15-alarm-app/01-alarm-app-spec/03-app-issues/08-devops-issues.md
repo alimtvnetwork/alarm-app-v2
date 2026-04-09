@@ -85,36 +85,15 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 80% |
-| **Status** | Open |
-| **Fail %** | 45% |
+| **Likelihood** | 80% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 45% → 5% |
 
 **Description:** Tauri 2.x uses a new `capabilities` system in `tauri.conf.json`. Without an exact permission manifest, AI will miss required plugin permissions and the app will crash at runtime with unhelpful errors.
 
 **Root Cause:** Tauri 2.x capability system is new and poorly documented. Most AIs default to Tauri 1.x patterns.
 
-**Suggested Fix:** Add exact `capabilities` JSON block to `03-file-structure.md` or a new `tauri-config.md`:
-```json
-{
-  "capabilities": [{
-    "identifier": "main",
-    "windows": ["main"],
-    "permissions": [
-      "core:default",
-      "sql:default",
-      "notification:default",
-      "dialog:default",
-      "fs:default",
-      "global-shortcut:default",
-      "tray:default",
-      "autostart:default",
-      "updater:default"
-    ]
-  }]
-}
-```
-
-**Resolution Plan:** Add the complete capabilities block to `01-fundamentals/03-file-structure.md` under the `src-tauri/` section with inline comments explaining each permission.
+**Resolution:** Added complete `capabilities/default.json` manifest to `01-fundamentals/03-file-structure.md` v1.3.0 with all 9 plugin permission groups, permission category table, and security notes.
 
 ---
 
@@ -123,37 +102,15 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 75% |
-| **Status** | Open |
-| **Fail %** | 35% |
+| **Likelihood** | 75% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 35% → 5% |
 
 **Description:** Spec mentions crate names (`rodio`, `chrono-tz`, `croner`, `refinery`) but not versions. AI may pick incompatible versions or use deprecated crates.
 
 **Root Cause:** Missing pinned dependency versions.
 
-**Suggested Fix:** Add to `03-file-structure.md` or `01-data-model.md`:
-```toml
-[dependencies]
-tauri = { version = "2", features = ["tray-icon", "global-shortcut"] }
-tauri-plugin-sql = { version = "2", features = ["sqlite"] }
-tauri-plugin-notification = "2"
-tauri-plugin-dialog = "2"
-tauri-plugin-fs = "2"
-tauri-plugin-autostart = "2"
-tauri-plugin-updater = "2"
-rodio = "0.19"
-chrono = { version = "0.4", features = ["serde"] }
-chrono-tz = "0.10"
-croner = "2.0"
-refinery = { version = "0.8", features = ["rusqlite"] }
-rusqlite = { version = "0.31", features = ["bundled"] }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-uuid = { version = "1", features = ["v4"] }
-tokio = { version = "1", features = ["full"] }
-```
-
-**Resolution Plan:** Add the full `Cargo.toml` `[dependencies]` block to `01-fundamentals/03-file-structure.md` with version comments.
+**Resolution:** Added complete `Cargo.toml` `[dependencies]` block to `01-fundamentals/03-file-structure.md` v1.3.0 with pinned versions, feature flags, and platform-conditional dependencies (`objc2`, `windows`, `zbus`).
 
 ---
 
