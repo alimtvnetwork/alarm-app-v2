@@ -45,6 +45,7 @@ Comprehensive research into cross-platform application frameworks for building n
 | 01 | `01-framework-comparison.md` | Deep-dive comparison of 6 frameworks — architecture, pros/cons, platform support, ecosystem maturity |
 | 02 | `02-development-velocity.md` | Development speed analysis — learning curve, iteration speed, time-to-MVP, team ramp-up |
 | 03 | `03-recommendation.md` | Final recommendation with scoring, risk analysis, decision record, and rollout strategy |
+| 04 | `04-pwa-research.md` | PWA deep-dive — pros/cons, Uber-type app feasibility, PWA gaming research, scoring vs native |
 
 ---
 
@@ -58,6 +59,7 @@ Comprehensive research into cross-platform application frameworks for building n
 | **Flutter** | Mobile-first apps with desktop as secondary | Existing React/Vue frontend you want to reuse |
 | **Go + CEF** | Full Chromium control with Go backend | Anything — too niche for most projects |
 | **Fyne** | Simple Go utility apps | Feature-rich apps needing audio, tray, or native look |
+| **PWA** | Zero-install web apps, MVPs, casual games, content apps | Background processing, native OS integration, driver apps, AAA games |
 
 ---
 
