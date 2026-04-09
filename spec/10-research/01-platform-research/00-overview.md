@@ -47,6 +47,7 @@ Comprehensive research into cross-platform application frameworks for building n
 | 03 | `03-recommendation.md` | Final recommendation with scoring, risk analysis, decision record, and rollout strategy |
 | 04 | `04-pwa-research.md` | PWA deep-dive — pros/cons, Uber-type app feasibility, PWA gaming research, scoring vs native |
 | 05 | `05-capacitor-hybrid-research.md` | Capacitor hybrid research — middle ground between PWA and native, architecture, scoring, MVP pipeline |
+| 06 | `06-how-frameworks-work.md` | Beginner-friendly explainer — why Tauri uses Rust, how WebView vs Chromium works, IPC examples, language lock-in |
 
 ---
 
