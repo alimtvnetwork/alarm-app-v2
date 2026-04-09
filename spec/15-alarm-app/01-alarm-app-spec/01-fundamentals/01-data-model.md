@@ -254,12 +254,127 @@ When the system timezone changes:
 
 ---
 
+## Migration Strategy (refinery)
+
+> **Resolves DB-MIGRATE-001.** Defines the migration tool, file format, versioning, rollback plan, and startup integration.
+
+### Tool Choice: `refinery` crate
+
+| Criterion | Value |
+|-----------|-------|
+| **Crate** | `refinery` v0.8 with `rusqlite` feature |
+| **License** | MIT |
+| **Why** | Embeddable (no CLI required), SQLite-native, uses numbered SQL files, auto-creates `refinery_schema_history` tracking table |
+| **Alternatives rejected** | `diesel` (too heavy, ORM not needed), `sqlx` (async-only, complex setup), manual `PRAGMA user_version` (no rollback tracking) |
+
+### Migration File Format
+
+```
+src-tauri/migrations/
+  V1__initial_schema.sql       — Core tables: alarms, alarm_groups, settings, snooze_state, alarm_events
+  V2__add_event_retention.sql  — Add event_retention_days to settings defaults
+  V3__add_alarm_label_cache.sql — Denormalized label on alarm_events (for DB-ORPHAN-001)
+  ...
+```
+
+**Naming convention:** `V{N}__{description}.sql` — sequential integer, double underscore, snake_case description.
+
+### Migration Runner (Rust)
+
+```rust
+use refinery::embed_migrations;
+
+// Embed migration SQL files at compile time
+embed_migrations!("migrations");
+
+pub async fn run_migrations(conn: &mut Connection) -> Result<(), AlarmAppError> {
+    migrations::runner()
+        .run(conn)
+        .map_err(|e| AlarmAppError::Migration(e.to_string()))?;
+
+    tracing::info!(
+        "Migrations complete. Current version: {}",
+        get_current_version(conn)?
+    );
+    Ok(())
+}
+
+fn get_current_version(conn: &Connection) -> Result<i64, rusqlite::Error> {
+    conn.query_row(
+        "SELECT MAX(version) FROM refinery_schema_history",
+        [],
+        |row| row.get(0),
+    )
+}
+```
+
+### Startup Integration
+
+Migrations run at **Step 3** of the startup sequence (see `07-startup-sequence.md`):
+
+1. Open SQLite connection (Step 2)
+2. **Run migrations** (Step 3) — `refinery` checks `refinery_schema_history`, runs only new migrations
+3. Enable WAL mode (Step 4) — must be after migrations
+
+### Rollback Plan
+
+`refinery` does not support automatic rollbacks. Instead:
+
+| Scenario | Strategy |
+|----------|----------|
+| Bad migration in dev | Fix SQL, reset dev DB, re-run |
+| Bad migration in production | Ship a **new forward migration** (V{N+1}) that reverts the change |
+| Corrupt DB after migration | Startup error handler backs up DB file, creates fresh (see `04-platform-constraints.md` → E7) |
+
+### Version Tracking Table
+
+`refinery` auto-creates this table — do NOT create manually:
+
+```sql
+-- Auto-created by refinery
+CREATE TABLE refinery_schema_history (
+    version INTEGER PRIMARY KEY,
+    name TEXT,
+    applied_on TEXT,
+    checksum TEXT
+);
+```
+
+### Initial Migration (V1)
+
+The `V1__initial_schema.sql` file must contain ALL tables from the SQLite Schema section above, plus:
+
+```sql
+-- Indexes for alarm engine performance
+CREATE INDEX idx_alarms_next_fire ON alarms(next_fire_time) WHERE enabled = 1 AND deleted_at IS NULL;
+CREATE INDEX idx_alarms_group ON alarms(group_id);
+CREATE INDEX idx_events_alarm ON alarm_events(alarm_id);
+CREATE INDEX idx_events_timestamp ON alarm_events(timestamp);
+
+-- Default settings
+INSERT INTO settings (key, value) VALUES
+  ('theme', 'system'),
+  ('time_format', '12h'),
+  ('default_snooze_duration', '5'),
+  ('default_sound', 'classic-beep'),
+  ('auto_launch', 'false'),
+  ('minimize_to_tray', 'true'),
+  ('language', 'en'),
+  ('event_retention_days', '90'),
+  ('system_timezone', '');
+```
+
+---
+
 ## Cross-References
 
 | Reference | Location |
 |-----------|----------|
 | Platform Strategy | `./05-platform-strategy.md` |
 | Platform Constraints | `./04-platform-constraints.md` |
+| Startup Sequence | `./07-startup-sequence.md` |
+| File Structure | `./03-file-structure.md` |
 | Export/Import Feature | `../02-features/10-export-import.md` |
 | Alarm Firing | `../02-features/03-alarm-firing.md` |
 | Snooze System | `../02-features/04-snooze-system.md` |
+| App Issues | `../03-app-issues/04-database-issues.md` → DB-MIGRATE-001 |
