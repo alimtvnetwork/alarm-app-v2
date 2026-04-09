@@ -149,9 +149,9 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 70% |
-| **Status** | Open |
-| **Fail %** | 50% |
+| **Likelihood** | 70% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 50% → 5% |
 
 **Description:** If two alarms fire at the same time (within the same 30s check), the spec says "only one overlay at a time" but doesn't define queue behavior. AI will likely render multiple overlays or drop the second alarm.
 
