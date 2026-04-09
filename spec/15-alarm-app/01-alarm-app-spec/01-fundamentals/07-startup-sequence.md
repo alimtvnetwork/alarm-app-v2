@@ -1,11 +1,11 @@
 # Startup Sequence
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
-**Resolves:** BE-STARTUP-001
+**Resolves:** BE-STARTUP-001, BE-LOG-001
 
 ---
 
@@ -174,6 +174,59 @@ Three independent subsystems start concurrently:
 | **6a. System tray** | ~50ms | Show tray icon with "Loading..." tooltip |
 | **6b. Logging** | ~10ms | `tracing_subscriber` + file appender |
 | **6c. WebView/React** | ~200–500ms | Vite bundle loads in WebView |
+
+#### 6b. Logging Strategy (Resolves BE-LOG-001)
+
+```rust
+use tracing_subscriber::{fmt, prelude::*, EnvFilter};
+use tracing_appender::rolling;
+
+pub fn init_logging(app_dir: &Path) -> Result<(), AlarmAppError> {
+    let log_dir = app_dir.join("logs");
+    std::fs::create_dir_all(&log_dir)?;
+
+    // Daily rotation, keep 7 days
+    let file_appender = rolling::daily(&log_dir, "alarm-app.log");
+    let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+
+    tracing_subscriber::registry()
+        .with(EnvFilter::new("info"))  // Default: INFO
+        .with(fmt::layer()
+            .with_writer(non_blocking)
+            .with_ansi(false)
+            .with_target(true)
+            .with_timer(fmt::time::UtcTime::rfc_3339()))
+        .with(fmt::layer().with_writer(std::io::stderr))  // Also log to stderr
+        .init();
+
+    Ok(())
+}
+```
+
+**Log levels:**
+
+| Level | Usage | Examples |
+|-------|-------|---------|
+| `ERROR` | Unrecoverable failures | DB corruption, migration fail, audio device missing |
+| `WARN` | Fallbacks, degraded state | Missing sound file, PRAGMA fail, notification denied |
+| `INFO` | Key lifecycle events | Alarm fire, dismiss, snooze, app start/stop, settings change |
+| `DEBUG` | Engine internals | Tick checks, next-fire calculations, IPC calls |
+| `TRACE` | Development only | SQL queries, full alarm state dumps |
+
+**Log file location:** `{app_data_dir}/logs/alarm-app.log`  
+**Rotation:** Daily, keep 7 days, oldest auto-deleted  
+**Frontend forwarding:** `console.error` and `console.warn` forwarded to Rust via `log_from_frontend` IPC command
+
+```rust
+#[tauri::command]
+fn log_from_frontend(level: String, message: String) {
+    match level.as_str() {
+        "error" => tracing::error!(source = "frontend", "{message}"),
+        "warn" => tracing::warn!(source = "frontend", "{message}"),
+        _ => tracing::info!(source = "frontend", "{message}"),
+    }
+}
+```
 
 ```rust
 let (tray, _, _) = tokio::join!(

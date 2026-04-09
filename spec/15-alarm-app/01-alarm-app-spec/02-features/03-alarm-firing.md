@@ -5,7 +5,7 @@
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
-**Resolves:** BE-QUEUE-001, UX-DST-001, UX-TZ-001, BE-WAKE-001
+**Resolves:** BE-QUEUE-001, UX-DST-001, UX-TZ-001, BE-WAKE-001, FE-OVERLAY-001
 
 ---
 
