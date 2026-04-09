@@ -85,36 +85,15 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 80% |
-| **Status** | Open |
-| **Fail %** | 45% |
+| **Likelihood** | 80% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 45% → 5% |
 
 **Description:** Tauri 2.x uses a new `capabilities` system in `tauri.conf.json`. Without an exact permission manifest, AI will miss required plugin permissions and the app will crash at runtime with unhelpful errors.
 
 **Root Cause:** Tauri 2.x capability system is new and poorly documented. Most AIs default to Tauri 1.x patterns.
 
-**Suggested Fix:** Add exact `capabilities` JSON block to `03-file-structure.md` or a new `tauri-config.md`:
-```json
-{
-  "capabilities": [{
-    "identifier": "main",
-    "windows": ["main"],
-    "permissions": [
-      "core:default",
-      "sql:default",
-      "notification:default",
-      "dialog:default",
-      "fs:default",
-      "global-shortcut:default",
-      "tray:default",
-      "autostart:default",
-      "updater:default"
-    ]
-  }]
-}
-```
-
-**Resolution Plan:** Add the complete capabilities block to `01-fundamentals/03-file-structure.md` under the `src-tauri/` section with inline comments explaining each permission.
+**Resolution:** Added complete `capabilities/default.json` manifest to `01-fundamentals/03-file-structure.md` v1.3.0 with all 9 plugin permission groups, permission category table, and security notes.
 
 ---
 
