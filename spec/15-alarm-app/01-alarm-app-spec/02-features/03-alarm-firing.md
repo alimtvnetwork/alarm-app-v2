@@ -1,11 +1,11 @@
 # Alarm Firing
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
-**Resolves:** BE-QUEUE-001
+**Resolves:** BE-QUEUE-001, UX-DST-001, UX-TZ-001
 
 ---
 
@@ -33,10 +33,151 @@ When the current time matches an enabled alarm's `nextFireTime`, the alarm fires
    e. Insert `alarm_events` row with `type = 'fired'`
 4. After firing: Rust recomputes `nextFireTime` based on `repeat` pattern
    - `once` → set `enabled = 0`, `nextFireTime = NULL`
-   - `daily` → advance by 24 hours
-   - `weekly` → advance to next matching day
+   - `daily` → advance by 24 hours (DST-aware — see DST section below)
+   - `weekly` → advance to next matching day (DST-aware)
    - `interval` → advance by `intervalMinutes`
    - `cron` → compute next from cron expression (via `croner` crate)
+
+---
+
+## DST & Timezone-Aware Firing
+
+> **Resolves UX-DST-001 and UX-TZ-001.** Without this, alarms fire at wrong times during DST transitions or when traveling.
+
+### Core Principle
+
+Alarms are defined in **local time** (`HH:MM`). The `nextFireTime` is stored as **UTC**. The Rust backend converts between them using the IANA timezone from the `settings` table.
+
+### nextFireTime Computation (Rust Pseudocode)
+
+```rust
+fn compute_next_fire_time(
+    alarm_time: NaiveTime,        // e.g., 07:30
+    alarm_date: Option<NaiveDate>,// for one-time date-specific alarms
+    repeat: &RepeatPattern,
+    timezone: &Tz,                // from chrono-tz, e.g., Asia/Kuala_Lumpur
+    now: DateTime<Utc>,
+) -> Option<DateTime<Utc>> {
+    let now_local = now.with_timezone(timezone);
+
+    match repeat.r#type {
+        RepeatType::Once => {
+            let target_date = alarm_date.unwrap_or_else(|| {
+                let today = now_local.date_naive();
+                if alarm_time > now_local.time() { today } else { today + Duration::days(1) }
+            });
+            resolve_local_to_utc(target_date, alarm_time, timezone)
+        }
+        RepeatType::Daily => {
+            let today = now_local.date_naive();
+            let candidate = resolve_local_to_utc(today, alarm_time, timezone);
+            match candidate {
+                Some(t) if t > now => Some(t),
+                _ => resolve_local_to_utc(today + Duration::days(1), alarm_time, timezone),
+            }
+        }
+        RepeatType::Weekly => {
+            // Try each of the next 7 days, check if weekday matches daysOfWeek
+            for offset in 0..=7 {
+                let date = now_local.date_naive() + Duration::days(offset);
+                let weekday_num = date.weekday().num_days_from_sunday(); // 0=Sun
+                if repeat.days_of_week.contains(&(weekday_num as u8)) {
+                    let candidate = resolve_local_to_utc(date, alarm_time, timezone);
+                    if let Some(t) = candidate {
+                        if t > now { return Some(t); }
+                    }
+                }
+            }
+            None
+        }
+        RepeatType::Interval => {
+            // Simply add interval minutes to last fire time
+            Some(now + Duration::minutes(repeat.interval_minutes as i64))
+        }
+        RepeatType::Cron => {
+            // Use croner crate to find next match
+            let cron = Cron::new(&repeat.cron_expression).parse().ok()?;
+            cron.find_next_occurrence(&now_local.naive_local(), false)
+                .and_then(|naive| resolve_local_to_utc(naive.date(), naive.time(), timezone))
+        }
+    }
+}
+```
+
+### DST Resolution Function
+
+```rust
+/// Convert a local date+time to UTC, handling DST edge cases.
+fn resolve_local_to_utc(
+    date: NaiveDate,
+    time: NaiveTime,
+    tz: &Tz,
+) -> Option<DateTime<Utc>> {
+    let naive_dt = NaiveDateTime::new(date, time);
+
+    match tz.from_local_datetime(&naive_dt) {
+        // Normal case: exactly one valid mapping
+        LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
+
+        // FALL-BACK: time occurs twice → use the FIRST occurrence
+        LocalResult::Ambiguous(first, _second) => {
+            tracing::info!(
+                date = %date, time = %time,
+                "DST fall-back: ambiguous time, using first occurrence"
+            );
+            Some(first.with_timezone(&Utc))
+        }
+
+        // SPRING-FORWARD: time doesn't exist → advance to next valid minute
+        LocalResult::None => {
+            // Find the transition point and use it
+            let transition = tz.from_local_datetime(
+                &NaiveDateTime::new(date, NaiveTime::from_hms_opt(3, 0, 0).unwrap())
+            );
+            tracing::warn!(
+                date = %date, time = %time,
+                "DST spring-forward: time skipped, firing at next valid minute"
+            );
+            match transition {
+                LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
+                LocalResult::Ambiguous(dt, _) => Some(dt.with_timezone(&Utc)),
+                LocalResult::None => None, // Should never happen
+            }
+        }
+    }
+}
+```
+
+### Timezone Change Detection
+
+```rust
+/// Called on each alarm engine tick and on OS timezone change event
+fn on_timezone_change(pool: &SqlitePool, new_tz: &Tz) {
+    // 1. Update settings table
+    update_setting(pool, "system_timezone", new_tz.name()).await;
+
+    // 2. Recalculate nextFireTime for ALL enabled alarms
+    let alarms = get_enabled_alarms(pool).await;
+    for alarm in alarms {
+        let new_next = compute_next_fire_time(
+            alarm.time, alarm.date, &alarm.repeat, new_tz, Utc::now()
+        );
+        update_next_fire_time(pool, &alarm.id, new_next).await;
+    }
+
+    tracing::info!(timezone = %new_tz, count = alarms.len(), "Recalculated all alarm times");
+}
+```
+
+### DST Test Cases
+
+| Scenario | Input | Expected |
+|----------|-------|----------|
+| Spring-forward: 2:30 AM skipped | `time=02:30`, DST jumps 2:00→3:00 | Fire at 3:00 AM |
+| Fall-back: 1:30 AM occurs twice | `time=01:30`, DST falls back 2:00→1:00 | Fire at first 1:30 AM only |
+| Normal day | `time=07:00`, no DST | Fire at 07:00 local = correct UTC |
+| Timezone change: KUL→LON | `time=07:00`, tz changes | `nextFireTime` recalculated for London |
+| Daily alarm across DST boundary | `time=02:30`, repeating daily | Skipped day fires at 3:00, next day fires at 2:30 normally |
 
 ---
 

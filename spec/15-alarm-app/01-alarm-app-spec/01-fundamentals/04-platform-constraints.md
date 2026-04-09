@@ -1,9 +1,10 @@
 # Platform Constraints
 
-**Version:** 1.1.0  
-**Updated:** 2026-04-08  
+**Version:** 1.2.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
-**Ambiguity:** Low
+**Ambiguity:** None  
+**Resolves:** BE-ERROR-001
 
 ---
 
@@ -92,6 +93,101 @@ Documents platform-specific constraints and mitigations for the Alarm App as a c
 
 ---
 
+## Error Handling Strategy
+
+> **Resolves BE-ERROR-001.** Defines what happens when things go wrong. Without this, AI will implement happy-path-only code.
+
+### Error → Behavior Mapping
+
+| # | Error | Severity | Behavior | Fallback |
+|---|-------|----------|----------|----------|
+| E1 | SQLite write failure | High | Retry once after 500ms. If still fails → show toast "Failed to save — try again" | Operation cancelled, no data loss (read-only state) |
+| E2 | SQLite read failure | High | Show toast "Could not load data". Retry on next user action | UI shows stale cached data if available |
+| E3 | Audio file not found | Medium | Fall back to built-in `classic-beep`. Show "⚠ Sound file missing" in overlay | Alarm still fires with default sound |
+| E4 | Audio playback failure | Medium | Log error. Show overlay without audio. Dispatch OS notification with sound | User still sees overlay + notification |
+| E5 | IPC timeout (>5s) | Medium | Cancel operation. Show toast "Operation timed out — try again" | No state change |
+| E6 | Corrupt database | Critical | Run `PRAGMA integrity_check`. If fails → backup DB to `alarm-app.db.backup.{timestamp}`, create fresh DB, run migrations | User loses data but gets clean start |
+| E7 | Migration failure | Critical | App refuses to start. Show native error dialog: "Database update failed. [Reset Database] [Exit]" | "Reset Database" backs up + recreates |
+| E8 | Notification permission denied | Low | Fall back to in-app overlay only. Show one-time hint: "Enable notifications in System Settings for alerts when app is minimized" | Overlay still works |
+| E9 | Tray init failure | Low | Log error, continue without tray. App works normally but can't minimize to tray | Window-only mode |
+| E10 | Network failure (updater) | Low | Silently skip update check. Retry on next app launch | App continues on current version |
+| E11 | Custom sound file too large (>10MB) | Low | Reject with toast "Sound file must be under 10MB" | User selects different file |
+| E12 | Timezone detection failure | Medium | Fall back to UTC. Log warning. Show toast "Could not detect timezone" | Alarms fire on UTC time |
+
+### Error Handling Implementation Rules
+
+1. **Never crash silently.** Every error must either show a user-visible message or be logged at `WARN`/`ERROR` level
+2. **Never lose alarm data.** SQLite write errors must not corrupt existing rows. Use transactions for multi-step operations
+3. **Always have a fallback.** Every feature must degrade gracefully — no feature failure should prevent alarms from firing
+4. **Retry before failing.** Transient errors (disk I/O, IPC) get one retry with a short delay
+5. **Log everything.** All errors logged with context: `tracing::error!(alarm_id = %id, error = %e, "Failed to play audio")`
+
+### Rust Error Type
+
+```rust
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum AlarmAppError {
+    #[error("Database error: {0}")]
+    Database(#[from] rusqlite::Error),
+
+    #[error("Audio playback failed: {0}")]
+    Audio(String),
+
+    #[error("IPC timeout after {timeout_ms}ms")]
+    IpcTimeout { timeout_ms: u64 },
+
+    #[error("File not found: {path}")]
+    FileNotFound { path: String },
+
+    #[error("Migration failed: {0}")]
+    Migration(String),
+
+    #[error("Notification permission denied")]
+    NotificationDenied,
+}
+```
+
+### Frontend Error Handling
+
+```typescript
+// All IPC calls wrapped with timeout + error toast
+async function safeInvoke<T>(command: string, args?: Record<string, unknown>): Promise<T | null> {
+  try {
+    const result = await Promise.race([
+      invoke<T>(command, args),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+    ]);
+    return result;
+  } catch (error) {
+    toast.error(getErrorMessage(error));
+    console.error(`IPC ${command} failed:`, error);
+    return null;
+  }
+}
+```
+
+### Critical Path Protection
+
+The alarm firing path has **zero tolerance for unhandled errors**. The engine loop must never stop:
+
+```rust
+// alarm_engine.rs — main loop
+loop {
+    match self.check_and_fire_alarms().await {
+        Ok(_) => {},
+        Err(e) => {
+            tracing::error!(error = %e, "Alarm engine tick failed — continuing");
+            // NEVER break the loop. Log and continue.
+        }
+    }
+    tokio::time::sleep(Duration::from_secs(30)).await;
+}
+```
+
+---
+
 ## Platform Support Matrix
 
 | Feature | macOS | Windows | Linux | iOS | Android |
@@ -112,5 +208,7 @@ Documents platform-specific constraints and mitigations for the Alarm App as a c
 | Reference | Location |
 |-----------|----------|
 | Platform Strategy | `./05-platform-strategy.md` |
+| Startup Sequence | `./07-startup-sequence.md` |
 | Alarm Firing Feature | `../02-features/03-alarm-firing.md` |
 | Sound & Vibration Feature | `../02-features/05-sound-and-vibration.md` |
+| App Issues | `../03-app-issues/03-backend-issues.md` → BE-ERROR-001 |

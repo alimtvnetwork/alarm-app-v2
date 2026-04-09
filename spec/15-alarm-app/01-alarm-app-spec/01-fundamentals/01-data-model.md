@@ -1,9 +1,10 @@
 # Data Model
 
-**Version:** 1.3.0  
-**Updated:** 2026-04-08  
+**Version:** 1.4.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
-**Ambiguity:** None
+**Ambiguity:** None  
+**Resolves:** DB-MIGRATE-001
 
 ---
 
