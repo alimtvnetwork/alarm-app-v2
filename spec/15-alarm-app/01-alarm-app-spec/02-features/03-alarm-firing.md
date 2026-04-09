@@ -443,6 +443,13 @@ src-tauri/src/engine/
 | Snooze button | Stops audio, schedules re-fire (hidden when max snooze reached) |
 | Auto-dismiss countdown | Progress bar if auto-dismiss is enabled |
 
+### Multi-Monitor Behavior (Resolves FE-OVERLAY-001)
+
+- **App visible on a monitor:** Overlay appears on the same monitor as the app window, using `WebviewWindow::current_monitor()` bounds
+- **App minimized to tray:** Overlay appears on the **primary monitor** via `Monitor::primary()`
+- **Overlay window:** Created with `fullscreen: true` on the target monitor. Uses Tauri `WindowBuilder::position(x, y).inner_size(w, h)` matching monitor bounds
+- **All platforms:** Overlay window is `always_on_top: true`, `decorations: false`, `resizable: false`
+
 ---
 
 ## Acceptance Criteria
