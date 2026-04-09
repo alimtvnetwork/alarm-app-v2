@@ -16,7 +16,7 @@ linters:
     # ── CODE RED enforcement ──────────────────────────────────────
     - nestif          # CODE-RED-001: No nested if
     - cyclop          # CODE-RED-004: Function complexity / length
-    - goerr113        # CODE-RED-005: No fmt.Errorf (forces wrapping)
+    - err113          # CODE-RED-005: No fmt.Errorf (forces wrapping) [renamed from goerr113]
     - funlen          # CODE-RED-004: Max function length
     - gocognit        # Cognitive complexity (supports nesting detection)
 

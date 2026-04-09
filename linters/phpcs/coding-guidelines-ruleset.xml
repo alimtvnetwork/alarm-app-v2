@@ -40,15 +40,12 @@
 
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <!-- CODE-RED-004: Max function length (15 lines)                    -->
+  <!-- NOTE: PHP_CodeSniffer has NO built-in function-length sniff.    -->
+  <!-- Use PHPMD (PHP Mess Detector) with the ExcessiveMethodLength    -->
+  <!-- rule instead:                                                   -->
+  <!--   phpmd src/ text codesize --minimumtokens 15                   -->
+  <!-- Or use the Go/Python validator: validate-guidelines.go/py       -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
-  <rule ref="Generic.Metrics.FunctionLength">
-    <properties>
-      <property name="lineLimit" value="15"/>
-      <property name="absoluteLineLimit" value="25"/>
-    </properties>
-    <type>error</type>
-    <message>🔴 CODE RED: Function exceeds 15 lines. Extract logic into smaller helpers.</message>
-  </rule>
 
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <!-- CODE-RED-004: Cyclomatic complexity                             -->

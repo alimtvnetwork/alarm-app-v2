@@ -32,8 +32,11 @@ if [[ "$CURRENT" == "NOT_FOUND" ]]; then
   exit 0
 fi
 
-# Check: range symbols
-if [[ "$CURRENT" == ^* ]] || [[ "$CURRENT" == ~* ]] || [[ "$CURRENT" == ">="* ]] || [[ "$CURRENT" == "*" ]] || [[ "$CURRENT" == "latest" ]]; then
+# Check: range symbols or tags (strip surrounding quotes if any)
+CURRENT="${CURRENT%\"}"
+CURRENT="${CURRENT#\"}"
+
+if [[ "$CURRENT" =~ ^[\^~\>\<\*] ]] || [[ "$CURRENT" == "latest" ]] || [[ "$CURRENT" == "next" ]]; then
   echo "❌ FAIL: Axios version uses a range symbol or tag: $CURRENT"
   echo "   Fix: Use an exact version like \"axios\": \"1.14.0\""
   exit 1
