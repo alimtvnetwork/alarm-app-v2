@@ -41,12 +41,43 @@ Users can create new alarms by setting a time (hour and minute), optional date, 
 
 ### Delete (Soft-Delete with Undo)
 
+> **Resolves BE-DELETE-001.** Defines the timer mechanism and crash recovery for permanent deletion.
+
 - Sets `deletedAt` timestamp instead of hard-deleting immediately
 - Shows a 5-second undo toast in the UI
 - If undone: clears `deletedAt` back to null
-- After 5 seconds: Rust backend permanently removes the row
+- **Timer mechanism:** `tokio::spawn` with `tokio::time::sleep(Duration::from_secs(5))`, then `DELETE FROM alarms WHERE id = ? AND deleted_at IS NOT NULL`
+- **Crash recovery:** On app startup, purge all rows where `deleted_at < now - 5 seconds` (cleanup pass)
 - IPC command: `invoke("delete_alarm", { alarmId })` → returns `{ undoToken }`
 - Undo IPC: `invoke("undo_delete_alarm", { undoToken })`
+
+```rust
+// Soft-delete timer
+pub async fn schedule_permanent_delete(pool: SqlitePool, alarm_id: String, undo_token: String) {
+    tokio::spawn(async move {
+        tokio::time::sleep(Duration::from_secs(5)).await;
+
+        // Only delete if still soft-deleted (not undone)
+        let rows = sqlx::query("DELETE FROM alarms WHERE id = ? AND deleted_at IS NOT NULL")
+            .bind(&alarm_id)
+            .execute(&pool).await;
+
+        if let Ok(result) = rows {
+            if result.rows_affected() > 0 {
+                tracing::info!(alarm_id = %alarm_id, "Permanently deleted alarm");
+            }
+        }
+    });
+}
+
+// Startup cleanup (in startup sequence Step 8)
+pub async fn cleanup_stale_soft_deletes(pool: &SqlitePool) {
+    let cutoff = Utc::now() - chrono::Duration::seconds(5);
+    sqlx::query("DELETE FROM alarms WHERE deleted_at IS NOT NULL AND deleted_at < ?")
+        .bind(cutoff.to_rfc3339())
+        .execute(pool).await.ok();
+}
+```
 
 ### Toggle
 

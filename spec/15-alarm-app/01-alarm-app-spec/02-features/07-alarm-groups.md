@@ -35,15 +35,39 @@ Alarms can be organized into named groups (e.g., "Workday", "Weekend", "Gym"). G
 
 ## Master Toggle Logic
 
-When a group is disabled:
-1. Save each alarm's current `enabled` state to a map: `{ [alarmId]: boolean }`
-2. Set all member alarms to `enabled = 0` in SQLite
+> **Resolves FE-STATE-001.** Without per-alarm state tracking, re-enabling a group would enable ALL alarms — even those the user had manually disabled.
 
-When a group is re-enabled:
-1. Restore each alarm's `enabled` state from the saved map
-2. Clear the saved map
+### Column: `previous_enabled`
 
-Toggle state saved in the `settings` SQLite table under key `group-toggle-state`.
+Add `previous_enabled INTEGER` column to the `alarms` table. This stores each alarm's `enabled` state before a group toggle-off.
+
+### Disable Group Flow
+
+1. For each alarm in the group: save `enabled` → `previous_enabled`
+2. Set all member alarms to `enabled = 0`
+3. Set group `enabled = 0`
+4. Recompute `nextFireTime` (all become NULL)
+
+### Enable Group Flow
+
+1. For each alarm in the group: restore `enabled` from `previous_enabled`
+2. Set `previous_enabled = NULL` (clear)
+3. Set group `enabled = 1`
+4. Recompute `nextFireTime` for restored-enabled alarms
+
+### IPC Commands
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `toggle_group` | `{ groupId: string, enabled: boolean }` | `void` |
+
+### Edge Cases
+
+| Scenario | Behavior |
+|----------|----------|
+| User manually toggles alarm while group is off | Writes to `enabled` directly; `previous_enabled` unchanged |
+| Group deleted while disabled | Alarms moved to ungrouped with `enabled = previous_enabled` (restore before move) |
+| `previous_enabled` is NULL when re-enabling | Treat as `enabled = 1` (default on) |
 
 ---
 

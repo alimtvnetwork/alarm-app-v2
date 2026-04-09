@@ -50,10 +50,47 @@ Each alarm has its own sound selection — either from the built-in library (8-1
 
 ## Gradual Volume Increase (Fade-In)
 
-- Alarm starts at ~10% volume and increases linearly to 100%
+> **Resolves BE-AUDIO-001.** Raw linear amplitude sounds wrong — human hearing is logarithmic.
+
+- Alarm starts at ~10% volume and increases **perceptually** to 100%
 - Duration options: 15, 30, or 60 seconds
 - Implemented in Rust via native audio API — volume ramp controlled by the `audio/gradual_volume.rs` module
 - Per-alarm setting: `gradualVolume: boolean`, `gradualVolumeDurationSec: number`
+
+### Volume Curve Algorithm
+
+`rodio::Sink::set_volume()` is amplitude-linear, not perceptually linear. A **quadratic curve** approximates perceived loudness:
+
+```rust
+// src-tauri/src/audio/gradual_volume.rs
+
+const UPDATE_INTERVAL_MS: u64 = 100;
+const MIN_VOLUME: f32 = 0.1;
+
+/// Runs on a tokio::interval, updating sink volume every 100ms
+pub async fn run_gradual_volume(sink: &Sink, duration_sec: u32) {
+    let mut interval = tokio::time::interval(Duration::from_millis(UPDATE_INTERVAL_MS));
+    let start = Instant::now();
+    let duration = Duration::from_secs(duration_sec as u64);
+
+    loop {
+        interval.tick().await;
+        let elapsed = start.elapsed();
+
+        if elapsed >= duration {
+            sink.set_volume(1.0);
+            break;
+        }
+
+        // Quadratic curve: feels more natural than linear
+        let t = elapsed.as_secs_f32() / duration.as_secs_f32();
+        let volume = MIN_VOLUME + (1.0 - MIN_VOLUME) * (t * t);
+        sink.set_volume(volume);
+    }
+}
+```
+
+**Why quadratic, not logarithmic?** True log curves start too quietly. `t²` provides a perceptually even increase from 10% → 100% that users perceive as "steady ramp." The 100ms update interval keeps transitions smooth without excessive CPU use.
 
 ---
 
