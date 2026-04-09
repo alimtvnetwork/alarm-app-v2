@@ -194,7 +194,7 @@
 9. Start WebView / render React UI
 10. Update tray with next alarm time
 
-**Resolution Plan:** Create `01-fundamentals/10-startup-sequence.md` with the ordered initialization steps, error handling at each stage, and a startup state diagram.
+**Resolution:** Created `01-fundamentals/07-startup-sequence.md` with 9-step ordered initialization, parallel init via `tokio::join!`, error handling per step, and startup time budget (<750ms).
 
 ---
 
