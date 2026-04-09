@@ -1,6 +1,6 @@
 # Content Gaps
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-09
 
 ---
@@ -54,8 +54,6 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 
 ---
 
----
-
 ## CG-005: No Exemptions List for External Conventions
 
 **Severity:** 🟡 Medium  
@@ -93,5 +91,45 @@ These prose references must also be updated when column names change to PascalCa
 
 ---
 
-## Issues Found So Far: 7
-## Open: 7 | Resolved: 0
+## CG-008: Scheduling Spec Uses Stale `recurringDays` Term
+
+**Severity:** 🟡 Medium  
+**Location:** `02-features/02-alarm-scheduling.md`  
+**Cross-ref:** UX-008 in `07-ui-ux-consistency.md`  
+**Status:** 🔴 Open
+
+**Problem:** `02-alarm-scheduling.md` line 27 uses `recurringDays` — replaced by `RepeatPattern` in data model. "One-time alarms (empty `recurringDays`) auto-disable" contradicts `repeat.type = "once"` pattern in `01-data-model.md`. AI will be confused about which pattern to implement.
+
+---
+
+## CG-009: Settings Page Component Not Specified
+
+**Severity:** 🟡 Medium  
+**Status:** 🔴 Open
+
+**Problem:** Multiple features reference "Settings page" (theme, i18n, retention days, shortcut reference, bedtime) but no `Settings.tsx` or settings page component exists in `03-file-structure.md`. No routing or page navigation defined — unclear if Settings is a dialog, page, or drawer.
+
+---
+
+## CG-010: No Error Toast Component in File Structure
+
+**Severity:** 🟢 Low  
+**Status:** 🔴 Open
+
+**Problem:** `04-platform-constraints.md` references `toast.error()` extensively; `01-alarm-crud.md` references `UndoToast` component. No toast library specified (Sonner? react-hot-toast? Custom?) and file structure doesn't list a toast component.
+
+---
+
+## CG-011: `02-alarm-scheduling.md` Severely Outdated
+
+**Severity:** 🟡 Medium  
+**Location:** `02-features/02-alarm-scheduling.md`  
+**Cross-ref:** UX-011 in `07-ui-ux-consistency.md`  
+**Status:** 🔴 Open
+
+**Problem:** Version 1.0.0 vs all other feature files at 1.1.0–1.6.0. Still references `recurringDays` (deprecated). Doesn't mention `interval` or `cron` repeat types (added in data model). Quick Alarm / Holiday features mentioned but no IPC commands, Rust logic, or data model integration. AI will find contradictory scheduling information.
+
+---
+
+## Issues Found So Far: 11
+## Open: 11 | Resolved: 0

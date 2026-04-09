@@ -1,6 +1,6 @@
 # Naming Violations
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-09
 
 ---
@@ -131,8 +131,6 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 
 ---
 
----
-
 ## NV-007: Primary Key Uses Generic `id` Instead of `{TableName}Id`
 
 **Severity:** 🔴 Critical  
@@ -217,5 +215,60 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 
 ---
 
-## Issues Found So Far: 12
-## Open: 12 | Resolved: 0
+## NV-013: TS HistoryFilter Uses camelCase Keys
+
+**Severity:** 🟡 Medium  
+**Location:** `02-features/13-analytics.md` (lines 48–56)  
+**Rule Violated:** `11-key-naming-pascalcase.md` §1  
+**Cross-ref:** UX-005 in `07-ui-ux-consistency.md`  
+**Status:** 🔴 Open
+
+| Current (camelCase) | Required (PascalCase) |
+|---------------------|-----------------------|
+| `startDate` | `StartDate` |
+| `endDate` | `EndDate` |
+| `groupId` | `GroupId` |
+| `alarmId` | `AlarmId` |
+| `eventType` | `EventType` |
+| `sortBy` | `SortBy` |
+| `sortOrder` | `SortOrder` |
+
+---
+
+## NV-014: ImportResult Uses camelCase Keys
+
+**Severity:** 🟡 Medium  
+**Location:** `02-features/10-export-import.md` (lines 96–101)  
+**Rule Violated:** `11-key-naming-pascalcase.md` §1  
+**Cross-ref:** UX-006 in `07-ui-ux-consistency.md`  
+**Status:** 🔴 Open
+
+| Current | Required |
+|---------|----------|
+| `imported` | `Imported` |
+| `skipped` | `Skipped` |
+| `overwritten` | `Overwritten` |
+| `errors` | `Errors` |
+
+---
+
+## NV-015: UndoEntry Interface Uses camelCase
+
+**Severity:** 🟡 Medium  
+**Location:** `02-features/01-alarm-crud.md` (lines 215–220)  
+**Rule Violated:** `11-key-naming-pascalcase.md` §1  
+**Cross-ref:** UX-007 in `07-ui-ux-consistency.md`  
+**Status:** 🔴 Open
+
+| Current | Required |
+|---------|----------|
+| `token` | `Token` |
+| `alarmId` | `AlarmId` |
+| `label` | `Label` |
+| `expiresAt` | `ExpiresAt` |
+| `timerId` | `TimerId` |
+
+---
+
+## Issues Found So Far: 15
+## Open: 15 | Resolved: 0
