@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SonarQube Quality Profile — TypeScript/JavaScript Coding Guidelines
+  
+  Import this profile in SonarQube: Quality Profiles → Create → Restore Profile
+  
+  Maps CODE RED rules to SonarQube TypeScript/JavaScript built-in rules.
+  For rules without direct SonarQube equivalents, use the Go/Python validator scripts.
+-->
+<profile>
+  <name>Coding Guidelines - CODE RED</name>
+  <language>ts</language>
+
+  <rules>
+    <!-- CODE-RED-001: No nested if → Cognitive Complexity -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S3776</key>
+      <priority>BLOCKER</priority>
+      <parameters>
+        <parameter>
+          <key>threshold</key>
+          <value>5</value>
+        </parameter>
+      </parameters>
+    </rule>
+
+    <!-- CODE-RED-001: Nesting depth -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S134</key>
+      <priority>BLOCKER</priority>
+      <parameters>
+        <parameter>
+          <key>max</key>
+          <value>1</value>
+        </parameter>
+      </parameters>
+    </rule>
+
+    <!-- CODE-RED-001 alt: Collapsible if statements -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S1066</key>
+      <priority>CRITICAL</priority>
+    </rule>
+
+    <!-- CODE-RED-003: No magic strings → Duplicated string literals -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S1192</key>
+      <priority>CRITICAL</priority>
+      <parameters>
+        <parameter>
+          <key>threshold</key>
+          <value>2</value>
+        </parameter>
+      </parameters>
+    </rule>
+
+    <!-- CODE-RED-004: Max function lines -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S138</key>
+      <priority>BLOCKER</priority>
+      <parameters>
+        <parameter>
+          <key>max</key>
+          <value>15</value>
+        </parameter>
+      </parameters>
+    </rule>
+
+    <!-- CODE-RED-011: No magic numbers -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S109</key>
+      <priority>CRITICAL</priority>
+    </rule>
+
+    <!-- CODE-RED-012: Prefer const → no var -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S3504</key>
+      <priority>CRITICAL</priority>
+    </rule>
+
+    <!-- CODE-RED-002 / Boolean: Return boolean directly -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S1126</key>
+      <priority>MAJOR</priority>
+    </rule>
+
+    <!-- DRY: Identical code branches -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S1871</key>
+      <priority>MAJOR</priority>
+    </rule>
+
+    <!-- DRY: Identical functions -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S4144</key>
+      <priority>MAJOR</priority>
+    </rule>
+
+    <!-- General: Functions should not have too many parameters -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S107</key>
+      <priority>MAJOR</priority>
+      <parameters>
+        <parameter>
+          <key>max</key>
+          <value>3</value>
+        </parameter>
+      </parameters>
+    </rule>
+
+    <!-- CODE-RED-015: No 'any' type -->
+    <rule>
+      <repositoryKey>typescript</repositoryKey>
+      <key>typescript:S4204</key>
+      <priority>CRITICAL</priority>
+    </rule>
+  </rules>
+</profile>
