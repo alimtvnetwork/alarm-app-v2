@@ -63,6 +63,7 @@ Comprehensive research into game development technologies — engines, languages
 | 08 | `08-doom-and-retro-research.md` | How Doom 1993 was built, modern retro approaches, raycasting, software rendering |
 | 09 | `09-3d-game-direction.md` | Entering 3D game development — engines vs frameworks vs custom, rendering pipelines |
 | 10 | `10-final-summary.md` | Generic + game-specific recommendations, decision matrices, cost-benefit analysis |
+| 11 | `11-game-framework-analysis.md` | Multi-dimensional framework evaluation — DX, security, UI/UX, performance, community, learning curve |
 
 ---
 
