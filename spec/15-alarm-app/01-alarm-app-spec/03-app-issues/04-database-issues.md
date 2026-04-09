@@ -85,31 +85,15 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 70% |
-| **Status** | Open |
-| **Fail %** | 55% |
+| **Likelihood** | 70% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 55% → 5% |
 
-**Description:** `repeat_days_of_week` stored as JSON string (`"[0,3,5]"`) in a TEXT column. The spec shows TypeScript interfaces but not the Rust serialization/deserialization strategy. AI will likely get `serde_json` parsing wrong.
+**Description:** `repeat_days_of_week` stored as JSON string (`"[0,3,5]"`) in a TEXT column. The spec shows TypeScript interfaces but not the Rust serialization/deserialization strategy.
 
 **Root Cause:** Missing Rust-side data mapping examples.
 
-**Suggested Fix:** Add Rust struct example:
-```rust
-#[derive(Debug, Serialize, Deserialize)]
-struct AlarmRow {
-    repeat_type: String,
-    repeat_days_of_week: String, // JSON: "[0,3,5]"
-    // ...
-}
-
-impl AlarmRow {
-    fn days_of_week(&self) -> Vec<u8> {
-        serde_json::from_str(&self.repeat_days_of_week).unwrap_or_default()
-    }
-}
-```
-
-**Resolution Plan:** Add Rust struct examples to `01-fundamentals/01-data-model.md` showing the full `AlarmRow` struct with all JSON field deserializers.
+**Resolution:** Added complete `AlarmRow` Rust struct to `01-fundamentals/01-data-model.md` v1.6.0 with `from_row()` constructor, `days_of_week()` JSON deserializer, `repeat_pattern()` converter, `RepeatType` enum with `FromStr`, and key patterns for SQLite INTEGER→bool, JSON TEXT, and nullable columns.
 
 ---
 

@@ -53,14 +53,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 75% |
-| **Status** | Open |
+| **Likelihood** | 75% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** Custom sound file validation has no max file size, no format validation beyond extension, and no handling for moved/deleted files.
 
 **Root Cause:** Missing validation spec.
 
-**Suggested Fix:** On alarm fire, check `std::path::Path::exists()` for custom sound file. If missing, fall back to default `classic-beep` and log a warning. Show "Sound file missing" in overlay.
+**Resolution:** Added `validate_custom_sound()` function and `resolve_sound_path()` fallback to `02-features/05-sound-and-vibration.md` v1.4.0. Includes extension check, 10MB size limit, symlink rejection, platform-specific restricted path blocking, and missing-file fallback to `classic-beep`.
 
 ---
 
@@ -85,14 +85,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 70% |
-| **Status** | Open |
+| **Likelihood** | 70% → 0% |
+| **Status** | ✅ Resolved |
 
-**Description:** `RepeatPattern` supports "cron" type but no Rust cron crate is specified. `cron`, `croner`, and `saffron` all have different syntax support.
+**Description:** `RepeatPattern` supports "cron" type but no Rust cron crate is specified.
 
 **Root Cause:** Missing technology decision.
 
-**Suggested Fix:** Use `croner` crate — MIT licensed, lightweight, supports standard 5-field cron + extensions.
+**Resolution:** Specified `croner` crate v2.0 in `01-fundamentals/01-data-model.md` v1.6.0 (RepeatPattern section) and pinned in `01-fundamentals/03-file-structure.md` Cargo.toml. Used in `compute_next_fire_time()` in `02-features/03-alarm-firing.md`.
 
 ---
 
@@ -243,20 +243,15 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 65% |
-| **Status** | Open |
-| **Fail %** | 55% |
+| **Likelihood** | 65% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 55% → 5% |
 
-**Description:** macOS requires setting the Core Audio session category for alarm-type playback. Without it, audio may be muted by Do Not Disturb or volume may follow system media volume instead of alarm volume.
+**Description:** macOS requires setting the Core Audio session category for alarm-type playback. Without it, audio may be muted by Do Not Disturb.
 
 **Root Cause:** Platform-specific audio detail not in spec.
 
-**Suggested Fix:**
-- macOS: Set `AVAudioSession` category to `.playback` with `.duckOthers` option (via `objc2` FFI or `coreaudio-rs`)
-- This ensures alarm audio plays even when DND is on
-- Alternatively, use Tauri notification with sound attachment for critical alarms
-
-**Resolution Plan:** Add platform-specific audio configuration to `02-features/05-sound-and-vibration.md` under a "Platform Audio Session" section.
+**Resolution:** Added "Platform Audio Sessions" section to `02-features/05-sound-and-vibration.md` v1.4.0 with macOS `AVAudioSession` configuration (`.playback` + `.duckOthers`), Windows/Linux notes, and startup integration point.
 
 ---
 

@@ -119,21 +119,15 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 85% |
-| **Status** | Open |
-| **Fail %** | 30% |
+| **Likelihood** | 85% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 30% → 5% |
 
-**Description:** No unit test, integration test, or E2E test strategy specified. AI will produce untested code with no verification mechanism.
+**Description:** No unit test, integration test, or E2E test strategy specified. AI will produce untested code.
 
 **Root Cause:** Missing quality assurance spec.
 
-**Suggested Fix:**
-- **Rust unit tests:** `scheduler.rs` (nextFireTime calculation for all 5 repeat types + DST), `gradual_volume.rs`, validation functions
-- **Rust integration tests:** IPC command handlers with in-memory SQLite
-- **Frontend unit tests:** `useAlarms` hook, `AlarmForm` validation, time formatting
-- **E2E test:** Create alarm → wait for fire → dismiss → verify event logged (use Tauri's `tauri-driver` or WebDriver)
-
-**Resolution Plan:** Create `01-fundamentals/12-test-strategy.md` defining test layers, coverage targets, and CI integration requirements.
+**Resolution:** Created `01-fundamentals/09-test-strategy.md` v1.0.0 with 4 test layers: Rust unit tests (`cargo test`, 90% coverage for scheduler), Rust integration tests (in-memory SQLite, IPC handler flows), frontend unit tests (Vitest + React Testing Library, 70% coverage), and E2E tests (`tauri-driver` + Playwright). Includes CI integration YAML, test fixtures, and coverage thresholds.
 
 ---
 

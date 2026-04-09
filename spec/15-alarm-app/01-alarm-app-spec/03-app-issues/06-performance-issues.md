@@ -21,14 +21,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 45% |
-| **Status** | Open |
+| **Likelihood** | 45% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** SQLite init + migration check + alarm scan + audio init + tray setup + WebView init. On HDD systems this chain may exceed the 2s NFR target.
 
 **Root Cause:** Sequential initialization assumed.
 
-**Suggested Fix:** Parallelize startup: WebView init + SQLite init run concurrently. Audio init is lazy (only when first alarm fires). Tray setup can happen after window shows. Use `tokio::join!` for concurrent init.
+**Resolution:** Already resolved by `01-fundamentals/07-startup-sequence.md` v1.0.0 which parallelizes startup via `tokio::join!` (tray + logging + WebView run concurrently), lazy audio init (only on first alarm fire), and total budget of <750ms — well under the 2s NFR.
 
 ---
 
@@ -37,14 +37,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 55% |
-| **Status** | Open |
+| **Likelihood** | 55% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** WebView2 alone uses ~80–120MB on Windows. Adding Rust runtime + SQLite may exceed the 150MB idle budget.
 
 **Root Cause:** WebView overhead is outside app control.
 
-**Suggested Fix:** Revise NFR to 200MB idle target. Minimize React bundle size. Use `React.lazy()` for settings/history views. Consider hiding (not destroying) WebView when minimized to tray.
+**Resolution:** Revised NFR to 200MB idle target in `01-fundamentals/04-platform-constraints.md` v1.3.0 under "Memory Budget" section. Added component memory breakdown, `React.lazy()` route splitting, audio sink disposal, paginated history, and WebView hide-on-minimize strategy.
 
 ---
 
