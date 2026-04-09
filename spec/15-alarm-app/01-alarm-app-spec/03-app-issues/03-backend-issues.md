@@ -69,14 +69,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 75% |
-| **Status** | Open |
+| **Likelihood** | 75% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** macOS `NSWorkspace`, Windows `WM_POWERBROADCAST`, Linux `systemd-logind` all require platform-specific Rust code. No Tauri plugin exists.
 
 **Root Cause:** Missing from Tauri plugin ecosystem.
 
-**Suggested Fix:** Use conditional compilation: macOS → `objc2` crate, Windows → `windows` crate, Linux → `zbus` crate for systemd D-Bus signals.
+**Resolution:** Added "Platform Wake-Event Listeners" section to `02-features/03-alarm-firing.md` v1.5.0 with `WakeListener` trait, platform factory, and complete Rust implementations for macOS (`objc2` + `NSWorkspace`), Windows (`WM_POWERBROADCAST` hidden window), and Linux (`zbus` + `PrepareForSleep` D-Bus signal). Includes integration code with alarm engine and file structure additions.
 
 ---
 

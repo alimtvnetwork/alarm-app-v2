@@ -1,10 +1,11 @@
 # Alarm CRUD
 
-**Version:** 1.3.0  
-**Updated:** 2026-04-08  
+**Version:** 1.4.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**Priority:** P0 — Must Have
+**Priority:** P0 — Must Have  
+**Resolves:** FE-A11Y-001
 
 ---
 
@@ -64,7 +65,92 @@ Users can create new alarms by setting a time (hour and minute), optional date, 
 - On drop: updates `groupId` in SQLite
 - IPC command: `invoke("move_alarm_to_group", { alarmId, groupId })`
 - Null `groupId` = "Ungrouped" section
-- **Keyboard alternative:** `Ctrl+Shift+↑/↓` to move alarm between groups (WCAG 2.1 AA compliance via `dnd-kit` keyboard sensor)
+
+### Keyboard & Screen Reader Accessibility (WCAG 2.1 AA)
+
+> **Resolves FE-A11Y-001.** Drag-and-drop is inherently inaccessible. This section defines the keyboard alternative.
+
+#### Keyboard Controls
+
+| Action | Shortcut | Behavior |
+|--------|----------|----------|
+| Focus alarm item | `Tab` / `Shift+Tab` | Standard focus navigation through alarm list |
+| Pick up alarm | `Space` or `Enter` | Enters "reorder mode" — item visually lifts, screen reader announces "Grabbed {label}. Use arrow keys to move." |
+| Move within group | `↑` / `↓` | Reorders alarm position within current group |
+| Move between groups | `Ctrl+↑` / `Ctrl+↓` | Moves alarm to previous/next group, placing it at the end |
+| Drop alarm | `Space` or `Enter` | Confirms new position. Screen reader announces "Dropped {label} in {group name}, position {n} of {total}" |
+| Cancel reorder | `Escape` | Returns alarm to original position. Screen reader announces "Reorder cancelled" |
+
+#### `dnd-kit` Keyboard Sensor Configuration
+
+```tsx
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+
+const sensors = useSensors(
+  useSensor(PointerSensor),
+  useSensor(KeyboardSensor, {
+    coordinateGetter: sortableKeyboardCoordinates,
+  })
+);
+
+// In JSX:
+<DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+  {/* AlarmList with SortableContext per group */}
+</DndContext>
+```
+
+#### ARIA Attributes
+
+```tsx
+// Each alarm item in the list
+<div
+  role="listitem"
+  aria-roledescription="sortable alarm"
+  aria-label={`${alarm.label}, ${alarm.time}, ${alarm.enabled ? 'enabled' : 'disabled'}`}
+  aria-describedby="dnd-instructions"
+  tabIndex={0}
+>
+  {/* alarm content */}
+</div>
+
+// Hidden instructions for screen readers
+<div id="dnd-instructions" className="sr-only">
+  Press Space to pick up. Use arrow keys to move within a group.
+  Use Ctrl+Arrow to move between groups. Press Space to drop, Escape to cancel.
+</div>
+```
+
+#### Live Region for Announcements
+
+```tsx
+// Announce drag state changes to screen readers
+<div role="status" aria-live="polite" aria-atomic className="sr-only">
+  {dragAnnouncement}
+</div>
+
+// Set dragAnnouncement to:
+// On grab: "Grabbed Morning Alarm. Use arrow keys to move."
+// On move: "Morning Alarm moved to Work group, position 2 of 5"
+// On drop: "Dropped Morning Alarm in Work group, position 2 of 5"
+// On cancel: "Reorder cancelled. Morning Alarm returned to original position."
+```
+
+#### Acceptance Criteria (Accessibility)
+
+- [ ] All alarm items are focusable via keyboard (`Tab`)
+- [ ] `Space` enters reorder mode with visual + audible feedback
+- [ ] Arrow keys move items; `Ctrl+Arrow` crosses group boundaries
+- [ ] `Escape` cancels reorder and restores original position
+- [ ] Screen reader announces all state changes via `aria-live` region
+- [ ] No drag-only interactions — every action has a keyboard equivalent
+- [ ] Focus indicator visible on all interactive elements (2px outline min)
 
 ---
 

@@ -69,14 +69,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 80% |
-| **Status** | Open |
+| **Likelihood** | 80% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** DnD is inherently inaccessible. Spec requires WCAG 2.1 AA but doesn't specify keyboard alternative for reordering.
 
 **Root Cause:** Conflicting requirements (DnD + a11y).
 
-**Suggested Fix:** Add keyboard alternative: `Ctrl+Shift+↑/↓` to move alarm between groups. `dnd-kit` has built-in keyboard sensor.
+**Resolution:** Added "Keyboard & Screen Reader Accessibility" section to `02-features/01-alarm-crud.md` v1.4.0 with full keyboard shortcut table (Space to grab, arrows to move, Ctrl+arrows for cross-group, Escape to cancel), `dnd-kit` KeyboardSensor config, ARIA attributes (`role`, `aria-roledescription`, `aria-describedby`), live region announcements, and 7 accessibility acceptance criteria.
 
 ---
 

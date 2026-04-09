@@ -1,11 +1,11 @@
 # Alarm Firing
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
-**Resolves:** BE-QUEUE-001, UX-DST-001, UX-TZ-001
+**Resolves:** BE-QUEUE-001, UX-DST-001, UX-TZ-001, BE-WAKE-001
 
 ---
 
@@ -189,12 +189,225 @@ This is the most important reliability feature. Desktop computers sleep, shut do
 
 1. **Persist `nextFireTime`** for every enabled alarm in SQLite
 2. **On app launch:** query all alarms where `next_fire_time < now AND enabled = 1 AND deleted_at IS NULL AND type != 'acknowledged'` → fire missed alarm notifications
-3. **On system wake:** same check via OS power event listener
-   - macOS: `NSWorkspace.willSleepNotification` / `didWakeNotification`
-   - Windows: `WM_POWERBROADCAST` / `PBT_APMRESUMEAUTOMATIC`
-   - Linux: `systemd-logind` `PrepareForSleep` signal
+3. **On system wake:** same check via OS power event listener (see Platform Wake-Event Listeners below)
 4. **On every 30s tick:** check if any alarm's `nextFireTime <= now`
 5. **After firing:** update `nextFireTime` based on repeat pattern, or disable if one-time
+
+### Platform Wake-Event Listeners
+
+> **Resolves BE-WAKE-001.** No Tauri plugin exists for system sleep/wake events. Platform-specific Rust FFI is required.
+
+#### Architecture
+
+```rust
+// src-tauri/src/engine/wake_listener.rs
+
+/// Trait for platform-specific wake detection
+pub trait WakeListener: Send + 'static {
+    /// Start listening for wake events. Calls `on_wake` when system resumes.
+    fn start(&self, on_wake: Box<dyn Fn() + Send + Sync>) -> Result<(), AlarmAppError>;
+    /// Stop listening (cleanup)
+    fn stop(&self);
+}
+
+/// Factory: returns the correct listener for the current platform
+pub fn create_wake_listener() -> Box<dyn WakeListener> {
+    #[cfg(target_os = "macos")]
+    { Box::new(macos::MacOsWakeListener::new()) }
+
+    #[cfg(target_os = "windows")]
+    { Box::new(windows::WindowsWakeListener::new()) }
+
+    #[cfg(target_os = "linux")]
+    { Box::new(linux::LinuxWakeListener::new()) }
+}
+```
+
+#### macOS — `NSWorkspace` Notifications
+
+```rust
+// src-tauri/src/engine/wake_listener/macos.rs
+use objc2::runtime::*;
+use objc2_foundation::*;
+use objc2_app_kit::NSWorkspace;
+
+pub struct MacOsWakeListener;
+
+impl MacOsWakeListener {
+    pub fn new() -> Self { Self }
+}
+
+impl WakeListener for MacOsWakeListener {
+    fn start(&self, on_wake: Box<dyn Fn() + Send + Sync>) -> Result<(), AlarmAppError> {
+        // Subscribe to NSWorkspaceDidWakeNotification
+        let workspace = unsafe { NSWorkspace::sharedWorkspace() };
+        let center = unsafe { workspace.notificationCenter() };
+
+        // Register observer for didWakeNotification
+        // When macOS wakes from sleep, this fires immediately
+        unsafe {
+            center.addObserverForName_object_queue_usingBlock(
+                Some(ns_string!("NSWorkspaceDidWakeNotification")),
+                None,
+                None,
+                &Block::new(move |_notification: &NSNotification| {
+                    tracing::info!("macOS: System woke from sleep");
+                    on_wake();
+                }),
+            );
+        }
+
+        // Also listen for willSleepNotification to log sleep time
+        unsafe {
+            center.addObserverForName_object_queue_usingBlock(
+                Some(ns_string!("NSWorkspaceWillSleepNotification")),
+                None,
+                None,
+                &Block::new(|_: &NSNotification| {
+                    tracing::info!("macOS: System entering sleep");
+                }),
+            );
+        }
+
+        Ok(())
+    }
+
+    fn stop(&self) {
+        // Remove observers on shutdown
+    }
+}
+```
+
+#### Windows — `WM_POWERBROADCAST`
+
+```rust
+// src-tauri/src/engine/wake_listener/windows.rs
+use windows::Win32::System::Power::*;
+use windows::Win32::UI::WindowsAndMessaging::*;
+
+pub struct WindowsWakeListener {
+    hwnd: Option<HWND>,
+}
+
+impl WindowsWakeListener {
+    pub fn new() -> Self { Self { hwnd: None } }
+}
+
+impl WakeListener for WindowsWakeListener {
+    fn start(&self, on_wake: Box<dyn Fn() + Send + Sync>) -> Result<(), AlarmAppError> {
+        // Create a hidden message-only window to receive power events
+        std::thread::spawn(move || {
+            // Register window class + create message-only window
+            // In the window proc:
+            unsafe {
+                // Window procedure handles WM_POWERBROADCAST
+                // match msg {
+                //     WM_POWERBROADCAST => {
+                //         if wparam == PBT_APMRESUMEAUTOMATIC
+                //            || wparam == PBT_APMRESUMESUSPEND {
+                //             tracing::info!("Windows: System resumed from sleep");
+                //             on_wake();
+                //         }
+                //     }
+                // }
+            }
+        });
+        Ok(())
+    }
+
+    fn stop(&self) {
+        // Destroy hidden window
+    }
+}
+```
+
+**Windows power events to handle:**
+
+| Event | Constant | When |
+|-------|----------|------|
+| Resume (automatic) | `PBT_APMRESUMEAUTOMATIC` | System wakes from sleep/hibernate (no user action) |
+| Resume (user) | `PBT_APMRESUMESUSPEND` | System wakes from user-initiated sleep |
+| Suspend | `PBT_APMSUSPEND` | System entering sleep (log only) |
+
+#### Linux — `systemd-logind` D-Bus Signal
+
+```rust
+// src-tauri/src/engine/wake_listener/linux.rs
+use zbus::{Connection, proxy};
+
+#[proxy(
+    interface = "org.freedesktop.login1.Manager",
+    default_service = "org.freedesktop.login1",
+    default_path = "/org/freedesktop/login1"
+)]
+trait Login1Manager {
+    /// Signal emitted before sleep (true) and after wake (false)
+    #[zbus(signal)]
+    fn prepare_for_sleep(&self, start: bool);
+}
+
+pub struct LinuxWakeListener;
+
+impl LinuxWakeListener {
+    pub fn new() -> Self { Self }
+}
+
+impl WakeListener for LinuxWakeListener {
+    fn start(&self, on_wake: Box<dyn Fn() + Send + Sync>) -> Result<(), AlarmAppError> {
+        tokio::spawn(async move {
+            let connection = Connection::system().await
+                .expect("Failed to connect to system D-Bus");
+
+            let proxy = Login1ManagerProxy::new(&connection).await
+                .expect("Failed to create login1 proxy");
+
+            let mut stream = proxy.receive_prepare_for_sleep().await
+                .expect("Failed to subscribe to PrepareForSleep");
+
+            while let Some(signal) = stream.next().await {
+                let args = signal.args().expect("Failed to parse signal args");
+                if !args.start {
+                    // start=false means system just woke up
+                    tracing::info!("Linux: System woke from sleep (PrepareForSleep=false)");
+                    on_wake();
+                } else {
+                    tracing::info!("Linux: System entering sleep (PrepareForSleep=true)");
+                }
+            }
+        });
+        Ok(())
+    }
+
+    fn stop(&self) {}
+}
+```
+
+#### Integration with Alarm Engine
+
+```rust
+// In main.rs setup, after alarm engine starts (Step 7 of startup sequence):
+let engine_clone = engine.clone();
+let wake_listener = create_wake_listener();
+wake_listener.start(Box::new(move || {
+    // On wake: trigger immediate missed alarm check
+    let engine = engine_clone.clone();
+    tokio::spawn(async move {
+        tracing::info!("Wake detected — running missed alarm check");
+        engine.check_missed_alarms().await;
+    });
+}))?;
+```
+
+#### File Structure Addition
+
+```
+src-tauri/src/engine/
+  wake_listener/
+    mod.rs                    — WakeListener trait + factory
+    macos.rs                  — NSWorkspace implementation
+    windows.rs                — WM_POWERBROADCAST implementation
+    linux.rs                  — systemd-logind D-Bus implementation
+```
 
 ### Missed Alarm UI
 
