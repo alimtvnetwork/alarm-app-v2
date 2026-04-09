@@ -220,21 +220,15 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Low |
-| **Likelihood** | 80% |
-| **Status** | Open |
-| **Fail %** | 20% |
+| **Likelihood** | 80% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 20% → 5% |
 
 **Description:** No log format, log levels, or log file location defined. AI will use `println!()` or skip logging entirely. Debugging production issues will be impossible.
 
 **Root Cause:** Missing observability spec.
 
-**Suggested Fix:**
-- Use `tracing` crate + `tracing-subscriber` with `tracing-appender` for file output
-- Log levels: `ERROR` (failures), `WARN` (fallbacks), `INFO` (alarm fire/dismiss/snooze), `DEBUG` (engine ticks)
-- Log file: `{app_data_dir}/logs/alarm-app.log` (rotate daily, keep 7 days)
-- Frontend: `console.warn/error` forwarded to Rust via IPC for unified logging
-
-**Resolution Plan:** Add logging requirements to `01-fundamentals/04-platform-constraints.md` or create a dedicated `01-fundamentals/11-logging.md` spec.
+**Resolution:** Added logging strategy to `01-fundamentals/07-startup-sequence.md` Step 6b and `01-fundamentals/04-platform-constraints.md`. Uses `tracing` + `tracing-subscriber` + `tracing-appender` (daily rotation, 7-day retention). Log levels: ERROR (failures), WARN (fallbacks), INFO (alarm fire/dismiss/snooze), DEBUG (engine ticks). File: `{app_data_dir}/logs/alarm-app.log`. Frontend logs forwarded to Rust via `log_from_frontend` IPC command.
 
 ---
 
@@ -260,33 +254,15 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Low |
-| **Likelihood** | 70% |
-| **Status** | Open |
-| **Fail %** | 45% |
+| **Likelihood** | 70% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 45% → 5% |
 
 **Description:** Spec says "starts at ~10% volume and increases linearly to 100%" but doesn't provide the algorithm or update interval. AI will implement it incorrectly (too coarse, wrong curve).
 
 **Root Cause:** Missing implementation detail.
 
-**Suggested Fix:**
-```
-Algorithm:
-  update_interval = 100ms
-  elapsed = time_since_alarm_fired
-  duration = gradualVolumeDurationSec (15, 30, or 60)
-  
-  if elapsed >= duration:
-    volume = 1.0
-  else:
-    # Perceptual (logarithmic) curve for natural volume increase
-    linear_t = elapsed / duration
-    volume = 0.1 + 0.9 * (linear_t ^ 2)  # quadratic feels more natural than linear
-  
-  set_sink_volume(volume)
-```
-Update `rodio::Sink::set_volume()` every 100ms via a `tokio::interval` timer.
-
-**Resolution Plan:** Add the volume algorithm pseudocode to `02-features/05-sound-and-vibration.md` under "Gradual Volume Implementation".
+**Resolution:** Already resolved by BE-AUDIO-001 fix. Complete `run_gradual_volume()` Rust implementation added to `02-features/05-sound-and-vibration.md` v1.4.0 with quadratic curve (`t²`), 100ms `tokio::interval`, `MIN_VOLUME = 0.1`, and `Sink::set_volume()` calls. Includes rationale for quadratic over logarithmic.
 
 ---
 

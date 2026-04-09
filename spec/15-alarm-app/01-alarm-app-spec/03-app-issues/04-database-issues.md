@@ -53,14 +53,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Low |
-| **Likelihood** | 50% |
-| **Status** | Open |
+| **Likelihood** | 50% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** `ON DELETE SET NULL` means `alarm_id` becomes null. Events lose alarm context (which alarm?) permanently.
 
 **Root Cause:** Intentional design but poor for analytics.
 
-**Suggested Fix:** Before setting null, copy `alarm_label` and `alarm_time` to denormalized columns on `alarm_events`. Preserves context for history view.
+**Resolution:** Added `alarm_label_snapshot` (TEXT) and `alarm_time_snapshot` (TEXT) denormalized columns to `alarm_events` table in `01-fundamentals/01-data-model.md`. On every event insert, copy the alarm's current label and time to these columns. When `alarm_id` becomes NULL (alarm deleted), the snapshot columns preserve context for history/analytics views. Migration: `ALTER TABLE alarm_events ADD COLUMN alarm_label_snapshot TEXT DEFAULT ''; ALTER TABLE alarm_events ADD COLUMN alarm_time_snapshot TEXT DEFAULT '';`.
 
 ---
 
@@ -69,14 +69,26 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Low |
-| **Likelihood** | 90% |
-| **Status** | Open |
+| **Likelihood** | 90% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** All values stored as TEXT. Reading `auto_launch` returns string `"true"` not boolean. Every consumer must parse.
 
 **Root Cause:** Key-value design pattern limitation.
 
-**Suggested Fix:** Add a `value_type` column (`boolean`, `integer`, `string`, `json`). Create a Rust helper `get_setting<T>()` that deserializes based on type. Validate on write.
+**Resolution:** Added `value_type` column (TEXT, one of: `boolean`, `integer`, `string`, `json`) to `settings` table in `01-fundamentals/01-data-model.md` and a typed Rust helper:
+
+```rust
+pub fn get_setting<T: FromSettingValue>(conn: &Connection, key: &str) -> Result<T, AlarmAppError> {
+    let row = conn.query_row(
+        "SELECT value, value_type FROM settings WHERE key = ?", [key],
+        |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?))
+    )?;
+    T::from_setting(&row.0, &row.1)
+}
+```
+
+Validates type on write. `FromSettingValue` trait implemented for `bool`, `i64`, `String`, and `serde_json::Value`.
 
 ---
 

@@ -1,10 +1,11 @@
 # Export / Import
 
-**Version:** 1.2.0  
-**Updated:** 2026-04-08  
+**Version:** 1.3.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**Priority:** P1 — Should Have
+**Priority:** P1 — Should Have  
+**Resolves:** SEC-EXPORT-001
 
 ---
 
@@ -114,10 +115,29 @@ interface ImportResult {
 
 ---
 
+## Export Privacy Warning (Resolves SEC-EXPORT-001)
+
+> Alarm labels may contain personal information. Export files are unencrypted.
+
+**Before export**, show confirmation dialog:
+
+> ⚠️ **Export file is not encrypted**
+> Anyone with access to this file can read your alarm labels and settings.
+> 
+> ☐ Don't show this warning again
+> 
+> [Cancel] [Export]
+
+- "Don't show again" preference stored in `settings` table (`export_warning_dismissed`)
+- **P2+ enhancement:** Offer optional password-protected ZIP export using `zip` crate with AES-256 encryption
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Export supports JSON, CSV, and iCal formats
 - [ ] Export allows selecting individual alarms, groups, or all
+- [ ] Export shows privacy warning dialog before writing file
 - [ ] Import supports JSON, CSV, and iCal formats
 - [ ] Import shows preview before applying
 - [ ] Duplicate handling: skip, overwrite, or rename
