@@ -11,7 +11,9 @@
   "prerequisites": {
     "go": true,
     "node": true,
-    "pnpm": true
+    "pnpm": true,
+    "rust": false,
+    "tauri": false
   },
   "usePnp": true,
   "pnpmStorePath": ".pnpm-store",
@@ -28,6 +30,9 @@
   "buildCommand": "pnpm run build",
   "installCommand": "pnpm install",
   "runCommand": "go run cmd/server/main.go",
+  "postBuildCommand": "",
+  "tauriBuildCommand": "pnpm tauri build",
+  "tauriDevCommand": "pnpm tauri dev",
   "configFile": "config.json",
   "configExampleFile": "config.example.json",
   "requiredModules": [
