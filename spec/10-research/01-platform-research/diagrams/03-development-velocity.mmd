@@ -1,0 +1,34 @@
+%% Development Velocity Timeline
+%% Top-down comparison with time annotations
+
+flowchart TD
+    TITLE["DEVELOPMENT VELOCITY COMPARISON\nTime-to-MVP for a solo developer building a desktop app"]
+
+    TITLE --> ELECT["ELECTRON\nTotal: 4 weeks"]
+    TITLE --> WAILS_F["WAILS\nTotal: 5 weeks"]
+    TITLE --> TAURI_F["TAURI\nTotal: 7 weeks"]
+    TITLE --> FLUTTER_F["FLUTTER\nTotal: 6 weeks"]
+
+    %% Electron breakdown
+    ELECT --> E1["Week 1: Setup + CRUD\nnpm init, React scaffold, basic UI"]
+    E1 --> E2["Week 2: Notifications + Tray\nBuilt-in Electron APIs, easy"]
+    E2 --> E3["Week 3-4: Polish + Packaging\nelectron-builder, auto-update"]
+    ELECT --> E_NOTE["Why fastest?\n- JavaScript everywhere: no new language\n- Massive npm ecosystem\n- Most tutorials and examples online\n- electron-forge scaffolds everything\n- Trade-off: 200MB app for simple tool"]
+
+    %% Wails breakdown
+    WAILS_F --> W1["Week 1-2: Setup + CRUD\nGo backend, React frontend, bindings"]
+    W1 --> W2["Week 3: Notifications\nManual implementation needed"]
+    W2 --> W3["Week 4-5: Tray + Packaging\nManual tray, NSIS/DMG packaging"]
+    WAILS_F --> W_NOTE["Why slower than Electron?\n- Fewer pre-built features\n- Manual system tray code\n- Smaller community: fewer examples\n- Go is easy but bindings take time\n- Benefit: 10MB app, low RAM"]
+
+    %% Tauri breakdown
+    TAURI_F --> T1["Week 1-3: Learn Rust Basics\nOwnership, borrowing, lifetimes\nThis is the biggest time investment"]
+    T1 --> T2["Week 4-5: CRUD + IPC\nRust commands, invoke() from JS"]
+    T2 --> T3["Week 6-7: Plugins + Packaging\ntauri-plugin-*, bundler built-in"]
+    TAURI_F --> T_NOTE["Why slowest?\n- Rust learning curve: 2-3 weeks\n- Borrow checker is unfamiliar\n- After learning: fastest iteration\n- Plugin system speeds up later work\n- Benefit: 5MB app, 30MB RAM\n- Long-term: fastest development"]
+
+    %% Flutter breakdown
+    FLUTTER_F --> F1["Week 1-2: Learn Dart + Flutter\nWidgets, state management, hot reload"]
+    F1 --> F2["Week 3-4: CRUD + State\nProvider/Riverpod, local storage"]
+    F2 --> F3["Week 5-6: Native Plugins + Packaging\nPlatform channels, build runner"]
+    FLUTTER_F --> F_NOTE["Why middle ground?\n- Dart is easy to learn: 1-2 weeks\n- Hot reload = fast iteration\n- Rich built-in widgets\n- Desktop support still beta\n- Best choice if mobile is primary\n- Cannot reuse React code"]

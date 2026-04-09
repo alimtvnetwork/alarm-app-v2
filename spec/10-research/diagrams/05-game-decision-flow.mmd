@@ -1,0 +1,30 @@
+%% Game Development Decision Flowchart
+%% Genre to Platform to Engine/Language
+
+flowchart TD
+    START[I want to make a game] --> GENRE{What genre?}
+
+    GENRE -->|Strategy / RTS| S1{Scale?}
+    S1 -->|Small-mid| S2[Godot 4]
+    S1 -->|Massive sim| S3[Custom C++ or Rust]
+
+    GENRE -->|Retro FPS| R1{Authenticity?}
+    R1 -->|Maximum retro| R2[Custom Rust+wgpu or C++]
+    R1 -->|Retro aesthetic| R3[Godot 4 + retro shaders]
+
+    GENRE -->|Mobile casual| M1[Unity or Godot 4]
+
+    GENRE -->|Browser game| W1{2D or 3D?}
+    W1 -->|2D| W2[Phaser 3]
+    W1 -->|3D| W3[Three.js or Babylon.js]
+
+    GENRE -->|3D game| T1{Scope?}
+    T1 -->|AAA| T2[Unreal Engine 5]
+    T1 -->|Indie| T3[Godot 4]
+    T1 -->|Custom tech| T4[Bevy or Custom Rust]
+
+    GENRE -->|Card / Board / UI| C1[Godot 4 or Tauri + web]
+
+    GENRE -->|Voxel / Simulation| V1[Custom Rust or C++]
+
+    GENRE -->|2D Platformer| P1[Godot 4]

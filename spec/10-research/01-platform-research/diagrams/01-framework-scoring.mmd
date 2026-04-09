@@ -1,0 +1,35 @@
+%% Framework Scoring Comparison (out of 240)
+%% Mind-map style with annotations explaining WHY each score
+
+flowchart TD
+    TITLE["FRAMEWORK SCORING COMPARISON\n(out of 240 points across 9 criteria)"]
+
+    TITLE --> T["1st: Tauri 2.x\n214/240 (89%)"]
+    TITLE --> W["2nd: Wails\n174/240 (73%)"]
+    TITLE --> FL["3rd: Flutter\n153/240 (64%)"]
+    TITLE --> E["4th: Electron\n152/240 (63%)"]
+    TITLE --> FY["5th: Fyne\n130/240 (54%)"]
+    TITLE --> C["6th: Go + CEF\n100/240 (42%)"]
+
+    %% Tauri annotations
+    T --> T_N1["Why #1?\n- 5 platforms: macOS, Win, Linux, iOS, Android\n- Smallest bundle: 3-10 MB\n- RAM: 20-40 MB vs Electron 150+ MB\n- Rust backend: memory safe, fast\n- Uses OS native WebView: zero extra size\n- Best plugin ecosystem for v2"]
+    T --> T_N2["Trade-offs\n- Must learn Rust basics: 2-3 week curve\n- WebView inconsistencies across OS\n- Younger ecosystem than Electron\n- Fewer Stack Overflow answers"]
+
+    %% Wails annotations
+    W --> W_N1["Why #2?\n- Go backend: familiar if you know Go\n- Same WebView approach as Tauri\n- Bundle: 8-15 MB\n- Auto-generated TypeScript bindings\n- Fast compilation"]
+    W --> W_N2["Trade-offs\n- Desktop only: no mobile support\n- Smaller community than Tauri\n- Manual system tray implementation\n- No official plugin system"]
+
+    %% Flutter annotations
+    FL --> FL_N1["Why #3?\n- Best mobile support: iOS + Android native\n- Single Dart codebase for all platforms\n- Hot reload: fastest iteration\n- Rich widget library built-in\n- Google-backed with large community"]
+    FL --> FL_N2["Trade-offs\n- Cannot reuse existing React/Vue code\n- Must learn Dart language\n- Desktop support still maturing\n- Larger bundle: 20-50 MB\n- Not a web frontend framework"]
+
+    %% Electron annotations
+    E --> E_N1["Why #4?\n- Most mature: 10+ years, huge ecosystem\n- Consistent rendering: ships Chromium\n- Fastest MVP: 1-2 weeks\n- npm ecosystem: 2M+ packages\n- VS Code, Slack, Discord built with it"]
+    E --> E_N2["Trade-offs\n- Largest bundle: 150-300 MB\n- Highest RAM: 150-500 MB per app\n- No mobile support at all\n- Ships entire Chrome browser\n- Security: full Node.js access"]
+
+    %% Fyne annotations
+    FY --> FY_N1["Why #5?\n- Pure Go: no web tech needed\n- Native-looking widgets\n- Simple API for utility apps\n- Good for Go-only teams"]
+    FY --> FY_N2["Trade-offs\n- No web frontend reuse\n- Limited audio/media support\n- Small ecosystem\n- Not suitable for complex UIs\n- No system tray support"]
+
+    %% CEF annotations
+    C --> C_N1["Why Last?\n- Full Chromium control\n- Niche use case only\n- Complex build setup\n- Same bloat as Electron\n- Almost no community support"]

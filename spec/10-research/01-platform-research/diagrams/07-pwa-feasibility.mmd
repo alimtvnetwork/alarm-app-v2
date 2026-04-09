@@ -1,0 +1,47 @@
+%% PWA Feasibility Decision Flow
+%% Mind-map with annotations explaining each decision
+
+flowchart TD
+    TITLE["PWA FEASIBILITY DECISION FLOW\nWhen to use PWA vs Native vs Hybrid"]
+
+    TITLE --> START["New App Project\nChoose the right approach"]
+
+    START --> Q1{"Need App Store\nlisting?"}
+    START --> NOTE_PWA["What is a PWA?\n- Progressive Web App\n- Runs in browser, installable\n- No app store needed\n- Works offline with service workers\n- Zero install: just visit URL\n- Auto-updates: no user action"]
+
+    Q1 -->|"Yes, required"| Q2{"Need background\nprocessing?"}
+    Q1 -->|"No / optional"| Q3{"Need native\nOS features?"}
+
+    Q2 -->|"Yes"| NATIVE["Native or Capacitor\nHybrid"]
+    Q2 -->|"No"| Q4{"Budget/timeline?"}
+
+    Q4 -->|"Tight budget"| CAPACITOR["Capacitor Hybrid"]
+    Q4 -->|"Flexible"| NATIVE
+
+    Q3 -->|"System tray,\ndeep OS"| DESKTOP["Tauri / Electron\n/ Native"]
+    Q3 -->|"No native\nOS needed"| Q5{"What type of app?"}
+
+    Q5 --> CONTENT{"Content /\nE-commerce / MVP?"}
+    Q5 --> UBER{"Uber-type /\nride-sharing?"}
+    Q5 --> GAME{"Game?"}
+    Q5 --> BUSINESS{"Internal\nbusiness tool?"}
+
+    CONTENT -->|"Yes"| PWA_BEST["PWA: Best Fit"]
+    BUSINESS -->|"Yes"| PWA_BEST
+
+    UBER -->|"Rider app"| PWA_MVP["PWA for MVP\nthen Capacitor for prod"]
+    UBER -->|"Driver app"| NO_PWA["Native required\nNeeds GPS, background, push"]
+
+    GAME --> GAME_TYPE{"Game type?"}
+    GAME_TYPE -->|"Casual / 2D\n/ Puzzle"| PWA_GAME["PWA: Excellent Fit\nPhaser, PixiJS work great"]
+    GAME_TYPE -->|"3D Mid-tier"| PWA_MAYBE["PWA possible\nWebGPU + WASM emerging"]
+    GAME_TYPE -->|"AAA / FPS"| NO_PWA_GAME["Native engine required\nUnreal, Unity, Godot"]
+
+    %% Annotation nodes
+    NATIVE --> NOTE_NATIVE["When to go native\n- Background GPS tracking\n- Bluetooth/NFC access\n- Heavy file system usage\n- System tray / menu bar\n- Audio processing\n- RAM: full native access"]
+
+    CAPACITOR --> NOTE_CAP["What is Capacitor?\n- Web app wrapped in native shell\n- App Store deployable\n- Access native APIs via plugins\n- Keep your React/Vue code\n- Bundle: 15-30 MB\n- Middle ground: web + native"]
+
+    PWA_BEST --> NOTE_BEST["PWA advantages\n- Zero install friction\n- Auto-updates\n- Works on all platforms\n- SEO-friendly\n- Costs less to maintain\n- 60-80% of native features"]
+
+    NO_PWA --> NOTE_NO["Why PWA fails here\n- No reliable background GPS\n- Push notifications: limited on iOS\n- No Bluetooth access\n- Cannot run when app closed\n- Battery optimization kills it"]

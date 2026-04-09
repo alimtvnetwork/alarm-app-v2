@@ -28,18 +28,20 @@ type: feature
 15. ✅ Update `09-theme-system.md` — localStorage → SQLite, OS appearance events
 16. ✅ Update `13-analytics.md` — localStorage → SQLite alarm_events table with schema
 
-### Phase 4: New Documents (P1)
-17. Create `01-fundamentals/06-tauri-architecture.md` — Rust backend, IPC, plugin system, build pipeline
-18. Update `02-features/00-overview.md` if any feature descriptions change
+### Phase 4: New Documents (P1) ✅ DONE
+17. ✅ `06-tauri-architecture-and-framework-comparison.md` already exists with full content — removed "Legacy" label
+18. ✅ `02-features/00-overview.md` already references Tauri architecture correctly
 
-### Phase 5: Reference & Cleanup (P3)
-19. Update `reference/alarm-app-features.md` — "browser support varies" → "platform support varies"
-20. Update `reference/alarm-clock-features.md` — review for browser references
-21. Run full cross-reference validation across all 30+ files
-22. Update all consistency reports
+### Phase 5: Reference & Cleanup (P3) ✅ DONE
+19. ✅ `reference/alarm-app-features.md` — already native, browser mentions only in comparison tables
+20. ✅ `reference/alarm-clock-features.md` — already native, no stale browser references
+21. ✅ Cross-reference validation: 0 broken spec-to-spec links across all files
+22. ✅ Consistency reports updated to v1.4.0
 
 ### Status
 - Phase 1 completed: All 6 core spec files updated
 - Phase 2 completed: All 5 P1 feature specs updated
 - Phase 3 completed: All 5 P2 feature specs updated
-- Awaiting user approval for Phase 4
+- Phase 4 completed: Architecture doc verified, overview labels fixed
+- Phase 5 completed: Reference files clean, cross-refs validated, consistency reports v1.4.0
+- **🎉 MIGRATION COMPLETE — All 22 tasks done**
