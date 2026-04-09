@@ -131,5 +131,80 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 
 ---
 
-## Issues Found So Far: 6
-## Open: 6 | Resolved: 0
+---
+
+## NV-007: Primary Key Uses Generic `id` Instead of `{TableName}Id`
+
+**Severity:** 🔴 Critical  
+**Location:** `01-fundamentals/01-data-model.md` (lines 223, 248, 266)  
+**Rule Violated:** `10-database-conventions/01-naming-conventions.md` §PK — "Primary key MUST be named `{TableName}Id`"  
+**Status:** 🔴 Open
+
+| Table | Current PK | Required PK |
+|-------|-----------|-------------|
+| `alarms` | `id TEXT PRIMARY KEY` | `AlarmId TEXT PRIMARY KEY` |
+| `alarm_groups` | `id TEXT PRIMARY KEY` | `AlarmGroupId TEXT PRIMARY KEY` |
+| `alarm_events` | `id TEXT PRIMARY KEY` | `AlarmEventId TEXT PRIMARY KEY` |
+| `settings` | `key TEXT PRIMARY KEY` | (key-value table — may be exemption) |
+
+---
+
+## NV-008: Boolean Columns Missing `Is`/`Has` Prefix
+
+**Severity:** 🔴 Critical  
+**Location:** `01-fundamentals/01-data-model.md` (lines 227–237, 251)  
+**Rule Violated:** `10-database-conventions/01-naming-conventions.md` §Boolean — "Every boolean column MUST start with `Is` or `Has`"  
+**Status:** 🔴 Open
+
+| Current | Required | Table |
+|---------|----------|-------|
+| `enabled INTEGER` | `IsEnabled INTEGER` | `alarms` |
+| `previous_enabled INTEGER` | `IsPreviousEnabled INTEGER` or `PreviousIsEnabled` | `alarms` |
+| `vibration_enabled INTEGER` | `IsVibrationEnabled INTEGER` | `alarms` |
+| `enabled INTEGER` | `IsEnabled INTEGER` | `alarm_groups` |
+
+---
+
+## NV-009: Tauri IPC Commands Use snake_case
+
+**Severity:** 🟡 Medium  
+**Location:** `02-features/01-alarm-crud.md`, `06-tauri-architecture-and-framework-comparison.md`  
+**Status:** 🔴 Open
+
+**Note:** Tauri convention IS snake_case for commands. This may be an acceptable external convention exemption (like WordPress hooks). **Decision needed.**
+
+| Current | If PascalCase applied |
+|---------|----------------------|
+| `create_alarm` | `CreateAlarm` |
+| `update_alarm` | `UpdateAlarm` |
+| `delete_alarm` | `DeleteAlarm` |
+| `snooze_alarm` | `SnoozeAlarm` |
+| `dismiss_alarm` | `DismissAlarm` |
+| `get_settings` | `GetSettings` |
+
+---
+
+## NV-010: CSV Export Columns Use snake_case
+
+**Severity:** 🟡 Medium  
+**Location:** `02-features/10-export-import.md` (line 60)  
+**Status:** 🔴 Open
+
+**Current:** `id, time, date, label, enabled, repeat_type, repeat_days, group_name, sound_file, snooze_duration, max_snooze_count`  
+**Required:** PascalCase per key naming standard (these are serialized keys)
+
+---
+
+## NV-011: JSON Export Keys Use camelCase
+
+**Severity:** 🔴 Critical  
+**Location:** `02-features/10-export-import.md` (line 59)  
+**Status:** 🔴 Open
+
+**Current:** `{ alarms: Alarm[], groups: AlarmGroup[], exportedAt: string, version: string }`  
+**Required:** `{ Alarms: Alarm[], Groups: AlarmGroup[], ExportedAt: string, Version: string }`
+
+---
+
+## Issues Found So Far: 11
+## Open: 11 | Resolved: 0

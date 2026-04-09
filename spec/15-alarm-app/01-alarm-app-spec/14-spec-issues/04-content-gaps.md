@@ -54,5 +54,33 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 
 ---
 
-## Issues Found So Far: 4
-## Open: 4 | Resolved: 0
+---
+
+## CG-005: No Exemptions List for External Conventions
+
+**Severity:** 🟡 Medium  
+**Status:** 🔴 Open
+
+**Problem:** The PascalCase standard (`11-key-naming-pascalcase.md` §6) has an exemptions table for external APIs. The alarm app spec has potential exemptions (Tauri IPC = snake_case, refinery migrations = snake_case, Rust struct fields = snake_case) but **never declares them as exemptions**. AI won't know which snake_case is intentional vs. violation.
+
+---
+
+## CG-006: Feature Specs Reference snake_case Columns in Prose
+
+**Severity:** 🟡 Medium  
+**Status:** 🔴 Open
+
+**Problem:** Feature files reference column names in prose text (not just code blocks), e.g.:
+- `07-alarm-groups.md` line 41: "Column: `previous_enabled`"
+- `07-alarm-groups.md` line 47: "save `enabled` → `previous_enabled`"
+- `03-alarm-firing.md` line 27: "`next_fire_time <= now`"
+- `03-alarm-firing.md` line 486: "Sort by `next_fire_time ASC`"
+
+These prose references must also be updated when column names change to PascalCase.
+
+**Files affected:** `01-alarm-crud.md`, `03-alarm-firing.md`, `04-snooze-system.md`, `07-alarm-groups.md`, `10-export-import.md`, `13-analytics.md`
+
+---
+
+## Issues Found So Far: 6
+## Open: 6 | Resolved: 0

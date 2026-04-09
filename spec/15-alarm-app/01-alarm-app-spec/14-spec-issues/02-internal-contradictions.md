@@ -71,5 +71,43 @@ Issues where different spec files contradict each other — the most dangerous c
 
 ---
 
-## Issues Found So Far: 4
-## Open: 4 | Resolved: 0
+---
+
+## IC-005: Duplicate `alarm_events` Schema Definition
+
+**Severity:** 🟡 Medium  
+**Status:** 🔴 Open
+
+**Locations:**
+- `01-fundamentals/01-data-model.md` line 265 — canonical definition
+- `02-features/13-analytics.md` line 91 — duplicate definition
+
+**Risk:** If one is updated and the other isn't, AI will get conflicting schemas. Single source of truth needed.
+
+---
+
+## IC-006: IPC Command Names Inconsistent Between Files
+
+**Severity:** 🟡 Medium  
+**Status:** 🔴 Open
+
+| File | Commands listed |
+|------|----------------|
+| `06-tauri-architecture.md` | `get_alarms` |
+| `01-alarm-crud.md` | `list_alarms` |
+
+**Same operation, different name.** AI will implement both or pick wrong one.
+
+---
+
+## IC-007: `sqlx` Used in Resolved Issues (01-alarm-crud.md)
+
+**Severity:** 🔴 Critical  
+**Status:** 🔴 Open
+
+**Context:** Even after issue resolutions, `01-alarm-crud.md` lines 61, 76 still use `sqlx::query()` in code samples. If the driver decision was `rusqlite`, these samples are wrong.
+
+---
+
+## Issues Found So Far: 7
+## Open: 7 | Resolved: 0
