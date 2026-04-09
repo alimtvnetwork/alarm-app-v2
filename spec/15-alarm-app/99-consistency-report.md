@@ -1,7 +1,7 @@
 # Consistency Report: Alarm App
 
-**Version:** 1.3.0  
-**Generated:** 2026-04-08  
+**Version:** 1.4.0  
+**Generated:** 2026-04-09  
 **Health Score:** 100/100 (A+)
 
 ---
@@ -16,7 +16,7 @@
 
 | # | Folder | `00-overview.md` | `99-consistency-report.md` | Status |
 |---|--------|-------------------|----------------------------|--------|
-| 1 | `01-alarm-app-spec/` | ✅ | ✅ (v1.3.0) | ✅ Compliant |
+| 1 | `01-alarm-app-spec/` | ✅ | ✅ (v1.4.0) | ✅ Compliant (43/43 issues resolved) |
 
 ---
 
