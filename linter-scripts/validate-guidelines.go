@@ -4,6 +4,10 @@
 // and Rust source files against the coding guidelines defined in
 // spec/02-coding-guidelines/03-coding-guidelines-spec/.
 //
+// TODO(I8): Several functions in this file exceed 15 lines (CODE-RED-004).
+//   Refactor checkMagicStrings, checkFunctionLength, checkVariableMutation,
+//   checkStyleRules, printReport, and main into smaller helpers.
+//
 // Usage:
 //
 //	go run scripts/validate-guidelines.go [--path <dir>] [--json] [--max-lines <n>]
