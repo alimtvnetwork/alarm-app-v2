@@ -37,14 +37,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 30% |
-| **Status** | Open |
+| **Likelihood** | 30% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** P3 webhook feature sends HTTP POST from Rust backend to user-configured URL. No validation against internal/localhost URLs.
 
 **Root Cause:** Missing SSRF protection.
 
-**Suggested Fix:** Validate webhook URLs: reject `127.0.0.1`, `localhost`, `::1`, `10.x.x.x`, `192.168.x.x`, `169.254.x.x`. Disable redirect-following. Set 5s timeout. Log all webhook calls.
+**Resolution:** Added comprehensive SSRF protection to `02-features/12-smart-features.md` v1.2.0 with `validate_webhook_url()` Rust function (blocks localhost, private IPs, link-local, CGNAT, metadata endpoints), `is_private_ip()` helper, HTTP client rules (no redirects, 5s timeout, HTTPS-only, non-standard port rejection), and validation timing (on save + on fire + fresh DNS resolution).
 
 ---
 
