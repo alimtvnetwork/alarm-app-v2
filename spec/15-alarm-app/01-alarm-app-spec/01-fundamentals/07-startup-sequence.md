@@ -1,0 +1,272 @@
+# Startup Sequence
+
+**Version:** 1.0.0  
+**Updated:** 2026-04-09  
+**AI Confidence:** High  
+**Ambiguity:** None  
+**Priority:** P0 — Must Have  
+**Resolves:** BE-STARTUP-001
+
+---
+
+## Keywords
+
+`startup`, `initialization`, `boot`, `sequence`, `migration`, `tray`, `engine`, `missed-alarm`
+
+---
+
+## Purpose
+
+Defines the exact initialization order for the Alarm App on launch. Incorrect ordering causes crashes (e.g., alarm engine starting before DB is ready) or silent failures (e.g., missed alarms not surfaced because engine starts before migration runs).
+
+---
+
+## Startup Sequence
+
+```
+┌─────────────────────────────────────────────────────┐
+│                   App Launch                         │
+└──────────────────────┬──────────────────────────────┘
+                       │
+                       ▼
+              ┌────────────────┐
+         1.   │ Resolve app    │  Determine OS-specific data directory:
+              │ data directory │  macOS: ~/Library/Application Support/com.alarm-app
+              └───────┬────────┘  Windows: %APPDATA%/alarm-app
+                      │           Linux: ~/.local/share/alarm-app
+                      ▼
+              ┌────────────────┐
+         2.   │ Open SQLite    │  Open or create alarm-app.db in app data dir
+              │ connection     │  Connection pool: 1 writer + N readers
+              └───────┬────────┘
+                      │
+                      ▼
+              ┌────────────────┐
+         3.   │ Run migrations │  refinery::embed_migrations!("migrations")
+              │ (refinery)     │  If migration fails → show error dialog
+              └───────┬────────┘  with "Reset Database" option, then exit
+                      │
+                      ▼
+              ┌────────────────┐
+         4.   │ Enable WAL     │  PRAGMA journal_mode=WAL
+              │ mode           │  PRAGMA busy_timeout=5000
+              └───────┬────────┘  PRAGMA foreign_keys=ON
+                      │
+                      ▼
+              ┌────────────────┐
+         5.   │ Load settings  │  Read all rows from settings table
+              │ into memory    │  Parse into typed Settings struct
+              └───────┬────────┘  Apply defaults for missing keys
+                      │
+                      ▼
+         ┌────────────┴────────────┐
+         │     PARALLEL INIT       │
+         │  (tokio::join!)         │
+         ├─────────┬───────────────┤
+         │         │               │
+         ▼         ▼               ▼
+    ┌─────────┐ ┌──────────┐ ┌──────────┐
+6a. │ Init    │ │ Init     │ │ Start    │
+    │ system  │ │ logging  │ │ WebView  │
+    │ tray    │ │ (tracing)│ │ / React  │
+    └────┬────┘ └────┬─────┘ └────┬─────┘
+         │           │            │
+         └─────────┬─┘            │
+                   │              │
+                   ▼              │
+         ┌────────────────┐       │
+    7.   │ Start alarm    │       │
+         │ engine thread  │       │
+         └───────┬────────┘       │
+                 │                │
+                 ▼                │
+         ┌────────────────┐       │
+    8.   │ Missed alarm   │       │
+         │ check + queue  │       │
+         └───────┬────────┘       │
+                 │                │
+                 ▼                ▼
+         ┌────────────────────────────┐
+    9.   │ Update tray: next alarm    │
+         │ Surface missed alarms      │
+         │ App ready                  │
+         └────────────────────────────┘
+```
+
+---
+
+## Step Details
+
+### Step 1 — Resolve App Data Directory
+
+```rust
+let app_dir = app_handle.path().app_data_dir()
+    .expect("Failed to resolve app data directory");
+std::fs::create_dir_all(&app_dir)
+    .expect("Failed to create app data directory");
+```
+
+- **Error:** If directory creation fails → show native error dialog, exit with code 1
+
+---
+
+### Step 2 — Open SQLite Connection
+
+```rust
+let db_path = app_dir.join("alarm-app.db");
+let pool = SqlitePool::connect(&format!("sqlite:{}?mode=rwc", db_path.display()))
+    .await
+    .expect("Failed to open database");
+```
+
+- **Error:** If DB file is locked by another process → show "Another instance may be running" dialog
+
+---
+
+### Step 3 — Run Migrations
+
+```rust
+let mut conn = pool.acquire().await?;
+refinery::embed_migrations!("migrations");
+migrations::runner().run(&mut *conn)?;
+```
+
+- **Error:** If migration fails:
+  1. Log full error to stderr
+  2. Show dialog: "Database migration failed. [Reset Database] [Exit]"
+  3. "Reset Database" → backup `alarm-app.db` to `alarm-app.db.backup.{timestamp}`, delete original, retry
+
+---
+
+### Step 4 — Enable WAL Mode
+
+```sql
+PRAGMA journal_mode=WAL;
+PRAGMA busy_timeout=5000;
+PRAGMA foreign_keys=ON;
+PRAGMA synchronous=NORMAL;
+```
+
+- WAL allows concurrent reads during writes (critical for alarm engine + UI)
+- `busy_timeout` prevents immediate `SQLITE_BUSY` errors
+
+---
+
+### Step 5 — Load Settings
+
+```rust
+let settings = Settings::load_all(&pool).await?;
+// Apply defaults for any missing keys
+settings.ensure_defaults(&pool).await?;
+```
+
+- Must complete before tray init (needs `time_format` for display)
+- Must complete before engine start (needs `snooze_duration`, etc.)
+
+---
+
+### Step 6 — Parallel Initialization (tokio::join!)
+
+Three independent subsystems start concurrently:
+
+| Subsystem | Duration | Notes |
+|-----------|----------|-------|
+| **6a. System tray** | ~50ms | Show tray icon with "Loading..." tooltip |
+| **6b. Logging** | ~10ms | `tracing_subscriber` + file appender |
+| **6c. WebView/React** | ~200–500ms | Vite bundle loads in WebView |
+
+```rust
+let (tray, _, _) = tokio::join!(
+    init_tray(&app_handle, &settings),
+    init_logging(&app_dir),
+    // WebView is started by Tauri automatically
+);
+```
+
+---
+
+### Step 7 — Start Alarm Engine
+
+```rust
+let engine = AlarmEngine::new(pool.clone(), event_emitter.clone());
+tokio::spawn(async move {
+    engine.run_loop(Duration::from_secs(30)).await;
+});
+```
+
+- Engine must start **after** migrations (Step 3) and settings (Step 5)
+- Engine runs independently of WebView — alarms fire even if UI is not visible
+
+---
+
+### Step 8 — Missed Alarm Check
+
+```sql
+SELECT * FROM alarms
+WHERE next_fire_time < datetime('now')
+  AND enabled = 1
+  AND deleted_at IS NULL;
+```
+
+- For each missed alarm:
+  1. Insert `alarm_events` row with `type = 'missed'`
+  2. Add to alarm queue (see `03-alarm-firing.md` → Simultaneous Alarms)
+  3. Recompute `nextFireTime` for repeating alarms
+  4. Dispatch OS notification: "Missed Alarm: {label} at {originalTime}"
+
+---
+
+### Step 9 — App Ready
+
+- Update tray tooltip: "Next alarm: {time} — {label}"
+- If missed alarms exist, show first overlay from queue
+- Log `INFO` "App started in {elapsed}ms, {n} alarms loaded, {m} missed"
+
+---
+
+## Startup Time Budget
+
+| Step | Budget | Notes |
+|------|--------|-------|
+| 1. App data dir | <10ms | Filesystem only |
+| 2. SQLite open | <50ms | Single file open |
+| 3. Migrations | <100ms | Usually no-op after first run |
+| 4. WAL + PRAGMAs | <10ms | SQLite PRAGMAs |
+| 5. Load settings | <20ms | ~10 rows |
+| 6. Parallel init | <500ms | WebView dominates |
+| 7. Engine start | <5ms | Spawns async task |
+| 8. Missed check | <50ms | Single indexed query |
+| 9. Ready | <5ms | Tray update |
+| **Total** | **<750ms** | Well under 2s NFR target |
+
+---
+
+## Error Handling Summary
+
+| Step | Error | Behavior |
+|------|-------|----------|
+| 1 | Dir creation fails | Native error dialog → exit |
+| 2 | DB locked | "Another instance running" dialog → exit |
+| 3 | Migration fails | Backup DB → offer reset → retry or exit |
+| 4 | PRAGMA fails | Log warning, continue (non-fatal) |
+| 5 | Settings read fails | Use all defaults, log warning |
+| 6a | Tray init fails | Log error, continue without tray |
+| 6b | Logging init fails | Fall back to stderr |
+| 7 | Engine spawn fails | Fatal — show error dialog → exit |
+| 8 | Missed check fails | Log error, continue (alarms will fire on next tick) |
+
+---
+
+## Cross-References
+
+| Reference | Location |
+|-----------|----------|
+| Alarm Firing | `../02-features/03-alarm-firing.md` |
+| Platform Constraints | `./04-platform-constraints.md` |
+| Data Model | `./01-data-model.md` |
+| File Structure | `./03-file-structure.md` |
+| App Issues | `../03-app-issues/03-backend-issues.md` → BE-STARTUP-001 |
+
+---
+
+*Startup sequence — created: 2026-04-09*

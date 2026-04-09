@@ -1,10 +1,11 @@
 # Alarm Firing
 
-**Version:** 1.2.0  
-**Updated:** 2026-04-08  
+**Version:** 1.3.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
-**Ambiguity:** Low  
-**Priority:** P0 — Must Have
+**Ambiguity:** None  
+**Priority:** P0 — Must Have  
+**Resolves:** BE-QUEUE-001
 
 ---
 
@@ -105,6 +106,80 @@ This is the most important reliability feature. Desktop computers sleep, shut do
 - [ ] Missed alarms logged with `type = 'missed'` in `alarm_events`
 - [ ] Auto-dismiss stops alarm after configured minutes if unacknowledged
 - [ ] Only one alarm overlay can be active at a time (queue if multiple fire simultaneously)
+- [ ] Queued alarms fire in FIFO order (earliest `nextFireTime` first)
+- [ ] Queue badge shows count of pending alarms on overlay
+
+---
+
+## Simultaneous Alarms (Queue System)
+
+> **Resolves BE-QUEUE-001.** Defines behavior when two or more alarms fire within the same 30s check interval.
+
+### Problem
+
+The 30-second check interval may match multiple alarms. Without queue rules, AI implementations will either render multiple overlays (broken) or drop subsequent alarms (data loss).
+
+### Queue Rules
+
+1. **Detection:** On each 30s tick, query returns all alarms where `next_fire_time <= now AND enabled = 1`
+2. **Ordering:** Sort matched alarms by `next_fire_time ASC` (earliest first), then `created_at ASC` (tiebreaker)
+3. **Immediate logging:** ALL matched alarms insert `alarm_events` row with `type = 'fired'` immediately — do not wait for overlay display
+4. **Overlay sequencing:** Show only the first alarm's overlay. Queue the rest in memory
+5. **Progression:** When user dismisses or snoozes the current overlay → show next alarm from queue
+6. **Auto-dismiss:** Each queued alarm's `autoDismissMin` timer starts when its overlay is shown (not when it enters the queue)
+7. **Audio:** Audio plays for the currently displayed alarm only. When progressing to next, restart audio with next alarm's sound
+
+### Queue Data Structure
+
+```rust
+struct AlarmQueue {
+    /// Ordered FIFO queue of alarms waiting to display overlay
+    pending: VecDeque<FiredAlarm>,
+    /// Currently displayed alarm (if any)
+    active: Option<FiredAlarm>,
+}
+
+struct FiredAlarm {
+    alarm_id: String,
+    label: String,
+    sound_id: String,
+    fire_time: DateTime<Utc>,     // Original scheduled time
+    fired_at: DateTime<Utc>,      // Actual fire time
+    auto_dismiss_min: u32,        // 0 = disabled
+    is_missed: bool,              // true if fire_time < app_launch_time
+}
+```
+
+### Queue UI Indicator
+
+When `pending.len() > 0`, show a badge on the `AlarmOverlay`:
+
+```
+┌──────────────────────────────────┐
+│          🔔 ALARM                │
+│                                  │
+│     "Morning Workout"           │
+│        7:00 AM                   │
+│                                  │
+│  ┌──────────┐  ┌──────────┐     │
+│  │ Dismiss  │  │  Snooze  │     │
+│  └──────────┘  └──────────┘     │
+│                                  │
+│     ┌─────────────────────┐     │
+│     │ 2 more alarms pending│    │
+│     └─────────────────────┘     │
+└──────────────────────────────────┘
+```
+
+### Edge Cases
+
+| Scenario | Behavior |
+|----------|----------|
+| 5+ alarms fire at once | All queued, processed FIFO. No limit on queue size |
+| Snooze alarm A, alarm B is next | Show alarm B overlay. Alarm A re-enters queue when snooze expires |
+| All queued alarms auto-dismissed | Queue drains, overlay closes, normal state resumes |
+| New alarm fires while queue active | Append to end of queue |
+| App closed while queue active | All unacknowledged alarms → `missed` on next launch (Step 8 of startup) |
 
 ---
 
@@ -115,6 +190,8 @@ This is the most important reliability feature. Desktop computers sleep, shut do
 | Snooze System | `./04-snooze-system.md` |
 | Sound & Vibration | `./05-sound-and-vibration.md` |
 | Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
+| Startup Sequence | `../01-fundamentals/07-startup-sequence.md` |
 | Dismissal Challenges | `./06-dismissal-challenges.md` |
 | Data Model | `../01-fundamentals/01-data-model.md` |
 | Analytics | `./13-analytics.md` |
+| App Issues | `../03-app-issues/03-backend-issues.md` → BE-QUEUE-001 |
