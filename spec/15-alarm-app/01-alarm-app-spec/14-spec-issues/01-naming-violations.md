@@ -206,5 +206,16 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 
 ---
 
-## Issues Found So Far: 11
-## Open: 11 | Resolved: 0
+## NV-012: CSV Export snake_case Also a Logic Consistency Issue
+
+**Severity:** 🟡 Medium  
+**Location:** `02-features/10-export-import.md` (line 60)  
+**Cross-ref:** LC-011 in `06-logic-consistency.md`  
+**Status:** 🔴 Open
+
+**Problem:** CSV columns `repeat_type, repeat_days, group_name, sound_file, snooze_duration, max_snooze_count` are serialized data keys — PascalCase mandate applies. This is both a naming violation and a data flow logic issue.
+
+---
+
+## Issues Found So Far: 12
+## Open: 12 | Resolved: 0

@@ -82,5 +82,16 @@ These prose references must also be updated when column names change to PascalCa
 
 ---
 
-## Issues Found So Far: 6
-## Open: 6 | Resolved: 0
+## CG-007: AlarmChallenge Missing From Schema
+
+**Severity:** 🔴 Critical  
+**Location:** `02-features/06-dismissal-challenges.md` vs `01-fundamentals/01-data-model.md`  
+**Cross-ref:** LC-001 in `06-logic-consistency.md`  
+**Status:** 🔴 Open
+
+**Problem:** The `AlarmChallenge` interface is defined in the dismissal challenges spec but has no corresponding columns in the `alarms` table or TS `Alarm` interface. Without schema support, challenge-per-alarm configuration cannot be implemented.
+
+---
+
+## Issues Found So Far: 7
+## Open: 7 | Resolved: 0
