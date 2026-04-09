@@ -114,6 +114,7 @@ Tables:
 | 01 | [Fundamentals](./01-fundamentals/00-overview.md) | Architecture, data model, design system, platform strategy |
 | 02 | [Features](./02-features/00-overview.md) | All feature specifications |
 | 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking, fixes, retrospectives (32 issues) |
+| 10 | [Research](./10-research/00-overview.md) | Framework evaluation, platform strategy research |
 | 98 | [Changelog](./98-changelog.md) | Version history and change log |
 
 ---
