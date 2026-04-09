@@ -18,12 +18,23 @@
 //	CODE-RED-006  No (T, error) returns in Go services (use Result[T])
 //	CODE-RED-007  No string-based Go enums (use byte + iota)
 //	CODE-RED-008  No raw string error codes — use apperrtype enum
+//	CODE-RED-009  Generic file-not-found without exact path or reason
 //	CODE-RED-011  No magic numbers in logic
 //	CODE-RED-012  Immutable by default (const over let/var, no reassignment)
+//	CODE-RED-013  File length ≤ 300 lines (hard max 400)
+//	CODE-RED-014  Max 3 parameters per function
+//	CODE-RED-015  No any/interface{}/unknown in business logic
+//	CODE-RED-016  No silent error swallowing (empty catch, ignored err)
+//	CODE-RED-017  PHP: catch Throwable, not Exception
+//	CODE-RED-018  Sequential independent async (use Promise.all)
+//	CODE-RED-019  SQL string concatenation (injection risk)
+//	CODE-RED-020  Go: missing stack trace (raw errors.New instead of apperror)
+//	CODE-RED-021  Mixed && and || in single expression
 //	STYLE-001     Blank line before return
 //	STYLE-002     No else after return
 //	STYLE-003     Blank line after closing brace
 //	STYLE-004     Blank line before if/else if block
+//	STYLE-005     File length 300-400 lines (warning)
 package main
 
 import (
@@ -769,6 +780,411 @@ func checkStyleRules(lines []string, path string) []Violation {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
+// CODE-RED-009: Generic file-not-found errors
+// ═══════════════════════════════════════════════════════════════════════
+
+var genericFilePatterns = []*regexp.Regexp{
+	regexp.MustCompile(`(?i)(?:console\.(?:error|warn|log)|log\.(?:Error|Warn|Info))\s*\(\s*["'` + "`" + `](?:file not found|path not found|missing file|file does not exist|no such file)`),
+	regexp.MustCompile(`(?i)(?:throw\s+new\s+(?:Error|AppError|Exception)\s*\(\s*["'` + "`" + `](?:file not found|path not found|missing file|file does not exist|no such file))`),
+	regexp.MustCompile(`(?i)fmt\.Errorf\s*\(\s*"(?:file not found|path not found|missing file|file does not exist|no such file)"`),
+}
+
+var fileContextPattern = regexp.MustCompile(`(?i)(?:%[sdvw]|%\{|\$\{|\bpath\b|\bfilePath\b|\bfilename\b|\breason\b|\bcause\b)`)
+
+func checkGenericFileErrors(lines []string, path string) []Violation {
+	var violations []Violation
+	for i, line := range lines {
+		stripped := strings.TrimSpace(line)
+		if isComment(stripped) {
+			continue
+		}
+
+		violations = append(violations, matchGenericFileError(stripped, path, i+1)...)
+	}
+
+	return violations
+}
+
+func matchGenericFileError(stripped, path string, lineNum int) []Violation {
+	for _, pat := range genericFilePatterns {
+		if pat.MatchString(stripped) && !fileContextPattern.MatchString(stripped) {
+			return []Violation{newViolation(path, lineNum, "CODE-RED-009", "CODE-RED",
+				"Generic file/path error without exact path or failure reason. Include the file path and reason.", stripped)}
+		}
+	}
+
+	return nil
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CODE-RED-013 / STYLE-005: File length
+// ═══════════════════════════════════════════════════════════════════════
+
+const fileLengthTarget = 300
+const fileLengthHardMax = 400
+
+func checkFileLength(lines []string, path string) []Violation {
+	total := len(lines)
+	if total <= fileLengthTarget {
+		return nil
+	}
+
+	severity := "STYLE"
+	rule := "STYLE-005"
+	if total > fileLengthHardMax {
+		severity = "CODE-RED"
+		rule = "CODE-RED-013"
+	}
+
+	msg := fmt.Sprintf("File has %d lines (limit %d, hard max %d). Split by concern.", total, fileLengthTarget, fileLengthHardMax)
+
+	return []Violation{newViolation(path, 1, rule, severity, msg, "")}
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CODE-RED-014: Max 3 parameters per function
+// ═══════════════════════════════════════════════════════════════════════
+
+var (
+	goParamPattern  = regexp.MustCompile(`^func\s+(?:\(.*?\)\s+)?(\w+)\(([^)]*)\)`)
+	phpParamPattern = regexp.MustCompile(`function\s+(\w+)\(([^)]*)\)`)
+	tsParamPattern  = regexp.MustCompile(`(?:function\s+(\w+)\(([^)]*)\)|(?:const|let)\s+(\w+)\s*=\s*(?:async\s*)?\(([^)]*)\))`)
+)
+
+var reactDestructuredPattern = regexp.MustCompile(`function\s+\w+\s*\(\s*\{`)
+
+const maxParams = 3
+
+func paramPatternForLang(lang string) *regexp.Regexp {
+	switch lang {
+	case "go":
+		return goParamPattern
+	case "php":
+		return phpParamPattern
+	case "typescript", "javascript":
+		return tsParamPattern
+	default:
+		return nil
+	}
+}
+
+func checkParameterCount(lines []string, path string, lang string) []Violation {
+	pattern := paramPatternForLang(lang)
+	if pattern == nil {
+		return nil
+	}
+
+	var violations []Violation
+	for i, line := range lines {
+		violations = append(violations, checkLineParams(pattern, line, path, lang, i+1)...)
+	}
+
+	return violations
+}
+
+func checkLineParams(pattern *regexp.Regexp, line, path, lang string, lineNum int) []Violation {
+	m := pattern.FindStringSubmatch(line)
+	if m == nil {
+		return nil
+	}
+
+	if (lang == "typescript" || lang == "javascript") && reactDestructuredPattern.MatchString(line) {
+		return nil
+	}
+
+	funcName, paramsStr := extractParamInfo(m)
+	if paramsStr == "" {
+		return nil
+	}
+
+	count := countParams(paramsStr)
+	if count <= maxParams {
+		return nil
+	}
+
+	return []Violation{newViolation(path, lineNum, "CODE-RED-014", "CODE-RED",
+		fmt.Sprintf(`Function "%s" has %d params (max %d). Use options object.`, funcName, count, maxParams),
+		strings.TrimSpace(line))}
+}
+
+func extractParamInfo(match []string) (string, string) {
+	funcName := "anonymous"
+	paramsStr := ""
+	for i := 1; i < len(match); i++ {
+		if match[i] != "" && funcName == "anonymous" && !strings.Contains(match[i], ",") {
+			funcName = match[i]
+		}
+
+		if strings.Contains(match[i], ",") || (i%2 == 0 && match[i] != "") {
+			paramsStr = match[i]
+		}
+	}
+
+	return funcName, paramsStr
+}
+
+func countParams(paramsStr string) int {
+	count := 0
+	for _, p := range strings.Split(paramsStr, ",") {
+		if strings.TrimSpace(p) != "" {
+			count++
+		}
+	}
+
+	return count
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CODE-RED-015: No any/interface{}/unknown
+// ═══════════════════════════════════════════════════════════════════════
+
+var (
+	tsAnyPattern        = regexp.MustCompile(`:\s*any\b`)
+	tsAsAnyPattern      = regexp.MustCompile(`as\s+any\b`)
+	goInterfacePattern  = regexp.MustCompile(`interface\{\}`)
+)
+
+func checkNoAnyType(lines []string, path string, lang string) []Violation {
+	var violations []Violation
+	for i, line := range lines {
+		stripped := strings.TrimSpace(line)
+		if isComment(stripped) {
+			continue
+		}
+
+		violations = append(violations, checkAnyTypeLine(stripped, path, lang, i+1)...)
+	}
+
+	return violations
+}
+
+func checkAnyTypeLine(stripped, path, lang string, lineNum int) []Violation {
+	if lang == "typescript" || lang == "javascript" {
+		if tsAnyPattern.MatchString(stripped) || tsAsAnyPattern.MatchString(stripped) {
+			return []Violation{newViolation(path, lineNum, "CODE-RED-015", "CODE-RED",
+				"Type `any` is forbidden. Use a concrete type or generic.", stripped)}
+		}
+	}
+
+	if lang == "go" && goInterfacePattern.MatchString(stripped) && !strings.Contains(stripped, "// allow:") {
+		return []Violation{newViolation(path, lineNum, "CODE-RED-015", "CODE-RED",
+			"`interface{}` forbidden in business logic. Use concrete type or generic.", stripped)}
+	}
+
+	return nil
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CODE-RED-016: No silent error swallowing
+// ═══════════════════════════════════════════════════════════════════════
+
+var emptyCatchPattern = regexp.MustCompile(`^\}\s*catch\s*(?:\(\s*\w*\s*\))?\s*\{`)
+
+func checkErrorSwallowing(lines []string, path string, lang string) []Violation {
+	var violations []Violation
+	violations = append(violations, checkEmptyCatch(lines, path, lang)...)
+
+	if lang == "go" {
+		violations = append(violations, checkGoUncheckedErr(lines, path)...)
+	}
+
+	return violations
+}
+
+func checkEmptyCatch(lines []string, path string, lang string) []Violation {
+	if lang != "typescript" && lang != "javascript" {
+		return nil
+	}
+
+	var violations []Violation
+	for i, line := range lines {
+		stripped := strings.TrimSpace(line)
+		if emptyCatchPattern.MatchString(stripped) && i+1 < len(lines) && strings.TrimSpace(lines[i+1]) == "}" {
+			violations = append(violations, newViolation(path, i+1, "CODE-RED-016", "CODE-RED",
+				"Empty catch block — never swallow errors. Log or rethrow.", stripped))
+		}
+	}
+
+	return violations
+}
+
+var goErrAssignPattern = regexp.MustCompile(`\berr\s*:?=\s*\w+`)
+
+func checkGoUncheckedErr(lines []string, path string) []Violation {
+	if strings.Contains(strings.ToLower(path), "test") {
+		return nil
+	}
+
+	var violations []Violation
+	for i, line := range lines {
+		stripped := strings.TrimSpace(line)
+		if strings.HasPrefix(stripped, "//") || strings.Contains(stripped, "defer") {
+			continue
+		}
+
+		if !goErrAssignPattern.MatchString(line) {
+			continue
+		}
+
+		if hasErrCheckWithin(lines, i) {
+			continue
+		}
+
+		violations = append(violations, newViolation(path, i+1, "CODE-RED-016", "CODE-RED",
+			"Error assigned but not checked within 3 lines. Handle or return.", stripped))
+	}
+
+	return violations
+}
+
+func hasErrCheckWithin(lines []string, idx int) bool {
+	limit := idx + 4
+	if limit > len(lines) {
+		limit = len(lines)
+	}
+
+	for j := idx + 1; j < limit; j++ {
+		if strings.Contains(lines[j], "err") && (strings.Contains(lines[j], "!= nil") || strings.Contains(lines[j], "HasError")) {
+			return true
+		}
+	}
+
+	return idx+1 < len(lines) && strings.Contains(lines[idx+1], "return")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CODE-RED-017: PHP catch Throwable, not Exception
+// ═══════════════════════════════════════════════════════════════════════
+
+var phpCatchExceptionPattern = regexp.MustCompile(`catch\s*\(\s*\\?Exception\s`)
+
+func checkPHPThrowable(lines []string, path string) []Violation {
+	var violations []Violation
+	for i, line := range lines {
+		if phpCatchExceptionPattern.MatchString(line) {
+			violations = append(violations, newViolation(path, i+1, "CODE-RED-017", "CODE-RED",
+				"Catch `Throwable`, not `Exception`. PHP Errors are not Exceptions.",
+				strings.TrimSpace(line)))
+		}
+	}
+
+	return violations
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CODE-RED-018: Sequential independent async
+// ═══════════════════════════════════════════════════════════════════════
+
+func checkSequentialAsync(lines []string, path string, lang string) []Violation {
+	if lang != "typescript" && lang != "javascript" {
+		return nil
+	}
+
+	var violations []Violation
+	for i := 0; i < len(lines)-1; i++ {
+		curr := strings.TrimSpace(lines[i])
+		nxt := strings.TrimSpace(lines[i+1])
+
+		if isAwaitConst(curr) && isAwaitConst(nxt) {
+			violations = append(violations, newViolation(path, i+2, "CODE-RED-018", "CODE-RED",
+				"Consecutive awaits detected. If independent, use Promise.all().", nxt))
+		}
+	}
+
+	return violations
+}
+
+func isAwaitConst(s string) bool {
+	return strings.HasPrefix(s, "const ") && strings.Contains(s, "await ")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CODE-RED-019: SQL string concatenation
+// ═══════════════════════════════════════════════════════════════════════
+
+var sqlVerbPattern = regexp.MustCompile(`(?i)\b(SELECT|INSERT\s+INTO|UPDATE\s+\w+\s+SET|DELETE\s+FROM)\b`)
+
+func checkSQLInjection(lines []string, path string, lang string) []Violation {
+	var violations []Violation
+	for i, line := range lines {
+		stripped := strings.TrimSpace(line)
+		if isComment(stripped) || !sqlVerbPattern.MatchString(stripped) {
+			continue
+		}
+
+		if hasSQLConcat(stripped, lang) {
+			violations = append(violations, newViolation(path, i+1, "CODE-RED-019", "CODE-RED",
+				"SQL string concatenation detected — use parameterized queries.", stripped))
+		}
+	}
+
+	return violations
+}
+
+func hasSQLConcat(stripped, lang string) bool {
+	if lang == "go" {
+		return strings.Contains(stripped, `" +`) || strings.Contains(stripped, `+ "`)
+	}
+
+	if lang == "typescript" || lang == "javascript" {
+		return (strings.Contains(stripped, "${") && strings.Contains(stripped, "`")) ||
+			strings.Contains(stripped, `" +`) || strings.Contains(stripped, `' +`)
+	}
+
+	if lang == "php" {
+		return strings.Contains(stripped, `"$`) || strings.Contains(stripped, `.$`) || strings.Contains(stripped, `. $`)
+	}
+
+	return false
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CODE-RED-020: Go raw errors.New (missing stack trace)
+// ═══════════════════════════════════════════════════════════════════════
+
+func checkGoRawErrors(lines []string, path string) []Violation {
+	var violations []Violation
+	for i, line := range lines {
+		stripped := strings.TrimSpace(line)
+		if strings.HasPrefix(stripped, "//") {
+			continue
+		}
+
+		if strings.Contains(stripped, "errors.New(") {
+			violations = append(violations, newViolation(path, i+1, "CODE-RED-020", "CODE-RED",
+				"Use apperror.New() instead of errors.New() — stack trace required.", stripped))
+		}
+	}
+
+	return violations
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CODE-RED-021: Mixed && and || in single expression
+// ═══════════════════════════════════════════════════════════════════════
+
+func checkMixedOperators(lines []string, path string) []Violation {
+	var violations []Violation
+	for i, line := range lines {
+		stripped := strings.TrimSpace(line)
+		if isComment(stripped) {
+			continue
+		}
+
+		if !strings.Contains(stripped, "&&") || !strings.Contains(stripped, "||") {
+			continue
+		}
+
+		if isIfStatement(stripped) || strings.HasPrefix(stripped, "} else if") {
+			violations = append(violations, newViolation(path, i+1, "CODE-RED-021", "CODE-RED",
+				"Mixed && and || in condition. Extract to named booleans.", stripped))
+		}
+	}
+
+	return violations
+}
+
+// ═══════════════════════════════════════════════════════════════════════
 // File Validation
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -810,6 +1226,7 @@ func validateFile(path string, maxLines int) []Violation {
 
 func runAllChecks(lines []string, path, lang string, maxLines int) []Violation {
 	var violations []Violation
+	// Universal rules
 	violations = append(violations, checkNestedIf(lines, path)...)
 	violations = append(violations, checkBooleanNaming(lines, path, lang)...)
 	violations = append(violations, checkMagicStrings(lines, path, lang)...)
@@ -817,9 +1234,23 @@ func runAllChecks(lines []string, path, lang string, maxLines int) []Violation {
 	violations = append(violations, checkFunctionLength(lines, path, lang, maxLines)...)
 	violations = append(violations, checkVariableMutation(lines, path, lang)...)
 	violations = append(violations, checkStyleRules(lines, path)...)
+	violations = append(violations, checkFileLength(lines, path)...)
+	violations = append(violations, checkParameterCount(lines, path, lang)...)
+	violations = append(violations, checkNoAnyType(lines, path, lang)...)
+	violations = append(violations, checkErrorSwallowing(lines, path, lang)...)
+	violations = append(violations, checkGenericFileErrors(lines, path)...)
+	violations = append(violations, checkSequentialAsync(lines, path, lang)...)
+	violations = append(violations, checkSQLInjection(lines, path, lang)...)
+	violations = append(violations, checkMixedOperators(lines, path)...)
 
+	// Language-specific
 	if lang == "go" {
 		violations = append(violations, checkGoSpecific(lines, path)...)
+		violations = append(violations, checkGoRawErrors(lines, path)...)
+	}
+
+	if lang == "php" {
+		violations = append(violations, checkPHPThrowable(lines, path)...)
 	}
 
 	return violations
