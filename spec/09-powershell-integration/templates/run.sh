@@ -441,9 +441,9 @@ if ! $FLAG_SKIPBUILD; then
       [[ -z "$clean_path" ]] && continue
       resolved=$(resolve_path "$clean_path")
       if [[ "$clean_path" == *"*"* ]]; then
-        # Wildcard: use find
-        local dir_part="${resolved%/*}"
-        local pattern="${resolved##*/}"
+      # Wildcard: use find
+        dir_part="${resolved%/*}"
+        pattern="${resolved##*/}"
         if [[ -d "$dir_part" ]]; then
           find "$dir_part" -maxdepth 1 -name "$pattern" -exec rm -rf {} + 2>/dev/null || true
           print_gray "Removed: $clean_path (wildcard)"
@@ -470,14 +470,14 @@ if ! $FLAG_SKIPBUILD; then
     # Clean backend runtime data
     if [[ -n "$DATA_DIR" && -d "$DATA_DIR" ]]; then
       for rt_path in sessions request-sessions errors; do
-        local full="$DATA_DIR/$rt_path"
+        full="$DATA_DIR/$rt_path"
         if [[ -d "$full" ]]; then
           print_gray "Removing: $full..."
           rm -rf "$full"
         fi
       done
       for log_file in log.txt error.log.txt; do
-        local log_path="$DATA_DIR/$log_file"
+        log_path="$DATA_DIR/$log_file"
         if [[ -f "$log_path" ]]; then
           rm -f "$log_path"
         fi
