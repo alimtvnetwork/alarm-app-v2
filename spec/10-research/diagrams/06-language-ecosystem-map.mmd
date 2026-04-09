@@ -1,0 +1,47 @@
+%% Language to Game Dev Ecosystem Map
+%% Shows what tools are available per language
+
+graph TD
+    subgraph CPP[C++]
+        CPP_E[Unreal Engine 5]
+        CPP_R[Vulkan / DX12 / OpenGL]
+        CPP_P[Bullet / Jolt / PhysX]
+        CPP_A[FMOD / Wwise]
+        CPP_ECS[EnTT / flecs]
+    end
+
+    subgraph RUST[Rust]
+        RUST_E[Bevy / Fyrox]
+        RUST_R[wgpu / vulkano]
+        RUST_P[Rapier]
+        RUST_A[kira / rodio]
+        RUST_ECS[Bevy ECS / hecs]
+    end
+
+    subgraph CSHARP[C# ]
+        CS_E[Unity / Godot / MonoGame]
+        CS_P[Unity Physics / BEPUphysics]
+        CS_A[Unity Audio / FMOD]
+        CS_ECS[Unity DOTS / Arch]
+    end
+
+    subgraph GDSCRIPT[GDScript]
+        GD_E[Godot 4 - everything built in]
+    end
+
+    subgraph GOLANG[Go]
+        GO_E[Ebitengine - 2D only]
+        GO_R[go-gl - OpenGL]
+        GO_A[Oto / beep]
+    end
+
+    subgraph JS[JavaScript / TypeScript]
+        JS_2D[Phaser / PixiJS]
+        JS_3D[Three.js / Babylon.js]
+        JS_P[Matter.js / Cannon-es]
+        JS_A[Web Audio / Howler.js]
+    end
+
+    subgraph DART[Dart]
+        DART_E[Flutter Flame - 2D only]
+    end
