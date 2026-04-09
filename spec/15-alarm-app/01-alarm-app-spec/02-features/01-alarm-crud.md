@@ -1,11 +1,11 @@
 # Alarm CRUD
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
-**Resolves:** FE-A11Y-001
+**Resolves:** FE-A11Y-001, BE-DELETE-001
 
 ---
 

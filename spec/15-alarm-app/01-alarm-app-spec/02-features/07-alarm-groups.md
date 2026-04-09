@@ -1,10 +1,11 @@
 # Alarm Groups
 
-**Version:** 1.1.0  
-**Updated:** 2026-04-08  
+**Version:** 1.2.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**Priority:** P1 — Should Have
+**Priority:** P1 — Should Have  
+**Resolves:** FE-STATE-001
 
 ---
 

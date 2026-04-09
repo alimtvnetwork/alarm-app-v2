@@ -1,10 +1,11 @@
 # Snooze System
 
-**Version:** 1.2.0  
-**Updated:** 2026-04-08  
+**Version:** 1.3.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**Priority:** P0 — Must Have
+**Priority:** P0 — Must Have  
+**Resolves:** BE-SNOOZE-001
 
 ---
 

@@ -1,10 +1,11 @@
 # Sound & Vibration
 
-**Version:** 1.2.0  
-**Updated:** 2026-04-08  
+**Version:** 1.3.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
-**Ambiguity:** Low  
-**Priority:** P0 (Sound Selection) / P1 (Gradual Volume, Vibration)
+**Ambiguity:** None  
+**Priority:** P0 (Sound Selection) / P1 (Gradual Volume, Vibration)  
+**Resolves:** BE-AUDIO-001
 
 ---
 
