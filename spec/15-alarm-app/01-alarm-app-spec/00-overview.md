@@ -1,10 +1,10 @@
 # Alarm App Spec
 
-**Version:** 1.3.0  
-**Status:** Active  
-**Updated:** 2026-04-08  
+**Version:** 1.4.0  
+**Status:** ✅ Complete — Ready for AI Handoff  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
-**Ambiguity:** Low
+**Ambiguity:** None
 
 ---
 
@@ -111,10 +111,11 @@ Tables:
 
 | # | Module | Description |
 |---|--------|-------------|
-| 01 | [Fundamentals](./01-fundamentals/00-overview.md) | Architecture, data model, design system, platform strategy |
-| 02 | [Features](./02-features/00-overview.md) | All feature specifications |
-| 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking, fixes, retrospectives (32 issues) |
-| 98 | [Changelog](./98-changelog.md) | Version history and change log |
+| 01 | [Fundamentals](./01-fundamentals/00-overview.md) | Architecture, data model, design system, platform strategy, startup, devops, tests (10 docs) |
+| 02 | [Features](./02-features/00-overview.md) | All feature specifications (17 docs) |
+| 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking — 43/43 issues resolved |
+| 10 | [AI Handoff Readiness Report](./10-ai-handoff-readiness-report.md) | 96/100 readiness score, implementation order |
+| 98 | [Changelog](./98-changelog.md) | Version history v1.0.0–v1.6.0 |
 
 ---
 
