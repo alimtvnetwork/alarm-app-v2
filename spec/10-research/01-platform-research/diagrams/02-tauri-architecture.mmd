@@ -1,0 +1,32 @@
+%% Tauri 2.x Application Architecture
+%% Mind-map with annotations explaining each layer
+
+flowchart TD
+    TITLE["TAURI 2.x APPLICATION ARCHITECTURE\nHow a Tauri app works from UI to OS"]
+
+    TITLE --> FE["FRONTEND LAYER\n(Runs inside WebView)"]
+    TITLE --> IPC_LAYER["IPC BRIDGE\n(Communication layer)"]
+    TITLE --> BE["RUST BACKEND\n(Native process)"]
+    TITLE --> PLUGINS["TAURI PLUGINS\n(Pre-built native features)"]
+    TITLE --> OS["OPERATING SYSTEM"]
+
+    %% Frontend details
+    FE --> FE_TECH["Tech Stack\nReact 18 + Vite 5 + TypeScript\nTailwind CSS + shadcn/ui\nAny web framework works"]
+    FE --> FE_NOTE["What it does\n- All UI rendering happens here\n- Same code as a normal website\n- No direct OS access\n- Must use IPC to talk to backend\n- Hot module reload during dev"]
+
+    %% IPC details
+    IPC_LAYER --> IPC_NOTE["How IPC works\n- invoke(): call Rust functions from JS\n- emit(): send events backend to frontend\n- listen(): subscribe to events\n- Type-safe: errors caught at compile\n- Async by default: non-blocking"]
+    IPC_LAYER --> IPC_EX["Example Flow\nJS: await invoke('get_alarms')\n--> Rust: fn get_alarms() runs\n--> Returns JSON to frontend\nLatency: sub-millisecond"]
+
+    %% Backend details
+    BE --> BE_CORE["Core Modules\n- Alarm Engine: tokio async runtime\n- Audio Manager: rodio crate\n- Storage: SQLite via rusqlite\n- All CPU-intensive work here"]
+    BE --> BE_SYS["System Modules\n- Notifications: OS-native alerts\n- System Tray: menu bar icon\n- Config: app settings\n- Power: prevent sleep during alarm"]
+    BE --> BE_NOTE["Why Rust?\n- Memory safe: no crashes from null pointers\n- Fast: C++ speed without C++ bugs\n- Small binary: 3-10 MB total app size\n- Async: tokio handles 1000s of tasks\n- No garbage collector: predictable performance"]
+
+    %% Plugin details
+    PLUGINS --> PLUG_LIST["Available Plugins\n- tauri-plugin-sql: SQLite/MySQL/Postgres\n- tauri-plugin-notification: OS alerts\n- tauri-plugin-dialog: file picker, alerts\n- tauri-plugin-updater: auto-update app\n- tauri-plugin-os: system info"]
+    PLUGINS --> PLUG_NOTE["Why plugins?\n- Pre-built native features\n- No need to write Rust for common tasks\n- Community-maintained\n- Drop-in: add to Cargo.toml + config"]
+
+    %% OS details
+    OS --> OS_LIST["Platform WebViews\n- macOS: WKWebView (built into macOS)\n- Windows: WebView2 (Edge-based, auto-installed)\n- Linux: webkit2gtk (install via apt)\n- iOS: WKWebView\n- Android: System WebView"]
+    OS --> OS_NOTE["Key insight\n- No browser shipped with app\n- Uses what the OS already has\n- This is why Tauri apps are 3-10 MB\n- Electron ships Chromium = 150+ MB\n- Trade-off: slight rendering differences per OS"]

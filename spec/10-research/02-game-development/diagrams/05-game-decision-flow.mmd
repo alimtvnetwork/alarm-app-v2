@@ -1,0 +1,49 @@
+%% Game Development Decision Flowchart
+%% Genre to Platform to Engine with annotations
+
+flowchart TD
+    TITLE["GAME DEVELOPMENT DECISION FLOW\nWhat engine/language should you use?"]
+
+    TITLE --> START["I want to make a game"]
+    START --> GENRE{"What genre?"}
+
+    %% Strategy
+    GENRE -->|"Strategy / RTS"| S1{"Scale?"}
+    S1 -->|"Small-mid"| S2["Godot 4"]
+    S1 -->|"Massive sim\n1000+ units"| S3["Custom C++ or Rust"]
+    S2 --> S_NOTE["Strategy game notes\n- Godot: built-in tilemap for maps\n- Godot: signals for unit events\n- Custom engine if: need ECS for mass units\n- Age of Empires scale = custom engine\n- Into the Breach scale = Godot is fine"]
+
+    %% Retro FPS
+    GENRE -->|"Retro FPS"| R1{"Authenticity level?"}
+    R1 -->|"Maximum retro\nDoom-like rendering"| R2["Custom Rust+wgpu\nor C++ raycaster"]
+    R1 -->|"Retro aesthetic\nmodern engine"| R3["Godot 4\n+ retro shaders"]
+    R2 --> R_NOTE["Retro FPS notes\n- True Doom-like: needs raycasting engine\n- BSP tree for level geometry\n- Software rendering for authentic look\n- Godot: apply CRT shader + low-res\n- Rust+wgpu: full control, harder\n- Dusk, Prodeus = custom engines"]
+
+    %% Mobile
+    GENRE -->|"Mobile casual"| M1["Unity or Godot 4"]
+    M1 --> M_NOTE["Mobile game notes\n- Unity: best mobile ecosystem\n- Godot: free, smaller APK size\n- Consider: touch input, battery drain\n- Unity asset store: monetization plugins\n- Godot: no built-in ads/analytics\n- Both export to iOS + Android"]
+
+    %% Browser
+    GENRE -->|"Browser game"| W1{"2D or 3D?"}
+    W1 -->|"2D"| W2["Phaser 3"]
+    W1 -->|"3D"| W3["Three.js or Babylon.js"]
+    W2 --> W_NOTE["Browser game notes\n- Phaser: most popular 2D web engine\n- Three.js: WebGL 3D, huge community\n- Babylon.js: more game-focused 3D\n- All use JavaScript/TypeScript\n- No install needed: runs in browser\n- Monetize: web ads, in-app purchase APIs"]
+
+    %% 3D
+    GENRE -->|"3D game"| T1{"Scope?"}
+    T1 -->|"AAA\nquality"| T2["Unreal Engine 5"]
+    T1 -->|"Indie\nscale"| T3["Godot 4"]
+    T1 -->|"Custom tech\nlearning"| T4["Bevy or Custom Rust"]
+    T2 --> T_NOTE["3D game notes\n- Unreal: Nanite (infinite geo) + Lumen (GI)\n- Godot 4: Vulkan renderer, good enough for indie\n- Bevy: Rust ECS, no editor yet\n- Custom: learn rendering pipeline\n- Unreal: free until $1M revenue\n- Start Godot unless you need AAA fidelity"]
+
+    %% Card/Board
+    GENRE -->|"Card / Board\n/ UI-heavy"| C1["Godot 4 or\nTauri + web UI"]
+    C1 --> C_NOTE["Card/Board game notes\n- UI-heavy games: web tech excels\n- Tauri: React UI + Rust game logic\n- Godot: Control nodes for UI\n- Web approach: CSS animations, flexbox\n- Examples: Slay the Spire, Balatro\n- Choose web if: heavy menus/text"]
+
+    %% Voxel
+    GENRE -->|"Voxel /\nSimulation"| V1["Custom Rust or C++"]
+    V1 --> V_NOTE["Voxel/Sim notes\n- Voxel: need custom chunk system\n- Minecraft-like: custom engine required\n- Rust: safe memory for large worlds\n- C++: industry standard for perf\n- Engines struggle with voxel scale\n- Need: LOD, meshing, world gen"]
+
+    %% 2D Platformer
+    GENRE -->|"2D Platformer"| P1["Godot 4"]
+    P1 --> P_NOTE["2D Platformer notes\n- Godot: best 2D engine period\n- Built-in: physics, tilemaps, animation\n- CharacterBody2D: platformer movement\n- Alternatives: Bevy, Love2D, Ebitengine\n- Hollow Knight scale: Godot handles it\n- Celeste was built with C#/MonoGame"]

@@ -1,0 +1,34 @@
+%% Game Engine Scoring Comparison
+%% Mind-map with annotations for each engine
+
+flowchart TD
+    TITLE["GAME ENGINE SCORING COMPARISON\nScored out of 70 across 7 criteria:\n2D + 3D + Editor + Free + Mobile + Web + Linux"]
+
+    TITLE --> G["1st: Godot 4\n62/70 (89%)"]
+    TITLE --> U["2nd: Unity\n52/70 (74%)"]
+    TITLE --> B["3rd: Bevy\n47/70 (67%)"]
+    TITLE --> E["4th: Ebitengine\n46/70 (66%)"]
+    TITLE --> UE["5th: Unreal 5\n44/70 (63%)"]
+    TITLE --> R["6th: Raylib\n43/70 (61%)"]
+    TITLE --> M["7th: MonoGame\n42/70 (60%)"]
+
+    %% Godot annotations
+    G --> G_NOTE["Why #1: Godot 4\n- Completely free and open source\n- Built-in editor: node-based scene system\n- 2D: best-in-class, dedicated 2D engine\n- 3D: improved in v4, Vulkan renderer\n- GDScript: easy Python-like language\n- Exports: PC, mobile, web, Linux\n- RAM: editor uses 200-400 MB\n- Community: fastest growing engine\n- Trade-off: 3D not as polished as Unreal"]
+
+    %% Unity annotations
+    U --> U_NOTE["Why #2: Unity\n- Most used engine worldwide\n- Huge asset store: 100K+ assets\n- Best mobile game engine\n- C# scripting: familiar to many\n- 2D + 3D both capable\n- Trade-off: licensing fees changed 2023\n- Trade-off: editor is slow and bloated\n- RAM: editor 1-4 GB\n- Avoid if: budget-conscious indie"]
+
+    %% Bevy annotations
+    B --> B_NOTE["Why #3: Bevy\n- Rust-based: memory safe, fast\n- ECS architecture: data-oriented\n- Hot reloading for fast iteration\n- Fully open source, MIT license\n- Trade-off: no visual editor yet\n- Trade-off: pre-1.0, API changes often\n- Best for: Rust developers\n- Avoid if: need stable production engine"]
+
+    %% Ebitengine annotations
+    E --> E_NOTE["Why #4: Ebitengine\n- Go-based: simple language\n- 2D only: excellent for retro games\n- Dead simple API: 50 lines for a game\n- Cross-platform including mobile + web\n- Trade-off: no 3D support\n- Trade-off: no visual editor\n- Best for: Go developers, game jams\n- RAM: very low, 20-50 MB"]
+
+    %% Unreal annotations
+    UE --> UE_NOTE["Why #5: Unreal 5\n- Best 3D graphics: Nanite + Lumen\n- AAA quality: used by top studios\n- Blueprints: visual scripting\n- Free until $1M revenue\n- Trade-off: massive engine, 50+ GB install\n- Trade-off: C++ is complex\n- Trade-off: overkill for 2D or indie\n- RAM: editor 4-16 GB\n- Best for: 3D AAA games only"]
+
+    %% Raylib annotations
+    R --> R_NOTE["Why #6: Raylib\n- C library: minimal and fast\n- Great for learning game dev\n- No bloat: just functions\n- Bindings for 50+ languages\n- Trade-off: no editor at all\n- Trade-off: no built-in physics\n- Trade-off: manual everything\n- Best for: learning, prototypes"]
+
+    %% MonoGame annotations
+    M --> M_NOTE["Why #7: MonoGame\n- C# framework: XNA successor\n- Stardew Valley was built with it\n- Cross-platform with .NET\n- Trade-off: no editor\n- Trade-off: aging ecosystem\n- Trade-off: fewer tutorials\n- Best for: C# devs who want low-level control"]
