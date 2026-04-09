@@ -1,10 +1,10 @@
 # File Structure
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**Resolves:** DEVOPS-PERM-001, DEVOPS-CARGO-001
+**Resolves:** DEVOPS-PERM-001, DEVOPS-CARGO-001, FE-I18N-001
 
 ---
 
@@ -51,8 +51,19 @@ src/                          — Frontend (React + TypeScript)
     tauri-commands.ts         — Typed wrappers for Tauri invoke() calls
     db.ts                     — Frontend DB query helpers
 
+  i18n/                       — Internationalization (Resolves FE-I18N-001)
+    index.ts                  — i18next initialization + language detection
+    locales/
+      en.json                 — English strings (default)
+      ms.json                 — Malay strings
+      zh.json                 — Chinese strings (future)
+
   assets/
     sounds/                   — Built-in alarm tone audio files
+
+  test/
+    setup.ts                  — Vitest + Testing Library setup
+    fixtures.ts               — Test data factories
 
 src-tauri/                    — Backend (Rust)
   src/
@@ -66,12 +77,18 @@ src-tauri/                    — Backend (Rust)
     engine/
       alarm_engine.rs         — Background alarm checking thread
       scheduler.rs            — Next-alarm calculation, recurring logic
+      wake_listener/
+        mod.rs                — WakeListener trait + factory
+        macos.rs              — NSWorkspace implementation
+        windows.rs            — WM_POWERBROADCAST implementation
+        linux.rs              — systemd-logind D-Bus implementation
     audio/
       player.rs               — Native audio playback (platform-specific)
       gradual_volume.rs       — Volume fade-in logic
+      platform_macos.rs       — macOS audio session config (BE-AUDIO-003)
     storage/
       db.rs                   — SQLite connection + migrations (via `refinery` crate)
-      models.rs               — Rust structs matching DB schema
+      models.rs               — Rust structs matching DB schema (AlarmRow etc.)
     notifications/
       mod.rs                  — OS notification dispatch
     tray/
@@ -83,6 +100,91 @@ src-tauri/                    — Backend (Rust)
     V1__initial_schema.sql    — Tables: alarms, alarm_groups, settings, snooze_state, alarm_events
     V2__*.sql                 — Future schema changes (sequential numbering)
   icons/                      — App icons (macOS .icns, Windows .ico, etc.)
+  tests/                      — Rust integration tests
+    alarm_commands.rs         — IPC handler tests with in-memory SQLite
+```
+
+---
+
+## i18n Enforcement (Resolves FE-I18N-001)
+
+> Without enforcement, AI will hardcode strings in JSX. i18n must be a structural requirement, not optional.
+
+### Library: `react-i18next` + `i18next`
+
+```typescript
+// src/i18n/index.ts
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import en from './locales/en.json';
+
+i18n.use(initReactI18next).init({
+  resources: { en: { translation: en } },
+  lng: 'en',  // Read from settings table on startup
+  fallbackLng: 'en',
+  interpolation: { escapeValue: false },
+});
+
+export default i18n;
+```
+
+### ESLint Enforcement
+
+Add `eslint-plugin-i18next` to prevent hardcoded strings in JSX:
+
+```json
+// .eslintrc.json (relevant rules)
+{
+  "plugins": ["i18next"],
+  "rules": {
+    "i18next/no-literal-string": ["warn", {
+      "markupOnly": true,
+      "ignoreAttribute": ["data-testid", "className", "id", "role", "aria-label"],
+      "ignore": ["—", "•", "/", "|"]
+    }]
+  }
+}
+```
+
+**Rule:** All user-visible strings must use `t('key')` from `useTranslation()`. Data-testid, class names, and ARIA attributes are exempt.
+
+### Locale File Structure
+
+```json
+// src/i18n/locales/en.json
+{
+  "alarm": {
+    "create": "Create Alarm",
+    "edit": "Edit Alarm",
+    "delete": "Delete",
+    "undo": "Undo",
+    "toggle_on": "Enabled",
+    "toggle_off": "Disabled",
+    "snooze": "Snooze ({{remaining}} remaining)",
+    "dismiss": "Dismiss",
+    "missed": "Missed Alarm",
+    "copy_suffix": "(Copy)",
+    "empty_state": "No alarms yet. Tap + to create one."
+  },
+  "group": {
+    "ungrouped": "Ungrouped",
+    "create": "Create Group",
+    "rename": "Rename Group",
+    "delete_confirm": "Delete group? Alarms will be moved to Ungrouped."
+  },
+  "settings": {
+    "theme": "Theme",
+    "time_format": "Time Format",
+    "language": "Language",
+    "sound": "Default Sound",
+    "retention": "Event History (days)"
+  },
+  "error": {
+    "save_failed": "Failed to save — try again",
+    "timeout": "Operation timed out — try again",
+    "sound_missing": "Sound file missing — using default"
+  }
+}
 ```
 
 ---
@@ -264,5 +366,7 @@ invoke("export_alarms")       →    commands/export_import.rs → file dialog
 | Data Model | `./01-data-model.md` |
 | Platform Strategy | `./05-platform-strategy.md` |
 | Startup Sequence | `./07-startup-sequence.md` |
+| Test Strategy | `./09-test-strategy.md` |
 | Features | `../02-features/00-overview.md` |
 | App Issues | `../03-app-issues/08-devops-issues.md` → DEVOPS-PERM-001, DEVOPS-CARGO-001 |
+| Frontend Issues | `../03-app-issues/02-frontend-issues.md` → FE-I18N-001 |
