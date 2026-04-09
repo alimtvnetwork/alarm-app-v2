@@ -1,16 +1,16 @@
 # Security Issues
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-08  
+**Version:** 1.1.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**Source:** AI Feasibility Analysis v1.0.0
+**Source:** AI Feasibility Analysis v1.0.0, AI Handoff Reliability Report v1.0.0
 
 ---
 
 ## Keywords
 
-`security`, `path-injection`, `ssrf`, `webhook`, `export`, `sanitization`
+`security`, `path-injection`, `ssrf`, `webhook`, `export`, `sanitization`, `file-validation`
 
 ---
 
@@ -64,4 +64,28 @@
 
 ---
 
-*Security issues — created: 2026-04-08*
+### SEC-SOUND-001 — Custom sound file validation rules missing
+
+| Field | Value |
+|-------|-------|
+| **Impact** | Low |
+| **Likelihood** | 60% |
+| **Status** | Open |
+| **Fail %** | 30% |
+
+**Description:** User can select any audio file but no max size, format validation, or handling for moved/deleted files is specified.
+
+**Root Cause:** Missing validation rules.
+
+**Suggested Fix:**
+- Max file size: 10MB
+- Allowed formats: `.mp3`, `.wav`, `.ogg`, `.flac`
+- On alarm fire: check `Path::exists()`. If missing → fall back to `classic-beep`, show "⚠ Sound file missing" in overlay
+- On alarm edit: if file path invalid, show warning + offer to re-select
+- Reject symlinks (security)
+
+**Resolution Plan:** Add validation rules to `02-features/05-sound-and-vibration.md` under "Custom Sound Validation" and cross-reference with `SEC-PATH-001`.
+
+---
+
+*Security issues — updated: 2026-04-09*
