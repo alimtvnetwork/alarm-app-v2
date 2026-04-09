@@ -57,6 +57,7 @@ A `diagrams/` folder contains visual architecture and comparison diagrams in Mer
 | # | Area | Description |
 |---|------|-------------|
 | 01 | [Platform Research](./01-platform-research/00-overview.md) | Cross-platform desktop + mobile framework evaluation — Tauri, Electron, Wails, Flutter, Go+CEF, Fyne |
+| 02 | [Game Development](./02-game-development/00-overview.md) | Game engines, languages, custom engines, genre/platform recommendations |
 
 ---
 
