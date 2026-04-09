@@ -1,8 +1,8 @@
 # App Issues
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Status:** Active  
-**Updated:** 2026-04-08  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None
 
@@ -10,7 +10,7 @@
 
 ## Keywords
 
-`issues`, `bugs`, `fixes`, `retrospectives`, `feasibility`, `risk-analysis`
+`issues`, `bugs`, `fixes`, `retrospectives`, `feasibility`, `risk-analysis`, `spec-gaps`
 
 ---
 
@@ -28,7 +28,7 @@
 
 ## Purpose
 
-Bug tracking, fixes, risk analysis, and retrospectives for the Alarm App. Issues sourced from the AI Feasibility Analysis v1.0.0 (32 atomic issues across 7 categories).
+Bug tracking, fixes, risk analysis, and retrospectives for the Alarm App. Issues sourced from the AI Feasibility Analysis v1.0.0 (32 issues) and the AI Handoff Reliability Report v1.0.0 (11 spec gap issues).
 
 ---
 
@@ -44,7 +44,8 @@ Bug tracking, fixes, risk analysis, and retrospectives for the Alarm App. Issues
 | Performance | `06-performance-issues.md` | 2 | — | — | 2 | — |
 | UX/UI | `07-ux-ui-issues.md` | 3 | — | 2 | — | 1 |
 | DevOps | `08-devops-issues.md` | 4 | 1 | 3 | — | — |
-| **Total** | | **32** | **1** | **10** | **12** | **8** |
+| **Spec Gaps** | `09-spec-gap-issues.md` | **11** | — | **3** | **5** | **3** |
+| **Total** | | **43** | **1** | **13** | **17** | **11** |
 
 ---
 
@@ -60,15 +61,17 @@ Bug tracking, fixes, risk analysis, and retrospectives for the Alarm App. Issues
 | 06 | `06-performance-issues.md` | 2 issues: startup budget, memory budget |
 | 07 | `07-ux-ui-issues.md` | 3 issues: DST handling, timezone change, challenge calibration |
 | 08 | `08-devops-issues.md` | 4 issues: macOS signing, Windows signing, CI/CD, update keys |
+| 09 | `09-spec-gap-issues.md` | 11 issues: Tauri permissions, Cargo versions, alarm queue, startup sequence, error handling, test strategy, logging, RepeatPattern JSON, audio session, sound validation, volume algorithm |
 | 99 | `99-consistency-report.md` | Folder health check |
 
 ---
 
 ## Cross-References
 
-- [AI Feasibility Analysis](/mnt/documents/alarm-app-ai-feasibility-analysis.md) — Source of all 32 issues
+- [AI Feasibility Analysis](/mnt/documents/alarm-app-ai-feasibility-analysis.md) — Source of original 32 issues
+- [AI Handoff Reliability Report](../09-ai-handoff-reliability-report.md) — Source of 11 spec gap issues
 - Parent folder's `00-overview.md` for broader context
 
 ---
 
-*App issues overview — updated: 2026-04-08*
+*App issues overview — updated: 2026-04-09*
