@@ -1,6 +1,6 @@
 # Research
 
-**Version:** 1.0.0  
+**Version:** 2.0.0  
 **Status:** Active  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
@@ -10,7 +10,7 @@
 
 ## Keywords
 
-`research`, `analysis`, `evaluation`, `comparison`, `decision`, `platform`, `framework`
+`research`, `analysis`, `evaluation`, `comparison`, `decision`, `framework`, `platform`, `architecture`, `velocity`
 
 ---
 
@@ -28,15 +28,45 @@
 
 ## Purpose
 
-Research documents supporting key technology and architecture decisions across all specification modules. Each document captures the evaluation process, alternatives considered, scoring criteria, and final recommendation rationale. These are reference-grade documents intended for AI handoff — self-contained, detailed, and decision-complete.
+Research documents supporting key technology and architecture decisions. Each research area lives in its own subfolder with evaluation criteria, alternatives analysis, scoring, risk assessment, and final recommendations. Documents are written to be **generic and reusable** — applicable to any project considering similar technology choices, with project-specific context noted where relevant.
+
+A `diagrams/` folder contains visual architecture and comparison diagrams in Mermaid format.
 
 ---
 
-## Document Inventory
+## Folder Structure
 
-| # | File | Description |
+```
+10-research/
+├── 00-overview.md              ← This file
+├── diagrams/                   ← Mermaid diagrams (.mmd)
+│   ├── 01-framework-scoring.mmd
+│   ├── 02-tauri-architecture.mmd
+│   └── 03-development-velocity.mmd
+└── 01-platform-research/       ← Cross-platform framework research
+    ├── 00-overview.md
+    ├── 01-framework-comparison.md
+    ├── 02-development-velocity.md
+    └── 03-recommendation.md
+```
+
+---
+
+## Research Areas
+
+| # | Area | Description |
 |---|------|-------------|
-| 01 | `01-platform-strategy.md` | Cross-platform framework evaluation for the Alarm App — Tauri vs Electron vs Wails vs Flutter vs Go+CEF vs Fyne, with scoring, architecture deep-dive, rollout plan, and risk analysis |
+| 01 | [Platform Research](./01-platform-research/00-overview.md) | Cross-platform desktop + mobile framework evaluation — Tauri, Electron, Wails, Flutter, Go+CEF, Fyne |
+
+---
+
+## Diagrams
+
+| File | Description |
+|------|-------------|
+| [Framework Scoring](./diagrams/01-framework-scoring.mmd) | Radar chart comparing 6 frameworks across 9 criteria |
+| [Tauri Architecture](./diagrams/02-tauri-architecture.mmd) | System architecture for Tauri 2.x applications |
+| [Development Velocity](./diagrams/03-development-velocity.mmd) | Timeline comparison of framework development speed |
 
 ---
 
@@ -44,7 +74,4 @@ Research documents supporting key technology and architecture decisions across a
 
 | Reference | Location |
 |-----------|----------|
-| Parent module | `../00-overview.md` |
-| Alarm App Spec | `../09-alarm-app/01-alarm-app-spec/00-overview.md` |
-| Alarm App Fundamentals | `../09-alarm-app/01-alarm-app-spec/01-fundamentals/00-overview.md` |
-| Platform Constraints | `../09-alarm-app/01-alarm-app-spec/01-fundamentals/04-platform-constraints.md` |
+| Spec Root | `../00-overview.md` |
