@@ -1,7 +1,7 @@
 # UX/UI Issues
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-08  
+**Version:** 1.1.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** Low  
 **Source:** AI Feasibility Analysis v1.0.0
@@ -21,14 +21,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 40% |
-| **Status** | Open |
+| **Likelihood** | 40% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** Alarm set for 2:30 AM during spring-forward doesn't exist (clocks jump from 2:00 to 3:00). Spec doesn't specify behavior — skip? fire at 3:00? fire at 1:30?
 
 **Root Cause:** Missing edge case specification.
 
-**Suggested Fix:** Define rule: if target local time is skipped during DST, fire at the next valid minute (e.g., 2:30 → 3:00). If target time occurs twice during fall-back, fire on the first occurrence only. Document in data model spec.
+**Resolution:** Added full DST handling rules to `01-fundamentals/01-data-model.md` (v1.3.0) and Rust pseudocode with `resolve_local_to_utc()` function to `02-features/03-alarm-firing.md` (v1.4.0). Spring-forward fires at next valid minute, fall-back fires on first occurrence only. Includes 5 test cases.
 
 ---
 
@@ -37,14 +37,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 30% |
-| **Status** | Open |
+| **Likelihood** | 30% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** If user travels and timezone changes, ISO 8601 `nextFireTime` stored as absolute UTC may fire at the wrong local time.
 
 **Root Cause:** `nextFireTime` stored as absolute time vs local time ambiguity.
 
-**Suggested Fix:** Store alarm time as **local time** (`HH:MM`) + **timezone** (`IANA string`). Calculate `nextFireTime` on each alarm check using current system timezone. Recalculate all `nextFireTime` values when system timezone changes (listen for OS timezone change event).
+**Resolution:** Added `on_timezone_change()` function to `02-features/03-alarm-firing.md` (v1.4.0) that recalculates all `nextFireTime` values when system timezone changes. Timezone stored in `settings` table as IANA string. Alarms always fire at configured local time.
 
 ---
 
@@ -64,4 +64,4 @@
 
 ---
 
-*UX/UI issues — created: 2026-04-08*
+*UX/UI issues — updated: 2026-04-09*

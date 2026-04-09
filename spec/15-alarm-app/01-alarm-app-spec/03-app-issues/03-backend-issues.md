@@ -203,26 +203,15 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 75% |
-| **Status** | Open |
-| **Fail %** | 35% |
+| **Likelihood** | 75% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 35% → 5% |
 
 **Description:** No spec for what happens when things go wrong: SQLite write failure, audio file not found, IPC timeout, corrupt database, notification permission denied after initial grant.
 
 **Root Cause:** Happy-path-only spec.
 
-**Suggested Fix:**
-
-| Error | Behavior |
-|-------|----------|
-| SQLite write failure | Retry once, then show toast "Failed to save — try again" |
-| Audio file not found | Fall back to `classic-beep`, show "Sound file missing" in overlay |
-| IPC timeout (>5s) | Cancel operation, show toast "Operation timed out" |
-| Corrupt DB | Attempt `PRAGMA integrity_check`. If fails, backup DB + create fresh |
-| Notification denied | Fall back to in-app overlay only, show settings hint |
-| Migration failure | App refuses to start, show error dialog with "Reset Database" option |
-
-**Resolution Plan:** Create an `error-handling` section in `01-fundamentals/04-platform-constraints.md` with a complete error → behavior mapping table and fallback chains.
+**Resolution:** Added comprehensive "Error Handling Strategy" section to `01-fundamentals/04-platform-constraints.md` v1.2.0 with 12-error behavior mapping table, Rust error type (`AlarmAppError`), frontend `safeInvoke` wrapper, and critical path protection rules.
 
 ---
 
