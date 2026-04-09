@@ -1,7 +1,8 @@
 # PowerShell Build & Run Script — Generic Template
-# Version: 1.3.0
-# Generic template for Go backend + React frontend projects with pnpm PnP support
-# Configure via powershell.json — see spec/powershell-integration/01-configuration-schema.md
+# Version: 2.0.0
+# Generic template for Go backend + React frontend projects
+# Supports: pnpm, Tauri (desktop), CleanCSS (post-build minification)
+# Configure via powershell.json — see spec/09-powershell-integration/01-configuration-schema.md
 #
 # USAGE:
 #   Copy this file and powershell.json to your project root.
@@ -16,62 +17,20 @@
 #   -f   Force clean build (remove caches, deps, databases)
 #   -i   Install/update all dependencies (frontend + backend)
 #   -r   Rebuild (combines -f + -i for complete clean reinstall)
+#   -t   Build Tauri desktop app (instead of web-only)
+#   -td  Run Tauri dev mode (hot-reload with Vite + Tauri window)
 #   -fw  Add Windows Firewall inbound rules (requires Admin)
 #   -u   Upload plugin to WordPress via upload-plugin-v2.ps1
 #   -pp  Override plugin path for upload (use with -u)
-#   -d   Debug mode for upload (verbose request/response logging)
+#   -dm  Debug mode for upload (verbose request/response logging)
 #   -v   Verbose debug output
 #
 # PIPELINE:
-#   1. Git Pull → 2. Prerequisites → 3. pnpm Install → 4. Build → 5. Copy → 6. Run
-#   Upload mode (-u): 1. Git Pull → 2. Prerequisites → Upload Plugin V2
+#   Web:   1. Git Pull → 2. Prerequisites → 3. Install → 4. Build → 5. Copy → 6. Run
+#   Tauri: 1. Git Pull → 2. Prerequisites → 3. Install → 4. Tauri Build/Dev
+#   Upload: 1. Git Pull → 2. Prerequisites → Upload Plugin V2
 #
-# FEATURES:
-#   - Auto-install Go, Node.js, pnpm via winget if missing
-#   - pnpm PnP mode for disk-efficient package management
-#   - Shared pnpm store across multiple projects
-#   - Force clean mode: removes node_modules, dist, .vite, PnP artifacts, databases
-#   - Windows Firewall rule management
-#   - pnpm v10+ compatibility (auto --dangerously-allow-all-builds)
-#   - Cross-drive store detection (falls back to isolated linker)
-#   - Node v24+ detection (falls back to isolated linker for ESM compat)
-#   - WordPress plugin upload integration (optional, via powershell.json)
-#
-# CONFIGURATION (powershell.json):
-#   {
-#     "projectName": "My App",
-#     "rootDir": ".",
-#     "backendDir": "backend",
-#     "frontendDir": ".",
-#     "distDir": "dist",
-#     "targetDir": "backend/frontend/dist",
-#     "dataDir": "backend/data",
-#     "ports": [8080],
-#     "prerequisites": { "go": true, "node": true, "pnpm": true },
-#     "usePnp": true,
-#     "pnpmStorePath": ".pnpm-store",
-#     "cleanPaths": ["node_modules", "dist", ".vite"],
-#     "buildCommand": "pnpm run build",
-#     "installCommand": "pnpm install",
-#     "runCommand": "go run cmd/server/main.go",
-#     "configFile": "config.json",
-#     "configExampleFile": "config.example.json",
-#     "upload": {
-#       "scriptPath": "wp-plugins/scripts/upload-plugin-v2.ps1",
-#       "defaultPluginPath": "wp-plugins/riseup-asia-uploader",
-#       "configPath": "wp-plugins/scripts/wp-plugin-config.json"
-#     }
-#   }
-#
-# UPLOAD INTEGRATION (optional):
-#   Add the "upload" section to powershell.json to enable -u flag.
-#   The upload script must exist at the configured scriptPath.
-#   Example:
-#     .\run.ps1 -u              # Upload default plugin
-#     .\run.ps1 -u -d           # Upload with debug output
-#     .\run.ps1 -u -pp "C:\custom-plugin"  # Upload custom path
-#
-# See spec/powershell-integration/ for full documentation.
+# See spec/09-powershell-integration/ for full documentation.
 
 param(
     [Alias('b')][switch]$buildonly,
@@ -80,10 +39,12 @@ param(
     [Alias('f')][switch]$force,
     [Alias('i')][switch]$install,
     [Alias('r')][switch]$rebuild,
+    [Alias('t')][switch]$tauri,
+    [Alias('td')][switch]$tauridev,
     [Alias('fw')][switch]$openfirewall,
     [Alias('u')][switch]$upload,
     [Alias('pp')][string]$pluginpath = "",
-    [Alias('d')][switch]$debugmode,
+    [Alias('dm')][switch]$debugmode,
     [Alias('h')][switch]$help,
     [Alias('v')][switch]$verbose
 )
@@ -112,7 +73,7 @@ $ConfigPath = Join-Path $ScriptDir "powershell.json"
 if (-not (Test-Path $ConfigPath)) {
     Write-Host "ERROR: powershell.json not found at: $ConfigPath" -ForegroundColor Red
     Write-Host "Create a powershell.json configuration file in the script directory." -ForegroundColor Yellow
-    Write-Host "See spec/powershell-integration/01-configuration-schema.md for format." -ForegroundColor Yellow
+    Write-Host "See spec/09-powershell-integration/01-configuration-schema.md for format." -ForegroundColor Yellow
     exit 1
 }
 
@@ -150,6 +111,9 @@ $CleanPaths = if ($Config.cleanPaths) { $Config.cleanPaths } else { @("node_modu
 $ConfigFile = if ($Config.configFile) { $Config.configFile } else { "config.json" }
 $ConfigExampleFile = if ($Config.configExampleFile) { $Config.configExampleFile } else { "config.example.json" }
 $RequiredModules = if ($Config.requiredModules) { $Config.requiredModules } else { @() }
+$PostBuildCommand = if ($Config.postBuildCommand) { $Config.postBuildCommand } else { "" }
+$TauriBuildCommand = if ($Config.tauriBuildCommand) { $Config.tauriBuildCommand } else { "pnpm tauri build" }
+$TauriDevCommand = if ($Config.tauriDevCommand) { $Config.tauriDevCommand } else { "pnpm tauri dev" }
 
 # pnpm configuration
 $PnpmStorePath = if ($Config.pnpmStorePath) { Resolve-RelativePath $Config.pnpmStorePath } else { $null }
@@ -159,8 +123,16 @@ $UsePnp = if ($null -ne $Config.usePnp) { $Config.usePnp } else { $true }
 $CheckGo = if ($null -ne $Config.prerequisites -and $null -ne $Config.prerequisites.go) { $Config.prerequisites.go } else { $true }
 $CheckNode = if ($null -ne $Config.prerequisites -and $null -ne $Config.prerequisites.node) { $Config.prerequisites.node } else { $true }
 $CheckPnpm = if ($null -ne $Config.prerequisites -and $null -ne $Config.prerequisites.pnpm) { $Config.prerequisites.pnpm } else { $true }
+$CheckRust = if ($null -ne $Config.prerequisites -and $null -ne $Config.prerequisites.rust) { $Config.prerequisites.rust } else { $false }
+$CheckTauri = if ($null -ne $Config.prerequisites -and $null -ne $Config.prerequisites.tauri) { $Config.prerequisites.tauri } else { $false }
 
-# pnpm version-aware install behavior (pnpm v10+ blocks dependency build scripts by default)
+# Auto-enable rust+tauri checks when -t or -td flags used
+if ($tauri -or $tauridev) {
+    $CheckRust = $true
+    $CheckTauri = $true
+}
+
+# pnpm version-aware install behavior
 $PnpmMajor = 0
 $NodeMajor = 0
 $EffectiveInstallCommand = $InstallCommand
@@ -188,22 +160,26 @@ if ($help) {
     Write-Host "  -f,  -force         Clean build: remove caches, dependencies, databases"
     Write-Host "  -i,  -install       Install/update dependencies (frontend + backend)"
     Write-Host "  -r,  -rebuild       Complete clean reinstall (combines -f + -i)"
+    Write-Host "  -t,  -tauri         Build Tauri desktop app (release build)"
+    Write-Host "  -td, -tauridev      Run Tauri dev mode (hot-reload Vite + Tauri window)"
     Write-Host "  -fw, -openfirewall  (Admin) Add Windows Firewall inbound rules"
     Write-Host "  -u,  -upload        Upload plugin to WordPress via upload-plugin-v2"
     Write-Host "  -pp, -pluginpath    Override plugin folder path (use with -u)"
-    Write-Host "  -d,  -debugmode     Debug mode for upload (verbose HTTP logging)"
+    Write-Host "  -dm, -debugmode     Debug mode for upload (verbose HTTP logging)"
     Write-Host "  -v,  -verbose       Show detailed debug output"
     Write-Host ""
     Write-Host "EXAMPLES:" -ForegroundColor Yellow
-    Write-Host "  .\run.ps1              # Full build and run"
+    Write-Host "  .\run.ps1              # Full build and run (web)"
     Write-Host "  .\run.ps1 -i           # Install/update all dependencies"
     Write-Host "  .\run.ps1 -r           # Complete clean reinstall and build"
     Write-Host "  .\run.ps1 -f           # Clean rebuild everything"
     Write-Host "  .\run.ps1 -s           # Just start the backend (skip build)"
     Write-Host "  .\run.ps1 -b           # Build only, don't start server"
+    Write-Host "  .\run.ps1 -t           # Build Tauri desktop app"
+    Write-Host "  .\run.ps1 -td          # Run Tauri dev mode (hot-reload)"
     Write-Host "  .\run.ps1 -p -f        # Clean build without git pull"
     Write-Host "  .\run.ps1 -u           # Upload default plugin to WordPress"
-    Write-Host "  .\run.ps1 -u -d        # Upload with debug output"
+    Write-Host "  .\run.ps1 -u -dm       # Upload with debug output"
     Write-Host "  .\run.ps1 -u -pp 'C:\path'  # Upload custom plugin path"
     Write-Host ""
     Write-Host "CONFIGURATION:" -ForegroundColor Yellow
@@ -234,6 +210,8 @@ if ($verbose) {
     Write-Host "  Backend Dir: $BackendDir" -ForegroundColor Gray
     Write-Host "  Frontend Dir: $FrontendDir" -ForegroundColor Gray
     Write-Host "  pnpm Store: $PnpmStorePath" -ForegroundColor Gray
+    if ($tauri) { Write-Host "  Mode: Tauri Desktop Build" -ForegroundColor Gray }
+    if ($tauridev) { Write-Host "  Mode: Tauri Dev (hot-reload)" -ForegroundColor Gray }
     Write-Host ""
 }
 
@@ -388,6 +366,61 @@ function Install-Pnpm {
     }
 }
 
+function Install-Rust {
+    Write-Host "  Attempting to install Rust via winget..." -ForegroundColor Yellow
+    if (-not (Test-Command "winget")) {
+        Write-Host "ERROR: winget not available. Install Rust manually: https://rustup.rs/" -ForegroundColor Red
+        exit 1
+    }
+    try {
+        winget install Rustlang.Rustup --accept-package-agreements --accept-source-agreements
+        if ($LASTEXITCODE -ne 0) { throw "winget install failed" }
+        Refresh-Path
+        # Run rustup to install default toolchain
+        rustup default stable 2>&1 | Out-Host
+        Write-Host "  ✓ Rust installed successfully" -ForegroundColor Green
+    } catch {
+        Write-Host "ERROR: Failed to install Rust. Install manually: https://rustup.rs/" -ForegroundColor Red
+        exit 1
+    }
+}
+
+function Install-TauriCli {
+    Write-Host "  Installing Tauri CLI..." -ForegroundColor Yellow
+    try {
+        if (Test-Command "pnpm") {
+            pnpm add -D @tauri-apps/cli
+        } elseif (Test-Command "npm") {
+            npm install -D @tauri-apps/cli
+        } elseif (Test-Command "cargo") {
+            cargo install tauri-cli --locked
+        } else {
+            throw "No pnpm, npm, or cargo found"
+        }
+        Write-Host "  ✓ Tauri CLI installed successfully" -ForegroundColor Green
+    } catch {
+        Write-Host "ERROR: Failed to install Tauri CLI. Install manually: https://v2.tauri.app/start/" -ForegroundColor Red
+        exit 1
+    }
+}
+
+function Install-CleanCss {
+    Write-Host "  Installing clean-css-cli..." -ForegroundColor Yellow
+    try {
+        if (Test-Command "pnpm") {
+            pnpm add -D clean-css-cli
+        } elseif (Test-Command "npm") {
+            npm install -D clean-css-cli
+        } else {
+            throw "No pnpm or npm found"
+        }
+        Write-Host "  ✓ clean-css-cli installed successfully" -ForegroundColor Green
+    } catch {
+        Write-Host "ERROR: Failed to install clean-css-cli" -ForegroundColor Red
+        exit 1
+    }
+}
+
 function Configure-PnpmStore {
     $projectDrive = Get-DriveRoot $FrontendDir
     $storeDrive = Get-DriveRoot $PnpmStorePath
@@ -476,7 +509,7 @@ if ($Config.env) {
 # ============================================================================
 $stepWatch = [System.Diagnostics.Stopwatch]::StartNew()
 if (-not $skippull) {
-    Write-Host "[1/5] Pulling latest changes from git..." -ForegroundColor Yellow
+    Write-Host "[1/6] Pulling latest changes from git..." -ForegroundColor Yellow
     Push-Location $RootDir
     try {
         if (Test-Path ".git") {
@@ -492,7 +525,7 @@ if (-not $skippull) {
     }
     finally { Pop-Location }
 } else {
-    Write-Host "[1/5] Skipping git pull (-p)" -ForegroundColor Gray
+    Write-Host "[1/6] Skipping git pull (-p)" -ForegroundColor Gray
 }
 $stepWatch.Stop()
 $StepTimes["Git Pull"] = $stepWatch.Elapsed
@@ -503,7 +536,7 @@ Write-Host ""
 # STEP 2: PREREQUISITES
 # ============================================================================
 $stepWatch = [System.Diagnostics.Stopwatch]::StartNew()
-Write-Host "[2/5] Checking prerequisites..." -ForegroundColor Yellow
+Write-Host "[2/6] Checking prerequisites..." -ForegroundColor Yellow
 
 if ($CheckGo) {
     if (-not (Test-Command "go")) { Install-Go }
@@ -527,6 +560,65 @@ if ($CheckPnpm) {
     Configure-PnpmStore
 }
 
+if ($CheckRust) {
+    if (-not (Test-Command "rustc")) { Install-Rust }
+    $rustVersion = rustc --version 2>&1
+    Write-Host "  ✓ Rust found: $rustVersion" -ForegroundColor Green
+    $cargoVersion = cargo --version 2>&1
+    Write-Host "  ✓ Cargo found: $cargoVersion" -ForegroundColor Green
+}
+
+if ($CheckTauri) {
+    $tauriFound = $false
+    $tauriVer = ""
+    
+    if ((Test-Command "pnpm")) {
+        try {
+            $tauriVer = pnpm tauri --version 2>&1
+            if ($LASTEXITCODE -eq 0) { $tauriFound = $true }
+        } catch {}
+    }
+    if (-not $tauriFound -and (Test-Command "npx")) {
+        try {
+            $tauriVer = npx tauri --version 2>&1
+            if ($LASTEXITCODE -eq 0) { $tauriFound = $true }
+        } catch {}
+    }
+    if (-not $tauriFound -and (Test-Command "cargo-tauri")) {
+        try {
+            $tauriVer = cargo-tauri --version 2>&1
+            $tauriFound = $true
+        } catch {}
+    }
+    
+    if (-not $tauriFound) {
+        Install-TauriCli
+        $tauriVer = "(just installed)"
+    }
+    Write-Host "  ✓ Tauri CLI found: $tauriVer" -ForegroundColor Green
+    
+    # Windows-specific: check for WebView2
+    try {
+        $wv2 = Get-ItemProperty -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BEF-EDC1F7D9BBDC}" -ErrorAction SilentlyContinue
+        if ($wv2) {
+            Write-Host "  ✓ WebView2 found: $($wv2.pv)" -ForegroundColor Green
+        } else {
+            Write-Host "  WARNING: WebView2 not detected. Tauri requires it: https://developer.microsoft.com/en-us/microsoft-edge/webview2/" -ForegroundColor Yellow
+        }
+    } catch {}
+}
+
+# Check clean-css-cli if postBuildCommand references cleancss
+if ($PostBuildCommand -match "cleancss") {
+    $ccFound = (Test-Command "cleancss")
+    if (-not $ccFound) {
+        $localCc = Join-Path $FrontendDir "node_modules/.bin/cleancss.cmd"
+        $ccFound = Test-Path $localCc
+    }
+    if (-not $ccFound) { Install-CleanCss }
+    Write-Host "  ✓ clean-css-cli available" -ForegroundColor Green
+}
+
 $stepWatch.Stop()
 $StepTimes["Prerequisites"] = $stepWatch.Elapsed
 Write-Host "  ⏱ $(Format-ElapsedTime $stepWatch)" -ForegroundColor DarkGray
@@ -534,11 +626,6 @@ Write-Host ""
 
 # ============================================================================
 # UPLOAD MODE (-u): Upload plugin to WordPress via upload-plugin-v2.ps1
-# This section is optional — only runs when -u flag is passed.
-# Requires "upload" section in powershell.json with:
-#   scriptPath:        Path to upload-plugin-v2.ps1
-#   defaultPluginPath: Default plugin folder to upload
-#   configPath:        Path to wp-plugin-config.json (credentials)
 # ============================================================================
 if ($upload) {
     Write-Host ""
@@ -547,7 +634,6 @@ if ($upload) {
     Write-Host "========================================" -ForegroundColor Cyan
     Write-Host ""
     
-    # Resolve upload config from powershell.json
     $uploadConfig = $Config.upload
     if (-not $uploadConfig) {
         Write-Host "ERROR: No 'upload' section in powershell.json." -ForegroundColor Red
@@ -569,7 +655,6 @@ if ($upload) {
         exit 1
     }
     
-    # Determine plugin path (CLI override or default from config)
     $targetPlugin = if ($pluginpath -ne "") { $pluginpath } else { $defaultPlugin }
     
     if (-not (Test-Path $targetPlugin)) {
@@ -581,7 +666,6 @@ if ($upload) {
     Write-Host "  Plugin: $pluginName" -ForegroundColor White
     Write-Host "  Path:   $targetPlugin" -ForegroundColor Gray
     
-    # Read config to show site URL
     if (Test-Path $wpConfig) {
         try {
             $wpConfigData = Get-Content $wpConfig -Raw | ConvertFrom-Json
@@ -590,7 +674,6 @@ if ($upload) {
     }
     Write-Host ""
     
-    # Build JSON config for V2 script
     if (Test-Path $wpConfig) {
         $configContent = Get-Content $wpConfig -Raw | ConvertFrom-Json
         $configContent.pluginFolderPath = $targetPlugin
@@ -601,7 +684,6 @@ if ($upload) {
         exit 1
     }
     
-    # Build V2 arguments
     $v2Args = @("-JsonConfig", $jsonConfig)
     if ($debugmode) { $v2Args += "-DebugMode" }
     
@@ -617,7 +699,6 @@ if ($install) {
     Write-Host "[INSTALL] Installing/updating all dependencies..." -ForegroundColor Cyan
     Write-Host ""
     
-    # Frontend
     if ($rebuild) {
         Write-Host "  [Frontend] Rebuild mode: deferring until after force-clean..." -ForegroundColor Yellow
     } else {
@@ -633,7 +714,6 @@ if ($install) {
         finally { Pop-Location }
     }
     
-    # Backend
     Write-Host ""
     Write-Host "  [Backend] Running go mod tidy && go mod download..." -ForegroundColor Yellow
     Push-Location $BackendDir
@@ -660,11 +740,44 @@ if ($install) {
 }
 
 # ============================================================================
+# TAURI DEV MODE (-td): Start Vite + Tauri window with hot-reload
+# ============================================================================
+if ($tauridev) {
+    Write-Host "[3/6] Starting Tauri dev mode..." -ForegroundColor Yellow
+    
+    Push-Location $FrontendDir
+    try {
+        # Install deps if needed
+        $depsPresent = if ($EffectiveNodeLinker -eq "pnp") { (Test-Path ".pnp.cjs") } else { (Test-Path "node_modules") }
+        if (-not $depsPresent) {
+            Write-Host "  Installing dependencies first..." -ForegroundColor Gray
+            Invoke-Expression $EffectiveInstallCommand
+        }
+        
+        Write-Host ""
+        Write-Host "========================================" -ForegroundColor Cyan
+        Write-Host "  $ProjectName — Tauri Dev Mode" -ForegroundColor Cyan
+        Write-Host "  Hot-reload enabled (Vite + Tauri)" -ForegroundColor Cyan
+        Write-Host "  Press Ctrl+C to stop" -ForegroundColor Cyan
+        Write-Host "========================================" -ForegroundColor Cyan
+        Write-Host ""
+        
+        Invoke-Expression $TauriDevCommand
+    }
+    finally { Pop-Location }
+    exit 0
+}
+
+# ============================================================================
 # STEP 3: FRONTEND BUILD
 # ============================================================================
 $stepWatch = [System.Diagnostics.Stopwatch]::StartNew()
 if (-not $skipbuild) {
-    Write-Host "[3/5] Building React frontend..." -ForegroundColor Yellow
+    if ($tauri) {
+        Write-Host "[3/6] Building Tauri desktop app..." -ForegroundColor Yellow
+    } else {
+        Write-Host "[3/6] Building React frontend..." -ForegroundColor Yellow
+    }
     
     Push-Location $FrontendDir
     try {
@@ -696,6 +809,16 @@ if (-not $skipbuild) {
                 if (Test-Path $extraPath) {
                     Write-Host "  Removing: $extraPath..." -ForegroundColor Gray
                     Remove-Item -Recurse -Force $extraPath -ErrorAction SilentlyContinue
+                }
+            }
+
+            # Clean Tauri build artifacts if applicable
+            if ($tauri -or $CheckTauri) {
+                foreach ($tauriPath in @("src-tauri\target", "src-tauri\gen")) {
+                    if (Test-Path $tauriPath) {
+                        Write-Host "  Removing: $tauriPath..." -ForegroundColor Gray
+                        Remove-Item -Recurse -Force $tauriPath -ErrorAction SilentlyContinue
+                    }
                 }
             }
             
@@ -746,19 +869,46 @@ if (-not $skipbuild) {
             if ($LASTEXITCODE -ne 0) { throw "pnpm install failed" }
         }
         
-        # Build
-        Write-Host "  Running: $BuildCommand" -ForegroundColor Gray
-        $oldNodeOptions = $env:NODE_OPTIONS
-        try {
-            if ($EffectiveNodeLinker -eq "pnp") {
-                Enable-PnpmPnpNodeOptions -ProjectDir (Get-Location)
+        # Build — Tauri or Web
+        if ($tauri) {
+            Write-Host "  Running: $TauriBuildCommand" -ForegroundColor Gray
+            Invoke-Expression $TauriBuildCommand
+            if ($LASTEXITCODE -ne 0) { throw "Tauri build failed" }
+            Write-Host "  ✓ Tauri desktop app built successfully" -ForegroundColor Green
+            
+            # Show output location
+            $bundlePath = "src-tauri\target\release\bundle"
+            if (Test-Path $bundlePath) {
+                Write-Host "  Bundles available in: $bundlePath\" -ForegroundColor Gray
+                Get-ChildItem -Path $bundlePath -Recurse -Include "*.msi","*.exe" -ErrorAction SilentlyContinue | ForEach-Object {
+                    Write-Host "    $($_.Name)" -ForegroundColor Gray
+                }
             }
-            Invoke-Expression $BuildCommand
-            if ($LASTEXITCODE -ne 0) { throw "Build failed" }
+        } else {
+            Write-Host "  Running: $BuildCommand" -ForegroundColor Gray
+            $oldNodeOptions = $env:NODE_OPTIONS
+            try {
+                if ($EffectiveNodeLinker -eq "pnp") {
+                    Enable-PnpmPnpNodeOptions -ProjectDir (Get-Location)
+                }
+                Invoke-Expression $BuildCommand
+                if ($LASTEXITCODE -ne 0) { throw "Build failed" }
+            }
+            finally { $env:NODE_OPTIONS = $oldNodeOptions }
+            
+            Write-Host "  ✓ Frontend built successfully" -ForegroundColor Green
+            
+            # Post-build: CleanCSS minification
+            if ($PostBuildCommand) {
+                Write-Host "  Running post-build: $PostBuildCommand" -ForegroundColor Gray
+                Invoke-Expression $PostBuildCommand
+                if ($LASTEXITCODE -ne 0) {
+                    Write-Host "  WARNING: Post-build command failed" -ForegroundColor Yellow
+                } else {
+                    Write-Host "  ✓ Post-build step complete" -ForegroundColor Green
+                }
+            }
         }
-        finally { $env:NODE_OPTIONS = $oldNodeOptions }
-        
-        Write-Host "  ✓ Frontend built successfully" -ForegroundColor Green
     }
     finally { Pop-Location }
     
@@ -767,30 +917,34 @@ if (-not $skipbuild) {
     Write-Host "  ⏱ $(Format-ElapsedTime $stepWatch)" -ForegroundColor DarkGray
     Write-Host ""
     
-    # STEP 4: COPY BUILD TO BACKEND
+    # STEP 4: COPY BUILD TO BACKEND (web mode only)
     $stepWatch = [System.Diagnostics.Stopwatch]::StartNew()
-    if ($TargetDir) {
-        Write-Host "[4/5] Copying build to backend..." -ForegroundColor Yellow
-        $SourceDist = Join-Path $FrontendDir $DistDir
-        if (-not (Test-Path $SourceDist)) {
-            Write-Host "  WARNING: Build output not found: $SourceDist" -ForegroundColor Yellow
-        } else {
-            $TargetParent = Split-Path -Parent $TargetDir
-            if (-not (Test-Path $TargetParent)) {
-                New-Item -ItemType Directory -Path $TargetParent -Force | Out-Null
+    if (-not $tauri) {
+        if ($TargetDir) {
+            Write-Host "[4/6] Copying build to backend..." -ForegroundColor Yellow
+            $SourceDist = Join-Path $FrontendDir $DistDir
+            if (-not (Test-Path $SourceDist)) {
+                Write-Host "  WARNING: Build output not found: $SourceDist" -ForegroundColor Yellow
+            } else {
+                $TargetParent = Split-Path -Parent $TargetDir
+                if (-not (Test-Path $TargetParent)) {
+                    New-Item -ItemType Directory -Path $TargetParent -Force | Out-Null
+                }
+                if (Test-Path $TargetDir) { Remove-Item -Recurse -Force $TargetDir }
+                Copy-Item -Recurse $SourceDist $TargetDir
+                Write-Host "  ✓ Copied to: $TargetDir" -ForegroundColor Green
             }
-            if (Test-Path $TargetDir) { Remove-Item -Recurse -Force $TargetDir }
-            Copy-Item -Recurse $SourceDist $TargetDir
-            Write-Host "  ✓ Copied to: $TargetDir" -ForegroundColor Green
+        } else {
+            Write-Host "[4/6] Skipping copy (no targetDir)" -ForegroundColor Gray
         }
     } else {
-        Write-Host "[4/5] Skipping copy (no targetDir)" -ForegroundColor Gray
+        Write-Host "[4/6] Skipping copy (Tauri mode)" -ForegroundColor Gray
     }
     $stepWatch.Stop()
     $StepTimes["Copy Build"] = $stepWatch.Elapsed
 } else {
-    Write-Host "[3/5] Skipping frontend build (-s)" -ForegroundColor Gray
-    Write-Host "[4/5] Skipping copy" -ForegroundColor Gray
+    Write-Host "[3/6] Skipping frontend build (-s)" -ForegroundColor Gray
+    Write-Host "[4/6] Skipping copy" -ForegroundColor Gray
     $stepWatch.Stop()
     $StepTimes["Frontend Build"] = [TimeSpan]::Zero
     $StepTimes["Copy Build"] = [TimeSpan]::Zero
@@ -801,7 +955,11 @@ Write-Host ""
 if ($buildonly) {
     $TotalStopwatch.Stop()
     Write-Host "========================================" -ForegroundColor Cyan
-    Write-Host "  Build complete! (-b mode)" -ForegroundColor Cyan
+    if ($tauri) {
+        Write-Host "  Tauri build complete! (-b -t mode)" -ForegroundColor Cyan
+    } else {
+        Write-Host "  Build complete! (-b mode)" -ForegroundColor Cyan
+    }
     Write-Host "  Total time: $(Format-ElapsedTime $TotalStopwatch)" -ForegroundColor Cyan
     Write-Host "========================================" -ForegroundColor Cyan
     Write-Host ""
@@ -813,10 +971,20 @@ if ($buildonly) {
     exit 0
 }
 
+# Tauri build mode exits here (no backend to start)
+if ($tauri) {
+    $TotalStopwatch.Stop()
+    Write-Host "========================================" -ForegroundColor Cyan
+    Write-Host "  Tauri desktop build complete!" -ForegroundColor Cyan
+    Write-Host "  Total time: $(Format-ElapsedTime $TotalStopwatch)" -ForegroundColor Cyan
+    Write-Host "========================================" -ForegroundColor Cyan
+    exit 0
+}
+
 # ============================================================================
-# STEP 5: START BACKEND
+# STEP 5: START BACKEND (web mode only)
 # ============================================================================
-Write-Host "[5/5] Starting Go backend..." -ForegroundColor Yellow
+Write-Host "[5/6] Starting Go backend..." -ForegroundColor Yellow
 
 Push-Location $BackendDir
 try {

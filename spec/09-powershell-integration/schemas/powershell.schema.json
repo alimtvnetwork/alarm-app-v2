@@ -73,6 +73,16 @@
           "default": true,
           "description": "Check/install pnpm package manager"
         },
+        "rust": {
+          "type": "boolean",
+          "default": false,
+          "description": "Check/install Rust toolchain (required for Tauri)"
+        },
+        "tauri": {
+          "type": "boolean",
+          "default": false,
+          "description": "Check/install Tauri CLI (requires Rust)"
+        },
         "bun": {
           "type": "boolean",
           "default": false,
@@ -120,6 +130,24 @@
       "default": "go run cmd/server/main.go",
       "description": "Command to start the Go backend",
       "examples": ["go run cmd/server/main.go", "go run main.go", "./server"]
+    },
+    "postBuildCommand": {
+      "type": "string",
+      "default": "",
+      "description": "Command to run after frontend build (e.g., CSS minification with CleanCSS)",
+      "examples": ["cleancss -o dist/assets/index.min.css dist/assets/index.css", ""]
+    },
+    "tauriBuildCommand": {
+      "type": "string",
+      "default": "pnpm tauri build",
+      "description": "Command to build Tauri desktop app (used with -t flag)",
+      "examples": ["pnpm tauri build", "cargo tauri build", "npx tauri build"]
+    },
+    "tauriDevCommand": {
+      "type": "string",
+      "default": "pnpm tauri dev",
+      "description": "Command to run Tauri dev mode with hot-reload (used with -d/-td flag)",
+      "examples": ["pnpm tauri dev", "cargo tauri dev", "npx tauri dev"]
     },
     "seedingDir": {
       "type": "string",

@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # ============================================================================
 # Build & Run Script — macOS/Linux Template
-# Version: 1.3.0
-# Generic template for Go backend + React frontend projects with pnpm support
+# Version: 2.0.0
+# Generic template for Go backend + React frontend projects
+# Supports: pnpm, Tauri (desktop), CleanCSS (post-build minification)
 # Configure via powershell.json — see spec/09-powershell-integration/01-configuration-schema.md
 #
 # USAGE:
@@ -18,12 +19,16 @@
 #   -f   Force clean build (remove caches, deps, databases)
 #   -i   Install/update all dependencies (frontend + backend)
 #   -r   Rebuild (combines -f + -i for complete clean reinstall)
+#   -t   Build Tauri desktop app (instead of web-only)
+#   -d   Run Tauri dev mode (hot-reload with Vite + Tauri window)
 #   -v   Verbose debug output
 #
 # PIPELINE:
-#   1. Git Pull → 2. Prerequisites → 3. pnpm Install → 4. Build → 5. Copy → 6. Run
+#   Web:   1. Git Pull → 2. Prerequisites → 3. Install → 4. Build → 5. Copy → 6. Run
+#   Tauri: 1. Git Pull → 2. Prerequisites → 3. Install → 4. Tauri Build/Dev
 #
-# REQUIRES: jq (for JSON config parsing), bash 4+ or zsh
+# REQUIRES: bash 4+ or zsh
+# AUTO-INSTALLS: Homebrew, jq, Go, Node.js, pnpm, Rust, Tauri CLI (macOS)
 #
 # See spec/09-powershell-integration/ for full documentation.
 # ============================================================================
@@ -41,6 +46,8 @@ FLAG_INSTALL=false
 FLAG_REBUILD=false
 FLAG_HELP=false
 FLAG_VERBOSE=false
+FLAG_TAURI=false
+FLAG_TAURIDEV=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -51,6 +58,8 @@ while [[ $# -gt 0 ]]; do
     -f|--force)      FLAG_FORCE=true; shift ;;
     -i|--install)    FLAG_INSTALL=true; shift ;;
     -r|--rebuild)    FLAG_REBUILD=true; shift ;;
+    -t|--tauri)      FLAG_TAURI=true; shift ;;
+    -d|--dev)        FLAG_TAURIDEV=true; shift ;;
     -v|--verbose)    FLAG_VERBOSE=true; shift ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
@@ -116,14 +125,40 @@ resolve_path() {
 }
 
 # ============================================================================
-# CONFIGURATION LOADING (requires jq)
+# BOOTSTRAP: Auto-install Homebrew and jq if missing (macOS)
 # ============================================================================
-if ! command -v jq &>/dev/null; then
-  echo -e "${C_RED}ERROR: jq is required for JSON config parsing.${C_RESET}"
-  echo "  Install: brew install jq"
-  exit 1
+if [[ "$(uname)" == "Darwin" ]]; then
+  if ! command -v brew &>/dev/null; then
+    echo -e "${C_YELLOW}Homebrew not found. Installing...${C_RESET}"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    # Add brew to PATH for Apple Silicon
+    if [[ -f "/opt/homebrew/bin/brew" ]]; then
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -f "/usr/local/bin/brew" ]]; then
+      eval "$(/usr/local/bin/brew shellenv)"
+    fi
+    echo -e "  ${C_GREEN}✓ Homebrew installed${C_RESET}"
+  fi
+
+  if ! command -v jq &>/dev/null; then
+    echo -e "${C_YELLOW}jq not found. Installing via brew...${C_RESET}"
+    brew install jq
+    echo -e "  ${C_GREEN}✓ jq installed${C_RESET}"
+  fi
+else
+  # Linux: require jq
+  if ! command -v jq &>/dev/null; then
+    echo -e "${C_RED}ERROR: jq is required for JSON config parsing.${C_RESET}"
+    echo "  Install: sudo apt install jq  (Debian/Ubuntu)"
+    echo "           sudo dnf install jq  (Fedora)"
+    echo "           sudo pacman -S jq    (Arch)"
+    exit 1
+  fi
 fi
 
+# ============================================================================
+# CONFIGURATION LOADING
+# ============================================================================
 CONFIG_PATH="$SCRIPT_DIR/powershell.json"
 
 if [[ ! -f "$CONFIG_PATH" ]]; then
@@ -158,10 +193,21 @@ PNPM_STORE_RAW=$(cfg '.pnpmStorePath' '')
 PNPM_STORE=""
 [[ -n "$PNPM_STORE_RAW" ]] && PNPM_STORE=$(resolve_path "$PNPM_STORE_RAW")
 USE_PNP=$(cfg_bool '.usePnp' 'true')
+POST_BUILD_CMD=$(cfg '.postBuildCommand' '')
+TAURI_BUILD_CMD=$(cfg '.tauriBuildCommand' 'pnpm tauri build')
+TAURI_DEV_CMD=$(cfg '.tauriDevCommand' 'pnpm tauri dev')
 
 CHECK_GO=$(cfg_bool '.prerequisites.go' 'true')
 CHECK_NODE=$(cfg_bool '.prerequisites.node' 'true')
 CHECK_PNPM=$(cfg_bool '.prerequisites.pnpm' 'true')
+CHECK_RUST=$(cfg_bool '.prerequisites.rust' 'false')
+CHECK_TAURI=$(cfg_bool '.prerequisites.tauri' 'false')
+
+# Auto-enable rust+tauri checks when -t or -d flags used
+if $FLAG_TAURI || $FLAG_TAURIDEV; then
+  CHECK_RUST="true"
+  CHECK_TAURI="true"
+fi
 
 # ============================================================================
 # HELP
@@ -181,15 +227,19 @@ if $FLAG_HELP; then
   echo "  -f,  --force       Clean build: remove caches, dependencies, databases"
   echo "  -i,  --install     Install/update dependencies (frontend + backend)"
   echo "  -r,  --rebuild     Complete clean reinstall (combines -f + -i)"
+  echo "  -t,  --tauri       Build Tauri desktop app (release build)"
+  echo "  -d,  --dev         Run Tauri dev mode (hot-reload Vite + Tauri window)"
   echo "  -v,  --verbose     Show detailed debug output"
   echo ""
   echo -e "${C_YELLOW}EXAMPLES:${C_RESET}"
-  echo "  ./run.sh              # Full build and run"
+  echo "  ./run.sh              # Full build and run (web)"
   echo "  ./run.sh -i           # Install/update all dependencies"
   echo "  ./run.sh -r           # Complete clean reinstall and build"
   echo "  ./run.sh -f           # Clean rebuild everything"
   echo "  ./run.sh -s           # Just start the backend (skip build)"
   echo "  ./run.sh -b           # Build only, don't start server"
+  echo "  ./run.sh -t           # Build Tauri desktop app"
+  echo "  ./run.sh -d           # Run Tauri dev mode (hot-reload)"
   echo "  ./run.sh -p -f        # Clean build without git pull"
   echo ""
   echo -e "${C_YELLOW}CONFIGURATION:${C_RESET}"
@@ -218,6 +268,8 @@ if $FLAG_VERBOSE; then
   print_gray "  Backend Dir: $BACKEND_DIR"
   print_gray "  Frontend Dir: $FRONTEND_DIR"
   [[ -n "$PNPM_STORE" ]] && print_gray "  pnpm Store:  $PNPM_STORE"
+  $FLAG_TAURI && print_gray "  Mode: Tauri Desktop Build"
+  $FLAG_TAURIDEV && print_gray "  Mode: Tauri Dev (hot-reload)"
   echo ""
 fi
 
@@ -240,11 +292,11 @@ get_node_major() {
 }
 
 # ============================================================================
-# INSTALLATION FUNCTIONS (macOS: brew; Linux: package manager)
+# INSTALLATION FUNCTIONS (macOS: brew; Linux: manual guidance)
 # ============================================================================
 ensure_brew() {
   if ! command_exists brew; then
-    print_error "Homebrew not found. Install from https://brew.sh"
+    print_error "Homebrew not found. This should have been auto-installed."
     exit 1
   fi
 }
@@ -277,6 +329,53 @@ install_pnpm() {
   echo -e "  ${C_YELLOW}Installing pnpm globally...${C_RESET}"
   npm install -g pnpm
   print_success "pnpm installed successfully"
+}
+
+install_rust() {
+  echo -e "  ${C_YELLOW}Installing Rust via rustup...${C_RESET}"
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  source "$HOME/.cargo/env"
+  print_success "Rust installed: $(rustc --version)"
+}
+
+install_tauri_cli() {
+  echo -e "  ${C_YELLOW}Installing Tauri CLI...${C_RESET}"
+  if command_exists pnpm; then
+    pnpm add -D @tauri-apps/cli
+  elif command_exists npm; then
+    npm install -D @tauri-apps/cli
+  elif command_exists cargo; then
+    cargo install tauri-cli --locked
+  else
+    print_error "Cannot install Tauri CLI: no pnpm, npm, or cargo found"
+    exit 1
+  fi
+  print_success "Tauri CLI installed"
+}
+
+ensure_xcode_clt() {
+  if [[ "$(uname)" == "Darwin" ]]; then
+    if ! xcode-select -p &>/dev/null; then
+      echo -e "  ${C_YELLOW}Xcode Command Line Tools not found. Installing...${C_RESET}"
+      xcode-select --install 2>/dev/null || true
+      echo -e "  ${C_YELLOW}Please complete the Xcode CLT installation dialog, then re-run this script.${C_RESET}"
+      exit 1
+    fi
+    print_success "Xcode CLT found: $(xcode-select -p)"
+  fi
+}
+
+install_cleancss() {
+  echo -e "  ${C_YELLOW}Installing clean-css-cli...${C_RESET}"
+  if command_exists pnpm; then
+    pnpm add -D clean-css-cli
+  elif command_exists npm; then
+    npm install -D clean-css-cli
+  else
+    print_error "Cannot install clean-css-cli: no pnpm or npm found"
+    exit 1
+  fi
+  print_success "clean-css-cli installed"
 }
 
 # ============================================================================
@@ -338,7 +437,7 @@ done < <(jq -r '.env // {} | to_entries[] | "\(.key)=\(.value)"' "$CONFIG_PATH" 
 # ============================================================================
 STEP_START=$(date +%s)
 if ! $FLAG_SKIPPULL; then
-  print_step "[1/5] Pulling latest changes from git..."
+  print_step "[1/6] Pulling latest changes from git..."
   pushd "$ROOT_DIR" > /dev/null
   if [[ -d ".git" ]]; then
     if git pull 2>&1; then
@@ -351,7 +450,7 @@ if ! $FLAG_SKIPPULL; then
   fi
   popd > /dev/null
 else
-  print_step "[1/5] Skipping git pull (-p)"
+  print_step "[1/6] Skipping git pull (-p)"
 fi
 print_gray "⏱ $(format_elapsed $STEP_START)"
 echo ""
@@ -360,7 +459,12 @@ echo ""
 # STEP 2: PREREQUISITES
 # ============================================================================
 STEP_START=$(date +%s)
-print_step "[2/5] Checking prerequisites..."
+print_step "[2/6] Checking prerequisites..."
+
+# Xcode CLT (macOS) — required for Rust/Tauri compilation
+if [[ "$CHECK_RUST" == "true" || "$CHECK_TAURI" == "true" ]]; then
+  ensure_xcode_clt
+fi
 
 if [[ "$CHECK_GO" == "true" ]]; then
   if ! command_exists go; then install_go; fi
@@ -382,6 +486,54 @@ if [[ "$CHECK_PNPM" == "true" ]]; then
   PNPM_MAJOR=$(get_pnpm_major)
   EFFECTIVE_INSTALL_CMD=$(get_effective_install_cmd)
   configure_pnpm_store
+fi
+
+if [[ "$CHECK_RUST" == "true" ]]; then
+  if ! command_exists rustc; then install_rust; fi
+  RUST_VER=$(rustc --version 2>&1)
+  print_success "Rust found: $RUST_VER"
+  CARGO_VER=$(cargo --version 2>&1)
+  print_success "Cargo found: $CARGO_VER"
+fi
+
+if [[ "$CHECK_TAURI" == "true" ]]; then
+  # Check for Tauri CLI (either via pnpm/npx or cargo)
+  TAURI_FOUND=false
+  if command_exists pnpm && pnpm tauri --version &>/dev/null; then
+    TAURI_FOUND=true
+    TAURI_VER=$(pnpm tauri --version 2>&1)
+  elif command_exists npx && npx tauri --version &>/dev/null; then
+    TAURI_FOUND=true
+    TAURI_VER=$(npx tauri --version 2>&1)
+  elif command_exists cargo-tauri; then
+    TAURI_FOUND=true
+    TAURI_VER=$(cargo-tauri --version 2>&1)
+  fi
+
+  if ! $TAURI_FOUND; then
+    install_tauri_cli
+    TAURI_VER="(just installed)"
+  fi
+  print_success "Tauri CLI found: $TAURI_VER"
+
+  # Check macOS-specific Tauri dependencies
+  if [[ "$(uname)" == "Darwin" ]]; then
+    # Tauri on macOS needs Xcode CLT (already checked above)
+    print_gray "macOS Tauri target: universal (arm64 + x86_64)"
+  fi
+fi
+
+# Check clean-css-cli if postBuildCommand references cleancss
+if [[ "$POST_BUILD_CMD" == *"cleancss"* ]]; then
+  if ! command_exists cleancss; then
+    pushd "$FRONTEND_DIR" > /dev/null
+    # Check local node_modules/.bin too
+    if [[ ! -x "node_modules/.bin/cleancss" ]]; then
+      install_cleancss
+    fi
+    popd > /dev/null
+  fi
+  print_success "clean-css-cli available"
 fi
 
 print_gray "⏱ $(format_elapsed $STEP_START)"
@@ -424,11 +576,49 @@ if $FLAG_INSTALL; then
 fi
 
 # ============================================================================
+# TAURI DEV MODE (-d): Start Vite + Tauri window with hot-reload
+# ============================================================================
+if $FLAG_TAURIDEV; then
+  print_step "[3/6] Starting Tauri dev mode..."
+
+  pushd "$FRONTEND_DIR" > /dev/null
+
+  # Install deps if needed
+  NEEDS_INSTALL=false
+  if [[ "$EFFECTIVE_NODE_LINKER" == "pnp" && ! -f ".pnp.cjs" ]]; then
+    NEEDS_INSTALL=true
+  elif [[ "$EFFECTIVE_NODE_LINKER" != "pnp" && ! -d "node_modules" ]]; then
+    NEEDS_INSTALL=true
+  fi
+
+  if $NEEDS_INSTALL; then
+    print_gray "Installing dependencies first..."
+    eval "$EFFECTIVE_INSTALL_CMD"
+  fi
+
+  echo ""
+  print_header "========================================"
+  print_header "  $PROJECT_NAME — Tauri Dev Mode"
+  print_header "  Hot-reload enabled (Vite + Tauri)"
+  print_header "  Press Ctrl+C to stop"
+  print_header "========================================"
+  echo ""
+
+  eval "$TAURI_DEV_CMD"
+  popd > /dev/null
+  exit 0
+fi
+
+# ============================================================================
 # STEP 3: FRONTEND BUILD
 # ============================================================================
 STEP_START=$(date +%s)
 if ! $FLAG_SKIPBUILD; then
-  print_step "[3/5] Building React frontend..."
+  if $FLAG_TAURI; then
+    print_step "[3/6] Building Tauri desktop app..."
+  else
+    print_step "[3/6] Building React frontend..."
+  fi
 
   pushd "$FRONTEND_DIR" > /dev/null
 
@@ -441,7 +631,6 @@ if ! $FLAG_SKIPBUILD; then
       [[ -z "$clean_path" ]] && continue
       resolved=$(resolve_path "$clean_path")
       if [[ "$clean_path" == *"*"* ]]; then
-      # Wildcard: use find
         dir_part="${resolved%/*}"
         pattern="${resolved##*/}"
         if [[ -d "$dir_part" ]]; then
@@ -461,6 +650,16 @@ if ! $FLAG_SKIPBUILD; then
         rm -rf "$extra"
       fi
     done
+
+    # Clean Tauri build artifacts if applicable
+    if $FLAG_TAURI || [[ "$CHECK_TAURI" == "true" ]]; then
+      for tauri_path in src-tauri/target src-tauri/gen; do
+        if [[ -d "$tauri_path" ]]; then
+          print_gray "Removing: $tauri_path..."
+          rm -rf "$tauri_path"
+        fi
+      done
+    fi
 
     if [[ "$CHECK_PNPM" == "true" ]]; then
       print_gray "Clearing pnpm cache..."
@@ -513,36 +712,62 @@ if ! $FLAG_SKIPBUILD; then
     eval "$EFFECTIVE_INSTALL_CMD"
   fi
 
-  # Build
-  print_gray "Running: $BUILD_CMD"
-  eval "$BUILD_CMD"
-  print_success "Frontend built successfully"
+  # Build — Tauri or Web
+  if $FLAG_TAURI; then
+    print_gray "Running: $TAURI_BUILD_CMD"
+    eval "$TAURI_BUILD_CMD"
+    print_success "Tauri desktop app built successfully"
+
+    # Show output location
+    if [[ -d "src-tauri/target/release/bundle" ]]; then
+      print_gray "Bundles available in: src-tauri/target/release/bundle/"
+      if [[ "$(uname)" == "Darwin" ]]; then
+        ls -1 src-tauri/target/release/bundle/dmg/*.dmg 2>/dev/null && true
+        ls -1 src-tauri/target/release/bundle/macos/*.app 2>/dev/null && true
+      fi
+    fi
+  else
+    print_gray "Running: $BUILD_CMD"
+    eval "$BUILD_CMD"
+    print_success "Frontend built successfully"
+
+    # Post-build: CleanCSS minification
+    if [[ -n "$POST_BUILD_CMD" ]]; then
+      print_gray "Running post-build: $POST_BUILD_CMD"
+      eval "$POST_BUILD_CMD"
+      print_success "Post-build step complete"
+    fi
+  fi
 
   popd > /dev/null
 
   print_gray "⏱ $(format_elapsed $STEP_START)"
   echo ""
 
-  # STEP 4: COPY BUILD TO BACKEND
+  # STEP 4: COPY BUILD TO BACKEND (web mode only)
   STEP_START=$(date +%s)
-  if [[ -n "$TARGET_DIR" ]]; then
-    print_step "[4/5] Copying build to backend..."
-    SOURCE_DIST="$FRONTEND_DIR/$DIST_DIR"
-    if [[ ! -d "$SOURCE_DIST" ]]; then
-      print_warn "Build output not found: $SOURCE_DIST"
+  if ! $FLAG_TAURI; then
+    if [[ -n "$TARGET_DIR" ]]; then
+      print_step "[4/6] Copying build to backend..."
+      SOURCE_DIST="$FRONTEND_DIR/$DIST_DIR"
+      if [[ ! -d "$SOURCE_DIST" ]]; then
+        print_warn "Build output not found: $SOURCE_DIST"
+      else
+        TARGET_PARENT=$(dirname "$TARGET_DIR")
+        mkdir -p "$TARGET_PARENT"
+        [[ -d "$TARGET_DIR" ]] && rm -rf "$TARGET_DIR"
+        cp -R "$SOURCE_DIST" "$TARGET_DIR"
+        print_success "Copied to: $TARGET_DIR"
+      fi
     else
-      TARGET_PARENT=$(dirname "$TARGET_DIR")
-      mkdir -p "$TARGET_PARENT"
-      [[ -d "$TARGET_DIR" ]] && rm -rf "$TARGET_DIR"
-      cp -R "$SOURCE_DIST" "$TARGET_DIR"
-      print_success "Copied to: $TARGET_DIR"
+      print_step "[4/6] Skipping copy (no targetDir)"
     fi
   else
-    print_step "[4/5] Skipping copy (no targetDir)"
+    print_step "[4/6] Skipping copy (Tauri mode)"
   fi
 else
-  print_step "[3/5] Skipping frontend build (-s)"
-  print_step "[4/5] Skipping copy"
+  print_step "[3/6] Skipping frontend build (-s)"
+  print_step "[4/6] Skipping copy"
 fi
 echo ""
 
@@ -553,16 +778,31 @@ if $FLAG_BUILDONLY; then
   TOTAL_END=$(date +%s)
   TOTAL_ELAPSED=$(( TOTAL_END - TOTAL_START ))
   print_header "========================================"
-  print_header "  Build complete! (-b mode)"
+  if $FLAG_TAURI; then
+    print_header "  Tauri build complete! (-b -t mode)"
+  else
+    print_header "  Build complete! (-b mode)"
+  fi
+  print_header "  Total time: ${TOTAL_ELAPSED}s"
+  print_header "========================================"
+  exit 0
+fi
+
+# Tauri build mode exits here (no backend to start)
+if $FLAG_TAURI; then
+  TOTAL_END=$(date +%s)
+  TOTAL_ELAPSED=$(( TOTAL_END - TOTAL_START ))
+  print_header "========================================"
+  print_header "  Tauri desktop build complete!"
   print_header "  Total time: ${TOTAL_ELAPSED}s"
   print_header "========================================"
   exit 0
 fi
 
 # ============================================================================
-# STEP 5: START BACKEND
+# STEP 5: START BACKEND (web mode only)
 # ============================================================================
-print_step "[5/5] Starting Go backend..."
+print_step "[5/6] Starting Go backend..."
 
 pushd "$BACKEND_DIR" > /dev/null
 

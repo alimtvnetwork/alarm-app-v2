@@ -76,7 +76,9 @@ The `powershell.json` configuration file defines project-specific paths and sett
       "properties": {
         "go": {"type": "boolean", "default": true},
         "node": {"type": "boolean", "default": true},
-        "pnpm": {"type": "boolean", "default": true}
+        "pnpm": {"type": "boolean", "default": true},
+        "rust": {"type": "boolean", "default": false, "description": "Rust toolchain (required for Tauri)"},
+        "tauri": {"type": "boolean", "default": false, "description": "Tauri CLI (requires Rust)"}
       },
       "description": "Which prerequisites to check/install"
     },
@@ -110,6 +112,21 @@ The `powershell.json` configuration file defines project-specific paths and sett
       "type": "string",
       "default": "go run main.go",
       "description": "Command to start backend"
+    },
+    "postBuildCommand": {
+      "type": "string",
+      "default": "",
+      "description": "Command to run after frontend build (e.g., CleanCSS minification)"
+    },
+    "tauriBuildCommand": {
+      "type": "string",
+      "default": "pnpm tauri build",
+      "description": "Command to build Tauri desktop app (used with -t flag)"
+    },
+    "tauriDevCommand": {
+      "type": "string",
+      "default": "pnpm tauri dev",
+      "description": "Command to run Tauri dev mode with hot-reload (used with -d/-td flag)"
     },
     "configFile": {
       "type": "string",
