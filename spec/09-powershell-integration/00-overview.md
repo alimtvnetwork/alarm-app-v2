@@ -137,27 +137,28 @@ spec/09-powershell-integration/
 
 ## Quick Start
 
+### Windows (PowerShell)
+
 ```powershell
-# Full build and run (pnpm PnP enabled)
-.\run.ps1
+.\run.ps1                # Full build and run
+.\run.ps1 -Force         # Clean rebuild everything
+.\run.ps1 -SkipBuild     # Just start backend
+.\run.ps1 -BuildOnly     # Build only
+.\run.ps1 -SkipPull -Force  # Skip git pull + clean build
+.\run.ps1 -OpenFirewall  # Configure firewall (requires Admin)
+.\run.ps1 -Help          # Show help
+```
 
-# Clean rebuild everything (clears pnpm store cache)
-.\run.ps1 -Force
+### macOS/Linux (Bash)
 
-# Just start backend (skip frontend build)
-.\run.ps1 -SkipBuild
-
-# Build only (don't start server)
-.\run.ps1 -BuildOnly
-
-# Skip git pull + clean build
-.\run.ps1 -SkipPull -Force
-
-# Configure firewall (requires Admin)
-.\run.ps1 -OpenFirewall
-
-# Show help
-.\run.ps1 -Help
+```bash
+./run.sh                 # Full build and run
+./run.sh -f              # Clean rebuild everything
+./run.sh -s              # Just start backend
+./run.sh -b              # Build only
+./run.sh -p -f           # Skip git pull + clean build
+./run.sh -r              # Full clean reinstall + build
+./run.sh -h              # Show help
 ```
 
 ---
