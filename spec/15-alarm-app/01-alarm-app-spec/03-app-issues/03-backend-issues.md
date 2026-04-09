@@ -174,9 +174,9 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 65% |
-| **Status** | Open |
-| **Fail %** | 40% |
+| **Likelihood** | 65% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 40% → 5% |
 
 **Description:** The spec defines individual features but not the initialization order. AI may initialize components in wrong order (e.g., alarm engine before DB, tray before settings loaded).
 
