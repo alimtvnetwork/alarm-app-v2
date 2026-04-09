@@ -893,7 +893,7 @@ def check_generic_file_errors(lines: List[str], filepath: str, lang: str) -> Lis
 # Main Validation
 # ═══════════════════════════════════════════════════════════════════════
 
-def validate_file(filepath: str) -> List[Violation]:
+def validate_file(filepath: str, max_lines: int = 15) -> List[Violation]:
     lang = detect_language(filepath)
 
     if not lang:

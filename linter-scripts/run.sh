@@ -70,12 +70,13 @@ echo "Using $(go version)"
 echo "Scanning: $SCAN_PATH (max $MAX_LINES lines/function)"
 echo ""
 
-if go run "$GO_FILE" --path "$SCAN_PATH" --max-lines "$MAX_LINES" $JSON_FLAG; then
-  echo ""
+go run "$GO_FILE" --path "$SCAN_PATH" --max-lines "$MAX_LINES" $JSON_FLAG
+EXIT_CODE=$?
+
+echo ""
+if [ "$EXIT_CODE" -eq 0 ]; then
   echo "✅ Validation passed!"
 else
-  EXIT_CODE=$?
-  echo ""
   echo "❌ Validation failed with CODE RED violations."
   exit $EXIT_CODE
 fi
