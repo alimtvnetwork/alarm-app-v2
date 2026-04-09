@@ -21,14 +21,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 65% |
-| **Status** | Open |
+| **Likelihood** | 65% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** `migrations/` folder exists but no tool (`sqlx`, `refinery`, `diesel`) specified. No rollback plan. No version tracking table.
 
 **Root Cause:** Missing technology decision.
 
-**Suggested Fix:** Use `refinery` crate — embeddable, SQLite-compatible, uses numbered SQL files. Add `refinery_migrations` table automatically. Run on app startup.
+**Resolution:** Added complete "Migration Strategy (refinery)" section to `01-fundamentals/01-data-model.md` v1.4.0 with tool choice rationale, file naming convention (`V{N}__{desc}.sql`), Rust runner code, startup integration (Step 3), rollback plan, and V1 initial migration with indexes and default settings.
 
 ---
 
