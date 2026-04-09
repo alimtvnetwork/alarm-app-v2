@@ -1,7 +1,7 @@
 # Go — golangci-lint Enforcement Rule Mapping
 
-**Version:** 1.1.0  
-**Updated:** 2026-04-01  
+**Version:** 1.2.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** Production-Ready  
 **Ambiguity:** None
 
@@ -43,6 +43,8 @@ golangci-lint bundles 100+ linters. We enable only those that enforce our coding
 | `gosimple` | Code simplification | DRY, flatten logic |
 | `unused` | Unused code detection | Dead code removal |
 | `errcheck` | Unchecked error returns | Error handling |
+| `errorlint` | Error wrapping best practices | `%w` wrapping, `errors.Is/As` |
+| `err113` | No `fmt.Errorf` for errors | Forces proper error types |
 | `gocritic` | Opinionated style checks | Nesting, boolean patterns |
 | `cyclop` | Cyclomatic complexity | Max function complexity |
 | `funlen` | Function length | Max 15 lines |
@@ -52,6 +54,9 @@ golangci-lint bundles 100+ linters. We enable only those that enforce our coding
 | `nestif` | Nested if detection | Zero nesting rule |
 | `predeclared` | Shadowing predeclared identifiers | Type safety |
 | `goimports` | Import ordering | 3-group import convention |
+| `gofmt` | Standard formatting | Consistent code style |
+| `unconvert` | Unnecessary type conversions | Code simplification |
+| `whitespace` | Blank line enforcement | Blank line before return |
 | `misspell` | Typo detection | Code quality |
 | `nolintlint` | Enforce nolint justifications | No silent suppressions |
 
@@ -70,6 +75,8 @@ golangci-lint bundles 100+ linters. We enable only those that enforce our coding
 | Max 400-line files (target 300) | [File Rules](../../03-golang/04-golang-standards-reference/01-file-and-function-rules.md) | `revive` | `file-header` + custom |
 | Blank line before return | [Code Style §R4](../04-code-style/03-blank-lines-and-spacing.md) | `whitespace` | `multi-func: true` |
 | Import 3-group ordering | [Concurrency & Patterns](../../03-golang/04-golang-standards-reference/06-concurrency-and-patterns.md) | `goimports` | `local-prefixes: project/` |
+| Standard formatting | [Code Style](../04-code-style/00-overview.md) | `gofmt` | (enabled) |
+| No unnecessary conversions | [Code Quality](../04-code-style/00-overview.md) | `unconvert` | (enabled) |
 | No dead code | [Code Style §R5](../04-code-style/00-overview.md) | `unused` | (enabled by default) |
 
 ### 2.2 Naming Conventions
@@ -86,7 +93,8 @@ golangci-lint bundles 100+ linters. We enable only those that enforce our coding
 | Guideline | Spec Source | Linter | Rule / Setting |
 |-----------|-------------|--------|----------------|
 | No `interface{}` / `any` in exported APIs | [Forbidden Patterns](../../03-golang/04-golang-standards-reference/06-concurrency-and-patterns.md) | `revive` | `use-any` (inverted) |
-| No `fmt.Errorf` for service errors | [Type Safety §2](../../03-golang/04-golang-standards-reference/02-type-safety-and-errors.md) | `revive` | `error-strings` + code review |
+| No `fmt.Errorf` for service errors | [Type Safety §2](../../03-golang/04-golang-standards-reference/02-type-safety-and-errors.md) | `err113` | Forces wrapped/typed errors |
+| Error wrapping best practices | [Type Safety §2](../../03-golang/04-golang-standards-reference/02-type-safety-and-errors.md) | `errorlint` | `%w`, `errors.Is/As` usage |
 | Unchecked error returns | [Type Safety §2](../../03-golang/04-golang-standards-reference/02-type-safety-and-errors.md) | `errcheck` | `check-blank: true` |
 | No `init()` functions | [Forbidden Patterns](../../03-golang/04-golang-standards-reference/06-concurrency-and-patterns.md) | `revive` | `no-init` (custom) |
 | No global mutable state | [Forbidden Patterns](../../03-golang/04-golang-standards-reference/06-concurrency-and-patterns.md) | `gocritic` | code review |
@@ -133,29 +141,48 @@ SonarQube's `sonar-go` plugin provides additional cross-language coverage:
 ```yaml
 run:
   timeout: 5m
+  skip-dirs:
+    - vendor
+    - dist
+    - node_modules
 
 linters:
   enable:
-    - revive
-    - govet
-    - staticcheck
+    # CODE RED enforcement
+    - nestif          # CODE-RED-001: No nested if
+    - cyclop          # CODE-RED-004: Function complexity / length
+    - err113          # CODE-RED-005: No fmt.Errorf (forces wrapping)
+    - funlen          # CODE-RED-004: Max function length
+    - gocognit        # Cognitive complexity (supports nesting detection)
+    - gocritic        # Opinionated style: nesting, boolean patterns
+    - dupl            # DRY: duplicate code detection
+
+    # Style enforcement
+    - gofmt           # Standard formatting
+    - goimports       # Import ordering (3-group convention)
+    - revive          # Extensible linter with custom rules
+    - goconst         # CODE-RED-003: Detect magic strings
+    - predeclared     # Catch shadowed built-ins
+    - unconvert       # Remove unnecessary type conversions
+    - whitespace      # STYLE-001/003: Blank line rules
+    - nolintlint      # Enforce nolint justifications
+
+    # Error handling
+    - errcheck        # Ensure errors are handled
+    - errorlint       # Error wrapping best practices
+
+    # General quality
     - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
     - unused
-    - errcheck
-    - gocritic
-    - cyclop
-    - funlen
-    - gocognit
-    - dupl
-    - goconst
-    - nestif
-    - predeclared
-    - goimports
     - misspell
-    - nolintlint
-    - whitespace
 
 linters-settings:
+  nestif:
+    min-complexity: 1
+
   funlen:
     lines: 15
     statements: 10
@@ -165,9 +192,6 @@ linters-settings:
 
   gocognit:
     min-complexity: 10
-
-  nestif:
-    min-complexity: 1
 
   goconst:
     min-len: 3
@@ -182,26 +206,77 @@ linters-settings:
   goimports:
     local-prefixes: project/
 
-  revive:
-    rules:
-      - name: superfluous-else
-        severity: error
-      - name: context-as-argument
-        severity: error
-      - name: deep-exit
-        severity: error
-      - name: flag-parameter
-        severity: error
-      - name: var-naming
-        severity: error
-
   nolintlint:
     require-explanation: true
     require-specific: true
 
+  whitespace:
+    multi-func: true
+
+  revive:
+    rules:
+      - name: var-naming
+        severity: error
+        arguments:
+          - []  # allowList
+          - []  # denyList
+      - name: superfluous-else
+        severity: error
+      - name: flag-parameter
+        severity: error
+      - name: blank-imports
+        severity: warning
+      - name: context-as-argument
+        severity: error
+      - name: unexported-return
+        severity: warning
+      - name: deep-exit
+        severity: error
+
 issues:
+  exclude-rules:
+    # Allow longer functions in test files
+    - path: _test\.go
+      linters:
+        - funlen
+        - nestif
+        - gocognit
+        - dupl
+
+    # Skip generated files
+    - path: \.pb\.go$
+      linters:
+        - funlen
+        - nestif
+        - gocognit
+        - gocritic
+        - dupl
+        - goconst
+        - err113
+
+    - path: wire_gen\.go$
+      linters:
+        - funlen
+        - nestif
+        - gocritic
+        - dupl
+
+    - path: _mock\.go$
+      linters:
+        - funlen
+        - dupl
+
   max-issues-per-linter: 0
   max-same-issues: 0
+
+severity:
+  default-severity: error
+  rules:
+    - linters:
+        - goconst
+        - whitespace
+        - misspell
+      severity: warning
 ```
 
 ---
@@ -233,4 +308,4 @@ issues:
 
 ---
 
-*Go golangci-lint enforcement v1.0.0 — maps every Go coding guideline to a linter rule — 2026-04-01*
+*Go golangci-lint enforcement v1.2.0 — maps every Go coding guideline to a linter rule — 2026-04-09*
