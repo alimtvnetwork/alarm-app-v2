@@ -82,4 +82,6 @@ Comprehensive research into game development technologies — engines, languages
 |-----------|----------|
 | Research Root | `../00-overview.md` |
 | Platform Research | `../01-platform-research/00-overview.md` |
+| PWA Gaming Research | `../01-platform-research/04-pwa-research.md` — Section 5: PWA for Gaming (APIs, engines, feasibility by genre) |
+| PWA Feasibility Diagram | `../diagrams/07-pwa-feasibility.mmd` — Decision flow for PWA vs native |
 | Diagrams | `../diagrams/` |

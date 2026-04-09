@@ -200,4 +200,5 @@ Q3: What language do you know?
 | App Shell Feasibility | `./07-app-shell-feasibility.md` |
 | Doom Research | `./08-doom-and-retro-research.md` |
 | 3D Direction | `./09-3d-game-direction.md` |
+| PWA Gaming Research | `../01-platform-research/04-pwa-research.md` — PWA gaming APIs, engine compatibility, genre feasibility, pros/cons vs native |
 | Game Dev Overview | `./00-overview.md` |

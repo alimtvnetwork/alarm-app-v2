@@ -255,4 +255,5 @@ Best technology choices organized by game genre. For each genre: what matters mo
 | Platform Recommendations | `./06-platform-recommendations.md` |
 | App Shell Feasibility | `./07-app-shell-feasibility.md` |
 | Doom Research | `./08-doom-and-retro-research.md` |
+| PWA Gaming Research | `../01-platform-research/04-pwa-research.md` — Browser game feasibility, WebGL/WebGPU/WASM APIs, PWA gaming engines |
 | Game Dev Overview | `./00-overview.md` |
