@@ -317,7 +317,7 @@ Apple has guidelines about WebView-only apps:
 
 ## 9. Capacitor for the Alarm App — Feasibility
 
-Evaluating Capacitor specifically for the Alarm App project (cross-reference: `../../09-alarm-app/01-alarm-app-spec/01-fundamentals/05-platform-strategy.md`):
+Evaluating Capacitor specifically for the Alarm App project (cross-reference: `../../15-alarm-app/01-alarm-app-spec/01-fundamentals/05-platform-strategy.md`):
 
 | Alarm App Requirement | Capacitor Support | Notes |
 |----------------------|:-:|-------|
@@ -371,6 +371,6 @@ Evaluating Capacitor specifically for the Alarm App project (cross-reference: `.
 | Final Recommendation | `./03-recommendation.md` |
 | PWA Research | `./04-pwa-research.md` |
 | PWA Feasibility Diagram | `../diagrams/07-pwa-feasibility.mmd` |
-| Alarm App Platform Strategy | `../../09-alarm-app/01-alarm-app-spec/01-fundamentals/05-platform-strategy.md` |
+| Alarm App Platform Strategy | `../../15-alarm-app/01-alarm-app-spec/01-fundamentals/05-platform-strategy.md` |
 | Game Dev Platform Recs | `../02-game-development/06-platform-recommendations.md` |
 | Game Dev App Shell Feasibility | `../02-game-development/07-app-shell-feasibility.md` |
