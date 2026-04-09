@@ -124,6 +124,30 @@ issues:
         - funlen
         - nestif
         - gocognit
+        - dupl
+
+    # Skip generated files
+    - path: \.pb\.go$
+      linters:
+        - funlen
+        - nestif
+        - gocognit
+        - gocritic
+        - dupl
+        - goconst
+        - err113
+
+    - path: wire_gen\.go$
+      linters:
+        - funlen
+        - nestif
+        - gocritic
+        - dupl
+
+    - path: _mock\.go$
+      linters:
+        - funlen
+        - dupl
 
   max-issues-per-linter: 0
   max-same-issues: 0
