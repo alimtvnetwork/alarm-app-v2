@@ -1,28 +1,32 @@
 # PowerShell Integration for Project Runner
 
-> **Spec Version:** 2.25.0  
-> **Script Version:** 2.25.0  
-> **Updated:** 2026-03-19  
+> **Spec Version:** 3.0.0  
+> **Script Version:** 2.0.0  
+> **Updated:** 2026-04-09  
 > **Status:** Active  
-> **Location:** `spec/powershell-integration/`  
-> **Purpose:** Reusable PowerShell runner for Go backend + React frontend projects with pnpm PnP support
+> **Location:** `spec/09-powershell-integration/`  
+> **Purpose:** Cross-platform runner for Go + React + Tauri projects with pnpm PnP, CleanCSS, and auto-dependency management
 
 ---
 
 ## Summary
 
-This specification defines a **cross-project reusable** PowerShell integration pattern for building and running fullstack applications with Go backend and React frontend. The system uses a JSON configuration file (`powershell.json`) to define project-specific paths and settings.
+This specification defines a **cross-platform, cross-project reusable** runner for building and running fullstack applications with Go backend and React frontend. Supports Tauri for desktop builds and CleanCSS for CSS minification. The system uses a JSON configuration file (`powershell.json`) to define project-specific paths and settings.
 
 **Key Features:**
-- **pnpm Plug'n'Play (PnP)** - Disk-efficient package management with shared store
-- **Relative Path Resolution** - All paths relative to script location (working directory)
-- **Force Reinstall** - Clear caches and reset everything with `-Force` flag
-- **Multi-Project Root Folder** - Shared pnpm store across Node.js projects
+- **pnpm Plug'n'Play (PnP)** — Disk-efficient package management with shared store
+- **Tauri Desktop Builds** — Build cross-platform desktop apps with `-t` flag, dev mode with `-d`
+- **CleanCSS Post-Build** — Automatic CSS minification via `postBuildCommand`
+- **Auto-Dependency Install** — Homebrew, jq, Go, Node.js, pnpm, Rust, Tauri CLI auto-installed if missing
+- **Relative Path Resolution** — All paths relative to script location
+- **Force Reinstall** — Clear caches and reset everything with `-Force` flag
+- **Cross-Platform** — Windows (PowerShell) + macOS/Linux (Bash) with feature parity
 
 **This spec is NOT project-specific** — it can be used by:
+- Any Go + React fullstack project
+- Tauri desktop applications
 - WP Plugin Publish
 - Spec Management Software
-- Any Go + React fullstack project
 
 ---
 
@@ -69,11 +73,12 @@ This specification defines a **cross-project reusable** PowerShell integration p
 
 | Step | Name | Description | Flags |
 |------|------|-------------|-------|
-| 1 | Git Pull | Sync latest changes | `-SkipPull` to skip |
-| 2 | Prerequisites | Check/install Go, Node.js, pnpm | Auto-install via winget |
-| 3 | pnpm Install | Install dependencies with PnP | `-Force` clears store & reinstalls |
-| 4 | Frontend Build | Build React with pnpm | `-SkipBuild` to skip |
-| 5 | Copy & Run | Copy dist, start Go server | `-BuildOnly` to skip run |
+| 1 | Git Pull | Sync latest changes | `-SkipPull` / `-p` to skip |
+| 2 | Prerequisites | Check/install Go, Node.js, pnpm, Rust, Tauri | Auto-install via brew/winget |
+| 3 | Install + Build | Install deps, build React (or Tauri) | `-Force` / `-f` clears & reinstalls |
+| 4 | Copy | Copy dist to backend | Skipped in Tauri mode |
+| 5 | Run | Start Go server | `-BuildOnly` / `-b` to skip |
+| 6 | Post-Build | CleanCSS minification (if configured) | Via `postBuildCommand` |
 
 ---
 
@@ -144,6 +149,8 @@ spec/09-powershell-integration/
 .\run.ps1 -Force         # Clean rebuild everything
 .\run.ps1 -SkipBuild     # Just start backend
 .\run.ps1 -BuildOnly     # Build only
+.\run.ps1 -t             # Build Tauri desktop app
+.\run.ps1 -td            # Tauri dev mode (hot-reload)
 .\run.ps1 -SkipPull -Force  # Skip git pull + clean build
 .\run.ps1 -OpenFirewall  # Configure firewall (requires Admin)
 .\run.ps1 -Help          # Show help
@@ -156,6 +163,8 @@ spec/09-powershell-integration/
 ./run.sh -f              # Clean rebuild everything
 ./run.sh -s              # Just start backend
 ./run.sh -b              # Build only
+./run.sh -t              # Build Tauri desktop app
+./run.sh -d              # Tauri dev mode (hot-reload)
 ./run.sh -p -f           # Skip git pull + clean build
 ./run.sh -r              # Full clean reinstall + build
 ./run.sh -h              # Show help
@@ -208,9 +217,15 @@ Create `powershell.json` in project root:
 
 ### Auto-Install Dependencies
 
-- **Go**: Installs via `winget install GoLang.Go` if missing
-- **Node.js**: Installs via `winget install OpenJS.NodeJS.LTS` if missing
-- **pnpm**: Installs via `npm install -g pnpm` if missing
+- **Homebrew** (macOS): Auto-installed if missing (run.sh only)
+- **jq** (macOS): Auto-installed via brew if missing (run.sh only)
+- **Go**: Installed via `brew install go` (macOS) or `winget install GoLang.Go` (Windows)
+- **Node.js**: Installed via `brew install node` (macOS) or `winget install OpenJS.NodeJS.LTS` (Windows)
+- **pnpm**: Installed via `npm install -g pnpm`
+- **Rust**: Installed via `rustup` (macOS/Linux) or `winget install Rustlang.Rustup` (Windows)
+- **Tauri CLI**: Installed via `pnpm add -D @tauri-apps/cli`
+- **Xcode CLT** (macOS): Detected and prompted if missing (required for Rust/Tauri compilation)
+- **clean-css-cli**: Installed via `pnpm add -D clean-css-cli` (if `postBuildCommand` uses it)
 
 ### Force Clean Build
 
