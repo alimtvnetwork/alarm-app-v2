@@ -1,11 +1,11 @@
 # Sound & Vibration
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 (Sound Selection) / P1 (Gradual Volume, Vibration)  
-**Resolves:** BE-AUDIO-001
+**Resolves:** BE-AUDIO-001, BE-AUDIO-002, BE-AUDIO-003, SEC-PATH-001
 
 ---
 
@@ -40,12 +40,99 @@ Each alarm has its own sound selection — either from the built-in library (8-1
 
 ## Custom Sound Files
 
-- User can select any local `.mp3`, `.wav`, or `.ogg` file as an alarm sound
+- User can select any local `.mp3`, `.wav`, `.ogg`, or `.flac` file as an alarm sound
 - File selection via `tauri-plugin-dialog` open dialog (filter: audio files)
 - IPC command: `invoke("set_custom_sound", { alarmId, filePath })`
 - The file path is stored in `soundFile` field on the alarm
 - Built-in sounds use a key (e.g., `"classic-beep"`); custom sounds store the absolute file path
 - Preview plays the selected file via Rust audio backend before confirming
+
+### Custom Sound Validation (Resolves BE-AUDIO-002 + SEC-PATH-001)
+
+> Without validation, custom sounds can reference missing files, oversized files, or sensitive system paths.
+
+```rust
+use std::path::Path;
+
+const MAX_SOUND_FILE_SIZE: u64 = 10 * 1024 * 1024; // 10 MB
+const ALLOWED_EXTENSIONS: &[&str] = &["mp3", "wav", "ogg", "flac"];
+
+pub fn validate_custom_sound(path: &str) -> Result<(), AlarmAppError> {
+    let p = Path::new(path);
+
+    // 1. Extension check
+    let ext = p.extension()
+        .and_then(|e| e.to_str())
+        .map(|e| e.to_lowercase())
+        .unwrap_or_default();
+    if !ALLOWED_EXTENSIONS.contains(&ext.as_str()) {
+        return Err(AlarmAppError::InvalidSoundFormat(ext));
+    }
+
+    // 2. Reject symlinks (prevent path traversal attacks)
+    if p.is_symlink() {
+        return Err(AlarmAppError::SymlinkRejected);
+    }
+
+    // 3. Path must be within user-accessible directories
+    //    Reject paths containing "..", absolute system paths
+    let canonical = p.canonicalize()
+        .map_err(|_| AlarmAppError::FileNotFound { path: path.to_string() })?;
+    let path_str = canonical.to_string_lossy();
+
+    #[cfg(target_os = "macos")]
+    if path_str.starts_with("/System") || path_str.starts_with("/Library") {
+        return Err(AlarmAppError::RestrictedPath);
+    }
+    #[cfg(target_os = "windows")]
+    if path_str.starts_with("C:\\Windows") || path_str.starts_with("C:\\Program Files") {
+        return Err(AlarmAppError::RestrictedPath);
+    }
+    #[cfg(target_os = "linux")]
+    if path_str.starts_with("/etc") || path_str.starts_with("/sys") || path_str.starts_with("/proc") {
+        return Err(AlarmAppError::RestrictedPath);
+    }
+
+    // 4. File size check
+    let metadata = std::fs::metadata(&canonical)
+        .map_err(|_| AlarmAppError::FileNotFound { path: path.to_string() })?;
+    if metadata.len() > MAX_SOUND_FILE_SIZE {
+        return Err(AlarmAppError::FileTooLarge { max_mb: 10 });
+    }
+
+    // 5. File must exist (final check)
+    if !canonical.exists() {
+        return Err(AlarmAppError::FileNotFound { path: path.to_string() });
+    }
+
+    Ok(())
+}
+```
+
+**Validation timing:**
+- **On select:** Validate when user picks file via dialog → reject immediately with clear error
+- **On alarm fire:** Check `Path::exists()`. If missing → fall back to `classic-beep`, show "⚠ Sound file missing" in overlay, log warning
+- **On alarm edit:** If stored path is invalid, show warning badge + "Re-select sound" button
+
+### Missing Sound Fallback (On Fire)
+
+```rust
+pub fn resolve_sound_path(sound_file: &str) -> String {
+    // Built-in sounds: key lookup (always available)
+    if !sound_file.contains('/') && !sound_file.contains('\\') {
+        return get_builtin_sound_path(sound_file);
+    }
+
+    // Custom sound: check existence
+    if Path::new(sound_file).exists() {
+        return sound_file.to_string();
+    }
+
+    // Fallback
+    tracing::warn!(path = %sound_file, "Custom sound file missing — using default");
+    get_builtin_sound_path("classic-beep")
+}
+```
 
 ---
 
@@ -95,6 +182,55 @@ pub async fn run_gradual_volume(sink: &Sink, duration_sec: u32) {
 
 ---
 
+## Platform Audio Sessions (Resolves BE-AUDIO-003)
+
+> Without platform-specific audio session configuration, alarms may be muted by Do Not Disturb or follow media volume instead of alarm volume.
+
+### macOS — Core Audio Session
+
+```rust
+// src-tauri/src/audio/platform_macos.rs
+use objc2_av_foundation::{AVAudioSession, AVAudioSessionCategory};
+
+pub fn configure_audio_session() -> Result<(), AlarmAppError> {
+    unsafe {
+        let session = AVAudioSession::sharedInstance();
+
+        // .playback category: audio plays even when DND is on, screen is locked
+        // .duckOthers: reduces other audio volume while alarm plays
+        session.setCategory_withOptions_error(
+            AVAudioSessionCategory::Playback,
+            AVAudioSessionCategoryOptions::DuckOthers,
+        ).map_err(|e| AlarmAppError::Audio(format!("Failed to set audio session: {e}")))?;
+
+        session.setActive_error(true)
+            .map_err(|e| AlarmAppError::Audio(format!("Failed to activate audio session: {e}")))?;
+    }
+
+    tracing::info!("macOS audio session configured: Playback + DuckOthers");
+    Ok(())
+}
+```
+
+### Windows — No Special Config Required
+
+Windows `rodio` uses WASAPI by default, which plays independently of focus state. No additional configuration needed.
+
+### Linux — PulseAudio/PipeWire
+
+`rodio` uses CPAL → ALSA/PulseAudio. No special session config required, but ensure the stream is created with the "alarm" media role:
+
+```rust
+// Set PulseAudio/PipeWire media.role to "alarm" for priority playback
+// This is handled automatically by rodio on most Linux desktop environments
+```
+
+### Integration Point
+
+Call `configure_audio_session()` at **Step 6a** of the startup sequence (parallel init), before any audio playback occurs.
+
+---
+
 ## Vibration
 
 - Independent toggle per alarm: `vibrationEnabled: boolean`
@@ -112,8 +248,11 @@ pub async fn run_gradual_volume(sink: &Sink, duration_sec: u32) {
 - [ ] Sound preview button plays selected sound briefly (via Rust audio backend)
 - [ ] Each alarm stores its own sound selection (built-in key or file path)
 - [ ] User can select a custom local audio file via native file dialog
+- [ ] Custom sound validation: extension, size (<10MB), no symlinks, no system paths
+- [ ] Missing custom sound falls back to `classic-beep` with warning in overlay
 - [ ] Custom sound file path persists in SQLite
-- [ ] Gradual volume works via native audio volume ramp
+- [ ] Gradual volume works via native audio volume ramp (quadratic curve)
+- [ ] macOS audio session set to Playback + DuckOthers (plays through DND)
 - [ ] Vibration fires on supported platforms (mobile) when enabled
 - [ ] Vibration toggle hidden on desktop platforms
 
@@ -126,3 +265,4 @@ pub async fn run_gradual_volume(sink: &Sink, duration_sec: u32) {
 | Alarm Firing | `./03-alarm-firing.md` |
 | Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
 | Data Model | `../01-fundamentals/01-data-model.md` |
+| Security Issues | `../03-app-issues/05-security-issues.md` → SEC-PATH-001 |

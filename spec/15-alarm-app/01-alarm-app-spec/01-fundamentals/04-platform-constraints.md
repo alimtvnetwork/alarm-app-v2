@@ -1,10 +1,10 @@
 # Platform Constraints
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**Resolves:** BE-ERROR-001
+**Resolves:** BE-ERROR-001, FE-RENDER-001, PERF-MEMORY-001
 
 ---
 
@@ -188,6 +188,78 @@ loop {
 
 ---
 
+## WebView CSS Compatibility (Resolves FE-RENDER-001)
+
+> CSS features behave differently across Safari WebKit (macOS), WebView2/Chromium (Windows), and WebKitGTK (Linux). Without a compatibility strategy, UI will break on at least one platform.
+
+### WebView Engine Matrix
+
+| Platform | Engine | CSS Notes |
+|----------|--------|-----------|
+| macOS | Safari WebKit (system version) | `backdrop-filter` supported. `gap` in flexbox supported since Safari 14.1 |
+| Windows | WebView2 (Chromium-based) | Full modern CSS support. Evergreen auto-updates |
+| Linux | WebKitGTK (distro version) | **Most restrictive.** May be WebKitGTK 2.38+ (varies by distro). `backdrop-filter` may be missing |
+
+### CSS Compatibility Rules
+
+1. **Feature detection with `@supports`:**
+   ```css
+   /* Frosted glass effect with fallback */
+   .overlay-backdrop {
+     background: hsl(var(--background) / 0.95);  /* Solid fallback */
+   }
+   @supports (backdrop-filter: blur(12px)) {
+     .overlay-backdrop {
+       background: hsl(var(--background) / 0.7);
+       backdrop-filter: blur(12px);
+     }
+   }
+   ```
+
+2. **Avoid cutting-edge CSS:** No `container-queries`, `@layer`, `color-mix()`, `light-dark()`. These may not be available on older WebKitGTK versions.
+
+3. **Safe CSS features (use freely):** Flexbox, Grid, CSS custom properties, `calc()`, `clamp()`, `aspect-ratio`, `gap` (flex/grid), transitions, animations, `prefers-color-scheme`.
+
+4. **Create `platform.css`** for WebView-specific overrides:
+   ```css
+   /* src/platform.css — loaded conditionally based on detected platform */
+   /* Linux WebKitGTK fallbacks */
+   .platform-linux .frosted-panel {
+     background: hsl(var(--background) / 0.95);
+     /* No backdrop-filter */
+   }
+   ```
+
+5. **CI testing:** Test on all 3 WebView engines. Add to CI matrix (see `08-devops-setup-guide.md`).
+
+---
+
+## Memory Budget (Resolves PERF-MEMORY-001)
+
+> WebView2 alone uses ~80–120MB on Windows. The original 150MB NFR is unrealistic.
+
+### Revised Memory Targets
+
+| Component | Idle Memory | Notes |
+|-----------|-------------|-------|
+| WebView (Chromium/WebKit) | 80–120 MB | Outside app control |
+| Rust runtime + engine | ~5 MB | Alarm engine + tokio |
+| SQLite (in-memory cache) | ~2 MB | WAL + page cache |
+| Audio (rodio) | ~1 MB (idle) | Sink allocated only when playing |
+| React app bundle | ~10 MB | Parsed JS + DOM |
+| **Total (idle)** | **~100–140 MB** | |
+
+**Revised NFR:** **200 MB idle target** (up from 150 MB). This accounts for WebView overhead which is outside application control.
+
+### Memory Optimization Strategies
+
+1. **Lazy-load React routes:** `React.lazy()` for Settings, History, Analytics pages. Only AlarmList loads on startup
+2. **Dispose audio sink:** Release `rodio::Sink` after alarm dismissal, not at app start
+3. **Limit alarm_events in memory:** Paginate history view (50 per page), don't load all into React state
+4. **WebView when minimized to tray:** Call `webview.hide()` (keeps process but reduces active memory) — do NOT destroy WebView (re-creation is expensive)
+
+---
+
 ## Platform Support Matrix
 
 | Feature | macOS | Windows | Linux | iOS | Android |
@@ -200,6 +272,7 @@ loop {
 | Auto-update | ✅ | ✅ | ✅ | App Store | Play Store |
 | SQLite storage | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Wake lock / prevent sleep | ✅ | ✅ | ⚠️ Varies | ✅ | ✅ |
+| backdrop-filter CSS | ✅ | ✅ | ⚠️ Distro-dependent | ✅ | ✅ |
 
 ---
 
@@ -212,3 +285,5 @@ loop {
 | Alarm Firing Feature | `../02-features/03-alarm-firing.md` |
 | Sound & Vibration Feature | `../02-features/05-sound-and-vibration.md` |
 | App Issues | `../03-app-issues/03-backend-issues.md` → BE-ERROR-001 |
+| Frontend Issues | `../03-app-issues/02-frontend-issues.md` → FE-RENDER-001 |
+| Performance Issues | `../03-app-issues/06-performance-issues.md` → PERF-MEMORY-001 |

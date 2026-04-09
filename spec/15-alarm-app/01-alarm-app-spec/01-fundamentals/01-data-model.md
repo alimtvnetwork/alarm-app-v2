@@ -1,10 +1,10 @@
 # Data Model
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**Resolves:** DB-MIGRATE-001, BE-CONCUR-001, DB-GROWTH-001, FE-STATE-001
+**Resolves:** DB-MIGRATE-001, BE-CONCUR-001, DB-GROWTH-001, FE-STATE-001, DB-SERIAL-001, BE-CRON-001
 
 ---
 
@@ -49,7 +49,9 @@ interface Alarm {
 
 ### RepeatPattern
 
-**Cron Parsing Library (Rust):** `croner` crate — MIT licensed, lightweight, supports standard 5-field cron + extensions.
+**Cron Parsing Library (Rust):** `croner` crate v2.0 — MIT licensed, lightweight, supports standard 5-field cron + extensions. Pinned in `Cargo.toml`.
+
+> **Resolves BE-CRON-001.** Without specifying the crate, AI may choose deprecated `cron` or incompatible `saffron`.
 
 ```typescript
 interface RepeatPattern {
@@ -59,6 +61,116 @@ interface RepeatPattern {
   cronExpression: string;     // For "cron" type — parsed by `croner` crate
 }
 ```
+
+### Rust Data Mapping (Resolves DB-SERIAL-001)
+
+> Without explicit Rust struct examples, AI will get `serde_json` deserialization wrong for JSON columns stored as TEXT.
+
+```rust
+use serde::{Deserialize, Serialize};
+
+/// Rust struct mapping the `alarms` SQLite table row.
+/// JSON fields are stored as TEXT in SQLite and must be manually deserialized.
+#[derive(Debug, Clone)]
+pub struct AlarmRow {
+    pub id: String,
+    pub time: String,                     // "HH:MM"
+    pub date: Option<String>,            // "YYYY-MM-DD" or NULL
+    pub label: String,
+    pub enabled: bool,                    // SQLite INTEGER → bool
+    pub previous_enabled: Option<bool>,
+    pub repeat_type: String,              // "once"|"daily"|"weekly"|"interval"|"cron"
+    pub repeat_days_of_week: String,      // JSON TEXT: "[0,3,5]"
+    pub repeat_interval_minutes: i32,
+    pub repeat_cron_expression: String,
+    pub group_id: Option<String>,
+    pub snooze_duration_min: i32,
+    pub max_snooze_count: i32,
+    pub sound_file: String,
+    pub vibration_enabled: bool,
+    pub gradual_volume: bool,
+    pub gradual_volume_duration_sec: i32,
+    pub auto_dismiss_min: i32,
+    pub next_fire_time: Option<String>,   // ISO 8601
+    pub deleted_at: Option<String>,       // ISO 8601
+    pub created_at: String,
+    pub updated_at: String,
+}
+
+impl AlarmRow {
+    /// Deserialize JSON array from TEXT column
+    pub fn days_of_week(&self) -> Vec<u8> {
+        serde_json::from_str(&self.repeat_days_of_week).unwrap_or_default()
+    }
+
+    /// Convert to RepeatPattern for scheduling logic
+    pub fn repeat_pattern(&self) -> RepeatPattern {
+        RepeatPattern {
+            r#type: self.repeat_type.parse().unwrap_or(RepeatType::Once),
+            days_of_week: self.days_of_week(),
+            interval_minutes: self.repeat_interval_minutes as u32,
+            cron_expression: self.repeat_cron_expression.clone(),
+        }
+    }
+
+    /// Convert from rusqlite::Row
+    pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
+        Ok(Self {
+            id: row.get("id")?,
+            time: row.get("time")?,
+            date: row.get("date")?,
+            label: row.get("label")?,
+            enabled: row.get::<_, i32>("enabled")? != 0,
+            previous_enabled: row.get::<_, Option<i32>>("previous_enabled")?.map(|v| v != 0),
+            repeat_type: row.get("repeat_type")?,
+            repeat_days_of_week: row.get("repeat_days_of_week")?,
+            repeat_interval_minutes: row.get("repeat_interval_minutes")?,
+            repeat_cron_expression: row.get("repeat_cron_expression")?,
+            group_id: row.get("group_id")?,
+            snooze_duration_min: row.get("snooze_duration_min")?,
+            max_snooze_count: row.get("max_snooze_count")?,
+            sound_file: row.get("sound_file")?,
+            vibration_enabled: row.get::<_, i32>("vibration_enabled")? != 0,
+            gradual_volume: row.get::<_, i32>("gradual_volume")? != 0,
+            gradual_volume_duration_sec: row.get("gradual_volume_duration_sec")?,
+            auto_dismiss_min: row.get("auto_dismiss_min")?,
+            next_fire_time: row.get("next_fire_time")?,
+            deleted_at: row.get("deleted_at")?,
+            created_at: row.get("created_at")?,
+            updated_at: row.get("updated_at")?,
+        })
+    }
+}
+
+/// Rust enum matching RepeatPattern.type for type-safe matching
+#[derive(Debug, Clone, PartialEq)]
+pub enum RepeatType {
+    Once,
+    Daily,
+    Weekly,
+    Interval,
+    Cron,
+}
+
+impl std::str::FromStr for RepeatType {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "once" => Ok(Self::Once),
+            "daily" => Ok(Self::Daily),
+            "weekly" => Ok(Self::Weekly),
+            "interval" => Ok(Self::Interval),
+            "cron" => Ok(Self::Cron),
+            _ => Err(format!("Unknown repeat type: {s}")),
+        }
+    }
+}
+```
+
+**Key patterns:**
+- SQLite `INTEGER` booleans → Rust `bool` via `row.get::<_, i32>() != 0`
+- JSON TEXT columns → `serde_json::from_str()` with `unwrap_or_default()` (never panic)
+- `Option<String>` for nullable TEXT columns
 
 ### AlarmGroup
 

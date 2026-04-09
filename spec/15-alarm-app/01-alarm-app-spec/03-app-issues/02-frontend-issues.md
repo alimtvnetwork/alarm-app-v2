@@ -37,14 +37,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 60% |
-| **Status** | Open |
+| **Likelihood** | 60% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** If user deletes alarm A, then alarm B within 5 seconds, undoing alarm A while B's timer is active creates conflicting undo tokens.
 
 **Root Cause:** No undo queue or token management strategy in spec.
 
-**Suggested Fix:** Implement an undo stack (max 5 items) instead of single undo token. Each entry has `{ token, alarmId, expiresAt }`. Timer cancels individually.
+**Resolution:** Added "Undo Stack" section to `02-features/01-alarm-crud.md` v1.6.0 with max 5 entries, independent timers per delete, stacking toasts (max 3 visible), and undo-any capability. Includes full TypeScript implementation.
 
 ---
 
@@ -101,14 +101,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 70% |
-| **Status** | Open |
+| **Likelihood** | 70% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** CSS features (`backdrop-filter`, `grid`, custom properties) behave differently on Safari WebKit (macOS) vs WebView2 (Windows) vs WebKitGTK (Linux).
 
 **Root Cause:** No browser compatibility testing matrix specified.
 
-**Suggested Fix:** Add CSS feature detection via `@supports`. Create a `platform.css` with fallbacks. Test on all 3 WebView engines in CI.
+**Resolution:** Added "WebView CSS Compatibility" section to `01-fundamentals/04-platform-constraints.md` v1.3.0 with WebView engine matrix, `@supports` feature detection rules, safe/unsafe CSS feature lists, `platform.css` fallback strategy, and updated Platform Support Matrix with `backdrop-filter` row.
 
 ---
 
@@ -117,14 +117,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 75% |
-| **Status** | Open |
+| **Likelihood** | 75% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** Spec mentions i18n support but no enforcement mechanism to prevent hardcoded strings in JSX components.
 
 **Root Cause:** Missing linting rule.
 
-**Suggested Fix:** Add `eslint-plugin-i18next` to enforce no hardcoded strings in JSX. CI fails if violation detected.
+**Resolution:** Added i18n enforcement section to `01-fundamentals/03-file-structure.md` v1.4.0 with `react-i18next` setup, `eslint-plugin-i18next` config (`no-literal-string` rule), locale file structure (`en.json` with full key inventory), and `src/i18n/` directory in file structure.
 
 ---
 

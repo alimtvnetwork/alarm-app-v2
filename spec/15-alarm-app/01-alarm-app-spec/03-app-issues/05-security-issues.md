@@ -21,14 +21,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Medium |
-| **Likelihood** | 25% |
-| **Status** | Open |
+| **Likelihood** | 25% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** User selects a sound file via file dialog, but the stored path is read by the Rust backend. If path validation is missing, a crafted path could be exploited.
 
 **Root Cause:** No path sanitization specified.
 
-**Suggested Fix:** Validate stored path: must have audio extension (`.mp3`, `.wav`, `.ogg`, `.flac`), must be within user-accessible directories, reject symlinks. Use Tauri's `fs` scope to restrict access.
+**Resolution:** Added `validate_custom_sound()` function to `02-features/05-sound-and-vibration.md` v1.4.0 with extension whitelist, symlink rejection, platform-specific restricted path blocking (macOS `/System`, Windows `C:\Windows`, Linux `/etc`/`/sys`/`/proc`), and canonicalization via `Path::canonicalize()`.
 
 ---
 

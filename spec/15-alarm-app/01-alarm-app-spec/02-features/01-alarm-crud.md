@@ -1,11 +1,11 @@
 # Alarm CRUD
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
-**Resolves:** FE-A11Y-001, BE-DELETE-001
+**Resolves:** FE-A11Y-001, BE-DELETE-001, FE-STATE-002
 
 ---
 
@@ -201,13 +201,76 @@ const sensors = useSensors(
 
 ---
 
+## Undo Stack (Resolves FE-STATE-002)
+
+> Without an undo stack, rapid delete+undo of multiple alarms creates conflicting undo tokens.
+
+### Problem
+
+User deletes alarm A, then alarm B within 5 seconds. Undoing alarm A while B's timer is active creates race conditions with a single undo token.
+
+### Solution: Undo Stack (Max 5)
+
+```typescript
+interface UndoEntry {
+  token: string;         // UUID — matches backend undo_token
+  alarmId: string;
+  label: string;         // For toast display
+  expiresAt: number;     // Date.now() + 5000
+  timerId: ReturnType<typeof setTimeout>;
+}
+
+// Frontend state
+const undoStack: UndoEntry[] = [];  // Max 5 entries
+const MAX_UNDO_STACK = 5;
+
+function onDeleteAlarm(alarmId: string, undoToken: string, label: string) {
+  // If stack is full, oldest entry expires immediately
+  if (undoStack.length >= MAX_UNDO_STACK) {
+    const oldest = undoStack.shift()!;
+    clearTimeout(oldest.timerId);
+    // oldest is permanently deleted (timer already fired on backend)
+  }
+
+  const timerId = setTimeout(() => {
+    // Remove from stack after 5s (backend has already hard-deleted)
+    const idx = undoStack.findIndex(e => e.token === undoToken);
+    if (idx !== -1) undoStack.splice(idx, 1);
+    // Remove toast for this entry
+  }, 5000);
+
+  undoStack.push({ token: undoToken, alarmId, label, expiresAt: Date.now() + 5000, timerId });
+
+  // Show toast: "Deleted {label} — Undo"
+}
+
+async function onUndo(token: string) {
+  const idx = undoStack.findIndex(e => e.token === token);
+  if (idx === -1) return; // Already expired
+
+  const entry = undoStack.splice(idx, 1)[0];
+  clearTimeout(entry.timerId);
+
+  await safeInvoke("undo_delete_alarm", { undoToken: token });
+}
+```
+
+### UI Behavior
+
+- **Multiple toasts:** Each delete shows its own toast with alarm label. Toasts stack vertically (newest on top, max 3 visible)
+- **Independent timers:** Each toast has its own 5s countdown, independent of others
+- **Undo any:** User can undo any visible toast, not just the most recent
+- **Toast auto-dismiss:** Toast disappears after 5s or on undo
+
+---
+
 ## UI Components
 
 | Component | Description |
 |-----------|-------------|
 | `AlarmList` | Displays all alarms grouped by AlarmGroup, with toggle switches, drag handles |
 | `AlarmForm` | Dialog for create/edit — time picker, date picker, label, repeat pattern, sound, group, snooze, auto-dismiss |
-| `UndoToast` | 5-second toast with "Undo" button after soft-delete |
+| `UndoToast` | 5-second toast with "Undo" button after soft-delete. Supports stacking (max 3 visible) |
 
 ---
 
