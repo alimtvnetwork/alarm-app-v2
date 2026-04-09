@@ -70,8 +70,10 @@ echo "Using $(go version)"
 echo "Scanning: $SCAN_PATH (max $MAX_LINES lines/function)"
 echo ""
 
+set +e
 go run "$GO_FILE" --path "$SCAN_PATH" --max-lines "$MAX_LINES" $JSON_FLAG
 EXIT_CODE=$?
+set -e
 
 echo ""
 if [ "$EXIT_CODE" -eq 0 ]; then
