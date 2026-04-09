@@ -1,82 +1,83 @@
 
 
-# Discovery Phase 3: Cross-File Logic Consistency Audit
+# Discovery Phase 4: UI/UX + Frontend State Consistency Audit
 
 ## Audit Scope
-Deep scan of the firing → snooze → dismiss flow, DST logic, concurrency patterns, and data model completeness across all spec files.
+Deep scan of all UI components, frontend state patterns, React hooks, Tauri IPC naming, event flow, and cross-file UI behavior consistency.
 
 ---
 
-## New Issues Found: 12
+## New Issues Found: 11
 
-### Logic Flow Issues
+### UI State Issues
 
-**LC-001: `AlarmChallenge` Not in Data Model or `alarms` Table** (Critical)
-- `06-dismissal-challenges.md` defines `AlarmChallenge` interface with fields `type`, `difficulty`, `shakeCount`, `stepCount`
-- Neither the TS `Alarm` interface nor the SQL `alarms` table has a `challenge` or `challengeType` column
-- AI cannot implement challenge-per-alarm without schema support
-- The `challenge_type` column exists only in `alarm_events` (logging), not in `alarms` (configuration)
+**UX-001: No React State Management Pattern Defined** (Critical)
+- Multiple hooks mentioned (`useAlarms`, `useTheme`, `useAlarmFiring`, `useClock`) but NO state management architecture specified
+- Is it React Context? Zustand? Redux? Just local state?
+- `useAlarms` holds CRUD + toggle + group toggle + drag-drop + SQLite sync — massive hook with no guidance on state sharing
+- AI will either create a monolithic context or duplicate state across components
+- `AlarmOverlay` needs access to alarm data from `useAlarms`, snooze state, and audio state — how does it get them?
+- No specification for how `listen("alarm-fired")` event from Rust triggers UI state updates across components
 
-**LC-002: Snooze State TS Interface Uses `nextFireTime` But Table Uses `snooze_until`** (Medium)
-- `04-snooze-system.md` line 43: TS `SnoozeState.nextFireTime`
-- `01-data-model.md` line 261: SQL column is `snooze_until`
-- AI will map wrong field name in serialization
+**UX-002: AlarmOverlay Lifecycle Not Specified** (Critical)
+- `AlarmOverlay` is "conditional — shown when alarm fires" but:
+  - No spec for which component owns the overlay state (`isOverlayVisible`, `activeAlarm`)
+  - No spec for how overlay interacts with the main window (does it replace the page? Is it a portal? A separate Tauri window?)
+  - `03-alarm-firing.md` says "full-screen overlay blocks all other interaction" — but how? CSS z-index? Window fullscreen? Separate window?
+  - The overlay needs alarm data, snooze state, challenge data, auto-dismiss timer, queue state — no prop/state flow defined
+  - Multi-alarm queue: who manages the queue? Frontend or backend? Both files mention it but neither assigns ownership
 
-**LC-003: Soft-Delete Timer Uses `sqlx` While Project Chose `rusqlite`** (Critical — extends IC-001)
-- `01-alarm-crud.md` lines 61, 76: `sqlx::query(...)` in the delete timer and cleanup functions
-- These are the ONLY code samples for soft-delete/undo behavior — AI will copy them verbatim
-- Already tracked in IC-007 but worth noting this is critical path code
+**UX-003: Alarm Queue State Ownership Ambiguous** (Medium)
+- `03-alarm-firing.md` defines queue rules (FIFO, max 10, badge)
+- Queue is managed by Rust `AlarmEngine.currently_firing` but overlay is React
+- No spec for how frontend knows about queue size, order, or transitions between queued alarms
+- IPC event `alarm-fired` sends one alarm at a time — does the frontend maintain its own queue mirror?
 
-**LC-004: `on_timezone_change` Uses `SqlitePool` (sqlx type) with `async` but `rusqlite` is sync** (Critical)
-- `03-alarm-firing.md` line 155: `fn on_timezone_change(pool: &SqlitePool, new_tz: &Tz)` — uses `await` inside
-- `rusqlite` is synchronous — no `SqlitePool`, no `.await`
-- This function is copy-paste-critical for DST handling and will fail to compile
+### Naming Violations (Frontend)
 
-**LC-005: Startup Step 2 Uses `SqlitePool::connect` (sqlx API)** (Critical)
-- `07-startup-sequence.md` line 117: `SqlitePool::connect(&format!("sqlite:{}?mode=rwc", ...))`
-- This is `sqlx` connection API. `rusqlite` uses `Connection::open(path)`
-- Startup will not compile as written
+**UX-004: IPC Event Names Use kebab-case** (Medium)
+- `alarm-fired` event in `03-alarm-firing.md` — Tauri events use kebab-case by convention
+- But all IPC command names use `snake_case` (e.g., `create_alarm`, `toggle_alarm`)
+- Inconsistency between event naming (kebab) and command naming (snake) — neither is PascalCase
+- Need exemption decision: are Tauri events/commands exempt from PascalCase?
 
-### DST Logic Issues
+**UX-005: TS HistoryFilter Uses camelCase Keys** (Medium)
+- `13-analytics.md` line 48-56: `HistoryFilter` interface uses `startDate`, `endDate`, `groupId`, `alarmId`, `eventType`, `sortBy`, `sortOrder`
+- All should be PascalCase per coding guidelines: `StartDate`, `EndDate`, `GroupId`, etc.
 
-**LC-006: Spring-Forward Hardcoded to 3:00 AM** (Critical — already noted, now with evidence)
-- `03-alarm-firing.md` line 135: `NaiveTime::from_hms_opt(3, 0, 0).unwrap()`
-- `13-ai-cheat-sheet.md` line 79: same hardcoded 3:00 AM
-- DST transitions vary: EU = 2:00→3:00, US = 2:00→3:00, Lord Howe Island = 2:00→2:30, Brazil (historical) = 0:00→1:00
-- Correct approach: iterate forward minute-by-minute from the skipped time until a valid time is found
-- AI will copy the hardcoded value and produce incorrect behavior for ~30% of world timezones
+**UX-006: ImportResult Uses camelCase Keys** (Medium)
+- `10-export-import.md` line 96-101: `imported`, `skipped`, `overwritten`, `errors` — all lowercase
+- Should be PascalCase: `Imported`, `Skipped`, `Overwritten`, `Errors`
 
-**LC-007: `purge_old_events` Uses `sqlx` in Data Model** (Medium — extends IC-001)
-- `01-data-model.md` line 306: `sqlx::query("DELETE FROM alarm_events WHERE timestamp < ?")`
-- Same pattern: uses sqlx in a file that elsewhere uses rusqlite
+**UX-007: UndoEntry Interface Uses camelCase** (Medium)
+- `01-alarm-crud.md` line 215-220: `token`, `alarmId`, `label`, `expiresAt`, `timerId`
+- Should be PascalCase: `Token`, `AlarmId`, `Label`, `ExpiresAt`, `TimerId`
 
-### Concurrency Logic Issues
+### Cross-File UI Inconsistencies
 
-**LC-008: `currently_firing` HashSet Not Thread-Safe** (Critical)
-- `12-platform-and-concurrency-guide.md` line 219: `currently_firing: HashSet<String>` in `AlarmEngine`
-- HashSet is not `Send + Sync` — cannot be shared across async tasks without `Arc<Mutex<>>`
-- Engine runs in `tokio::spawn` — needs `Arc<Mutex<HashSet<String>>>` or `DashSet`
-- AI will get a compile error on the `Sync` bound
+**UX-008: Scheduling Spec Uses Stale `recurringDays` Term** (Medium)
+- `02-alarm-scheduling.md` line 27: `recurringDays` — this term was replaced by `RepeatPattern` in the data model
+- "One-time alarms (empty `recurringDays`) auto-disable" contradicts the `repeat.type = "once"` pattern defined in `01-data-model.md`
+- AI will be confused about which pattern to implement
 
-**LC-009: Race 2 Optimistic Locking Uses `sqlx`** (Medium — extends IC-001)
-- `12-platform-and-concurrency-guide.md` line 181: `sqlx::query("UPDATE alarms SET...")`
-- Optimistic locking code is the safeguard for a critical race condition — must compile
+**UX-009: Settings Page Component Not Specified** (Medium)
+- Multiple features reference "Settings page" (theme, i18n, retention days, shortcut reference, bedtime)
+- No `Settings.tsx` or settings page component exists in the file structure (`03-file-structure.md`)
+- The component hierarchy shows `Index.tsx` with all components — no routing or page navigation defined
+- How does the user navigate to Settings? A dialog? A page? A drawer?
 
-**LC-010: Snooze Crash Recovery Not in Startup Sequence** (Medium)
-- `04-snooze-system.md` line 82: "On startup, query `snooze_state` table for active snoozes"
-- `07-startup-sequence.md` Step 8 only mentions missed alarms from `alarms` table
-- Active snoozes from previous session are never recovered — snoozed alarms silently disappear
+**UX-010: No Error Toast Component in File Structure** (Low)
+- `04-platform-constraints.md` references `toast.error()` extensively
+- `01-alarm-crud.md` references `UndoToast` component
+- No toast library specified (Sonner? react-hot-toast? Custom?)
+- File structure doesn't list a toast component
 
-### Data Flow Issues
-
-**LC-011: CSV Export Uses `snake_case` Column Names** (Medium — naming violation)
-- `10-export-import.md` line 60: columns are `repeat_type, repeat_days, group_name, sound_file, snooze_duration, max_snooze_count`
-- Coding guidelines mandate PascalCase for all keys including export formats
-- Already tracked in naming violations but this is a data flow issue too
-
-**LC-012: `alarm_events` Duplicate Schema — Analytics vs Data Model** (Already IC-005, confirmed)
-- `13-analytics.md` line 91 and `01-data-model.md` line 265 both define `CREATE TABLE alarm_events`
-- Confirmed identical for now, but any future edit to one without the other will break
+**UX-011: `02-alarm-scheduling.md` Severely Outdated** (Medium)
+- Version 1.0.0 vs all other feature files at 1.1.0–1.6.0
+- Still references `recurringDays` (deprecated)
+- Doesn't mention `interval` or `cron` repeat types (added in data model)
+- Quick Alarm / Holiday features mentioned but no IPC commands, no Rust logic, no data model integration
+- AI will find contradictory scheduling information between this file and data model
 
 ---
 
@@ -84,37 +85,40 @@ Deep scan of the firing → snooze → dismiss flow, DST logic, concurrency patt
 
 | Category | Previous | New | Total |
 |----------|:--------:|:---:|:-----:|
-| Naming Violations | 11 | 1 | 12 |
+| Naming Violations | 12 | 3 | 15 |
 | Internal Contradictions | 7 | 0 | 7 |
 | Structural Issues | 5 | 0 | 5 |
-| Content Gaps | 6 | 1 | 7 |
+| Content Gaps | 7 | 4 | 11 |
 | AI Handoff Risks | 4 | 0 | 4 |
-| **Logic Consistency (NEW)** | 0 | 10 | **10** |
-| **Grand Total** | **33** | **12** | **45** |
+| Logic Consistency | 10 | 0 | 10 |
+| **UI/UX Consistency (NEW)** | 0 | 4 | **4** |
+| **Grand Total** | **45** | **11** | **56** |
 
----
-
-## Severity Breakdown (All 45 Issues)
+## Severity Breakdown (All 56 Issues)
 
 | Severity | Count |
 |----------|:-----:|
-| Critical | 20 |
-| Medium | 23 |
-| Low | 2 |
+| Critical | 22 |
+| Medium | 31 |
+| Low | 3 |
 
 ---
 
 ## Implementation Plan
 
-1. **Create** `14-spec-issues/06-logic-consistency.md` with all 10 new LC-xxx issues
-2. **Update** `14-spec-issues/01-naming-violations.md` — add LC-011
-3. **Update** `14-spec-issues/04-content-gaps.md` — add LC-001 (AlarmChallenge missing from schema)
-4. **Update** `14-spec-issues/00-overview.md` — add category 6, update totals to 45, mark Phase 3 done
+1. **Create** `14-spec-issues/07-ui-ux-consistency.md` with UX-001 through UX-004
+2. **Update** `14-spec-issues/01-naming-violations.md` — add UX-005, UX-006, UX-007
+3. **Update** `14-spec-issues/04-content-gaps.md` — add UX-008, UX-009, UX-010, UX-011
+4. **Update** `14-spec-issues/00-overview.md` — add category 7, update totals to 56, mark Phase 4 done
 5. **Update** `mem://feature/alarm-app-spec-issues` — sync with new totals and phase status
 
 ---
 
-## Key Insight
+## Key Insights
 
-The `sqlx` vs `rusqlite` contradiction (IC-001) is far worse than initially assessed. It is not just a naming disagreement — it infects **8+ code samples** across critical paths: startup, soft-delete, DST timezone change, event purge, optimistic locking, and connection pooling. An AI copying these samples will hit compilation failures across the entire backend.
+1. **State management is the #1 frontend risk.** Without specifying React Context, Zustand, or similar, AI will create inconsistent state patterns. The alarm overlay alone needs data from 4+ sources (alarm data, snooze state, challenge config, queue state, auto-dismiss timer).
+
+2. **The scheduling spec is dangerously outdated.** It still uses `recurringDays` which was replaced by `RepeatPattern` with 5 types. An AI reading files in order will hit `02-alarm-scheduling.md` before `01-data-model.md` and implement the wrong model.
+
+3. **Every TS interface in every feature file uses camelCase.** The PascalCase mandate for serialized keys means ALL interfaces across all 16 feature files need conversion. This is systemic, not isolated.
 
