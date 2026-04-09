@@ -61,6 +61,7 @@ Comprehensive research into cross-platform application frameworks for building n
 | **Go + CEF** | Full Chromium control with Go backend | Anything — too niche for most projects |
 | **Fyne** | Simple Go utility apps | Feature-rich apps needing audio, tray, or native look |
 | **PWA** | Zero-install web apps, MVPs, casual games, content apps | Background processing, native OS integration, driver apps, AAA games |
+| **Capacitor** | Mobile-first web apps needing App Store + native APIs, PWA-to-native pipeline | Desktop apps, performance-critical apps, system tray, heavy background processing |
 
 ---
 
