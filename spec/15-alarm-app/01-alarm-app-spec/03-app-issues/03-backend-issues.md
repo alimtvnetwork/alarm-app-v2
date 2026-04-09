@@ -165,7 +165,7 @@
 - Queue indicator: "2 more alarms pending" badge on overlay
 - All queued alarms log `fired` event immediately (not when overlay shows)
 
-**Resolution Plan:** Update `02-features/03-alarm-firing.md` with a "Simultaneous Alarms" section defining FIFO queue, overlay sequencing, and event logging rules.
+**Resolution:** Added "Simultaneous Alarms (Queue System)" section to `02-features/03-alarm-firing.md` v1.3.0 with FIFO queue rules, `AlarmQueue` Rust struct, overlay sequencing, badge UI, and edge case table.
 
 ---
 
