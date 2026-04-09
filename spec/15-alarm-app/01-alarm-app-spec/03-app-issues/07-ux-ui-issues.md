@@ -53,14 +53,21 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Low |
-| **Likelihood** | 60% |
-| **Status** | Open |
+| **Likelihood** | 60% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** "Hard" = "147 ÷ 3" — this is trivial for some users, impossible for others at 6 AM. No adaptive difficulty.
 
 **Root Cause:** Subjective difficulty levels.
 
-**Suggested Fix:** Keep fixed tiers for v1.0 (Easy/Medium/Hard). Add "Custom" tier in P2+ that lets users set operand ranges. Track average solve time in `alarm_events` for future adaptive calibration.
+**Resolution:** Added calibrated difficulty tiers to `02-features/06-dismissal-challenges.md` v1.2.0:
+
+- **Easy:** Addition/subtraction, operands 1–20 (e.g., `12 + 7`). Target solve: <5s.
+- **Medium:** Multiplication, one operand 2–12, other 10–50 (e.g., `23 × 4`). Target solve: <10s.
+- **Hard:** Two-step problems (e.g., `(15 × 3) + 12`). Target solve: <20s.
+- **Custom (P2):** User sets operand ranges and operation types.
+- Solve time logged in `alarm_events.metadata` JSON for future adaptive calibration (P3).
+- All tiers use integer-only answers (no decimals). Division problems are pre-validated to have integer results.
 
 ---
 

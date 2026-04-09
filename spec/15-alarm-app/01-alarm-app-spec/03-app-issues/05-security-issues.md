@@ -53,14 +53,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Low |
-| **Likelihood** | 40% |
-| **Status** | Open |
+| **Likelihood** | 40% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** Users may put personal info in alarm labels. Export to JSON/CSV/iCal creates an unencrypted file on disk.
 
 **Root Cause:** No export encryption option.
 
-**Suggested Fix:** Add a warning dialog before export: "Export file is not encrypted." For P3+, offer optional password-protected ZIP export.
+**Resolution:** Added export warning dialog to `02-features/10-export-import.md`. Before any export, show confirmation: "Export file is not encrypted. Anyone with access to the file can read your alarm labels and settings. Continue?" with [Cancel] [Export] buttons. For v2.0+, offer optional password-protected ZIP export using `zip` crate with AES-256 encryption. Warning is skippable via "Don't show again" checkbox (stored in settings).
 
 ---
 
@@ -69,22 +69,15 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Low |
-| **Likelihood** | 60% |
-| **Status** | Open |
-| **Fail %** | 30% |
+| **Likelihood** | 60% → 0% |
+| **Status** | ✅ Resolved |
+| **Fail %** | 30% → 5% |
 
 **Description:** User can select any audio file but no max size, format validation, or handling for moved/deleted files is specified.
 
 **Root Cause:** Missing validation rules.
 
-**Suggested Fix:**
-- Max file size: 10MB
-- Allowed formats: `.mp3`, `.wav`, `.ogg`, `.flac`
-- On alarm fire: check `Path::exists()`. If missing → fall back to `classic-beep`, show "⚠ Sound file missing" in overlay
-- On alarm edit: if file path invalid, show warning + offer to re-select
-- Reject symlinks (security)
-
-**Resolution Plan:** Add validation rules to `02-features/05-sound-and-vibration.md` under "Custom Sound Validation" and cross-reference with `SEC-PATH-001`.
+**Resolution:** Already fully resolved by BE-AUDIO-002 and SEC-PATH-001 fixes. Complete `validate_custom_sound()` function in `02-features/05-sound-and-vibration.md` v1.4.0 covers: extension whitelist (`.mp3`, `.wav`, `.ogg`, `.flac`), 10MB size limit, symlink rejection, platform-restricted paths, and missing-file fallback (`resolve_sound_path()` → `classic-beep`).
 
 ---
 

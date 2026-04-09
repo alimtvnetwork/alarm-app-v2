@@ -53,14 +53,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Low |
-| **Likelihood** | 50% |
-| **Status** | Open |
+| **Likelihood** | 50% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** React DnD requires a library (`dnd-kit`, `react-beautiful-dnd`, etc.). Each has different API patterns. AI may choose a deprecated library.
 
 **Root Cause:** Missing technology decision.
 
-**Suggested Fix:** Specify `@dnd-kit/core` + `@dnd-kit/sortable` — actively maintained, accessible, lightweight.
+**Resolution:** Specified `@dnd-kit/core` v6.x + `@dnd-kit/sortable` + `@dnd-kit/utilities` in `01-fundamentals/03-file-structure.md` (package.json dependencies). `dnd-kit` is actively maintained, tree-shakeable, accessible (built-in `KeyboardSensor`), and works with `SortableContext` for alarm reordering. `react-beautiful-dnd` is deprecated — do NOT use. Already integrated with keyboard accessibility in FE-A11Y-001 resolution.
 
 ---
 
@@ -85,14 +85,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Low |
-| **Likelihood** | 60% |
-| **Status** | Open |
+| **Likelihood** | 60% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** "Full-screen overlay" doesn't specify which monitor. If app window is on secondary display, overlay may appear on wrong screen.
 
 **Root Cause:** Missing multi-monitor spec.
 
-**Suggested Fix:** Use Tauri window API to get current monitor bounds. Show overlay on the monitor containing the app window.
+**Resolution:** Added multi-monitor rule to `02-features/03-alarm-firing.md` overlay section. Overlay uses Tauri `WebviewWindow::current_monitor()` to determine the monitor containing the app window. If app is minimized to tray, overlay shows on the primary monitor (`Monitor::primary()`). Overlay window created with `fullscreen: true` on the target monitor's bounds.
 
 ---
 
