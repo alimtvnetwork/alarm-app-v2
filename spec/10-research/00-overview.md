@@ -37,7 +37,7 @@ A `diagrams/` folder contains visual architecture and comparison diagrams in Mer
 ## Folder Structure
 
 ```
-10-research/
+10-research/                    ← Folder number: 10
 ├── 00-overview.md              ← This file
 ├── diagrams/                   ← Legacy (kept for reference)
 ├── 01-platform-research/

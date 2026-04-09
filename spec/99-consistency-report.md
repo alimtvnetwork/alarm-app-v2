@@ -30,7 +30,9 @@
 | `06-design-system/` | ✅ | ✅ |
 | `07-docs-viewer-ui/` | ✅ | ✅ |
 | `08-code-block-system/` | ✅ | ✅ |
-| `09-alarm-app/` | ✅ | ✅ |
+| `09-powershell-integration/` | ✅ | ⚠️ Missing |
+| `10-research/` | ✅ | ⚠️ Missing |
+| `15-alarm-app/` | ✅ | ✅ |
 
 ---
 
@@ -48,3 +50,4 @@
 |------|---------|--------|
 | 2026-04-05 | 1.0.0 | Initial root consistency report |
 | 2026-04-08 | 1.1.0 | Added `09-alarm-app/` module |
+| 2026-04-09 | 1.2.0 | Reorganized: alarm-app→15, powershell→09, research stays 10 |
