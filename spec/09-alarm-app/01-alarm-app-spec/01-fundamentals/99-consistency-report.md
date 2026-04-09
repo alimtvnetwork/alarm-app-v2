@@ -1,7 +1,7 @@
 # Consistency Report: Fundamentals
 
-**Version:** 1.3.0  
-**Generated:** 2026-04-08  
+**Version:** 1.4.0  
+**Generated:** 2026-04-09  
 **Health Score:** 100/100 (A+)
 
 ---
@@ -30,13 +30,21 @@
 | Numeric prefixes sequential | ✅ |
 | All files listed in overview | ✅ |
 | No stale cross-references | ✅ |
+| No stale browser/localStorage references | ✅ (all mentions are in comparison context) |
 | Data model v1.3.0 consistent with feature specs | ✅ |
 | `croner` crate referenced in both data model and firing spec | ✅ |
 | `refinery` crate referenced in file structure | ✅ |
 | DST rules consistent with UX-DST-001 / UX-TZ-001 issue resolutions | ✅ |
 | 30s interval consistent across platform-constraints and firing spec | ✅ |
+| `06-tauri-architecture` no longer marked Legacy in overview | ✅ |
 
 ---
+
+## v1.4.0 Changes
+
+- Phase 5 cross-reference validation: 0 broken links across all spec files
+- Removed "Legacy" label from `06-tauri-architecture-and-framework-comparison.md` in overview
+- Verified no stale browser/localStorage references (all in comparison context)
 
 ## v1.3.0 Changes
 
