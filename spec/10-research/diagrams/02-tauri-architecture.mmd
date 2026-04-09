@@ -1,0 +1,61 @@
+---
+title: Tauri 2.x Application Architecture
+---
+graph TB
+    subgraph Frontend["Frontend Layer (WebView)"]
+        direction LR
+        React["React 18"]
+        Vite["Vite 5"]
+        TW["Tailwind CSS"]
+        SCN["shadcn/ui"]
+        TS["TypeScript"]
+    end
+
+    subgraph IPC["Tauri IPC Bridge"]
+        direction LR
+        Invoke["invoke()"]
+        Emit["emit()"]
+        Listen["listen()"]
+    end
+
+    subgraph Backend["Rust Backend"]
+        direction TB
+        subgraph Core["Core Modules"]
+            Engine["Alarm Engine\n(tokio, chrono)"]
+            Audio["Audio Manager\n(rodio)"]
+            Storage["Storage\n(SQLite)"]
+        end
+        subgraph System["System Modules"]
+            Notif["Notification\nManager"]
+            Tray["System Tray"]
+            Config["Config\nManager"]
+        end
+        subgraph Support["Support Modules"]
+            Snooze["Snooze\nTracker"]
+            Power["Power\nManager"]
+            Export["Export /\nImport"]
+        end
+    end
+
+    subgraph Plugins["Tauri Plugins"]
+        direction LR
+        SQL["tauri-plugin-sql"]
+        NotifP["tauri-plugin-notification"]
+        Dialog["tauri-plugin-dialog"]
+        Updater["tauri-plugin-updater"]
+        OSP["tauri-plugin-os"]
+    end
+
+    subgraph OS["Operating System"]
+        direction LR
+        Mac["macOS\n(WKWebView)"]
+        Win["Windows\n(WebView2)"]
+        Lin["Linux\n(webkit2gtk)"]
+        iOS["iOS"]
+        Android["Android"]
+    end
+
+    Frontend --> IPC
+    IPC --> Backend
+    Backend --> Plugins
+    Plugins --> OS

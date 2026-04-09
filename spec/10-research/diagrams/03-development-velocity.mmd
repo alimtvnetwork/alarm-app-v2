@@ -1,0 +1,27 @@
+---
+title: Development Velocity Timeline - Framework Comparison
+---
+gantt
+    title Time-to-MVP Comparison (Solo Developer)
+    dateFormat X
+    axisFormat %s weeks
+
+    section Electron
+    Setup + CRUD           :e1, 0, 7
+    Notifications + Tray   :e2, after e1, 7
+    Polish + Packaging     :e3, after e2, 14
+
+    section Wails
+    Setup + CRUD           :w1, 0, 14
+    Notifications (manual) :w2, after w1, 7
+    Tray (manual) + Pkg    :w3, after w2, 14
+
+    section Tauri
+    Learn Rust Basics      :t1, 0, 21
+    CRUD + IPC             :t2, after t1, 14
+    Plugins + Packaging    :t3, after t2, 14
+
+    section Flutter
+    Learn Dart + Flutter   :f1, 0, 14
+    CRUD + State Mgmt      :f2, after f1, 14
+    Native Plugins + Pkg   :f3, after f2, 14

@@ -1,0 +1,29 @@
+---
+title: Framework Scoring Comparison (out of 240)
+---
+graph LR
+    subgraph Scoring["Weighted Score Ranking"]
+        direction TB
+        T["Tauri 2.x\n214/240 (89%)"] --> W["Wails\n174/240 (73%)"]
+        W --> FL["Flutter\n153/240 (64%)"]
+        FL --> E["Electron\n152/240 (63%)"]
+        E --> FY["Fyne\n130/240 (54%)"]
+        FY --> C["Go + CEF\n100/240 (42%)"]
+    end
+
+    subgraph Strengths["Key Differentiators"]
+        direction TB
+        S1["5 Platforms\nTauri, Flutter"]
+        S2["Web Frontend Reuse\nTauri, Electron, Wails"]
+        S3["Smallest Bundle\nTauri (3-10 MB)"]
+        S4["Best Background Tasks\nTauri (Rust tokio)"]
+        S5["Fastest MVP\nElectron (1-2 weeks)"]
+        S6["Best Mobile\nFlutter"]
+    end
+
+    T -.-> S1
+    T -.-> S2
+    T -.-> S3
+    T -.-> S4
+    E -.-> S5
+    FL -.-> S6
