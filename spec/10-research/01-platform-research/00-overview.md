@@ -46,6 +46,7 @@ Comprehensive research into cross-platform application frameworks for building n
 | 02 | `02-development-velocity.md` | Development speed analysis — learning curve, iteration speed, time-to-MVP, team ramp-up |
 | 03 | `03-recommendation.md` | Final recommendation with scoring, risk analysis, decision record, and rollout strategy |
 | 04 | `04-pwa-research.md` | PWA deep-dive — pros/cons, Uber-type app feasibility, PWA gaming research, scoring vs native |
+| 05 | `05-capacitor-hybrid-research.md` | Capacitor hybrid research — middle ground between PWA and native, architecture, scoring, MVP pipeline |
 
 ---
 
@@ -60,6 +61,7 @@ Comprehensive research into cross-platform application frameworks for building n
 | **Go + CEF** | Full Chromium control with Go backend | Anything — too niche for most projects |
 | **Fyne** | Simple Go utility apps | Feature-rich apps needing audio, tray, or native look |
 | **PWA** | Zero-install web apps, MVPs, casual games, content apps | Background processing, native OS integration, driver apps, AAA games |
+| **Capacitor** | Mobile-first web apps needing App Store + native APIs, PWA-to-native pipeline | Desktop apps, performance-critical apps, system tray, heavy background processing |
 
 ---
 
