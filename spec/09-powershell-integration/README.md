@@ -16,7 +16,7 @@
 | [04-error-codes.md](./04-error-codes.md) | Error codes reference |
 | [05-firewall-rules.md](./05-firewall-rules.md) | Firewall rules for remote connectivity |
 | [06-php-known-issues.md](./06-php-known-issues.md) | Known PHP issues and workarounds |
-| [25-multi-site-deployment.md](./25-multi-site-deployment.md) | Multi-site deployment strategy |
+| [08-multi-site-deployment.md](./08-multi-site-deployment.md) | Multi-site deployment strategy |
 | [changelog.md](./changelog.md) | PowerShell integration changelog |
 | [parallel-work-sync-output.md](./parallel-work-sync-output.md) | Parallel work sync output specification |
 
@@ -26,5 +26,6 @@
 |------|-------------|
 | [schemas/powershell.schema.json](./schemas/powershell.schema.json) | JSON Schema for `powershell.json` |
 | [templates/powershell.json](./templates/powershell.json) | Template `powershell.json` |
-| [templates/run.ps1](./templates/run.ps1) | Template `run.ps1` entry point |
+| [templates/run.ps1](./templates/run.ps1) | Template `run.ps1` entry point (Windows) |
+| [templates/run.sh](./templates/run.sh) | Template `run.sh` entry point (macOS/Linux) |
 | [examples/server-client-project.json](./examples/server-client-project.json) | Example server-client project configuration |

@@ -12,9 +12,13 @@
 
 | Requirement | Minimum Version | Auto-Install |
 |-------------|-----------------|--------------|
-| Windows | 10/11 or Server 2019+ | N/A |
+| **Windows** | 10/11 or Server 2019+ | N/A |
 | PowerShell | 5.1 or 7+ | N/A |
 | winget | Latest | N/A |
+| **macOS/Linux** | macOS 12+ / Ubuntu 20.04+ | N/A |
+| Bash | 4+ or zsh | N/A |
+| jq | Latest | N/A (brew install jq) |
+| Homebrew (macOS) | Latest | N/A |
 | Go | 1.21+ | ✅ Yes |
 | Node.js | 18+ LTS | ✅ Yes |
 | pnpm | 8+ | ✅ Yes |
@@ -25,12 +29,16 @@
 
 Copy from spec templates to your project:
 
+**Windows:**
 ```powershell
-# From this spec folder
-Copy-Item "spec/powershell-integration/templates/run.ps1" "YOUR_PROJECT/run.ps1"
+Copy-Item "spec/09-powershell-integration/templates/run.ps1" "YOUR_PROJECT/run.ps1"
 ```
 
-Or use the existing `run.ps1` if already in your project root.
+**macOS/Linux:**
+```bash
+cp spec/09-powershell-integration/templates/run.sh YOUR_PROJECT/run.sh
+chmod +x YOUR_PROJECT/run.sh
+```
 
 ---
 
