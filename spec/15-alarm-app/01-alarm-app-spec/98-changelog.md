@@ -1,7 +1,7 @@
 # Changelog
 
-**Version:** 1.3.0  
-**Updated:** 2026-04-08  
+**Version:** 1.6.0  
+**Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None
 
@@ -26,6 +26,96 @@
 ---
 
 ## Version History
+
+### v1.6.0 — 2026-04-09
+
+**Theme:** All 43 issues resolved — spec complete for AI handoff
+
+#### Added
+- **`09-test-strategy.md`** (new) in `01-fundamentals/` — 4-layer test strategy: Rust unit (cargo test, 90% scheduler coverage), Rust integration (in-memory SQLite), frontend unit (Vitest + React Testing Library, 70%), E2E (tauri-driver + Playwright). CI YAML, fixtures, coverage thresholds
+- **Logging strategy** in `07-startup-sequence.md` v1.1.0 — `tracing` + `tracing-appender` (daily rotation, 7-day retention), 5 log levels, frontend forwarding via `log_from_frontend` IPC
+- **Multi-monitor overlay** in `03-alarm-firing.md` v1.5.0 — `current_monitor()` for visible app, `primary()` when minimized to tray
+- **Export privacy warning** in `10-export-import.md` v1.3.0 — confirmation dialog before export, optional AES-256 ZIP for v2.0+
+- **Challenge calibration** in `06-dismissal-challenges.md` v1.2.0 — operand rules per tier, target solve times, solve time logging in `alarm_events.metadata`, Custom tier (P2), integer-only answers
+- **`alarm_label_snapshot` + `alarm_time_snapshot`** columns on `alarm_events` table — preserves context after alarm deletion (DB-ORPHAN-001)
+- **`value_type` column** on `settings` table + typed `get_setting<T>()` Rust helper (DB-SETTINGS-001)
+- **`@dnd-kit/core` v6.x** explicitly specified, `react-beautiful-dnd` rejected as deprecated (FE-DND-001)
+
+#### Changed
+- `01-fundamentals/01-data-model.md` → v1.6.0 (AlarmRow Rust struct, croner v2.0 pinned, DB-ORPHAN-001, DB-SETTINGS-001)
+- `01-fundamentals/07-startup-sequence.md` → v1.1.0 (logging strategy)
+- `02-features/03-alarm-firing.md` → v1.5.0 (multi-monitor overlay)
+- `02-features/06-dismissal-challenges.md` → v1.2.0 (calibrated tiers)
+- `02-features/10-export-import.md` → v1.3.0 (privacy warning)
+- `03-app-issues/00-overview.md` → v1.4.0 (all 43 resolved)
+- All `99-consistency-report.md` files updated to reflect final state
+
+#### Fixed (10 issues resolved)
+- **BE-LOG-001** ✅ — Logging strategy (tracing + tracing-appender)
+- **BE-VOLUME-001** ✅ — Already resolved by BE-AUDIO-001 (quadratic curve in sound spec)
+- **FE-DND-001** ✅ — @dnd-kit/core specified
+- **FE-OVERLAY-001** ✅ — Multi-monitor overlay behavior defined
+- **DB-ORPHAN-001** ✅ — Denormalized snapshot columns on alarm_events
+- **DB-SETTINGS-001** ✅ — value_type column + get_setting<T>()
+- **SEC-EXPORT-001** ✅ — Export privacy warning dialog
+- **SEC-SOUND-001** ✅ — Already resolved by BE-AUDIO-002/SEC-PATH-001 validation chain
+- **UX-CHALLENGE-001** ✅ — Calibrated difficulty tiers with operand rules
+
+---
+
+### v1.5.0 — 2026-04-09
+
+**Theme:** Medium-impact issue resolution batch (11 issues)
+
+#### Added
+- **Custom sound validation** in `05-sound-and-vibration.md` v1.4.0 — `validate_custom_sound()` function (extension, size, symlink, restricted paths), `resolve_sound_path()` fallback
+- **Platform audio sessions** in `05-sound-and-vibration.md` v1.4.0 — macOS `AVAudioSession` Playback+DuckOthers, Windows/Linux notes
+- **Gradual volume algorithm** in `05-sound-and-vibration.md` v1.4.0 — quadratic curve (`t²`), 100ms interval, `run_gradual_volume()` Rust implementation
+- **Undo stack** in `01-alarm-crud.md` v1.6.0 — max 5 entries, independent timers, stacking toasts (max 3), undo-any capability
+- **WebView CSS compatibility** in `04-platform-constraints.md` v1.3.0 — engine matrix, `@supports` feature detection, safe/unsafe CSS lists, `platform.css`
+- **Memory budget** in `04-platform-constraints.md` v1.3.0 — revised to 200MB (WebView overhead), component breakdown, optimization strategies
+- **i18n enforcement** in `03-file-structure.md` v1.4.0 — `react-i18next`, `eslint-plugin-i18next` no-literal-string rule, `en.json` key inventory
+- **AlarmRow Rust struct** in `01-data-model.md` v1.6.0 — `from_row()`, `days_of_week()`, `repeat_pattern()`, `RepeatType` enum
+- **`croner` v2.0** pinned in `01-data-model.md` v1.6.0
+
+#### Changed
+- `01-fundamentals/01-data-model.md` → v1.6.0
+- `01-fundamentals/03-file-structure.md` → v1.4.0
+- `01-fundamentals/04-platform-constraints.md` → v1.3.0
+- `02-features/01-alarm-crud.md` → v1.6.0
+- `02-features/05-sound-and-vibration.md` → v1.4.0
+
+#### Fixed (11 issues resolved)
+- **BE-AUDIO-002** ✅, **BE-CRON-001** ✅, **BE-AUDIO-003** ✅, **FE-STATE-002** ✅, **FE-RENDER-001** ✅, **FE-I18N-001** ✅, **DB-SERIAL-001** ✅, **SEC-PATH-001** ✅, **PERF-STARTUP-001** ✅, **PERF-MEMORY-001** ✅, **DEVOPS-TEST-001** ✅
+
+---
+
+### v1.4.0 — 2026-04-09
+
+**Theme:** DevOps + high/medium-impact issue resolution (22 issues total resolved)
+
+#### Added
+- **`08-devops-setup-guide.md`** (new) in `01-fundamentals/` — macOS code signing (Apple Developer, notarization), Windows code signing (EV certificate, signtool), CI/CD pipeline (GitHub Actions matrix), auto-update key management (tauri-plugin-updater, Ed25519)
+- **`07-startup-sequence.md`** (new) in `01-fundamentals/` — 9-step initialization, parallel init (tokio::join!), <750ms budget, error handling per step
+- **Soft-delete timer** in `01-alarm-crud.md` v1.5.0 — `tokio::spawn` + `sleep(5s)`, startup cleanup for stale deleted_at rows
+- **Exact snooze timing** in `04-snooze-system.md` v1.3.0 — `tokio::time::sleep_until(snooze_expiry)` replacing polling
+- **SSRF protection** in `12-smart-features.md` v1.2.0 — `validate_webhook_url()`, `is_private_ip()`, HTTP client rules
+- **Platform wake-events** in `03-alarm-firing.md` v1.5.0 — `WakeListener` trait, macOS/Windows/Linux FFI implementations
+- **Error handling strategy** in `04-platform-constraints.md` v1.2.0 — `AlarmAppError` enum, 12-error behavior table, `safeInvoke` wrapper
+- **DST handling** in `03-alarm-firing.md` v1.4.0 — `resolve_local_to_utc()`, spring-forward/fall-back rules, 5 test cases
+- **WAL mode** in `01-data-model.md` v1.5.0 — `PRAGMA journal_mode=WAL`, busy_timeout=5000
+- **Event retention** in `01-data-model.md` v1.5.0 — 90-day purge, `event_retention_days` setting
+- **Group toggle state** in `07-alarm-groups.md` v1.2.0 — `previous_enabled` column
+- **Alarm queue** in `03-alarm-firing.md` v1.3.0 — FIFO `AlarmQueue` struct, overlay sequencing
+- **AI Handoff Reliability Report** — 11 spec gap issues merged into category files
+- **Keyboard accessibility** in `01-alarm-crud.md` v1.4.0 — full keyboard shortcut table, ARIA attributes, dnd-kit KeyboardSensor
+
+#### Fixed (21 issues resolved in this version)
+- **Critical:** DEVOPS-SIGN-001 ✅ (macOS signing), DEVOPS-SIGN-002 ✅ (Windows signing)
+- **High:** BE-TIMER-001 ✅, BE-WAKE-001 ✅, FE-A11Y-001 ✅, SEC-WEBHOOK-001 ✅, UX-DST-001 ✅, UX-TZ-001 ✅, DEVOPS-CI-001 ✅, DEVOPS-UPDATE-001 ✅, DB-MIGRATE-001 ✅, BE-STARTUP-001 ✅, BE-QUEUE-001 ✅
+- **Medium:** BE-AUDIO-001 ✅, BE-SNOOZE-001 ✅, BE-DELETE-001 ✅, BE-CONCUR-001 ✅, BE-ERROR-001 ✅, FE-STATE-001 ✅, DB-GROWTH-001 ✅, DEVOPS-PERM-001 ✅, DEVOPS-CARGO-001 ✅
+
+---
 
 ### v1.3.0 — 2026-04-08
 
@@ -64,9 +154,6 @@
 
 #### Fixed
 - **BE-TIMER-001 (RESOLVED):** Standardized alarm check interval to **30 seconds** across all specs
-  - `01-fundamentals/04-platform-constraints.md` — changed from 1s to 30s
-  - Now consistent with `02-features/03-alarm-firing.md` and `16-accessibility-and-nfr.md`
-  - Snooze expiry uses exact `tokio::time::sleep_until()` instead of polling
 
 ---
 
@@ -123,7 +210,8 @@
 | Spec Overview | `./00-overview.md` |
 | Issues Folder | `./03-app-issues/00-overview.md` |
 | Feasibility Analysis | `/mnt/documents/alarm-app-ai-feasibility-analysis.md` |
+| AI Handoff Readiness Report | `./10-ai-handoff-readiness-report.md` |
 
 ---
 
-*Changelog — updated: 2026-04-08*
+*Changelog — updated: 2026-04-09*
