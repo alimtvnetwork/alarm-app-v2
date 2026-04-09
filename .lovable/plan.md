@@ -1,88 +1,120 @@
 
-# Game Development Research Plan
 
-## Folder Structure
+# Discovery Phase 3: Cross-File Logic Consistency Audit
 
-```
-spec/10-research/02-game-development/
-├── 00-overview.md                    ← Index + purpose + quick summary
-├── 01-engine-comparison.md           ← Unity, Unreal, Godot, Bevy, etc.
-├── 02-language-comparison.md         ← C++, Rust, Go, C#, Dart, JS — game dev ecosystems
-├── 03-custom-engine-research.md      ← Build vs buy, what's needed, feasibility by genre
-├── 04-framework-and-library-map.md   ← Rendering libs, ECS, physics, audio, input per language
-├── 05-genre-recommendations.md       ← Strategy, Doom-like, mobile, 3D, indie, browser
-├── 06-platform-recommendations.md    ← PC, Linux, mobile, cross-platform, console
-├── 07-app-shell-feasibility.md       ← Tauri, Electron, Wails for games — when practical
-├── 08-doom-and-retro-research.md     ← Raycasting, software rendering, retro 3D — modern options
-├── 09-3d-game-direction.md           ← Entering 3D: engines vs frameworks vs custom
-├── 10-final-summary.md              ← Generic + game-specific recommendations, decision matrix
-└── diagrams/
-    ├── 01-engine-scoring.mmd
-    ├── 02-decision-flow.mmd
-    └── 03-language-ecosystem-map.mmd
-```
+## Audit Scope
+Deep scan of the firing → snooze → dismiss flow, DST logic, concurrency patterns, and data model completeness across all spec files.
 
-## Phase Plan
+---
 
-### Phase 1: Engine Comparison (01-engine-comparison.md)
-- **Engines**: Unity, Unreal Engine 5, Godot 4, Bevy (Rust), Fyrox (Rust), Macroquad (Rust), Ebitengine (Go), Raylib, SDL2, Love2D, Defold, Cocos2d-x, MonoGame, Stride
-- **Criteria**: Language, 2D/3D, editor maturity, asset pipeline, cross-platform export, Linux support, mobile support, licensing/cost, community size, learning curve, performance
+## New Issues Found: 12
 
-### Phase 2: Language Comparison (02-language-comparison.md)
-- **Languages**: C++ (industry standard), Rust (Bevy, wgpu), Go (Ebitengine, Raylib-go), C# (Unity, Godot, MonoGame), GDScript (Godot), Dart (Flame/Flutter), JavaScript/TypeScript (PixiJS, Three.js, Phaser)
-- **Per language**: Available engines, rendering libs, ECS options, tooling, performance profile, learning curve, 2D/3D suitability, production readiness
+### Logic Flow Issues
 
-### Phase 3: Custom Engine Research (03-custom-engine-research.md)
-- Build vs use existing — decision framework
-- What a custom engine requires (renderer, physics, audio, input, UI, asset pipeline, editor, save system, networking)
-- Feasibility by genre and team size
-- Historical examples (id Tech, Source, in-house engines)
-- Modern custom engine paths: Rust+wgpu, C+++Vulkan/OpenGL, Go+OpenGL
+**LC-001: `AlarmChallenge` Not in Data Model or `alarms` Table** (Critical)
+- `06-dismissal-challenges.md` defines `AlarmChallenge` interface with fields `type`, `difficulty`, `shakeCount`, `stepCount`
+- Neither the TS `Alarm` interface nor the SQL `alarms` table has a `challenge` or `challengeType` column
+- AI cannot implement challenge-per-alarm without schema support
+- The `challenge_type` column exists only in `alarm_events` (logging), not in `alarms` (configuration)
 
-### Phase 4: Framework & Library Map (04-framework-and-library-map.md)
-- Per-language matrix of: rendering (wgpu, OpenGL, Vulkan, Metal, DirectX), ECS (legion, hecs, flecs), physics (rapier, box2d, bullet), audio (rodio, OpenAL, FMOD), input, UI, networking
-- Which combinations are production-tested
+**LC-002: Snooze State TS Interface Uses `nextFireTime` But Table Uses `snooze_until`** (Medium)
+- `04-snooze-system.md` line 43: TS `SnoozeState.nextFireTime`
+- `01-data-model.md` line 261: SQL column is `snooze_until`
+- AI will map wrong field name in serialization
 
-### Phase 5: Genre Recommendations (05-genre-recommendations.md)
-- Strategy (Age of Empires-like): large maps, pathfinding, AI, networking
-- Retro/Doom-like: raycasting, lightweight 3D, fast iteration
-- Mobile: touch input, small bundle, battery, monetization SDKs
-- 3D AAA-adjacent: modern rendering, PBR, large worlds
-- Indie/experimental: rapid prototyping, small team
-- Browser/desktop-shell: HTML5 games, Electron/Tauri wrapped
+**LC-003: Soft-Delete Timer Uses `sqlx` While Project Chose `rusqlite`** (Critical — extends IC-001)
+- `01-alarm-crud.md` lines 61, 76: `sqlx::query(...)` in the delete timer and cleanup functions
+- These are the ONLY code samples for soft-delete/undo behavior — AI will copy them verbatim
+- Already tracked in IC-007 but worth noting this is critical path code
 
-### Phase 6: Platform Recommendations (06-platform-recommendations.md)
-- PC (Windows primary), Linux-first, macOS, mobile (iOS/Android), cross-platform, console (overview only)
-- Best engine/language per platform
+**LC-004: `on_timezone_change` Uses `SqlitePool` (sqlx type) with `async` but `rusqlite` is sync** (Critical)
+- `03-alarm-firing.md` line 155: `fn on_timezone_change(pool: &SqlitePool, new_tz: &Tz)` — uses `await` inside
+- `rusqlite` is synchronous — no `SqlitePool`, no `.await`
+- This function is copy-paste-critical for DST handling and will fail to compile
 
-### Phase 7: App Shell Feasibility (07-app-shell-feasibility.md)
-- Can Tauri/Electron/Wails be used for games?
-- Performance ceiling, rendering limits, input latency
-- Where it works: card games, visual novels, UI-heavy games, turn-based
-- Where it fails: real-time action, physics-heavy, 3D
+**LC-005: Startup Step 2 Uses `SqlitePool::connect` (sqlx API)** (Critical)
+- `07-startup-sequence.md` line 117: `SqlitePool::connect(&format!("sqlite:{}?mode=rwc", ...))`
+- This is `sqlx` connection API. `rusqlite` uses `Connection::open(path)`
+- Startup will not compile as written
 
-### Phase 8: Doom & Retro Research (08-doom-and-retro-research.md)
-- How Doom 1993 was built (C, software renderer, BSP)
-- Modern equivalents: Rust+wgpu raycaster, C++ with modern OpenGL, Godot retro shader
-- Pseudo-3D and raycasting approaches today
-- When C++ is still the best choice vs Rust/Go alternatives
+### DST Logic Issues
 
-### Phase 9: 3D Game Direction (09-3d-game-direction.md)
-- Entry paths: existing engine (Unreal, Godot, Bevy) vs framework (wgpu, three.js) vs custom
-- Rendering pipeline complexity (forward vs deferred, PBR, shadows, post-processing)
-- Recommended path by team size and scope
+**LC-006: Spring-Forward Hardcoded to 3:00 AM** (Critical — already noted, now with evidence)
+- `03-alarm-firing.md` line 135: `NaiveTime::from_hms_opt(3, 0, 0).unwrap()`
+- `13-ai-cheat-sheet.md` line 79: same hardcoded 3:00 AM
+- DST transitions vary: EU = 2:00→3:00, US = 2:00→3:00, Lord Howe Island = 2:00→2:30, Brazil (historical) = 0:00→1:00
+- Correct approach: iterate forward minute-by-minute from the skipped time until a valid time is found
+- AI will copy the hardcoded value and produce incorrect behavior for ~30% of world timezones
 
-### Phase 10: Final Summary (10-final-summary.md)
-- Generic decision matrix (language × engine × platform × genre)
-- Game-specific recommendations per scenario
-- "If you want to build X, choose Y because Z" format
-- Cost-benefit and ROI analysis
+**LC-007: `purge_old_events` Uses `sqlx` in Data Model** (Medium — extends IC-001)
+- `01-data-model.md` line 306: `sqlx::query("DELETE FROM alarm_events WHERE timestamp < ?")`
+- Same pattern: uses sqlx in a file that elsewhere uses rusqlite
 
-### Phase 11: Diagrams
-- Engine scoring radar/ranking chart
-- Decision flowchart (genre → platform → engine/language)
-- Language ecosystem map (language → available tools)
+### Concurrency Logic Issues
 
-## Execution
+**LC-008: `currently_firing` HashSet Not Thread-Safe** (Critical)
+- `12-platform-and-concurrency-guide.md` line 219: `currently_firing: HashSet<String>` in `AlarmEngine`
+- HashSet is not `Send + Sync` — cannot be shared across async tasks without `Arc<Mutex<>>`
+- Engine runs in `tokio::spawn` — needs `Arc<Mutex<HashSet<String>>>` or `DashSet`
+- AI will get a compile error on the `Sync` bound
 
-Each phase = 1 "next" step. I'll create 2-3 files per step to keep quality high.
+**LC-009: Race 2 Optimistic Locking Uses `sqlx`** (Medium — extends IC-001)
+- `12-platform-and-concurrency-guide.md` line 181: `sqlx::query("UPDATE alarms SET...")`
+- Optimistic locking code is the safeguard for a critical race condition — must compile
+
+**LC-010: Snooze Crash Recovery Not in Startup Sequence** (Medium)
+- `04-snooze-system.md` line 82: "On startup, query `snooze_state` table for active snoozes"
+- `07-startup-sequence.md` Step 8 only mentions missed alarms from `alarms` table
+- Active snoozes from previous session are never recovered — snoozed alarms silently disappear
+
+### Data Flow Issues
+
+**LC-011: CSV Export Uses `snake_case` Column Names** (Medium — naming violation)
+- `10-export-import.md` line 60: columns are `repeat_type, repeat_days, group_name, sound_file, snooze_duration, max_snooze_count`
+- Coding guidelines mandate PascalCase for all keys including export formats
+- Already tracked in naming violations but this is a data flow issue too
+
+**LC-012: `alarm_events` Duplicate Schema — Analytics vs Data Model** (Already IC-005, confirmed)
+- `13-analytics.md` line 91 and `01-data-model.md` line 265 both define `CREATE TABLE alarm_events`
+- Confirmed identical for now, but any future edit to one without the other will break
+
+---
+
+## Updated Totals
+
+| Category | Previous | New | Total |
+|----------|:--------:|:---:|:-----:|
+| Naming Violations | 11 | 1 | 12 |
+| Internal Contradictions | 7 | 0 | 7 |
+| Structural Issues | 5 | 0 | 5 |
+| Content Gaps | 6 | 1 | 7 |
+| AI Handoff Risks | 4 | 0 | 4 |
+| **Logic Consistency (NEW)** | 0 | 10 | **10** |
+| **Grand Total** | **33** | **12** | **45** |
+
+---
+
+## Severity Breakdown (All 45 Issues)
+
+| Severity | Count |
+|----------|:-----:|
+| Critical | 20 |
+| Medium | 23 |
+| Low | 2 |
+
+---
+
+## Implementation Plan
+
+1. **Create** `14-spec-issues/06-logic-consistency.md` with all 10 new LC-xxx issues
+2. **Update** `14-spec-issues/01-naming-violations.md` — add LC-011
+3. **Update** `14-spec-issues/04-content-gaps.md` — add LC-001 (AlarmChallenge missing from schema)
+4. **Update** `14-spec-issues/00-overview.md` — add category 6, update totals to 45, mark Phase 3 done
+5. **Update** `mem://feature/alarm-app-spec-issues` — sync with new totals and phase status
+
+---
+
+## Key Insight
+
+The `sqlx` vs `rusqlite` contradiction (IC-001) is far worse than initially assessed. It is not just a naming disagreement — it infects **8+ code samples** across critical paths: startup, soft-delete, DST timezone change, event purge, optimistic locking, and connection pooling. An AI copying these samples will hit compilation failures across the entire backend.
+
