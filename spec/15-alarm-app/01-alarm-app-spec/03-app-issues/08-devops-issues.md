@@ -1,6 +1,6 @@
 # DevOps Issues
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -21,14 +21,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | Critical |
-| **Likelihood** | 95% |
-| **Status** | Open |
+| **Likelihood** | 95% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** AI cannot create Apple Developer accounts, generate certificates, or configure notarization. Requires human identity verification and $99/year enrollment.
 
 **Root Cause:** Apple's signing infrastructure requires human identity verification.
 
-**Suggested Fix:** Human task — create Apple Developer account, generate Developer ID certificate, configure `tauri.conf.json` with signing identity. Document in a `devops/macos-signing-guide.md`.
+**Resolution:** Created `01-fundamentals/08-devops-setup-guide.md` v1.0.0 Section 1 with complete step-by-step: Apple Developer enrollment, Developer ID certificate creation, app-specific password, Keychain export to Base64, `tauri.conf.json` signing config, and 5 GitHub Actions secrets with descriptions.
 
 ---
 
@@ -37,14 +37,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 90% |
-| **Status** | Open |
+| **Likelihood** | 90% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** SmartScreen trust requires EV certificate on a physical USB token. Cannot be automated by AI. Expensive (~$200–500/year).
 
 **Root Cause:** Microsoft's SmartScreen requirements.
 
-**Suggested Fix:** Human task — purchase EV certificate from DigiCert/Sectigo, configure CI signing step. Alternative: use Azure Trusted Signing (cloud-based, cheaper) when available for Tauri.
+**Resolution:** Created `01-fundamentals/08-devops-setup-guide.md` v1.0.0 Section 2 with two paths: Option A (EV cert with USB token + self-hosted runner) and Option B (Azure Trusted Signing cloud alternative with GitHub Actions config). Includes cost comparison and signing command examples.
 
 ---
 
@@ -53,14 +53,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 80% |
-| **Status** | Open |
+| **Likelihood** | 80% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** Building for macOS requires macOS runner (GitHub Actions charges premium). Linux + Windows runners also needed. Total CI cost and complexity are high.
 
 **Root Cause:** Native compilation requirement — no cross-compilation for Tauri.
 
-**Suggested Fix:** Use GitHub Actions with matrix strategy: `[macos-latest, windows-latest, ubuntu-latest]`. Cache `target/` and `node_modules/` between runs. Use Tauri's official `tauri-action` for build + bundle.
+**Resolution:** Created `01-fundamentals/08-devops-setup-guide.md` v1.0.0 Section 3 with complete GitHub Actions workflow: 4-target matrix (macOS arm64/x64, Windows x64, Linux x64), Rust/Node caching, macOS certificate import, `tauri-action` integration, cost estimate (~$4–8/release), and branch strategy.
 
 ---
 
@@ -69,14 +69,14 @@
 | Field | Value |
 |-------|-------|
 | **Impact** | High |
-| **Likelihood** | 70% |
-| **Status** | Open |
+| **Likelihood** | 70% → 0% |
+| **Status** | ✅ Resolved |
 
 **Description:** Tauri updater requires a private key to sign update bundles. Key storage, rotation, and backup strategy not specified.
 
 **Root Cause:** Missing key management specification.
 
-**Suggested Fix:** Generate Tauri updater keypair (`tauri signer generate`). Store private key as GitHub Actions secret (`TAURI_PRIVATE_KEY`). Back up to a password manager. Document rotation procedure in `devops/update-key-management.md`.
+**Resolution:** Created `01-fundamentals/08-devops-setup-guide.md` v1.0.0 Section 4 with keypair generation, `tauri.conf.json` updater config, 3-location backup strategy, key rotation procedure (transition version approach), emergency lost-key recovery plan, and update flow diagram.
 
 ---
 
