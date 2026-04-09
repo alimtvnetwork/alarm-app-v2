@@ -46,6 +46,7 @@ Comprehensive research into cross-platform application frameworks for building n
 | 02 | `02-development-velocity.md` | Development speed analysis — learning curve, iteration speed, time-to-MVP, team ramp-up |
 | 03 | `03-recommendation.md` | Final recommendation with scoring, risk analysis, decision record, and rollout strategy |
 | 04 | `04-pwa-research.md` | PWA deep-dive — pros/cons, Uber-type app feasibility, PWA gaming research, scoring vs native |
+| 05 | `05-capacitor-hybrid-research.md` | Capacitor hybrid research — middle ground between PWA and native, architecture, scoring, MVP pipeline |
 
 ---
 
