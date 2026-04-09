@@ -1,0 +1,51 @@
+%% Framework Architecture Comparison
+%% Shows how Electron, Tauri, and Wails differ architecturally
+
+flowchart TB
+    subgraph ELECTRON["ELECTRON (JavaScript / Node.js)"]
+        direction TB
+        E_UI["Frontend: React / Vue / Svelte"]
+        E_CHROME["Bundled Chromium Browser (~150 MB)\nFull Chrome engine shipped with app"]
+        E_IPC["IPC: ipcMain / ipcRenderer"]
+        E_BACK["Backend: Node.js Process\nJavaScript / npm packages"]
+        E_OS["OS APIs via Node.js"]
+
+        E_UI --> E_CHROME
+        E_CHROME --> E_IPC
+        E_IPC --> E_BACK
+        E_BACK --> E_OS
+    end
+
+    subgraph TAURI["TAURI (Rust)"]
+        direction TB
+        T_UI["Frontend: React / Vue / Svelte"]
+        T_WV["OS Native WebView (0 MB extra)\nmacOS: WKWebView | Win: WebView2 | Linux: webkit2gtk"]
+        T_IPC["IPC: invoke() / emit() / listen()"]
+        T_BACK["Backend: Rust Process\ntokio async runtime + plugins"]
+        T_OS["OS APIs via Rust crates"]
+
+        T_UI --> T_WV
+        T_WV --> T_IPC
+        T_IPC --> T_BACK
+        T_BACK --> T_OS
+    end
+
+    subgraph WAILS["WAILS (Go)"]
+        direction TB
+        W_UI["Frontend: React / Vue / Svelte"]
+        W_WV["OS Native WebView (0 MB extra)\nSame approach as Tauri"]
+        W_IPC["IPC: Auto-generated TS bindings"]
+        W_BACK["Backend: Go Process\ngoroutines + Go stdlib"]
+        W_OS["OS APIs via Go packages"]
+
+        W_UI --> W_WV
+        W_WV --> W_IPC
+        W_IPC --> W_BACK
+        W_BACK --> W_OS
+    end
+
+    subgraph RESULT["Result: App Bundle Size"]
+        R_E["Electron: 150-300 MB"]
+        R_T["Tauri: 3-10 MB"]
+        R_W["Wails: 8-15 MB"]
+    end
