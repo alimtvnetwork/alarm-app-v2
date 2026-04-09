@@ -113,28 +113,24 @@ This specification defines a **cross-project reusable** PowerShell integration p
 ## Folder Structure
 
 ```
-spec/powershell-integration/
+spec/09-powershell-integration/
 ├── 00-overview.md               ← This file
 ├── 01-configuration-schema.md   ← JSON config format with pnpm options
-├── 02-script-reference.md       ← CLI flags and functions
-├── 03-integration-guide.md      ← How to add to any project
-├── 04-error-codes.md            ← Exit codes (9500-9599)
-├── 05-firewall-rules.md         ← Windows firewall setup
+├── 02-template-vs-project-differences.md ← Template vs project differences
+├── 03-script-reference.md       ← CLI flags and functions
+├── 04-integration-guide.md      ← How to add to any project
+├── 05-error-codes.md            ← Exit codes (9500-9599)
+├── 06-firewall-rules.md         ← Windows firewall setup
+├── 07-php-known-issues.md       ← PHP error management
+├── 08-multi-site-deployment.md  ← Multi-site deployment
 ├── schemas/
 │   └── powershell.schema.json   ← JSON Schema for validation
 ├── templates/
-│   ├── run.ps1                  ← Main script template
+│   ├── run.ps1                  ← Main script template (Windows)
+│   ├── run.sh                   ← Main script template (macOS/Linux)
 │   └── powershell.json          ← Example config with pnpm
 └── examples/
     └── server-client-project.json  ← Sample for server/client layout
-
-spec/upload-scripts/              ← Related: WordPress plugin upload scripts
-├── README.md                    ← Upload pipeline overview
-├── 01-upload-plugin-v1.md       ← V1: Basic single-file upload
-├── 02-upload-plugin-v2.md       ← V2: Envelope-aware upload
-├── 03-upload-plugin-v3.md       ← V3: Parallel multi-plugin deployment
-├── 04-upload-plugin-custom.md   ← Custom path deployments
-└── 05-configuration.md          ← Auth, headers, fallback config
 ```
 
 ---
