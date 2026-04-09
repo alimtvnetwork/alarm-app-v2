@@ -1,6 +1,6 @@
 # Consistency Report: Fundamentals
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Generated:** 2026-04-09  
 **Health Score:** 100/100 (A+)
 
@@ -10,13 +10,16 @@
 
 | # | File | Version | Status |
 |---|------|---------|--------|
-| 1 | `00-overview.md` | 1.1.0 | ✅ Present |
-| 2 | `01-data-model.md` | 1.3.0 | ✅ Updated (DST/TZ rules, `croner` crate, `chrono-tz`) |
+| 1 | `00-overview.md` | 1.2.0 | ✅ Updated (added 09-test-strategy.md) |
+| 2 | `01-data-model.md` | 1.6.0 | ✅ Updated (Rust AlarmRow, croner v2.0, DB-ORPHAN-001, DB-SETTINGS-001) |
 | 3 | `02-design-system.md` | 1.0.0 | ✅ Present |
-| 4 | `03-file-structure.md` | 1.2.0 | ✅ Updated (`refinery` crate, `V1__` migration naming) |
-| 5 | `04-platform-constraints.md` | 1.1.0 | ✅ Present (30s interval standardized) |
+| 4 | `03-file-structure.md` | 1.4.0 | ✅ Updated (i18n enforcement, test dirs, wake_listener, audio/platform_macos) |
+| 5 | `04-platform-constraints.md` | 1.3.0 | ✅ Updated (WebView CSS, memory budget, error handling) |
 | 6 | `05-platform-strategy.md` | 1.0.0 | ✅ Present |
 | 7 | `06-tauri-architecture-and-framework-comparison.md` | 1.0.0 | ✅ Present |
+| 8 | `07-startup-sequence.md` | 1.1.0 | ✅ Updated (logging strategy BE-LOG-001) |
+| 9 | `08-devops-setup-guide.md` | 1.0.0 | ✅ Present (signing, CI/CD, update keys) |
+| 10 | `09-test-strategy.md` | 1.0.0 | ✅ **New** (4-layer test strategy, DEVOPS-TEST-001) |
 
 ---
 
@@ -27,29 +30,28 @@
 | `00-overview.md` present | ✅ |
 | `99-consistency-report.md` present | ✅ |
 | Lowercase kebab-case naming | ✅ |
-| Numeric prefixes sequential | ✅ |
+| Numeric prefixes sequential (01–09) | ✅ |
 | All files listed in overview | ✅ |
 | No stale cross-references | ✅ |
-| No stale browser/localStorage references | ✅ (all mentions are in comparison context) |
-| Data model v1.3.0 consistent with feature specs | ✅ |
-| `croner` crate referenced in both data model and firing spec | ✅ |
+| Data model v1.6.0 consistent with feature specs | ✅ |
+| `croner` v2.0 pinned in data model and Cargo.toml | ✅ |
 | `refinery` crate referenced in file structure | ✅ |
-| DST rules consistent with UX-DST-001 / UX-TZ-001 issue resolutions | ✅ |
-| 30s interval consistent across platform-constraints and firing spec | ✅ |
-| `06-tauri-architecture` no longer marked Legacy in overview | ✅ |
+| `tracing` logging strategy in startup sequence | ✅ |
+| WebView CSS rules in platform-constraints | ✅ |
+| Memory budget (200MB) in platform-constraints | ✅ |
+| Test strategy cross-references DevOps CI/CD | ✅ |
+| AlarmRow Rust struct consistent with SQLite schema | ✅ |
+| i18n enforcement (eslint-plugin-i18next) in file structure | ✅ |
 
 ---
 
-## v1.4.0 Changes
+## v1.5.0 Changes
 
-- Phase 5 cross-reference validation: 0 broken links across all spec files
-- Removed "Legacy" label from `06-tauri-architecture-and-framework-comparison.md` in overview
-- Verified no stale browser/localStorage references (all in comparison context)
-
-## v1.3.0 Changes
-
-- `01-data-model.md` → v1.3.0: added `croner` crate for cron parsing, DST & Timezone Handling Rules section (`chrono-tz`, spring-forward, fall-back, timezone change)
-- `03-file-structure.md` → v1.2.0: added `refinery` crate for migrations, `V1__initial_schema.sql` naming convention
+- `01-data-model.md` → v1.6.0: added `AlarmRow` Rust struct, `RepeatType` enum, `from_row()`, `days_of_week()` JSON deserializer, `alarm_label_snapshot`/`alarm_time_snapshot` columns on `alarm_events`, `value_type` column + `get_setting<T>()` on `settings`
+- `03-file-structure.md` → v1.4.0: added `src/i18n/` directory, `src/test/`, `src-tauri/tests/`, `wake_listener/` module, `platform_macos.rs`
+- `04-platform-constraints.md` → v1.3.0: added WebView CSS Compatibility section, Memory Budget (200MB), `backdrop-filter` in Platform Support Matrix
+- `07-startup-sequence.md` → v1.1.0: added full logging strategy (tracing + tracing-appender, daily rotation, 5 log levels, frontend forwarding IPC)
+- `09-test-strategy.md` → v1.0.0: **new file** — 4 test layers (Rust unit, Rust integration, frontend Vitest, E2E tauri-driver), coverage targets, CI YAML
 
 ---
 
