@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Updated:** 2026-04-09
 
 ---
@@ -22,6 +22,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 🔴 Open |
 | 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 10 | 🔴 Open |
 | 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 🔴 Open |
+| 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 8 | 🔴 Open |
 
 ---
 
@@ -29,10 +30,10 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 22 |
-| 🟡 Medium | 31 |
-| 🟢 Low | 3 |
-| **Grand Total** | **56** |
+| 🔴 Critical | 26 |
+| 🟡 Medium | 34 |
+| 🟢 Low | 4 |
+| **Grand Total** | **64** |
 
 ---
 
@@ -44,8 +45,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | Discovery Phase 2 | Deep feature file scan | ✅ Done (+10 issues = 33 total) |
 | Discovery Phase 3 | Cross-file logic consistency | ✅ Done (+12 issues = 45 total) |
 | Discovery Phase 4 | UI/UX + frontend state consistency | ✅ Done (+11 issues = 56 total) |
-| Discovery Phase 5 | Coding guideline compliance check | 🔴 Pending |
-| Fix phases | TBD after all discovery complete | 🔴 Pending |
+| Discovery Phase 5 | Coding guideline compliance check | ✅ Done (+8 issues = 64 total) |
+| Fix phases | TBD — ready to plan | 🔴 Pending |
 
 ---
 
@@ -53,11 +54,15 @@ This folder tracks all specification quality issues found during the deep audit 
 
 1. The `sqlx` vs `rusqlite` contradiction (IC-001) infects **8+ code samples** across critical paths: startup, soft-delete, DST timezone change, event purge, optimistic locking, and connection pooling.
 
-2. **State management is the #1 frontend risk.** No React state architecture specified — AI will create inconsistent patterns.
+2. **22 functions exceed the 15-line limit.** Some are extreme (51, 55, 57, 98 lines). AI will copy these verbatim, violating the linter on first run.
 
-3. **Every TS interface in every feature file uses camelCase.** The PascalCase mandate means ALL interfaces across all 16 feature files need conversion. This is systemic.
+3. **State management is the #1 frontend risk.** No React state architecture specified — AI will guess.
 
-4. **`02-alarm-scheduling.md` is severely outdated** (v1.0.0) and contradicts the data model's `RepeatPattern` system.
+4. **Every TS interface in every feature file uses camelCase.** The PascalCase mandate means ALL interfaces across all 16 feature files need conversion. This is systemic.
+
+5. **`02-alarm-scheduling.md` is severely outdated** (v1.0.0) and contradicts the data model's `RepeatPattern` system.
+
+6. **Boolean fields missing `Is`/`Has` prefix** in both TS interfaces AND Rust structs — affects serialization chain end-to-end.
 
 ---
 
@@ -69,6 +74,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | PascalCase Key Standard | `spec/02-coding-guidelines/03-coding-guidelines-spec/01-cross-language/11-key-naming-pascalcase.md` |
 | Database Conventions | `spec/02-coding-guidelines/03-coding-guidelines-spec/10-database-conventions/01-naming-conventions.md` |
 | Boolean Principles | `spec/02-coding-guidelines/03-coding-guidelines-spec/01-cross-language/02-boolean-principles/01-naming-prefixes.md` |
+| Function Length Limit | Linter CODE RED rules (max 15 lines/function) |
 
 ---
 
