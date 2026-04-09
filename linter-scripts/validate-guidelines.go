@@ -388,7 +388,7 @@ func checkGoSpecific(lines []string, path string) []Violation {
 				Severity: "CODE-RED",
 				Message:  "String-based enums forbidden. Use `type Variant byte` with iota.",
 				CodeSnippet: truncate(stripped, 120),
-		})
+			})
 		}
 
 		// CODE-RED-008: No raw string error codes — use apperrtype enum

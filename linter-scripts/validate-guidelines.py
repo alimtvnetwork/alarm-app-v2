@@ -893,7 +893,7 @@ def check_generic_file_errors(lines: List[str], filepath: str, lang: str) -> Lis
 # Main Validation
 # ═══════════════════════════════════════════════════════════════════════
 
-def validate_file(filepath: str) -> List[Violation]:
+def validate_file(filepath: str, max_lines: int = 15) -> List[Violation]:
     lang = detect_language(filepath)
 
     if not lang:
@@ -926,7 +926,7 @@ def validate_file(filepath: str) -> List[Violation]:
     violations.extend(check_boolean_naming(lines, filepath, lang))
     violations.extend(check_magic_strings(lines, filepath, lang))
     violations.extend(check_magic_numbers(lines, filepath, lang))
-    violations.extend(check_function_length(lines, filepath, lang))
+    violations.extend(check_function_length(lines, filepath, lang, max_lines))
     violations.extend(check_variable_mutation(lines, filepath, lang))
     violations.extend(check_file_length(lines, filepath))
     violations.extend(check_parameter_count(lines, filepath, lang))
@@ -963,7 +963,7 @@ def main():
     for ext in extensions:
         for filepath in glob.glob(os.path.join(args.path, "**", ext), recursive=True):
             report.total_files += 1
-            violations = validate_file(filepath)
+            violations = validate_file(filepath, max_lines=args.max_lines)
 
             for v in violations:
                 report.violations.append(v)
