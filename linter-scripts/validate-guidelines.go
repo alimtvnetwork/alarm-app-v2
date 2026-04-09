@@ -674,6 +674,8 @@ func checkStyleRules(lines []string, path string) []Violation {
 
 func shouldSkip(path string) bool {
 	normalized := strings.ReplaceAll(path, "\\", "/")
+	// NOTE: _test.go is also excluded in .golangci.yml exclude-rules.
+	// Both tools skip independently — this is intentional, not a bug.
 	skipPatterns := []string{
 		"vendor/", "node_modules/", "dist/", ".min.", "_test.go",
 		"components/ui/", // Auto-generated shadcn/ui — not business logic
