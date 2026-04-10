@@ -1,6 +1,6 @@
 # Alarm Groups
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Updated:** 2026-04-10
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -83,13 +83,15 @@ Add `IsPreviousEnabled INTEGER` column to the `Alarms` table. This stores each a
 ```typescript
 interface CreateGroupPayload {
   Name: string;       // Max 50 chars, trimmed, required
-  SortOrder: number;  // Position in list (0-based). Backend assigns next available if omitted
+  Color?: string;     // Hex color (e.g., "#FF5733"). Defaults to '#6366F1' if omitted
+  Position?: number;  // Position in list (0-based). Backend assigns next available if omitted
 }
 
 interface UpdateGroupPayload {
   AlarmGroupId: string;  // Required — identifies the group to update
   Name?: string;         // Max 50 chars, trimmed
-  SortOrder?: number;    // New position in list
+  Color?: string;        // Hex color
+  Position?: number;     // New position in list
 }
 ```
 
@@ -108,18 +110,17 @@ pub fn create_group(
     // 1. Validate
     let name = payload.name.trim();
     if name.is_empty() || name.len() > 50 {
-        return Err(AlarmAppError::ValidationFailed {
-            field: "Name".into(),
-            message: "Group name must be 1–50 characters".into(),
-        });
+        return Err(AlarmAppError::Validation(
+            "Group name must be 1–50 characters".into(),
+        ));
     }
 
     // 2. DB insert
     let db = state.db.lock().expect("DB lock");
     let group_id = uuid::Uuid::new_v4().to_string();
     db.execute(
-        "INSERT INTO AlarmGroups (AlarmGroupId, Name) VALUES (?1, ?2)",
-        params![&group_id, name],
+        "INSERT INTO AlarmGroups (AlarmGroupId, Name, Color, Position) VALUES (?1, ?2, ?3, ?4)",
+        params![&group_id, name, &payload.color.unwrap_or_default(), &payload.position.unwrap_or(0)],
     )?;
 
     // 3. Return created group
@@ -129,10 +130,10 @@ pub fn create_group(
 }
 ```
 
-**Frontend call pattern:** Use `safeInvoke` from `02-design-system.md`:
+**Frontend call pattern:** Use `safeInvoke` from `04-platform-constraints.md`:
 
 ```typescript
-const group = await safeInvoke<AlarmGroup>("create_group", { Name: "Workday", SortOrder: 0 });
+const group = await safeInvoke<AlarmGroup>("create_group", { Name: "Workday", Color: "#FF5733", Position: 0 });
 ```
 
 ### Edge Cases
