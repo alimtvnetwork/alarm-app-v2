@@ -7,40 +7,55 @@ type: feature
 ## Audit Status
 
 - **Total issues:** 77
-- **Open:** 29
-- **Resolved:** 48
+- **Open:** 25
+- **Resolved:** 52
 - **Discovery phases:** 6 complete
-- **Fix phases:** 15 complete (1–15)
+- **Fix phases:** 15 complete (all planned phases done) + stale status cleanup
 
 ## Issue Distribution
 
 | Category | Count | Open | Resolved |
 |----------|:-----:|:----:|:--------:|
-| Naming Violations | 18 | 3 | 15 |
+| Naming Violations | 18 | 0 | 18 |
 | Internal Contradictions | 11 | 3 | 8 |
 | Structural Issues | 5 | 5 | 0 |
-| Content Gaps | 12 | 8 | 4 |
-| AI Handoff Risks | 4 | 2 | 2 |
+| Content Gaps | 12 | 7 | 5 |
+| AI Handoff Risks | 4 | 1 | 3 |
 | Logic Consistency | 11 | 4 | 7 |
-| UI/UX Consistency | 4 | 2 | 2 |
+| UI/UX Consistency | 4 | 3 | 1 |
 | Guideline Compliance | 12 | 2 | 10 |
 
-## All Fix Phases Complete (1–15)
+## All 15 Fix Phases Complete
 
-All 15 planned fix phases are done. Remaining 29 open issues need new fix phases.
+## Remaining 25 Open Issues
 
-## Remaining Open Issues (29)
-
-| Category | Open Issues |
-|----------|-------------|
-| Structural (5) | SI-001–005 |
-| Content Gaps (8) | CG-002–005, CG-008–011 |
-| Logic Consistency (4) | LC-002, LC-005–007 |
-| Naming Violations (3) | NV-013, NV-015, NV-016 |
-| Internal Contradictions (3) | IC-002–004 |
-| AI Handoff Risks (2) | AH-003, AH-004 |
-| UI/UX Consistency (2) | UX-008, UX-011 |
-| Guideline Compliance (2) | GC-004, GC-005 |
+| ID | Severity | Description |
+|----|:--------:|-------------|
+| IC-002 | 🔴 | Task count contradictions (94 vs 62) |
+| IC-003 | 🟡 | TS Alarm missing IsPreviousEnabled |
+| IC-004 | 🟡 | alarm_events schema missing resolved columns |
+| SI-001 | 🟡 | reference/ folder missing numeric prefix |
+| SI-002 | 🟡 | Reference files missing Version/Updated headers |
+| SI-003 | 🟢 | Missing Updated header on readiness report |
+| SI-004 | 🟡 | Files 09–13 at module root without subfolder |
+| SI-005 | 🟡 | reference/ missing 00-overview.md |
+| CG-001 | 🟡 | No frontend state management pattern |
+| CG-002 | 🔴 | DST hardcoded to US 3:00 AM |
+| CG-003 | 🟡 | Error enum incomplete |
+| CG-008 | 🟡 | Scheduling spec uses stale recurringDays |
+| CG-009 | 🟡 | Settings page component not specified |
+| CG-010 | 🟢 | No toast component in file structure |
+| CG-011 | 🟡 | 02-alarm-scheduling.md severely outdated |
+| AH-003 | 🟡 | Contradictory task lists |
+| LC-002 | 🟡 | SnoozeState.NextFireTime vs SnoozeUntil mismatch |
+| LC-006 | 🔴 | Spring-forward DST hardcoded to 3:00 AM |
+| LC-008 | 🔴 | currently_firing HashSet not thread-safe |
+| LC-010 | 🟡 | Snooze crash recovery not in startup sequence |
+| UX-001 | 🔴 | No React state management pattern |
+| UX-002 | 🔴 | AlarmOverlay lifecycle not specified |
+| UX-003 | 🟡 | Alarm queue state ownership ambiguous |
+| GC-004 | 🟡 | Magic numbers in code samples |
+| GC-005 | 🟡 | .unwrap() in non-test code |
 
 ## Canonical Location
 
