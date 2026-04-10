@@ -265,9 +265,9 @@ async function onUndo(token: string) {
   if (idx === -1) return; // Already expired
 
   const entry = undoStack.splice(idx, 1)[0];
-  clearTimeout(entry.timerId);
+  clearTimeout(entry.TimerId);
 
-  await safeInvoke("undo_delete_alarm", { undoToken: token });
+  await safeInvoke("undo_delete_alarm", { UndoToken: token });
 }
 ```
 

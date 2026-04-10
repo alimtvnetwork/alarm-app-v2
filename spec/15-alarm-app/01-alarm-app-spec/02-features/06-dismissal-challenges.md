@@ -94,13 +94,13 @@ Each alarm can have an optional challenge:
 ```typescript
 interface AlarmChallenge {
   Type: ChallengeType;
-  Difficulty?: ChallengeDifficulty; // math only
-  ShakeCount?: number; // shake only
-  StepCount?: number;  // steps only
+  Difficulty: ChallengeDifficulty | null; // math only
+  ShakeCount: number | null; // shake only
+  StepCount: number | null;  // steps only
 }
 ```
 
-> **Note:** This interface is a convenience wrapper for the frontend. The data is stored as flat columns on the `Alarms` table (`ChallengeType`, `ChallengeDifficulty`, `ChallengeShakeCount`, `ChallengeStepCount`). See `01-fundamentals/01-data-model.md`.
+> **Note:** This interface is a documentation-only convenience wrapper for the frontend. Do NOT create this as a separate interface in code. The data is stored as flat columns on the `Alarms` table (`ChallengeType`, `ChallengeDifficulty`, `ChallengeShakeCount`, `ChallengeStepCount`). See `01-fundamentals/01-data-model.md`.
 
 ---
 

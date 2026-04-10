@@ -57,13 +57,13 @@ Persistent log of every alarm event (fired, snoozed, dismissed, missed) with fil
 
 ```typescript
 interface HistoryFilter {
-  StartDate?: string;    // ISO 8601
-  EndDate?: string;      // ISO 8601
-  GroupId?: string;
-  AlarmId?: string;
-  EventType?: AlarmEventType;
-  SortBy?: SortField;
-  SortOrder?: SortOrder;
+  StartDate: string | null;    // ISO 8601
+  EndDate: string | null;      // ISO 8601
+  GroupId: string | null;
+  AlarmId: string | null;
+  EventType: AlarmEventType | null;
+  SortBy: SortField | null;
+  SortOrder: SortOrder | null;
 }
 ```
 

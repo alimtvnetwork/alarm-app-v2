@@ -65,7 +65,7 @@ interface RepeatPattern {
 ### Repeat Type Selector
 
 - Segmented control or dropdown: Once | Daily | Weekdays | Weekends | Custom | Interval | Cron
-- "Weekdays" and "Weekends" are shortcuts that set `Type = "weekly"` with pre-filled `DaysOfWeek`
+- "Weekdays" and "Weekends" are shortcuts that set `Type = RepeatType.Weekly` with pre-filled `DaysOfWeek`
 - "Interval" shows a numeric input for minutes (min: 1, max: 1440)
 - "Cron" shows a text input with validation (P2 — hidden behind advanced toggle)
 
@@ -131,7 +131,7 @@ Optional integration with a holiday calendar API.
 
 - [ ] Day selection via pill toggles for Mon–Sun
 - [ ] Shortcut buttons: Weekdays, Weekends, Daily
-- [ ] One-time alarms (`Type = "once"`) auto-disable after firing
+- [ ] One-time alarms (`Type = RepeatType.Once`) auto-disable after firing
 - [ ] Recurring alarms fire every matching day/interval indefinitely
 - [ ] "Alarm in X hours Y minutes" countdown updates in real time
 - [ ] `NextFireTime` recomputed correctly after every fire event (DST-aware)

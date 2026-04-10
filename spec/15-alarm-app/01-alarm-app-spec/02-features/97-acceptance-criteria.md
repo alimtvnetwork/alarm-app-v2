@@ -33,7 +33,7 @@
 
 - [ ] Day selection via pill toggles for Mon–Sun
 - [ ] Shortcut buttons: Weekdays, Weekends, Daily
-- [ ] One-time alarms (`Type = "once"`) auto-disable after firing
+- [ ] One-time alarms (`Type = RepeatType.Once`) auto-disable after firing
 - [ ] Recurring alarms fire every matching day/interval indefinitely
 - [ ] "Alarm in X hours Y minutes" countdown updates in real time
 - [ ] `NextFireTime` recomputed correctly after every fire event (DST-aware)
