@@ -53,13 +53,13 @@ Detailed Tauri 2.x architecture for the Alarm App — Rust backend design, IPC c
 
 | Module | Responsibility | Key Crates / APIs |
 |--------|---------------|-------------------|
-| **Alarm Engine** | 1-second interval timer, time matching, missed alarm detection | `tokio`, `chrono` |
+| **Alarm Engine** | 30-second interval timer, time matching, missed alarm detection | `tokio`, `chrono` |
 | **Audio Manager** | Sound playback, volume ramp, looping, stop | `rodio`, Core Audio (macOS), AAudio (Android) |
 | **Notification Manager** | OS-native notifications for alarm firing, bedtime reminders | `tauri-plugin-notification` |
-| **Storage (SQLite)** | CRUD for alarms, groups, settings, snooze state, analytics events | `tauri-plugin-sql` (SQLite) |
+| **Storage (SQLite)** | CRUD for alarms, groups, settings, snooze state, analytics events | `rusqlite`, `refinery` |
 | **System Tray** | Menu bar icon, quick alarm toggle, next alarm display | `tauri-plugin-system-tray` |
-| **Config Manager** | Read/write settings table, theme preference, sound preferences | SQLite `settings` table |
-| **Snooze Tracker** | Active snooze state, countdown, auto-fire on expiry | SQLite `snooze_state` table |
+| **Config Manager** | Read/write Settings table, theme preference, sound preferences | SQLite `Settings` table |
+| **Snooze Tracker** | Active snooze state, countdown, auto-fire on expiry | SQLite `SnoozeState` table |
 | **Power Manager** | Prevent sleep during alarm, wake from sleep | Platform power APIs |
 | **Export/Import** | JSON serialization, file dialog, merge/replace logic | `tauri-plugin-dialog`, `serde_json` |
 
@@ -73,7 +73,7 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 |---------|-----------|---------|---------|
 | `create_alarm` | FE → BE | `CreateAlarmPayload` | `Alarm` |
 | `update_alarm` | FE → BE | `UpdateAlarmPayload` | `Alarm` |
-| `delete_alarm` | FE → BE | `{ AlarmId: string }` | `void` |
+| `delete_alarm` | FE → BE | `{ AlarmId: string }` | `{ UndoToken: string }` |
 | `get_alarms` | FE → BE | `void` | `Alarm[]` |
 | `toggle_alarm` | FE → BE | `{ AlarmId: string, IsEnabled: boolean }` | `void` |
 
@@ -101,9 +101,9 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
 | `get_settings` | FE → BE | `void` | `Settings` |
-| `update_setting` | FE → BE | `{ key: string, value: string }` | `void` |
-| `export_data` | FE → BE | `void` | `string` (file path) |
-| `import_data` | FE → BE | `{ mode: "merge" \| "replace" }` | `ImportResult` |
+| `update_setting` | FE → BE | `{ Key: string, Value: string }` | `void` |
+| `export_data` | FE → BE | `{ Format: string, Scope: string, AlarmIds?: string[] }` | `string` (file path) |
+| `import_data` | FE → BE | `{ Mode: "Merge" \| "Replace" }` | `ImportResult` |
 | `get_next_alarm` | FE → BE | `void` | `NextAlarmInfo \| null` |
 
 #### Events (Backend → Frontend)
