@@ -85,11 +85,11 @@ Explicitly states scheduling is handled by `create_alarm`/`update_alarm`. This i
 
 | ID | Severity | Description | Status |
 |----|----------|-------------|--------|
-| IPC-001 | 🔴 Critical | 8 commands missing from architecture registry | Open |
-| IPC-002 | 🟡 Medium | 2 orphaned commands in registry (no feature spec) | Open |
-| IPC-003 | 🟢 Low | 3 intentional duplicates across snooze specs | Open |
-| IPC-004 | 🟡 Medium | `update_setting` generic key ambiguity vs `set_theme` | Open |
-| IPC-005 | 🟡 Medium | `12-smart-features.md` missing IPC command table | Open |
+| IPC-001 | 🔴 Critical | 8 commands missing from architecture registry | ✅ Resolved — added to `06-tauri-architecture-and-framework-comparison.md` |
+| IPC-002 | 🟡 Medium | 2 orphaned commands in registry (no feature spec) | ✅ Resolved — `get_settings` clarified as full Settings loader; `log_from_frontend` is utility (no feature spec needed) |
+| IPC-003 | 🟢 Low | 3 intentional duplicates across snooze specs | ✅ Resolved — added cross-reference notes to both `03-alarm-firing.md` and `04-snooze-system.md` |
+| IPC-004 | 🟡 Medium | `update_setting` generic key ambiguity vs `set_theme` | ✅ Resolved — `get_theme`/`set_theme` documented as convenience wrappers around Settings table; note added to registry and `09-theme-system.md` |
+| IPC-005 | 🟡 Medium | `12-smart-features.md` missing IPC command table | ✅ Resolved — added 4 commands (`create_webhook`, `delete_webhook`, `test_webhook`, `get_weather_briefing`) with payload interfaces |
 | IPC-006 | ℹ️ Info | `02-alarm-scheduling.md` no IPC (by design) | Closed |
 
 **New issues this phase:** 5 open (1 critical, 3 medium, 1 low)  

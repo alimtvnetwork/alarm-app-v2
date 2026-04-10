@@ -55,7 +55,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 39 | `39-discovery-phase-27.md` | Discovery Phase 27 — Post-Fix Regression Scan | 12 | 0 | 12 |
 | 40 | `40-fix-phase-u-comprehensive.md` | Fix Phase U — Comprehensive fix of 81 issues from Phases 22–27 | 81 resolved | 0 | 81 |
 | 41 | `41-discovery-phase-28.md` | Discovery Phase 28 — Post-Fix-U Regression Scan | 9 | 0 | 9 |
-| 47 | `47-discovery-phase-29.md` | Discovery Phase 29 — IPC Registry Completeness Audit | 5 | 5 | 0 |
+| 47 | `47-discovery-phase-29.md` | Discovery Phase 29 — IPC Registry Completeness Audit | 5 | 0 | 5 |
 
 ---
 
@@ -67,8 +67,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 251 |
 | 🟢 Low | 68 |
 | **Grand Total** | **410** |
-| **Open** | **5** |
-| **Resolved** | **405** |
+| **Open** | **0** |
+| **Resolved** | **410** |
 
 ---
 
