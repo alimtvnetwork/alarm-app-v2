@@ -93,6 +93,7 @@ fn resolve_local_to_utc(date: NaiveDate, time: NaiveTime, tz: &Tz) -> Option<Dat
         }
     }
 }
+```
 
 ### 3. SQLite Booleans — Integer Conversion
 

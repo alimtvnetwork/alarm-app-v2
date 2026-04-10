@@ -110,7 +110,7 @@ fn validate_file_size(canonical: &Path) -> Result<(), AlarmAppError> {
     let metadata = std::fs::metadata(canonical)
         .map_err(|_| AlarmAppError::FileNotFound { path: canonical.to_string_lossy().to_string() })?;
     if metadata.len() > MAX_SOUND_FILE_SIZE {
-        return Err(AlarmAppError::FileTooLarge { max_mb: 10 });
+        return Err(AlarmAppError::SoundFileTooLarge { size_bytes: metadata.len(), max_bytes: MAX_SOUND_FILE_SIZE });
     }
     Ok(())
 }

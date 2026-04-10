@@ -23,7 +23,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 11 | 0 | 11 |
 | 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 0 | 4 |
 | 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 0 | 12 |
-| 9 | `09-discovery-phase-7.md` | Discovery Phase 7 — Regression Scan | 18 | 3 | 15 |
+| 9 | `09-discovery-phase-7.md` | Discovery Phase 7 — Regression Scan | 18 | 0 | 18 |
 
 ---
 
@@ -35,8 +35,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 54 |
 | 🟢 Low | 8 |
 | **Grand Total** | **95** |
-| **Open** | **3** |
-| **Resolved** | **92** |
+| **Open** | **0** |
+| **Resolved** | **95** |
 
 ---
 
@@ -92,8 +92,8 @@ This folder tracks all specification quality issues found during the deep audit 
 6. ~~`02-alarm-scheduling.md` severely outdated~~ **✅ FIXED**
 7. ~~Root `00-overview.md` Data Model section camelCase~~ **✅ FIXED (Fix 21)**
 8. ~~`04-snooze-system.md` SnoozeState interface contradicts data model~~ **✅ FIXED (Fix 22)**
-9. **NEW:** Error enum incomplete — `RestrictedPath` variant missing (D7-NEW-010)
-10. **NEW:** AI cheat sheet has broken markdown — unclosed code fence (D7-NEW-012)
+9. ~~Error enum incomplete — `RestrictedPath` variant missing~~ **✅ FIXED (Fix 26)**
+10. ~~AI cheat sheet broken markdown — unclosed code fence~~ **✅ FIXED (Fix 27)**
 
 ---
 

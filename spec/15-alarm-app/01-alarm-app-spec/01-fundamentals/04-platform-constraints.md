@@ -156,6 +156,9 @@ pub enum AlarmAppError {
     #[error("Sound file too large: {size_bytes} bytes (max {max_bytes})")]
     SoundFileTooLarge { size_bytes: u64, max_bytes: u64 },
 
+    #[error("Restricted path: cannot use files from system directories")]
+    RestrictedPath,
+
     #[error("Concurrent modification: row was changed by another operation")]
     ConcurrentModification,
 
