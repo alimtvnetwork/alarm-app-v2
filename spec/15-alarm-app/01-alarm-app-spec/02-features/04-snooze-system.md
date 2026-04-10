@@ -40,7 +40,7 @@ When `MaxSnoozeCount = 0`, the Snooze button is never shown — the user must di
 interface SnoozeState {
   AlarmId: string;
   SnoozeCount: number;
-  NextFireTime: string; // ISO 8601
+  SnoozeUntil: string; // ISO 8601
 }
 ```
 
@@ -58,7 +58,7 @@ Stored in the `SnoozeState` SQLite table. Cleared on dismiss.
 4. **Exact-time snooze trigger:** Rust spawns `tokio::time::sleep_until(snooze_expiry)` per active snooze — does NOT rely on the 30s polling interval
 5. When `SnoozeCount >= MaxSnoozeCount`, "Snooze" button is hidden — only "Dismiss" remains
 6. Remaining snooze count displayed: "Snooze (2 remaining)"
-7. Each snooze event logged in `AlarmEvents` with `EventType = 'Snoozed'`
+7. Each snooze event logged in `AlarmEvents` with `Type = 'snoozed'`
 
 ### Snooze Timer Implementation
 
