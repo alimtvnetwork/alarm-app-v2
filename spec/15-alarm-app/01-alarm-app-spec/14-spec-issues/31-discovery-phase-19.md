@@ -156,9 +156,9 @@ Files: `01-data-model.md`, `03-alarm-firing.md`, `04-snooze-system.md`
 **P19-012 to P19-019** (inline union types in interfaces/IPC tables)  
 Files: `02-alarm-scheduling.md`, `06-tauri-architecture-and-framework-comparison.md`
 
-### Fix Phase M — camelCase + Naming Fixes (10 issues)
+### Fix Phase M — camelCase + Naming Fixes (10 issues) ✅ RESOLVED
 **P19-020 to P19-029** (PascalCase inconsistencies + naming mismatches)  
-Files: `01-alarm-crud.md`, `06-tauri-architecture*.md`, `13-analytics.md`, `03-file-structure.md`, `07-startup-sequence.md`
+Files: `01-alarm-crud.md`, `06-tauri-architecture-and-framework-comparison.md`, `13-analytics.md`, `03-file-structure.md`, `07-startup-sequence.md`, `03-alarm-firing.md`
 
 ### Fix Phase N — Serde + Structural + Prose (5 issues)
 **P19-030 to P19-034** (missing serde, duplicate section, prose casing)  

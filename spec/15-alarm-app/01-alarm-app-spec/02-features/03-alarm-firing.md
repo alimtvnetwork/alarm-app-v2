@@ -1,6 +1,6 @@
 # Alarm Firing
 
-**Version:** 1.9.0  
+**Version:** 1.10.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
