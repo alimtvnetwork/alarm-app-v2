@@ -846,6 +846,72 @@ INSERT INTO Settings (Key, Value, ValueType) VALUES
 
 ---
 
+## Boolean Semantic Inverses
+
+> **Resolves P14-014.** Per `12-no-negatives.md`, every boolean field on domain objects must have a named semantic inverse. AI agents MUST use these instead of raw `!` negation.
+
+### Alarm
+
+| Boolean Field | Positive Guard | Semantic Inverse | Use Instead Of |
+|--------------|---------------|------------------|---------------|
+| `IsEnabled` | `alarm.IsEnabled` | `alarm.isDisabled()` | `!alarm.IsEnabled` |
+| `IsVibrationEnabled` | `alarm.IsVibrationEnabled` | `alarm.isVibrationOff()` | `!alarm.IsVibrationEnabled` |
+| `IsGradualVolume` | `alarm.IsGradualVolume` | `alarm.isFixedVolume()` | `!alarm.IsGradualVolume` |
+
+### Rust Implementation
+
+```rust
+impl AlarmRow {
+    pub fn is_disabled(&self) -> bool { !self.is_enabled }
+    pub fn is_vibration_off(&self) -> bool { !self.is_vibration_enabled }
+    pub fn is_fixed_volume(&self) -> bool { !self.is_gradual_volume }
+}
+```
+
+### TypeScript Implementation
+
+```typescript
+// Add to Alarm type utilities (e.g., lib/alarm-utils.ts)
+const isDisabled = (alarm: Alarm): boolean => !alarm.IsEnabled;
+const isVibrationOff = (alarm: Alarm): boolean => !alarm.IsVibrationEnabled;
+const isFixedVolume = (alarm: Alarm): boolean => !alarm.IsGradualVolume;
+```
+
+### AlarmGroup
+
+| Boolean Field | Positive Guard | Semantic Inverse |
+|--------------|---------------|------------------|
+| `IsEnabled` | `group.IsEnabled` | `group.isDisabled()` |
+
+**Rule:** The `!` operator is only used INSIDE the semantic inverse implementation. All call sites use the named method.
+
+---
+
+## Single Database Decision
+
+> **Resolves P14-015.** Documents why the alarm app uses a single SQLite file instead of the [Split DB Architecture](../../04-split-db-architecture/00-overview.md).
+
+### Decision
+
+The alarm app uses a **single `alarm-app.db` SQLite file** for all tables (Alarms, AlarmGroups, Settings, SnoozeState, AlarmEvents).
+
+### Rationale
+
+| Factor | Split DB | Single DB (chosen) |
+|--------|----------|-------------------|
+| **Complexity** | 3-4 connection pools, cross-DB joins impossible | One connection, simple queries |
+| **Data volume** | Justified at 10K+ rows/table | Alarm app: <1000 alarms, <100K events |
+| **Migration** | Separate migration tracks per DB | Single `refinery` migration chain |
+| **Backup** | Must coordinate across files | Single file copy |
+| **WAL mode** | Per-DB WAL files | One WAL file |
+| **Atomic cross-table ops** | Requires distributed transactions | Native SQLite transactions |
+
+### When to Reconsider
+
+If the app ever adds: cloud sync (separate sync queue DB), multi-user support (separate auth DB), or analytics growing beyond 1M rows (separate analytics DB). None of these are in scope for v1.
+
+---
+
 ## Cross-References
 
 | Reference | Location |
@@ -858,3 +924,6 @@ INSERT INTO Settings (Key, Value, ValueType) VALUES
 | Alarm Firing | `../02-features/03-alarm-firing.md` |
 | Snooze System | `../02-features/04-snooze-system.md` |
 | App Issues | `../03-app-issues/04-database-issues.md` → DB-MIGRATE-001 |
+| Split DB Architecture | `../../04-split-db-architecture/00-overview.md` |
+| Seedable Config Architecture | `../../05-seedable-config-architecture/00-overview.md` |
+| Coding Guidelines | `../../02-coding-guidelines/03-coding-guidelines-spec/` |
