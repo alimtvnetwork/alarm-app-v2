@@ -1,6 +1,6 @@
 # Platform Constraints
 
-**Version:** 1.6.0  
+**Version:** 1.7.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -75,9 +75,9 @@ Documents platform-specific constraints and mitigations for the Alarm App as a c
 |-------|--------|
 | **Problem** | Data must persist across app restarts. No cloud dependency. |
 | **Mitigation** | SQLite database stored in OS app data directory. Managed via Tauri SQL plugin. |
-| **macOS** | `~/Library/Application Support/com.alarmapp/` |
-| **Windows** | `%APPDATA%/com.alarmapp/` |
-| **Linux** | `~/.local/share/com.alarmapp/` |
+| **macOS** | `~/Library/Application Support/com.alarm-app/` |
+| **Windows** | `%APPDATA%/com.alarm-app/` |
+| **Linux** | `~/.local/share/com.alarm-app/` |
 
 ### Vibration / Haptics
 

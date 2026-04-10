@@ -68,15 +68,15 @@
 ## 07 — Startup Sequence (`07-startup-sequence.md`)
 
 - [ ] 9-step startup sequence executes in exact order
-- [ ] Step 1: Init logging with daily rotating file appender (7-day retention)
+- [ ] Step 1: Resolve app data directory (`com.alarm-app`)
 - [ ] Step 2: Open SQLite connection (create file if absent)
 - [ ] Step 3: Run `refinery` migrations
-- [ ] Step 4: Enable WAL mode + `busy_timeout=5000`
-- [ ] Step 5: Load settings into `ConfigManager`
-- [ ] Step 6: Start alarm engine (30s interval background thread)
-- [ ] Step 7: Register platform wake listeners (macOS/Windows/Linux)
-- [ ] Step 8: Check for missed alarms + cleanup stale soft-deletes + purge old events
-- [ ] Step 9: Create Tauri window + system tray
+- [ ] Step 4: Enable WAL mode + `busy_timeout=5000` + `foreign_keys=ON`
+- [ ] Step 5: Load settings into memory, apply defaults for missing keys
+- [ ] Step 6: Parallel init — system tray + logging (daily rotating, 7-day retention) + WebView/React
+- [ ] Step 7: Start alarm engine (30s interval background thread)
+- [ ] Step 8: Missed alarm check + snooze crash recovery + cleanup stale soft-deletes + purge old events
+- [ ] Step 9: Update tray (next alarm), surface missed alarms, app ready
 - [ ] Startup completes in < 750ms on target hardware
 - [ ] Each step has specific error handling (no unhandled panics except intentional startup `expect()`)
 
