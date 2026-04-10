@@ -618,12 +618,6 @@ pub fn purge_old_events(conn: &Connection) {
             tracing::warn!(error = %e, "purge_old_events: DELETE failed");
         }
     }
-
-    tracing::info!(
-        retention_days = retention_days,
-        cutoff = %cutoff,
-        "Purged old alarm events"
-    );
 }
 ```
 

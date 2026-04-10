@@ -1,6 +1,6 @@
 # Alarm CRUD
 
-**Version:** 1.10.0  
+**Version:** 1.11.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
