@@ -1,9 +1,12 @@
 # Platform Strategy
+ 
+> ⚠️ **SUPERSEDED** — This document is a legacy reference. The authoritative Tauri architecture is in `06-tauri-architecture-and-framework-comparison.md`. This file is retained for framework evaluation context only.
 
 **Version:** 1.0.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
-**Ambiguity:** Low
+**Ambiguity:** Low  
+**Status:** Legacy (superseded by `06-tauri-architecture-and-framework-comparison.md`)
 
 ---
 

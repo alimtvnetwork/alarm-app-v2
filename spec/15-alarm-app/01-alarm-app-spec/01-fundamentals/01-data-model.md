@@ -362,8 +362,8 @@ pub fn purge_old_events(conn: &Connection) {
 | `TimeFormat` | `"12h" \| "24h"` | Clock display format |
 | `DefaultSnoozeDuration` | `number` | Default snooze minutes for new alarms |
 | `DefaultSound` | `string` | Default sound for new alarms |
-| `AutoLaunch` | `"true" \| "false"` | Start on system boot |
-| `MinimizeToTray` | `"true" \| "false"` | Keep running when window closed |
+| `AutoLaunch` | `boolean` | Start on system boot (ValueType: `"boolean"`, stored as `"true"`/`"false"`) |
+| `MinimizeToTray` | `boolean` | Keep running when window closed (ValueType: `"boolean"`, stored as `"true"`/`"false"`) |
 | `Language` | `string` | i18n locale code (default: "en") |
 | `EventRetentionDays` | `number` | Days to keep `AlarmEvents` (default: 90) |
 
