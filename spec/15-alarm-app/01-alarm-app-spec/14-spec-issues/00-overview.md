@@ -109,6 +109,10 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase F** | **PascalCase, atomic tasks, semantic inverses, cross-references** | **✅ Done (13 resolved, 7 open)** |
 | **Fix Phase I** | **Acceptance criteria rollups for features/ and fundamentals/** | **✅ Done (2 resolved, 0 open)** |
 | **Fix Phase J** | **Final 7: ARIA, 0=disabled framing, personalization IPC, magic strings, exemption** | **✅ Done (7 resolved, 0 open)** |
+| **Fix Phase K** | **SQL defaults PascalCase + critical magic strings (11 issues)** | **✅ Done (11 resolved)** |
+| **Fix Phase L** | **Magic string union types in IPC/interfaces (8 issues)** | **✅ Done (8 resolved)** |
+| **Fix Phase M** | **camelCase + naming mismatches (10 issues)** | **✅ Done (10 resolved)** |
+| **Fix Phase N** | **Serde attributes, duplicate cross-refs, prose casing (5 issues)** | **✅ Done (5 resolved, 0 open)** |
 
 ---
 
