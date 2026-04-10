@@ -1,6 +1,6 @@
 # Alarm CRUD
 
-**Version:** 1.10.0  
+**Version:** 1.11.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -62,10 +62,12 @@ Users can create new alarms by setting a time (hour and minute), optional date, 
 - Undo IPC: `invoke("undo_delete_alarm", { UndoToken })`
 
 ```rust
+const UNDO_TIMEOUT_SECS: u64 = 5;
+
 // Soft-delete timer
 pub fn schedule_permanent_delete(conn: Arc<Mutex<Connection>>, alarm_id: String, undo_token: String) {
     tokio::spawn(async move {
-        tokio::time::sleep(Duration::from_secs(5)).await;
+        tokio::time::sleep(Duration::from_secs(UNDO_TIMEOUT_SECS)).await;
 
         // Only delete if still soft-deleted (not undone)
         let db = conn.lock().expect("DB lock poisoned");
@@ -76,18 +78,30 @@ pub fn schedule_permanent_delete(conn: Arc<Mutex<Connection>>, alarm_id: String,
             Ok(rows) if rows > 0 => {
                 tracing::info!(alarm_id = %alarm_id, "Permanently deleted alarm");
             }
-            _ => {}
+            Ok(_) => {
+                tracing::debug!(alarm_id = %alarm_id, "schedule_permanent_delete: no rows affected (alarm was undone or missing)");
+            }
+            Err(e) => {
+                tracing::warn!(alarm_id = %alarm_id, error = %e, "schedule_permanent_delete: DELETE failed");
+            }
         }
     });
 }
 
 // Startup cleanup (in startup sequence Step 8)
 pub fn cleanup_stale_soft_deletes(conn: &Connection) {
-    let cutoff = Utc::now() - chrono::Duration::seconds(5);
-    conn.execute(
+    let cutoff = Utc::now() - chrono::Duration::seconds(UNDO_TIMEOUT_SECS as i64);
+    match conn.execute(
         "DELETE FROM Alarms WHERE DeletedAt IS NOT NULL AND DeletedAt < ?1",
         params![cutoff.to_rfc3339()],
-    ).ok();
+    ) {
+        Ok(rows) => {
+            tracing::info!(rows_purged = rows, "cleanup_stale_soft_deletes complete");
+        }
+        Err(e) => {
+            tracing::warn!(error = %e, "cleanup_stale_soft_deletes failed");
+        }
+    }
 }
 ```
 
@@ -304,6 +318,88 @@ async function onUndo(token: string) {
 
 ---
 
+## Payload Interfaces
+
+> **Resolves GA1-001, GA1-002.** Defines exactly which fields the frontend sends. Server-generated fields (`AlarmId`, `NextFireTime`, `CreatedAt`, `UpdatedAt`, `DeletedAt`) are never client-supplied.
+
+### `CreateAlarmPayload`
+
+```typescript
+interface CreateAlarmPayload {
+  Time: string;                    // "HH:MM" (24h format, "00:00"–"23:59")
+  Date: string | null;             // "YYYY-MM-DD" or null (null = today/tomorrow based on time)
+  Label: string;                   // Max 100 chars, trimmed. Empty string = no label
+  RepeatType: RepeatType;          // "Once" | "Daily" | "Weekly" | "Interval" | "Cron"
+  RepeatDaysOfWeek: number[];      // [0=Sun..6=Sat] — required ≥1 when RepeatType=Weekly, else []
+  RepeatIntervalMinutes: number;   // 1–1440, only used when RepeatType=Interval, else 0
+  RepeatCronExpression: string;    // Valid cron, only used when RepeatType=Cron, else ""
+  GroupId: string | null;          // AlarmGroupId or null (Ungrouped)
+  SnoozeDurationMin: number;       // 1–60, default 5
+  MaxSnoozeCount: number;          // 0–20, default 3. 0 = snooze disabled
+  SoundFile: string;               // Sound ID from list_sounds, default "classic-beep"
+  IsVibrationEnabled: boolean;     // default false
+  IsGradualVolume: boolean;        // default false
+  GradualVolumeDurationSec: number;// 10–300, default 30. Only used when IsGradualVolume=true
+  AutoDismissMin: number;          // 0–60, default 0. 0 = manual dismiss only (sentinel, not null)
+  ChallengeType: ChallengeType | null; // null = no challenge
+  ChallengeDifficulty: ChallengeDifficulty | null; // "Easy"|"Medium"|"Hard" — math only
+  ChallengeShakeCount: number | null;  // shake challenge only
+  ChallengeStepCount: number | null;   // steps challenge only
+}
+```
+
+### `UpdateAlarmPayload`
+
+Uses **PATCH semantics** — only changed fields are sent. `AlarmId` is always required.
+
+```typescript
+interface UpdateAlarmPayload {
+  AlarmId: string;                 // Required — identifies the alarm to update
+  Time?: string;
+  Date?: string | null;
+  Label?: string;
+  RepeatType?: RepeatType;
+  RepeatDaysOfWeek?: number[];
+  RepeatIntervalMinutes?: number;
+  RepeatCronExpression?: string;
+  GroupId?: string | null;
+  SnoozeDurationMin?: number;
+  MaxSnoozeCount?: number;
+  SoundFile?: string;
+  IsVibrationEnabled?: boolean;
+  IsGradualVolume?: boolean;
+  GradualVolumeDurationSec?: number;
+  AutoDismissMin?: number;
+  ChallengeType?: ChallengeType | null;
+  ChallengeDifficulty?: ChallengeDifficulty | null;
+  ChallengeShakeCount?: number | null;
+  ChallengeStepCount?: number | null;
+}
+```
+
+---
+
+## Input Validation Rules
+
+> **Resolves GA2-004, GA2-005.** Validation runs in both Rust backend (authoritative) and frontend (UX convenience). Backend rejects invalid data with a typed error; frontend prevents the Save button.
+
+| Field | Rule | Error |
+|-------|------|-------|
+| `Time` | Regex `^([01]\d\|2[0-3]):[0-5]\d$` | "Invalid time format" |
+| `Date` | ISO 8601 date or null; must be ≥ today if non-null | "Date cannot be in the past" |
+| `Label` | Max 100 chars, trimmed, whitespace-collapsed | "Label exceeds 100 characters" |
+| `RepeatDaysOfWeek` | When `RepeatType=Weekly`: length ≥ 1, values 0–6, no duplicates | "Select at least one day" |
+| `RepeatIntervalMinutes` | When `RepeatType=Interval`: 1–1440 | "Interval must be 1–1440 minutes" |
+| `RepeatCronExpression` | When `RepeatType=Cron`: valid 5-field cron syntax | "Invalid cron expression" |
+| `SnoozeDurationMin` | 1–60 | "Snooze duration must be 1–60 minutes" |
+| `MaxSnoozeCount` | 0–20 | "Max snooze count must be 0–20" |
+| `SoundFile` | Must exist in `list_sounds` result | "Unknown sound file" |
+| `GradualVolumeDurationSec` | 10–300 | "Gradual volume duration must be 10–300 seconds" |
+| `AutoDismissMin` | 0–60 | "Auto-dismiss must be 0–60 minutes" |
+| `GroupId` | Must exist in AlarmGroups table or be null | "Unknown group" |
+
+---
+
 ## Hook
 
 `useAlarms` — Provides CRUD operations, toggle, duplicate, soft-delete/undo, drag-drop, SQLite sync via Tauri `invoke()` commands.
@@ -315,6 +411,8 @@ async function onUndo(token: string) {
 | Reference | Location |
 |-----------|----------|
 | Data Model | `../01-fundamentals/01-data-model.md` |
+| Design System (UI States) | `../01-fundamentals/02-design-system.md` |
+| File Structure (Zustand Stores) | `../01-fundamentals/03-file-structure.md` |
 | Alarm Groups | `./07-alarm-groups.md` |
 | Sound Selection | `./05-sound-and-vibration.md` |
 | Alarm Firing | `./03-alarm-firing.md` |
