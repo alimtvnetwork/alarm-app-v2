@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.27.0  
+**Version:** 1.28.0  
 **Updated:** 2026-04-10
 
 ---
@@ -47,6 +47,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 31 | `31-discovery-phase-19.md` | Discovery Phase 19 — Post-Completion Regression Audit | 34 | 0 | 34 |
 | 32 | `32-discovery-phase-20.md` | Discovery Phase 20 — Fresh Audit (IPC, magic strings, Scoring, serde, seedable config) | 21 | 0 | 21 |
 | 33 | `33-discovery-phase-21.md` | Discovery Phase 21 — Post-Phase-20 Regression Scan (stale metrics, version alignment) | 4 | 0 | 4 |
+| 34 | `34-discovery-phase-22.md` | Discovery Phase 22 — Fresh Comprehensive Audit (missing deps, undefined interfaces, naming) | 8 | 10 | 0 |
 
 ---
 
@@ -54,11 +55,11 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 72 |
-| 🟡 Medium | 196 |
-| 🟢 Low | 43 |
-| **Grand Total** | **315** |
-| **Open** | **0** |
+| 🔴 Critical | 80 |
+| 🟡 Medium | 203 |
+| 🟢 Low | 46 |
+| **Grand Total** | **333** |
+| **Open** | **18** |
 | **Resolved** | **315** |
 
 ---
@@ -124,6 +125,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 20** | **Fresh audit: IPC, magic strings, Scoring, serde, seedable config** | **✅ Done (+21 = 311)** |
 | **Fix Phase T** | **Stale "290" metrics → "311", version alignment (4 issues)** | **✅ Done (4 resolved)** |
 | **Discovery Phase 21** | **Post-Phase-20 regression scan** | **✅ Done (+4 = 315, all resolved)** |
+| **Discovery Phase 22** | **Fresh comprehensive audit (deps, interfaces, naming)** | **✅ Done (+18 = 333, 18 open)** |
 
 ---
 

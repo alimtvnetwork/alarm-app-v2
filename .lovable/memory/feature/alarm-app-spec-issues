@@ -1,43 +1,50 @@
 ---
 name: Alarm App Spec Issues Audit
-description: All 315 spec quality issues resolved — 21 discovery phases, 40 fix phases, 100/100 readiness, audit complete
+description: 333 total spec issues — 315 resolved, 18 open (Discovery Phase 22). Missing deps, undefined interfaces, naming violations.
 type: feature
 ---
 
-## Audit Status — COMPLETE ✅
+## Audit Status — IN PROGRESS ⚠️
 
-- **Total issues:** 315
-- **Open:** 0
+- **Total issues:** 333
+- **Open:** 18 (Discovery Phase 22)
 - **Resolved:** 315
-- **Discovery phases:** 21
+- **Discovery phases:** 22
 - **Fix phases:** 40 (Phases 1–20, A–T)
-- **Readiness Score:** 100/100 (A+)
+- **Readiness Score:** Pending re-assessment after fixes
 
-## Fix Phase Summary
+## Open Issues (Phase 22)
 
-| Phase | Issues Resolved |
-|-------|:---:|
-| Phases 1–20 | 103 |
-| Phase A — Domain enums | 11 |
-| Phase B — Error enums | 2 |
-| Phase C — Acceptance criteria + IPC keys | 6 |
-| Phase D — Test fixtures + cheat sheet | 6 |
-| Phase E — Settings seeding + UI states | 4 |
-| Phase F — PascalCase, atomic tasks, inverses | 13 |
-| Phase G — Code sample patterns | 12 |
-| Phase H — Stale metrics | 15 |
-| Phase I — Acceptance criteria rollups | 2 |
-| Phase J — Final 7 (ARIA, 0=disabled, IPC, magic strings, exemption) | 7 |
-| Phase K — SQL defaults + magic strings | 11 |
-| Phase L — Magic string union types | 8 |
-| Phase M — camelCase + naming | 10 |
-| Phase N — Serde, cross-refs, prose casing | 5 |
-| Phase O — Stale "256" → "290" | 5 |
-| Phase P — IPC rename, magic elimination | 5 |
-| Phase Q — Scoring tables + metadata | 6 |
-| Phase R — Casing boundary, internal structs | 3 |
-| Phase S — Seedable config cross-ref | 2 |
-| Phase T — Stale "290" → "315", version alignment | 4 |
+### 🔴 Critical (8)
+- P22-001: Missing `@dnd-kit/core` + `@dnd-kit/sortable` from npm deps
+- P22-002: Missing `reqwest` + `url` crates from Cargo.toml
+- P22-003: Missing `rand` crate from Cargo.toml
+- P22-004: Missing group CRUD IPC commands (only `toggle_group` exists)
+- P22-005: `ExportWarningDismissed` setting not in data model
+- P22-006: `ImportPreview` interface undefined
+- P22-007: `WebhookPayload` interface undefined
+- P22-008: `RepeatPattern` Rust struct undefined
+
+### 🟡 Medium (7)
+- P22-009: Firing logic uses lowercase repeat types instead of enum refs
+- P22-010: `is_day_excluded` negative naming violates boolean guidelines
+- P22-011: Cheat sheet says 12 AlarmAppError variants, actual is 13
+- P22-012: `&alarm.repeat` field doesn't exist on AlarmRow
+- P22-013: AlarmEvent uses `?` optional instead of `| null`
+- P22-014: Acceptance criteria use raw string `"once"` instead of enum
+- P22-015: AlarmSound interface defined but no storage mechanism
+
+### 🟢 Low (3)
+- P22-016: Double `---` separators in 28 files
+- P22-017: Cheat sheet footer version mismatch
+- P22-018: shadcn/ui clarification needed
+
+## Suggested Fix Phases
+- Phase U: Missing deps (3 issues)
+- Phase V: Missing IPC + interfaces (4 issues)
+- Phase W: Data model gaps (2 issues)
+- Phase X: Enum/naming violations (4 issues)
+- Phase Y: Cosmetic fixes (5 issues)
 
 ## Canonical Location
 
