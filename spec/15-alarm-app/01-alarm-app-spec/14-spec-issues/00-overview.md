@@ -26,7 +26,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 9 | `09-discovery-phase-7.md` | Discovery Phase 7 — Regression Scan | 18 | 0 | 18 |
 | 10 | `10-discovery-phase-8.md` | Discovery Phase 8 — Remaining Files | 11 | 0 | 11 |
 | 11 | `11-discovery-phase-9.md` | Discovery Phase 9 — Full Grep Scan | 30 | 0 | 30 |
-| 12 | `12-discovery-phase-10.md` | Discovery Phase 10 — Deep Cross-File Audit | 18 | 10 | 8 |
+| 12 | `12-discovery-phase-10.md` | Discovery Phase 10 — Deep Cross-File Audit | 18 | 4 | 14 |
 
 ---
 
@@ -38,8 +38,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 65 |
 | 🟢 Low | 12 |
 | **Grand Total** | **154** |
-| **Open** | **10** |
-| **Resolved** | **144** |
+| **Open** | **4** |
+| **Resolved** | **150** |
 
 ---
 
