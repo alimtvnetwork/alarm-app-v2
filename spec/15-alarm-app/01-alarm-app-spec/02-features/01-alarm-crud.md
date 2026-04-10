@@ -353,12 +353,12 @@ interface CreateAlarmPayload {
   RepeatIntervalMinutes: number;   // 1–1440, only used when RepeatType=Interval, else 0
   RepeatCronExpression: string;    // Valid cron, only used when RepeatType=Cron, else ""
   GroupId: string | null;          // AlarmGroupId or null (Ungrouped)
-  SnoozeDurationMin: number;       // 1–60, default 5
-  MaxSnoozeCount: number;          // 0–20, default 3. 0 = snooze disabled
+  SnoozeDurationMin: number;       // 1–30, default 5
+  MaxSnoozeCount: number;          // 0–10, default 3. 0 = snooze disabled (dismiss only)
   SoundFile: string;               // Sound ID from list_sounds, default "classic-beep"
   IsVibrationEnabled: boolean;     // default false
   IsGradualVolume: boolean;        // default false
-  GradualVolumeDurationSec: number;// 10–300, default 30. Only used when IsGradualVolume=true
+  GradualVolumeDurationSec: number;// 15, 30, or 60 seconds, default 30. Only used when IsGradualVolume=true
   AutoDismissMin: number;          // 0–60, default 0. 0 = manual dismiss only (sentinel, not null)
   ChallengeType: ChallengeType | null; // null = no challenge
   ChallengeDifficulty: ChallengeDifficulty | null; // "Easy"|"Medium"|"Hard" — math only
@@ -410,10 +410,10 @@ interface UpdateAlarmPayload {
 | `RepeatDaysOfWeek` | When `RepeatType=Weekly`: length ≥ 1, values 0–6, no duplicates | "Select at least one day" |
 | `RepeatIntervalMinutes` | When `RepeatType=Interval`: 1–1440 | "Interval must be 1–1440 minutes" |
 | `RepeatCronExpression` | When `RepeatType=Cron`: valid 5-field cron syntax | "Invalid cron expression" |
-| `SnoozeDurationMin` | 1–60 | "Snooze duration must be 1–60 minutes" |
-| `MaxSnoozeCount` | 0–20 | "Max snooze count must be 0–20" |
+| `SnoozeDurationMin` | 1–30 | "Snooze duration must be 1–30 minutes" |
+| `MaxSnoozeCount` | 0–10 | "Max snooze count must be 0–10" |
 | `SoundFile` | Must exist in `list_sounds` result | "Unknown sound file" |
-| `GradualVolumeDurationSec` | 10–300 | "Gradual volume duration must be 10–300 seconds" |
+| `GradualVolumeDurationSec` | Must be 15, 30, or 60 | "Gradual volume duration must be 15, 30, or 60 seconds" |
 | `AutoDismissMin` | 0–60 | "Auto-dismiss must be 0–60 minutes" |
 | `GroupId` | Must exist in AlarmGroups table or be null | "Unknown group" |
 

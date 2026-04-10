@@ -292,13 +292,13 @@ interface Alarm {
   AlarmId: string;                 // UUID v4
   Time: string;                    // "HH:MM" 24-hour format
   Date: string | null;             // "YYYY-MM-DD" for date-specific alarms, null for recurring/daily
-  Label: string;                   // User-defined label, max 50 chars
+  Label: string;                   // User-defined label, max 100 chars
   IsEnabled: boolean;              // Toggle state
   IsPreviousEnabled: boolean | null; // Saved state for group toggle restore (null = no saved state)
   Repeat: RepeatPattern;           // Scheduling pattern (replaces recurringDays)
   GroupId: string | null;          // Reference to AlarmGroup.AlarmGroupId
   SnoozeDurationMin: number;       // 1–30, default 5
-  MaxSnoozeCount: number;          // 1–10, default 3 (0 = dismiss only, no snooze)
+  MaxSnoozeCount: number;          // 0–10, default 3 (0 = dismiss only, no snooze)
   SoundFile: string;               // Built-in key OR custom file path
   IsVibrationEnabled: boolean;     // Independent vibration toggle
   IsGradualVolume: boolean;        // Fade-in volume enabled
@@ -715,7 +715,7 @@ This is a deliberate design decision, not an oversight.
 |-------|------|
 | `Time` | Must match `HH:MM` format, 00:00–23:59 |
 | `Date` | Must match `YYYY-MM-DD` or be null |
-| `Label` | String, 0–50 characters, trimmed |
+| `Label` | String, 0–100 characters, trimmed |
 | `Repeat.Type` | Must be a valid `RepeatType` enum variant |
 | `Repeat.DaysOfWeek` | Array of 0–6, no duplicates, sorted ascending (weekly only) |
 | `Repeat.IntervalMinutes` | Positive integer (interval only) |
