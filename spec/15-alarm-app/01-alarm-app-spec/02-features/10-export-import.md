@@ -101,6 +101,22 @@ Users can export alarms and groups in multiple formats (JSON, CSV, iCal) and imp
 
 ---
 
+## Import Preview
+
+```typescript
+interface ImportPreview {
+  PreviewId: string;       // UUID — reference for confirm_import
+  AlarmCount: number;      // Total alarms in file
+  GroupCount: number;      // Total groups in file
+  DuplicateCount: number;  // Alarms that already exist (matched by AlarmId)
+  Alarms: Alarm[];         // Preview of alarms to import
+  Groups: AlarmGroup[];    // Preview of groups to import
+  Errors: string[];        // Validation errors (if any)
+}
+```
+
+---
+
 ## Import Result
 
 ```typescript
