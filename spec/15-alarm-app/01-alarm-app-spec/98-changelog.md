@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 1.8.0  
+**Version:** 1.9.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -26,6 +26,40 @@
 ---
 
 ## Version History
+
+### v1.9.0 — 2026-04-10
+
+**Theme:** Final spec audit — 180 total issues resolved across 13 discovery phases, readiness score 98/100
+
+#### Added
+- **`14-spec-issues/13-discovery-phase-11.md`** — 14 issues: memory budget contradiction (150MB vs 200MB), startup budget contradiction (2s vs 750ms), AlarmEvents column count, i18n locale path mismatch, missing IPC commands, dark mode token, stale overview
+- **`14-spec-issues/14-discovery-phase-12.md`** — 9 issues: stale readiness report versions/counts, cheat sheet AlarmEvents column count, concurrency guide PascalCase/field refs, reliability report stale gaps, consistency report missing inventory, task breakdown duration mismatch
+- **`14-spec-issues/15-discovery-phase-13.md`** — 3 issues: absolute local path in app-issues overview, stale AlarmEvents.Metadata column ref, incorrect feature count (190+ → 69)
+
+#### Changed
+- `10-ai-handoff-readiness-report.md` → v1.2.0: Re-scored to **98/100 (A+)**, AI success rate 97–99%, 180/180 issues, 13 discovery phases, 59 fix phases, updated all file versions and cross-references
+- `09-ai-handoff-reliability-report.md` — Added "ALL RESOLVED" banners to gaps section, updated issue counts
+- `12-platform-and-concurrency-guide.md` — PascalCase table names (`Alarms`), corrected `alarm.alarm_id` field references
+- `13-ai-cheat-sheet.md` — AlarmEvents column count corrected to 13
+- `99-consistency-report.md` (root) — Full inventory of all 7 root documents and 4 subfolders
+- `03-app-issues/00-overview.md` — Removed absolute filesystem path, changed to external document note
+- `03-app-issues/07-ux-ui-issues.md` — `AlarmEvents.Metadata` → `AlarmEvents.ChallengeSolveTimeSec`
+- `15-reference/alarm-app-features.md` — Total features corrected from "~190+" to 69
+- `14-spec-issues/00-overview.md` → v1.9.0: Added phases 11–13, updated totals to 180/180
+- `02-features/03-alarm-firing.md` — Fixed memory budget (150MB → 200MB), startup budget (2s → 750ms)
+- `02-features/05-sound-and-vibration.md` — Added missing IPC commands
+- `02-features/06-dismissal-challenges.md` — Added missing IPC commands, clarified AlarmChallenge interface
+- `02-features/14-personalization.md` — Added missing IPC commands
+- `01-fundamentals/02-design-system.md` — Added destructive token for dark mode
+- `01-fundamentals/16-accessibility-and-nfr.md` — Fixed i18n locale path
+- `00-overview.md` — Updated fundamentals count, dates, and spec-issues reference
+
+#### Fixed (26 spec quality issues across 3 discovery phases)
+- **Discovery 11:** 14 issues — feature specs & fundamentals deep audit (3 critical, 7 medium, 4 low)
+- **Discovery 12:** 9 issues — root-level docs & execution guides audit (stale versions, naming, cross-refs)
+- **Discovery 13:** 3 issues — app issues & reference docs audit (absolute path, stale column, incorrect count)
+
+---
 
 ### v1.8.0 — 2026-04-10
 
@@ -276,4 +310,4 @@
 
 ---
 
-*Changelog — updated: 2026-04-09*
+*Changelog v1.9.0 — updated: 2026-04-10*
