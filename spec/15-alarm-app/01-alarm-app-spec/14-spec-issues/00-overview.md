@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.10.0  
+**Version:** 1.11.0  
 **Updated:** 2026-04-10
 
 ---
@@ -31,6 +31,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 14 | `14-discovery-phase-12.md` | Discovery Phase 12 — Root-Level Docs Audit | 9 | 0 | 9 |
 | 15 | `15-discovery-phase-13.md` | Discovery Phase 13 — App Issues & Reference Audit | 3 | 0 | 3 |
 | 16 | `16-discovery-phase-14.md` | Discovery Phase 14 — Foundational Alignment Audit | 29 | 29 | 0 |
+| 17 | `17-discovery-phase-15.md` | Discovery Phase 15 — Deep Boolean, Negation & Code Sample Audit | 13 | 13 | 0 |
 
 ---
 
@@ -38,11 +39,11 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 45 |
-| 🟡 Medium | 97 |
-| 🟢 Low | 25 |
-| **Grand Total** | **209** |
-| **Open** | **29** |
+| 🔴 Critical | 46 |
+| 🟡 Medium | 106 |
+| 🟢 Low | 28 |
+| **Grand Total** | **222** |
+| **Open** | **42** |
 | **Resolved** | **180** |
 
 ---
@@ -65,6 +66,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 12** | **Root-level docs & execution guides audit** | **✅ Done (+9 = 177, all fixed)** |
 | **Discovery Phase 13** | **App issues & reference docs audit** | **✅ Done (+3 = 180, all fixed)** |
 | **Discovery Phase 14** | **Foundational alignment audit (coding guidelines, booleans, enums, split-db, seedable config)** | **✅ Done (+29 = 209, 29 open)** |
+| **Discovery Phase 15** | **Deep boolean, negation & code sample audit** | **✅ Done (+13 = 222, 42 open)** |
 | **Fix Phase 1** | **Exemptions & decisions** | **✅ Done (4 resolved)** |
 | **Fix Phase 2** | **sqlx → rusqlite** | **✅ Done (7 resolved)** |
 | **Fix Phase 3** | **DB naming PascalCase** | **✅ Done (5 resolved)** |
