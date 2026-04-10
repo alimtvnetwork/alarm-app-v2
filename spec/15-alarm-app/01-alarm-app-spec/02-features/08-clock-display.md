@@ -69,7 +69,7 @@ interface ClockState {
   Hours: number;      // 0–23
   Minutes: number;    // 0–59
   Seconds: number;    // 0–59
-  Is24Hour: boolean;  // from Settings
+  Is24Hour: boolean;  // Derived from Settings: `getSettings("TimeFormat") === "24h"`
 }
 
 function useClock(): ClockState;
