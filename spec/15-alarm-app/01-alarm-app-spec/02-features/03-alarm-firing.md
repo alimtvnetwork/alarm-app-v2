@@ -138,7 +138,7 @@ fn resolve_local_to_utc(
     match tz.from_local_datetime(&naive_dt) {
         LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
         LocalResult::Ambiguous(first, _) => Some(handle_fall_back(first, date, time)),
-        LocalResult::None => handle_spring_forward(date, tz),
+        LocalResult::None => handle_spring_forward(date, time, tz),
     }
 }
 
@@ -148,17 +148,27 @@ fn handle_fall_back(first: DateTime<Tz>, date: NaiveDate, time: NaiveTime) -> Da
     first.with_timezone(&Utc)
 }
 
-/// SPRING-FORWARD: time doesn't exist → advance to next valid minute
-fn handle_spring_forward(date: NaiveDate, tz: &Tz) -> Option<DateTime<Utc>> {
-    let transition = tz.from_local_datetime(
-        &NaiveDateTime::new(date, NaiveTime::from_hms_opt(3, 0, 0).unwrap())
-    );
-    tracing::warn!(date = %date, "DST spring-forward: firing at next valid minute");
-    match transition {
-        LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
-        LocalResult::Ambiguous(dt, _) => Some(dt.with_timezone(&Utc)),
-        LocalResult::None => None,
+/// SPRING-FORWARD: time doesn't exist → advance minute-by-minute until valid
+fn handle_spring_forward(date: NaiveDate, skipped_time: NaiveTime, tz: &Tz) -> Option<DateTime<Utc>> {
+    // Walk forward from the skipped time to find the first valid local minute
+    let mut candidate = skipped_time;
+    for _ in 0..120 {
+        candidate = candidate + chrono::Duration::minutes(1);
+        let naive_dt = NaiveDateTime::new(date, candidate);
+        match tz.from_local_datetime(&naive_dt) {
+            LocalResult::Single(dt) => {
+                tracing::warn!(date = %date, skipped = %skipped_time, resolved = %candidate,
+                    "DST spring-forward: advanced to next valid minute");
+                return Some(dt.with_timezone(&Utc));
+            }
+            LocalResult::Ambiguous(dt, _) => {
+                return Some(dt.with_timezone(&Utc));
+            }
+            LocalResult::None => continue, // still in the gap
+        }
     }
+    tracing::error!(date = %date, "DST spring-forward: no valid time found within 2 hours");
+    None
 }
 ```
 
@@ -187,9 +197,11 @@ fn on_timezone_change(conn: &Connection, new_tz: &Tz) {
 
 | Scenario | Input | Expected |
 |----------|-------|----------|
-| Spring-forward: 2:30 AM skipped | `time=02:30`, DST jumps 2:00→3:00 | Fire at 3:00 AM |
+| Spring-forward: 2:30 AM skipped (US) | `time=02:30`, DST jumps 2:00→3:00 | Fire at 3:00 AM (next valid minute) |
+| Spring-forward: 1:30 AM skipped (EU) | `time=01:30`, DST jumps 1:00→2:00 | Fire at 2:00 AM (next valid minute) |
 | Fall-back: 1:30 AM occurs twice | `time=01:30`, DST falls back 2:00→1:00 | Fire at first 1:30 AM only |
 | Normal day | `time=07:00`, no DST | Fire at 07:00 local = correct UTC |
+| No DST timezone (e.g., MYT) | `time=07:00`, no DST ever | Fire at 07:00 local = correct UTC |
 | Timezone change: KUL→LON | `time=07:00`, tz changes | `nextFireTime` recalculated for London |
 | Daily alarm across DST boundary | `time=02:30`, repeating daily | Skipped day fires at 3:00, next day fires at 2:30 normally |
 
