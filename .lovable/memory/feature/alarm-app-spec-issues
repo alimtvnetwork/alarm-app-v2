@@ -7,31 +7,28 @@ type: feature
 ## Audit Status
 
 - **Total issues:** 77
-- **Open:** 21
-- **Resolved:** 56
+- **Open:** 17
+- **Resolved:** 60
 - **Discovery phases:** 6 complete
-- **Fix phases:** 16 complete + stale status cleanup
+- **Fix phases:** 17 complete
 
 ## Issue Distribution
 
 | Category | Count | Open | Resolved |
 |----------|:-----:|:----:|:--------:|
 | Naming Violations | 18 | 0 | 18 |
-| Internal Contradictions | 11 | 3 | 8 |
+| Internal Contradictions | 11 | 0 | 11 |
 | Structural Issues | 5 | 5 | 0 |
 | Content Gaps | 12 | 6 | 6 |
 | AI Handoff Risks | 4 | 1 | 3 |
-| Logic Consistency | 11 | 3 | 8 |
+| Logic Consistency | 11 | 2 | 9 |
 | UI/UX Consistency | 4 | 3 | 1 |
 | Guideline Compliance | 12 | 0 | 12 |
 
-## Remaining 21 Open Issues
+## Remaining 17 Open Issues
 
 | ID | Severity | Description |
 |----|:--------:|-------------|
-| IC-002 | 🔴 | Task count contradictions (94 vs 62) |
-| IC-003 | 🟡 | TS Alarm missing IsPreviousEnabled |
-| IC-004 | 🟡 | alarm_events schema missing resolved columns |
 | SI-001 | 🟡 | reference/ folder missing numeric prefix |
 | SI-002 | 🟡 | Reference files missing Version/Updated headers |
 | SI-003 | 🟢 | Missing Updated header on readiness report |
@@ -45,7 +42,6 @@ type: feature
 | CG-011 | 🟡 | 02-alarm-scheduling.md severely outdated |
 | AH-003 | 🟡 | Contradictory task lists |
 | LC-002 | 🟡 | SnoozeState.NextFireTime vs SnoozeUntil mismatch |
-| LC-008 | 🔴 | currently_firing HashSet not thread-safe |
 | LC-010 | 🟡 | Snooze crash recovery not in startup sequence |
 | UX-001 | 🔴 | No React state management pattern |
 | UX-002 | 🔴 | AlarmOverlay lifecycle not specified |
