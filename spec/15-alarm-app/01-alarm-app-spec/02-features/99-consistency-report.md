@@ -1,7 +1,7 @@
 # Consistency Report: Features
 
-**Version:** 1.5.0  
-**Generated:** 2026-04-09  
+**Version:** 1.6.0  
+**Generated:** 2026-04-10  
 **Health Score:** 100/100 (A+)
 
 ---
@@ -11,18 +11,18 @@
 | # | File | Version | Status |
 |---|------|---------|--------|
 | 1 | `00-overview.md` | 1.2.0 | ✅ Present |
-| 2 | `01-alarm-crud.md` | 1.6.0 | ✅ Updated (undo stack, soft-delete timer, keyboard a11y) |
-| 3 | `02-alarm-scheduling.md` | 1.0.0 | ✅ Present |
-| 4 | `03-alarm-firing.md` | 1.5.0 | ✅ Updated (DST, wake-events, queue, multi-monitor overlay) |
-| 5 | `04-snooze-system.md` | 1.3.0 | ✅ Updated (exact-time tokio::sleep_until) |
-| 6 | `05-sound-and-vibration.md` | 1.4.0 | ✅ Updated (validation, fallback, audio sessions, gradual volume) |
-| 7 | `06-dismissal-challenges.md` | 1.2.0 | ✅ Updated (calibrated difficulty tiers, solve time logging) |
-| 8 | `07-alarm-groups.md` | 1.2.0 | ✅ Updated (IsPreviousEnabled group toggle) |
+| 2 | `01-alarm-crud.md` | 1.6.0 | ✅ Updated (PascalCase naming in pseudocode) |
+| 3 | `02-alarm-scheduling.md` | 2.0.0 | ✅ Present |
+| 4 | `03-alarm-firing.md` | 1.7.0 | ✅ Updated (PascalCase: NextFireTime, AlarmEvents, SnoozeState) |
+| 5 | `04-snooze-system.md` | 1.3.0 | ✅ Present |
+| 6 | `05-sound-and-vibration.md` | 1.4.0 | ✅ Present |
+| 7 | `06-dismissal-challenges.md` | 1.2.0 | ✅ Present |
+| 8 | `07-alarm-groups.md` | 1.2.0 | ✅ Present |
 | 9 | `08-clock-display.md` | 1.1.0 | ✅ Present |
 | 10 | `09-theme-system.md` | 1.1.0 | ✅ Present |
-| 11 | `10-export-import.md` | 1.3.0 | ✅ Updated (privacy warning dialog, SEC-EXPORT-001) |
-| 12 | `11-sleep-wellness.md` | 1.1.0 | ✅ Present |
-| 13 | `12-smart-features.md` | 1.2.0 | ✅ Updated (SSRF protection, webhook validation) |
+| 11 | `10-export-import.md` | 1.3.0 | ✅ Updated (PascalCase in export schema references) |
+| 12 | `11-sleep-wellness.md` | 1.1.0 | ✅ Updated (PascalCase in settings references) |
+| 13 | `12-smart-features.md` | 1.2.0 | ✅ Present |
 | 14 | `13-analytics.md` | 1.2.0 | ✅ Present |
 | 15 | `14-personalization.md` | 1.1.0 | ✅ Present |
 | 16 | `15-keyboard-shortcuts.md` | 1.0.0 | ✅ Present |
@@ -52,16 +52,16 @@
 | Export privacy warning ↔ SEC-EXPORT-001 | ✅ |
 | Challenge calibration ↔ UX-CHALLENGE-001 | ✅ |
 | Group toggle state ↔ FE-STATE-001 | ✅ |
+| PascalCase naming in all SQL/pseudocode references | ✅ |
 
 ---
 
-## v1.5.0 Changes
+## v1.6.0 Changes (Fix Phases 21–46)
 
-- `01-alarm-crud.md` → v1.6.0: undo stack (max 5, independent timers, stacking toasts)
-- `03-alarm-firing.md` → v1.5.0: multi-monitor overlay (current_monitor / primary), FE-OVERLAY-001
-- `05-sound-and-vibration.md` → v1.4.0: validate_custom_sound(), resolve_sound_path(), platform audio sessions, gradual volume algorithm
-- `06-dismissal-challenges.md` → v1.2.0: calibrated math tiers with operand rules and solve time logging
-- `10-export-import.md` → v1.3.0: export privacy warning dialog
+- `01-alarm-crud.md` v1.6.0: PascalCase naming in soft-delete pseudocode (`NextFireTime`, `MaxSnoozeCount`)
+- `03-alarm-firing.md` v1.7.0: PascalCase in all table/column references, wake listener pseudocode
+- `10-export-import.md` v1.3.0: PascalCase in export schema references
+- `11-sleep-wellness.md` v1.1.0: PascalCase in settings references
 
 ---
 

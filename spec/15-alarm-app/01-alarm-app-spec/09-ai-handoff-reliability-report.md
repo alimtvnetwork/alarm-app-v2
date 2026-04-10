@@ -1,5 +1,7 @@
 # AI Handoff Reliability Report — Alarm App
 
+> ℹ️ **Supplementary** — The authoritative task breakdown is `11-atomic-task-breakdown.md` (62 tasks). This report provides failure probability analysis and risk data that remains useful for planning.
+
 **Version:** 1.0.0  
 **Updated:** 2026-04-09  
 **Purpose:** Predict failure points and risks when handing this spec to another AI system for implementation

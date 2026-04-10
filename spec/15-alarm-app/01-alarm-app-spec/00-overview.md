@@ -114,12 +114,12 @@ Tables:
 | 01 | [Fundamentals](./01-fundamentals/00-overview.md) | Architecture, data model, design system, platform strategy, startup, devops, tests (10 docs) |
 | 02 | [Features](./02-features/00-overview.md) | All feature specifications (17 docs) |
 | 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking — 43/43 issues resolved |
-| 09 | [AI Handoff Reliability Report](./09-ai-handoff-reliability-report.md) | 94-task failure analysis (superseded by 62-task breakdown), top 15 risk points |
+| 09 | [AI Handoff Reliability Report](./09-ai-handoff-reliability-report.md) | Supplementary failure analysis (62-task breakdown is authoritative), top 15 risk points |
 | 10 | [AI Handoff Readiness Report](./10-ai-handoff-readiness-report.md) | 96/100 readiness score, implementation order |
 | 11 | [Atomic Task Breakdown](./11-atomic-task-breakdown.md) | **Authoritative** 62 dependency-ordered tasks, effort estimates, risk levels |
 | 12 | [Platform & Concurrency Guide](./12-platform-and-concurrency-guide.md) | Platform gotchas, race condition safeguards, async safety, error recovery |
 | 13 | [AI Cheat Sheet](./13-ai-cheat-sheet.md) | Single-page quick reference for AI coding agents |
-| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 154 issues found, 136 resolved, 18 open |
+| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 154 issues found, 154 resolved ✅ |
 | 15 | [Reference](./15-reference/00-overview.md) | Feature inventories and planning references |
 | 98 | [Changelog](./98-changelog.md) | Version history v1.0.0–v1.7.0 |
 

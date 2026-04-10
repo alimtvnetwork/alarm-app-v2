@@ -57,7 +57,7 @@ src/                          — Frontend (React + TypeScript)
 
   lib/
     tauri-commands.ts         — Typed wrappers for Tauri invoke() calls
-    db.ts                     — Frontend DB query helpers
+    db.ts                     — IPC query wrappers (all DB access via Tauri invoke)
 
   i18n/                       — Internationalization (Resolves FE-I18N-001)
     index.ts                  — i18next initialization + language detection

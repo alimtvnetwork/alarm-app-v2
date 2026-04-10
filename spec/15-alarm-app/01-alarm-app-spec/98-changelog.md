@@ -1,7 +1,7 @@
 # Changelog
 
-**Version:** 1.7.0  
-**Updated:** 2026-04-09  
+**Version:** 1.8.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
 
@@ -26,6 +26,45 @@
 ---
 
 ## Version History
+
+### v1.8.0 — 2026-04-10
+
+**Theme:** Spec quality audit — 154 issues found and resolved across 10 discovery phases and 46 fix phases
+
+#### Added
+- **`14-spec-issues/`** folder (new) — 12 discovery/fix tracking documents covering naming violations, contradictions, structural issues, content gaps, AI handoff risks, logic consistency, UI/UX consistency, guideline compliance
+- **`ValueType`** column on `Settings` table schema (`01-data-model.md`) — enables typed `get_setting<T>()` helper
+- **SUPERSEDED** banner on `05-platform-strategy.md` — points to authoritative `06-tauri-architecture-and-framework-comparison.md`
+- **Supplementary** banner on `09-ai-handoff-reliability-report.md` — clarifies relationship to authoritative `11-atomic-task-breakdown.md`
+
+#### Changed
+- `00-overview.md` — Updated spec-issues count (154 found), reliability report label changed from "superseded" to "supplementary"
+- `01-fundamentals/01-data-model.md` → v1.7.0: Settings `ValueType` column, `Alarms` table comment fix, AutoLaunch/MinimizeToTray typed as boolean, PascalCase naming throughout all SQL and prose
+- `01-fundamentals/03-file-structure.md` → v1.5.0: Removed duplicate `rusqlite`/`refinery` Cargo.toml entries, `db.ts` → "IPC query wrappers"
+- `01-fundamentals/04-platform-constraints.md` → v1.3.0: PascalCase naming fixes
+- `01-fundamentals/09-test-strategy.md` → v1.0.0: PascalCase naming fixes in test examples
+- `02-features/01-alarm-crud.md` → v1.6.0: PascalCase in pseudocode
+- `02-features/03-alarm-firing.md` → v1.7.0: PascalCase for all table/column references
+- `02-features/10-export-import.md` → v1.3.0: PascalCase in export schema
+- `02-features/11-sleep-wellness.md` → v1.1.0: PascalCase in settings references
+- `03-app-issues/` — PascalCase fixes across all 8 issue files (column names, table names, SQL)
+- `09-ai-handoff-reliability-report.md` — PascalCase fixes, supplementary banner
+- `10-ai-handoff-readiness-report.md` — Updated file versions, added spec-issues reference, fixed absolute filesystem path
+- `11-atomic-task-breakdown.md` — PascalCase naming fixes
+- `12-platform-and-concurrency-guide.md` — PascalCase naming fixes
+- `13-ai-cheat-sheet.md` — Settings column count 2→3, PascalCase fixes
+- `15-reference/alarm-app-features.md` — PascalCase naming fixes
+- `15-reference/alarm-clock-features.md` — PascalCase naming fixes
+- Both `99-consistency-report.md` files → v1.6.0: Updated all version numbers, added PascalCase compliance checks
+
+#### Fixed (154 spec quality issues across 10 discovery phases)
+- **Discovery 1–6:** 77 issues — naming violations (18), contradictions (11), structural (5), content gaps (12), AI handoff risks (4), logic consistency (11), UI/UX consistency (4), guideline compliance (12)
+- **Discovery 7:** 18 issues — regression scan after initial fixes
+- **Discovery 8:** 11 issues — remaining files audit
+- **Discovery 9:** 30 issues — full grep scan for snake_case/camelCase violations
+- **Discovery 10:** 18 issues — deep cross-file audit (stale data, schema contradictions, broken cross-references, ambiguity)
+
+---
 
 ### v1.7.0 — 2026-04-09
 
@@ -60,7 +99,7 @@
 - **Export privacy warning** in `10-export-import.md` v1.3.0 — confirmation dialog before export, optional AES-256 ZIP for v2.0+
 - **Challenge calibration** in `06-dismissal-challenges.md` v1.2.0 — operand rules per tier, target solve times, solve time logging in `AlarmEvents.metadata`, Custom tier (P2), integer-only answers
 - **`AlarmLabelSnapshot` + `AlarmTimeSnapshot`** columns on `AlarmEvents` table — preserves context after alarm deletion (DB-ORPHAN-001)
-- **`value_type` column** on `settings` table + typed `get_setting<T>()` Rust helper (DB-SETTINGS-001)
+- **`ValueType` column** on `Settings` table + typed `get_setting<T>()` Rust helper (DB-SETTINGS-001)
 - **`@dnd-kit/core` v6.x** explicitly specified, `react-beautiful-dnd` rejected as deprecated (FE-DND-001)
 
 #### Changed
@@ -162,7 +201,7 @@
   - `06-performance-issues.md` — 2 issues (PERF-STARTUP-001, PERF-MEMORY-001)
   - `07-ux-ui-issues.md` — 3 issues (UX-DST-001, UX-TZ-001, UX-CHALLENGE-001)
   - `08-devops-issues.md` — 4 issues (DEVOPS-SIGN-001/002, DEVOPS-CI-001, DEVOPS-UPDATE-001)
-- **AI Feasibility Analysis** — `/mnt/documents/alarm-app-ai-feasibility-analysis.md`
+- **AI Feasibility Analysis** — external document (not included in spec repo)
   - 62% overall success probability
   - 32 atomic issues across 9 categories
   - Execution roadmap: 18–29 day estimate, ~30% AI / ~70% human
@@ -231,7 +270,8 @@
 |-----------|----------|
 | Spec Overview | `./00-overview.md` |
 | Issues Folder | `./03-app-issues/00-overview.md` |
-| Feasibility Analysis | `/mnt/documents/alarm-app-ai-feasibility-analysis.md` |
+| Spec Issues Audit | `./14-spec-issues/00-overview.md` |
+| Feasibility Analysis | External document (not included in spec repo) |
 | AI Handoff Readiness Report | `./10-ai-handoff-readiness-report.md` |
 
 ---
