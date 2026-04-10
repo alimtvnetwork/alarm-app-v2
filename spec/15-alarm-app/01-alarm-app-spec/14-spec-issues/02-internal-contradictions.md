@@ -14,24 +14,15 @@ Issues where different spec files contradict each other — the most dangerous c
 ## IC-001: sqlx vs rusqlite — Database Driver Conflict
 
 **Severity:** 🔴 Critical  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved
 
-**The contradiction:**
+**The contradiction:** Multiple files used `sqlx` APIs (`SqlitePool`, `sqlx::query()`, `.await`) while the project chose `rusqlite` (sync).
 
-| File | Uses | Evidence |
-|------|------|----------|
-| `01-data-model.md` line 420 | **Rejects** `sqlx` | "Alternatives rejected: `sqlx` (async-only, complex setup)" |
-| `01-data-model.md` line 116–117 | `rusqlite` | `fn from_row(row: &rusqlite::Row)` |
-| `01-data-model.md` line 306 | `sqlx` | `sqlx::query("DELETE FROM alarm_events...")` |
-| `03-file-structure.md` line 305 | `rusqlite` | `rusqlite = { version = "0.31", features = ["bundled"] }` |
-| `04-platform-constraints.md` line 133 | `rusqlite` | `Database(#[from] rusqlite::Error)` |
-| `01-alarm-crud.md` lines 61, 76 | `sqlx` | `sqlx::query("DELETE FROM alarms...")` |
-| `12-platform-and-concurrency-guide.md` line 151 | `rusqlite` | Table says "rusqlite" |
-| `12-platform-and-concurrency-guide.md` line 181 | `sqlx` | `sqlx::query(...)` in code |
-| `12-platform-and-concurrency-guide.md` line 267 | `sqlx` | "`sqlx::SqlitePool`" |
-| `13-ai-cheat-sheet.md` line 16 | `rusqlite` | "SQLite (bundled, via `rusqlite`)" |
-
-**Impact:** AI will fail at compilation. These are incompatible APIs.
+**Resolution:** All code samples converted to `rusqlite` synchronous API:
+- `SqlitePool` → `Connection` or `Arc<Mutex<Connection>>`
+- `sqlx::query(...).bind(...).execute(pool).await` → `conn.execute(..., params![...])`
+- Removed `.await` from all DB operations
+- Files fixed: `01-data-model.md`, `01-alarm-crud.md`, `03-alarm-firing.md`, `07-startup-sequence.md`, `12-platform-and-concurrency-guide.md`
 
 ---
 
@@ -103,11 +94,11 @@ Issues where different spec files contradict each other — the most dangerous c
 ## IC-007: `sqlx` Used in Resolved Issues (01-alarm-crud.md)
 
 **Severity:** 🔴 Critical  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved
 
-**Context:** Even after issue resolutions, `01-alarm-crud.md` lines 61, 76 still use `sqlx::query()` in code samples. If the driver decision was `rusqlite`, these samples are wrong.
+**Resolution:** Converted `01-alarm-crud.md` soft-delete and cleanup code from `sqlx::query()` to `conn.execute()` with `rusqlite` API. See IC-001 resolution.
 
 ---
 
 ## Issues Found So Far: 7
-## Open: 7 | Resolved: 0
+## Open: 5 | Resolved: 2

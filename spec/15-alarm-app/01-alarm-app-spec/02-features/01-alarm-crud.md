@@ -53,29 +53,31 @@ Users can create new alarms by setting a time (hour and minute), optional date, 
 
 ```rust
 // Soft-delete timer
-pub async fn schedule_permanent_delete(pool: SqlitePool, alarm_id: String, undo_token: String) {
+pub fn schedule_permanent_delete(conn: Arc<Mutex<Connection>>, alarm_id: String, undo_token: String) {
     tokio::spawn(async move {
         tokio::time::sleep(Duration::from_secs(5)).await;
 
         // Only delete if still soft-deleted (not undone)
-        let rows = sqlx::query("DELETE FROM alarms WHERE id = ? AND deleted_at IS NOT NULL")
-            .bind(&alarm_id)
-            .execute(&pool).await;
-
-        if let Ok(result) = rows {
-            if result.rows_affected() > 0 {
+        let db = conn.lock().expect("DB lock poisoned");
+        match db.execute(
+            "DELETE FROM alarms WHERE id = ?1 AND deleted_at IS NOT NULL",
+            params![&alarm_id],
+        ) {
+            Ok(rows) if rows > 0 => {
                 tracing::info!(alarm_id = %alarm_id, "Permanently deleted alarm");
             }
+            _ => {}
         }
     });
 }
 
 // Startup cleanup (in startup sequence Step 8)
-pub async fn cleanup_stale_soft_deletes(pool: &SqlitePool) {
+pub fn cleanup_stale_soft_deletes(conn: &Connection) {
     let cutoff = Utc::now() - chrono::Duration::seconds(5);
-    sqlx::query("DELETE FROM alarms WHERE deleted_at IS NOT NULL AND deleted_at < ?")
-        .bind(cutoff.to_rfc3339())
-        .execute(pool).await.ok();
+    conn.execute(
+        "DELETE FROM alarms WHERE deleted_at IS NOT NULL AND deleted_at < ?1",
+        params![cutoff.to_rfc3339()],
+    ).ok();
 }
 ```
 

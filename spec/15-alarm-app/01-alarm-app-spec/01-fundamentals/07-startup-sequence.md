@@ -114,8 +114,7 @@ std::fs::create_dir_all(&app_dir)
 
 ```rust
 let db_path = app_dir.join("alarm-app.db");
-let pool = SqlitePool::connect(&format!("sqlite:{}?mode=rwc", db_path.display()))
-    .await
+let conn = Connection::open(&db_path)
     .expect("Failed to open database");
 ```
 
@@ -126,9 +125,8 @@ let pool = SqlitePool::connect(&format!("sqlite:{}?mode=rwc", db_path.display())
 ### Step 3 — Run Migrations
 
 ```rust
-let mut conn = pool.acquire().await?;
 refinery::embed_migrations!("migrations");
-migrations::runner().run(&mut *conn)?;
+migrations::runner().run(&mut conn)?;
 ```
 
 - **Error:** If migration fails:

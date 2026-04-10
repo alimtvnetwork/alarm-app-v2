@@ -36,7 +36,7 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 **Severity:** 🔴 Critical  
 **Location:** `02-features/01-alarm-crud.md` (lines 61, 76)  
 **Extends:** IC-001  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — converted to `conn.execute()` with `rusqlite` API
 
 **Problem:** `sqlx::query(...)` used in the delete timer and cleanup functions. These are the ONLY code samples for soft-delete/undo behavior — AI will copy them verbatim and get compile errors.
 
@@ -47,9 +47,9 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 **Severity:** 🔴 Critical  
 **Location:** `02-features/03-alarm-firing.md` (line 155)  
 **Extends:** IC-001  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — changed to `fn on_timezone_change(conn: &Connection, new_tz: &Tz)`, removed `.await`
 
-**Problem:** `fn on_timezone_change(pool: &SqlitePool, new_tz: &Tz)` uses `.await` inside. `rusqlite` is synchronous — no `SqlitePool`, no `.await`. This function is copy-paste-critical for DST handling and will fail to compile.
+**Problem:** `fn on_timezone_change(pool: &SqlitePool, new_tz: &Tz)` used `.await` inside. `rusqlite` is synchronous — no `SqlitePool`, no `.await`.
 
 ---
 
@@ -58,9 +58,9 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/07-startup-sequence.md` (line 117)  
 **Extends:** IC-001  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — changed to `Connection::open(&db_path)`
 
-**Problem:** `SqlitePool::connect(&format!("sqlite:{}?mode=rwc", ...))` is `sqlx` connection API. `rusqlite` uses `Connection::open(path)`. Startup will not compile as written.
+**Problem:** Was using `SqlitePool::connect(...)` (sqlx API). Now uses `Connection::open()` (rusqlite).
 
 ---
 
@@ -79,9 +79,9 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 **Severity:** 🟡 Medium  
 **Location:** `01-fundamentals/01-data-model.md` (line 306)  
 **Extends:** IC-001  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — converted to `conn.execute()` with `rusqlite` API
 
-**Problem:** `sqlx::query("DELETE FROM alarm_events WHERE timestamp < ?")` — uses sqlx in a file that elsewhere references rusqlite.
+**Problem:** Was using `sqlx::query(...)`. Now uses `conn.execute(..., params![...])` (rusqlite).
 
 ---
 
@@ -100,9 +100,9 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 **Severity:** 🟡 Medium  
 **Location:** `01-fundamentals/12-platform-and-concurrency-guide.md` (line 181)  
 **Extends:** IC-001  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — converted to `conn.execute()` with `params![]`
 
-**Problem:** `sqlx::query("UPDATE alarms SET...")` — optimistic locking code is the safeguard for a critical race condition and must compile correctly.
+**Problem:** Was using `sqlx::query(...)`. Now uses `conn.execute(..., params![...])` (rusqlite).
 
 ---
 
@@ -117,4 +117,4 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 ---
 
 ## Issues Found: 10
-## Open: 10 | Resolved: 0
+## Open: 5 | Resolved: 5

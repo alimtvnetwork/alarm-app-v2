@@ -178,15 +178,12 @@ User saves edit at t=07:30:02 → overwrites nextFireTime
 **Safeguard:** Use `updatedAt` optimistic locking:
 ```rust
 // On update: include WHERE updated_at = {expected}
-let rows = sqlx::query(
-    "UPDATE alarms SET time=?, ..., updated_at=? WHERE id=? AND updated_at=?"
-)
-.bind(new_updated_at)
-.bind(alarm_id)
-.bind(expected_updated_at)
-.execute(pool).await?;
+let rows = conn.execute(
+    "UPDATE alarms SET time=?, ..., updated_at=? WHERE id=? AND updated_at=?",
+    params![new_time, new_updated_at, alarm_id, expected_updated_at],
+)?;
 
-if rows.rows_affected() == 0 {
+if rows == 0 {
     // Alarm was modified by engine — reload and retry
     return Err(AlarmAppError::ConcurrentModification);
 }
@@ -264,7 +261,7 @@ This is documented in `07-alarm-groups.md`. The group toggle takes precedence.
 | **WAL mode** | `PRAGMA journal_mode=WAL` at startup Step 4 |
 | **Busy timeout** | `PRAGMA busy_timeout=5000` — wait 5s before `SQLITE_BUSY` |
 | **Single writer** | SQLite handles this automatically in WAL mode |
-| **Connection pool** | 1 writer connection + N reader connections via `sqlx::SqlitePool` |
+| **Connection pool** | 1 writer `Connection` wrapped in `Arc<Mutex<Connection>>` + reader connections via `rusqlite` |
 | **Transactions** | Use for multi-step operations (group toggle, import) |
 | **No ORM** | Direct SQL queries with parameterized binds — no ORM overhead or magic |
 
