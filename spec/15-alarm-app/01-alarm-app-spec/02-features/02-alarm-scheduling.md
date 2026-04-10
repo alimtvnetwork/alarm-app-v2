@@ -140,12 +140,19 @@ Optional integration with a holiday calendar API.
 
 ---
 
+## IPC Commands
+
+> Scheduling is handled by `create_alarm` and `update_alarm` IPC commands — see `01-alarm-crud.md`. The `NextFireTime` computation is performed by the Rust backend on every create, edit, toggle, and duplicate operation. No separate scheduling IPC commands exist.
+
+---
+
 ## Cross-References
 
 | Reference | Location |
 |-----------|----------|
 | RepeatPattern Interface | `../01-fundamentals/01-data-model.md` → Interfaces |
 | NextFireTime Computation | `./03-alarm-firing.md` → DST & Timezone-Aware Firing |
+| Design System (UI States) | `../01-fundamentals/02-design-system.md` |
 | Alarm CRUD | `./01-alarm-crud.md` |
 | Alarm Firing | `./03-alarm-firing.md` |
 | Cron Parsing | `croner` crate v2.0 (pinned in `01-data-model.md`) |

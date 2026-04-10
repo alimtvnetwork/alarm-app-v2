@@ -669,6 +669,21 @@ When `pending.len() > 0`, show a badge on the `AlarmOverlay`:
 
 ---
 
+## IPC Commands
+
+> Firing-related IPC commands. See also `06-tauri-architecture-and-framework-comparison.md` for the complete registry.
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `dismiss_alarm` | `{ AlarmId: string }` | `void` |
+| `snooze_alarm` | `{ AlarmId: string, DurationMin: number }` | `SnoozeState` |
+| `get_snooze_state` | `void` | `SnoozeState[]` |
+| `cancel_snooze` | `{ AlarmId: string }` | `void` |
+
+> **Note:** Scheduling is handled by `create_alarm` and `update_alarm` IPC commands — see `01-alarm-crud.md`.
+
+---
+
 ## Cross-References
 
 | Reference | Location |
@@ -676,6 +691,8 @@ When `pending.len() > 0`, show a badge on the `AlarmOverlay`:
 | Snooze System | `./04-snooze-system.md` |
 | Sound & Vibration | `./05-sound-and-vibration.md` |
 | Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
+| Design System (UI States) | `../01-fundamentals/02-design-system.md` |
+| File Structure (Zustand Stores) | `../01-fundamentals/03-file-structure.md` |
 | Startup Sequence | `../01-fundamentals/07-startup-sequence.md` |
 | Dismissal Challenges | `./06-dismissal-challenges.md` |
 | Data Model | `../01-fundamentals/01-data-model.md` |

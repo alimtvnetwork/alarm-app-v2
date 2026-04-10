@@ -1,6 +1,6 @@
 # File Structure
 
-**Version:** 1.9.0  
+**Version:** 1.10.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -55,15 +55,31 @@ src/                          — Frontend (React + TypeScript)
     AlarmForm.tsx             — Create/edit alarm dialog
     AlarmGroupForm.tsx        — Group create/rename dialog
     AlarmOverlay.tsx          — Full-screen firing overlay (dismiss/snooze) — rendered in a **separate Tauri window**, not a child component of Index.tsx (see `03-alarm-firing.md`)
+    ChallengePanel.tsx        — Dismissal challenge UI (math/shake/typing) — rendered inside AlarmOverlay when ChallengeType is set
     ThemeToggle.tsx           — Sun/moon icon button
     ExportImport.tsx          — Export button + import via native file dialog
     AlarmCountdown.tsx        — "Alarm in X hours Y minutes" display
     Toast.tsx                 — Toast notifications via `sonner` (success/error/info/undo)
-    SettingsPanel.tsx          — Settings sections: Theme, Time Format, Snooze, Language, Keyboard Shortcuts ref
+    SettingsPanel.tsx         — Settings sections: Theme, Time Format, Snooze, Language, Keyboard Shortcuts ref
+    SleepWellness.tsx         — Sleep & wellness hub: bedtime reminder config, sleep calculator, mood logger
+    BedtimeReminder.tsx       — Bedtime reminder configuration form
+    SleepCalculator.tsx       — Optimal bedtime / wake time calculator
+    AmbientPlayer.tsx         — Ambient sound player with auto-stop timer
+    MoodLogger.tsx            — Post-dismissal sleep quality + mood prompt
+    StreakCalendar.tsx         — Calendar view of alarm streak data
+    QuoteDisplay.tsx          — Daily motivational quote display
+    AccentColorPicker.tsx     — Accent color selection for personalization
+    BackgroundPicker.tsx      — Custom background image selection
+    HistoryList.tsx           — Alarm event history list with filters
+    AnalyticsChart.tsx        — Charts/graphs for alarm analytics
+    HistoryFilter.tsx         — Filter controls for history view (date range, event type)
 
   pages/
-    Index.tsx                 — Main layout: clock + alarm list + countdown
+    Index.tsx                 — Main layout: clock + alarm list + countdown (route: /)
     Settings.tsx              — Settings page wrapping SettingsPanel (route: /settings)
+    Analytics.tsx             — Alarm history + analytics charts (route: /analytics)
+    Sleep.tsx                 — Sleep & wellness features hub (route: /sleep)
+    Personalization.tsx       — Streaks, quotes, themes, backgrounds (route: /personalization)
 
   lib/
     tauri-commands.ts         — Typed wrappers for Tauri invoke() calls
@@ -387,10 +403,44 @@ zbus = "=4.4.0"                   # Pin 4.x — 5.x is async-only rewrite
 
 ---
 
+## Routing Table
+
+> **Resolves GA2-012, GA3-010.** Defines all routes and navigation structure.
+
+| Route | Page Component | Primary Content | Navigation |
+|-------|---------------|-----------------|------------|
+| `/` | `Index.tsx` | Clock + alarm list + countdown | Bottom tab: Home |
+| `/settings` | `Settings.tsx` | SettingsPanel (theme, time format, snooze, language, shortcuts) | Bottom tab: Settings |
+| `/analytics` | `Analytics.tsx` | HistoryList + AnalyticsChart + HistoryFilter | Bottom tab: Analytics |
+| `/sleep` | `Sleep.tsx` | SleepWellness + BedtimeReminder + SleepCalculator + AmbientPlayer | Bottom tab: Sleep |
+| `/personalization` | `Personalization.tsx` | StreakCalendar + QuoteDisplay + AccentColorPicker + BackgroundPicker | Bottom tab: Me |
+
+### Navigation Method
+
+**Bottom tab bar** (mobile-first) with 5 tabs: Home, Analytics, Sleep, Settings, Me. On desktop, tabs render as a top navigation bar. The tab bar is always visible except when `AlarmOverlay` is active (separate window).
+
+### Router Setup
+
+```tsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+<BrowserRouter>
+  <Routes>
+    <Route path="/" element={<Index />} />
+    <Route path="/settings" element={<Settings />} />
+    <Route path="/analytics" element={<Analytics />} />
+    <Route path="/sleep" element={<Sleep />} />
+    <Route path="/personalization" element={<Personalization />} />
+  </Routes>
+</BrowserRouter>
+```
+
+---
+
 ## Component Hierarchy
 
 ```
-Index.tsx
+Index.tsx (route: /)
   ├── ThemeToggle
   ├── AnalogClock
   ├── DigitalClock
@@ -398,10 +448,27 @@ Index.tsx
   ├── AlarmList
   │   ├── AlarmForm (dialog)
   │   └── AlarmGroupForm (dialog)
-  ├── ExportImport
   └── ExportImport
 
-AlarmOverlay.tsx (mounted in separate Tauri overlay window — NOT a child of Index.tsx)
+Analytics.tsx (route: /analytics)
+  ├── HistoryFilter
+  ├── HistoryList
+  └── AnalyticsChart
+
+Sleep.tsx (route: /sleep)
+  ├── BedtimeReminder
+  ├── SleepCalculator
+  ├── AmbientPlayer
+  └── MoodLogger
+
+Personalization.tsx (route: /personalization)
+  ├── StreakCalendar
+  ├── QuoteDisplay
+  ├── AccentColorPicker
+  └── BackgroundPicker
+
+AlarmOverlay.tsx (mounted in separate Tauri overlay window — NOT a child of any page)
+  └── ChallengePanel (rendered when ChallengeType is set on the firing alarm)
 ```
 
 ---

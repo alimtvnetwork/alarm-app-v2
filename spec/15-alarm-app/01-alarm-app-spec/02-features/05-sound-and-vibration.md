@@ -263,6 +263,16 @@ Call `configure_audio_session()` at **Step 6a** of the startup sequence (paralle
 
 ---
 
+## IPC Commands
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `list_sounds` | `void` | `AlarmSound[]` |
+| `set_custom_sound` | `{ FilePath: string }` | `AlarmSound` |
+| `validate_custom_sound` | `{ FilePath: string }` | `{ IsValid: boolean, Error: string \| null }` |
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Sound preview button plays selected sound briefly (via Rust audio backend)
@@ -283,6 +293,7 @@ Call `configure_audio_session()` at **Step 6a** of the startup sequence (paralle
 | Reference | Location |
 |-----------|----------|
 | Alarm Firing | `./03-alarm-firing.md` |
+| Design System (UI States) | `../01-fundamentals/02-design-system.md` |
 | Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
 | Data Model | `../01-fundamentals/01-data-model.md` |
 | Security Issues | `../03-app-issues/05-security-issues.md` → SEC-PATH-001 |
