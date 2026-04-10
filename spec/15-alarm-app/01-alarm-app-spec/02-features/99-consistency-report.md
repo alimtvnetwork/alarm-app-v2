@@ -1,7 +1,13 @@
 # Consistency Report: Features
 
-**Version:** 1.8.0  
+**Version:** 1.9.0  
 **Generated:** 2026-04-10  
+
+---
+
+## Keywords
+
+`consistency`, `features`, `health-check`, `file-inventory`, `cross-reference`
 **Health Score:** 100/100 (A+)
 
 ---
@@ -66,3 +72,12 @@
 
 - **Errors:** 0
 - **Health Score:** 100/100 (A+)
+
+---
+
+## Cross-References
+
+| Reference | Location |
+|-----------|----------|
+| Parent overview | `./00-overview.md` |
+| Acceptance criteria | `./97-acceptance-criteria.md` |
