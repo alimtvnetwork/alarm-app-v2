@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 2.3.0  
+**Version:** 2.4.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -26,6 +26,34 @@
 ---
 
 ## Version History
+
+### v2.4.0 — 2026-04-10
+
+**Theme:** Fix Phase J — final 7 issues resolved, readiness score 100/100 (A+)
+
+#### Fix Phase J
+
+| Phase | Issues | Focus |
+|-------|:------:|-------|
+| J | 7 | ARIA positive framing, `0=disabled` replacement, personalization IPC commands, concurrency guide enum fix, `!= 0` exemption documentation |
+
+#### Changed
+- `02-features/01-alarm-crud.md` — ARIA label: `'enabled'/'disabled'` → `'on'/'off'` (P14-012)
+- `02-features/03-alarm-firing.md` — `0 = disabled` → `0 = manual dismiss only` (P15-006, 2 locations)
+- `02-features/04-snooze-system.md` — `0 = snooze disabled` → `0 = dismiss only, no snooze` (P15-006)
+- `02-features/14-personalization.md` — Added Theme & Background IPC Commands (4) + Streak IPC Commands (2) (P15-016)
+- `01-fundamentals/01-data-model.md` — Added `!= 0` exemption cross-ref to key patterns (P15-017)
+- `12-platform-and-concurrency-guide.md` — `"fired"` → `AlarmEventType::Fired` enum (P17-005, 2 locations)
+
+#### Confirmed (no change needed)
+- P14-013: ARIA label already uses `alarm.IsEnabled` — correct
+- P18-011: Root overview already uses positive framing — correct
+
+#### Status
+- **Total issues:** 256 (256 resolved + 0 open) ✅
+- **Readiness:** 100/100 (A+)
+
+---
 
 ### v2.3.0 — 2026-04-10
 
