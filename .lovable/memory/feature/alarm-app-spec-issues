@@ -1,17 +1,17 @@
 ---
 name: Alarm App Spec Issues Audit
-description: Tracking all spec quality issues found during deep audit — naming violations, contradictions, structural problems, content gaps, AI handoff risks, logic consistency, UI/UX consistency, guideline compliance
+description: Tracking all spec quality issues found during deep audit — naming violations, contradictions, structural problems, content gaps, AI handoff risks, logic consistency, UI/UX consistency, guideline compliance, foundational alignment
 type: feature
 ---
 
 ## Audit Status
 
-- **Total issues:** 180
-- **Open:** 0
+- **Total issues:** 209
+- **Open:** 29
 - **Resolved:** 180
-- **Discovery phases:** 13 complete
+- **Discovery phases:** 14 complete
 - **Fix phases:** 59 complete
-- **Readiness Score:** 98/100 (A+)
+- **Readiness Score:** Pending (was 100/100, now 29 open issues)
 
 ## Issue Distribution
 
@@ -32,6 +32,30 @@ type: feature
 | Discovery Phase 11 | 14 | 0 | 14 |
 | Discovery Phase 12 | 9 | 0 | 9 |
 | Discovery Phase 13 | 3 | 0 | 3 |
+| Discovery Phase 14 | 29 | 29 | 0 |
+
+## Discovery Phase 14 — Key Findings
+
+### Critical (6)
+- P14-003: ChallengeType uses magic strings, not enum
+- P14-004: ChallengeDifficulty uses magic strings, not enum
+- P14-005: AlarmEvent.Type uses magic strings, not enum
+- P14-018: No AlarmAppError enum spec (thiserror)
+- P14-019: No IPC error response format defined
+- P14-027: No Rust error enum spec despite thiserror in deps
+
+### Medium (17)
+- 9 magic string types needing enums (RepeatType TS, SoundCategory, SettingsValueType, ThemeMode, ExportFormat, ExportScope, DuplicateAction, ImportMode, SortField)
+- 4 feature files missing acceptance criteria
+- PascalCase violations in IPC payloads
+- Settings seeding not specified
+- No frontend state management spec
+- No loading/empty/error UI states spec
+
+### Low (6)
+- Missing boolean semantic inverses
+- Single-DB decision undocumented vs split-DB
+- No config version tracking
 
 ## Canonical Location
 
