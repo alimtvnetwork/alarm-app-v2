@@ -114,3 +114,5 @@ interface HistoryFilter {
 | Dismissal Challenges | `./06-dismissal-challenges.md` |
 | Data Model | `../01-fundamentals/01-data-model.md` |
 | Export/Import | `./10-export-import.md` |
+| Domain Enums | `../01-fundamentals/01-data-model.md` → Domain Enums (`SortField`, `SortOrder`, `AlarmEventType`) |
+| Coding Guidelines | `../../02-coding-guidelines/03-coding-guidelines-spec/` |

@@ -100,8 +100,9 @@ async fn test_create_alarm_persists_to_db() {
         ..Default::default()
     };
 
+    // Rust struct fields are snake_case; serde serializes to PascalCase for IPC
     let alarm = create_alarm_handler(&conn, payload).await.unwrap();
-    assert_eq!(alarm.time, "07:30");
+    assert_eq!(alarm.time, "07:30");  // Rust field access (snake_case)
     assert!(alarm.next_fire_time.is_some());
 
     // Verify persisted
@@ -386,6 +387,7 @@ dep-check:
 | App Issues | `../03-app-issues/08-devops-issues.md` → DEVOPS-TEST-001 |
 | Platform Verification Matrix | `./11-platform-verification-matrix.md` |
 | Dependency Lock | `./10-dependency-lock.md` |
+| Coding Guidelines | `../../02-coding-guidelines/03-coding-guidelines-spec/` — test code must follow same boolean/naming/enum rules |
 
 ---
 

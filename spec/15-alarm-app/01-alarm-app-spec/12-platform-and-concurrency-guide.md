@@ -426,9 +426,10 @@ async fn test_undo_during_hard_delete_timer() {
     tokio::time::sleep(Duration::from_secs(4)).await;
     
     // Alarm should still exist (undo succeeded)
-    let alarm = get_alarm(&db, &alarm.alarm_id).await;
+    // Rust struct fields are snake_case; serde serializes to PascalCase for IPC
+    let alarm = get_alarm(&db, &alarm.alarm_id).await;  // alarm_id → serializes to AlarmId
     assert!(alarm.is_some());
-    assert!(alarm.unwrap().deleted_at.is_none());
+    assert!(alarm.unwrap().deleted_at.is_none());  // deleted_at → serializes to DeletedAt
 }
 
 #[tokio::test]

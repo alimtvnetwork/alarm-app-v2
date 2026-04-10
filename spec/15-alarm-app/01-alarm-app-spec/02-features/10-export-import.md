@@ -158,3 +158,5 @@ interface ImportResult {
 | Alarm CRUD | `./01-alarm-crud.md` |
 | Alarm Groups | `./07-alarm-groups.md` |
 | Tauri Architecture | `../01-fundamentals/06-tauri-architecture-and-framework-comparison.md` |
+| Domain Enums | `../01-fundamentals/01-data-model.md` → Domain Enums (`ExportFormat`, `ExportScope`, `DuplicateAction`, `ImportMode`) |
+| Coding Guidelines | `../../02-coding-guidelines/03-coding-guidelines-spec/` |

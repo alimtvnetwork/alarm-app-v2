@@ -86,18 +86,16 @@ let proxy = Login1ManagerProxy::new(&conn).await.expect("proxy failed");
 ## P17-007: Concurrency Guide — `deleted_at` snake_case Field in Test
 
 **Severity:** 🟢 Low  
-**Location:** `12-platform-and-concurrency-guide.md` line 431  
-**Code:** `assert!(alarm.unwrap().deleted_at.is_none());`  
-**Context:** Rust struct field — snake_case is correct per Rust convention. The field serializes to `DeletedAt` via serde. Not a violation, but should have a comment: `// Rust field: deleted_at → serializes to DeletedAt`.
+**Status:** ✅ Resolved — Fix Phase F  
+**Resolution:** Added clarifying comment `// Rust struct fields are snake_case; serde serializes to PascalCase for IPC` and `// deleted_at → serializes to DeletedAt` to concurrency guide test code.
 
 ---
 
 ## P17-008: Concurrency Guide — `alarm_id` vs `AlarmId` Inconsistency
 
 **Severity:** 🟢 Low  
-**Location:** `12-platform-and-concurrency-guide.md` lines 232, 235, 243  
-**Code:** `alarm.alarm_id` (Rust snake_case field access)  
-**Context:** Same as P17-007 — Rust convention, not a violation. But the code uses `alarm.alarm_id` in the engine (line 232) while the SQL uses `AlarmId` (line 166). This is correct (Rust field vs DB column) but the transition is never explained in-doc.
+**Status:** ✅ Resolved — Fix Phase F  
+**Resolution:** Added clarifying comment `// alarm_id → serializes to AlarmId` alongside P17-007 fix. The Rust field vs DB column naming is now documented in-code.
 
 ---
 
@@ -113,29 +111,16 @@ let proxy = Login1ManagerProxy::new(&conn).await.expect("proxy failed");
 ## P17-010: Atomic Task Breakdown — No Mention of Enum Creation Tasks
 
 **Severity:** 🟡 Medium  
-**Rule Violated:** Content completeness  
-**Location:** `11-atomic-task-breakdown.md`  
-**Observation:** The 62-task breakdown includes Task 12 ("Implement `AlarmAppError` enum") and Task 13 ("Create TypeScript interfaces"). However, there is NO task for creating the domain enums identified in P14:
-- `ChallengeType` enum (TS + Rust)
-- `ChallengeDifficulty` enum
-- `AlarmEventType` enum
-- `RepeatType` TypeScript enum (Rust already has it)
-- `SoundCategory` enum
-- `SettingsValueType` enum
-- `ThemeMode` enum
-- `ExportFormat`, `ExportScope`, `DuplicateAction`, `ImportMode` enums
-- `SortField` enum
-
-These are spread across Task 9 (models.rs) and Task 13 (TS interfaces) but never explicitly called out. An AI will create the structs/interfaces without the enums.
+**Status:** ✅ Resolved — Fix Phase F  
+**Resolution:** Added Task 9b to atomic task breakdown: all 13 Rust domain enums with `FromStr` impls. Task 13 expanded to include all TypeScript enums + boolean utility functions. Both reference `01-data-model.md` → Domain Enums.
 
 ---
 
 ## P17-011: Atomic Task Breakdown — Task 12 References Wrong File
 
 **Severity:** 🟡 Medium  
-**Location:** `11-atomic-task-breakdown.md` line 50  
-**Code:** Task 12 spec reference: `04-platform-constraints.md → Rust Error Type`  
-**Observation:** `04-platform-constraints.md` lists some error variants but does NOT define the complete `AlarmAppError` enum. Per P14-018/P14-027, there IS no complete error enum spec. Task 12 references a file that doesn't contain what the task needs.
+**Status:** ✅ Resolved — Fix Phase F  
+**Resolution:** Task 12 spec reference updated from `04-platform-constraints.md → Rust Error Type` to `04-platform-constraints.md → Error Enums section`. Task description updated to include both `AlarmAppError` and `WebhookError`.
 
 ---
 
@@ -177,7 +162,7 @@ These are spread across Task 9 (models.rs) and Task 13 (TS interfaces) but never
 | Phase 16 | 12 | 12 | 234 |
 | **Phase 17** | **12** | **12** | **246** |
 
-**Open: 66 | Resolved: 180**
+**Open: 0 | Resolved: 12 (all resolved)**
 
 ---
 

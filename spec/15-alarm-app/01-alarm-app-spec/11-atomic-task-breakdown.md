@@ -1,9 +1,9 @@
 # Atomic Task Breakdown — Implementation Order
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-09  
-**Purpose:** Dependency-ordered atomic coding tasks for AI execution at near-100% success  
-**Total Tasks:** 62  
+**Version:** 1.1.0  
+**Updated:** 2026-04-10  
+**Purpose:** Dependency-ordered atomic coding tasks for AI execution  
+**Total Tasks:** 62
 **Estimated Total:** 20–26 days
 
 ---
@@ -44,12 +44,13 @@
 | # | Task | Effort | Spec Reference | Risk | Depends On |
 |---|------|--------|----------------|:----:|:----------:|
 | 8 | Implement `storage/db.rs` — SQLite connection open + `refinery` migration runner + WAL mode + PRAGMAs | 2h | `01-data-model.md` → Migration Strategy, `07-startup-sequence.md` Steps 2-4 | 🔴 | 6 |
-| 9 | Implement `storage/models.rs` — `AlarmRow`, `RepeatType`, `AlarmGroupRow`, `SettingsRow`, `SnoozeStateRow`, `AlarmEventRow` with `from_row()` | 2h | `01-data-model.md` → Rust Data Mapping | 🟡 | 8 |
+| 9 | Implement `storage/models.rs` — `AlarmRow` with `from_row()`, `AlarmGroupRow`, `SettingsRow`, `SnoozeStateRow`, `AlarmEventRow` | 2h | `01-data-model.md` → Rust Data Mapping | 🟡 | 8 |
+| 9b | Implement all Rust domain enums: `RepeatType`, `ChallengeType`, `ChallengeDifficulty`, `AlarmEventType`, `SoundCategory`, `SettingsValueType`, `ThemeMode`, `ExportFormat`, `ExportScope`, `DuplicateAction`, `ImportMode`, `SortField`, `SortOrder` with `FromStr` impls | 1h | `01-data-model.md` → Domain Enums (Rust section) | 🔴 | 4 |
 | 10 | Implement `RepeatPattern` JSON serialization: `days_of_week()` from TEXT, `repeat_pattern()` builder | 1h | `01-data-model.md` → AlarmRow impl | 🔴 | 9 |
-| 11 | Implement settings key-value CRUD: `get_setting<T>()`, `update_setting()`, `Settings::load_all()`, `ensure_defaults()` | 1h | `01-data-model.md` → Settings Keys + DB-SETTINGS-001 | 🟡 | 8 |
-| 12 | Implement `AlarmAppError` enum with `thiserror` — all 13 error variants | 30m | `04-platform-constraints.md` → Rust Error Type | 🟢 | 4 |
-| 13 | Create TypeScript interfaces: `Alarm`, `RepeatPattern`, `AlarmGroup`, `AlarmSound`, `AlarmEvent`, `SnoozeState` | 30m | `01-data-model.md` → Interfaces | 🟢 | 2 |
-| 14 | Create `lib/tauri-commands.ts` — typed `invoke()` wrappers with `safeInvoke()` timeout + error toast | 1h | `04-platform-constraints.md` → Frontend Error Handling, `06-tauri-architecture.md` → IPC | 🟡 | 13 |
+| 11 | Implement settings key-value CRUD: `get_setting<T>()`, `update_setting()`, `Settings::load_all()`, `ensure_defaults()` | 1h | `01-data-model.md` → Settings Keys + Settings Seeding Strategy | 🟡 | 8 |
+| 12 | Implement `AlarmAppError` + `WebhookError` enums with `thiserror` — all variants per spec | 30m | `04-platform-constraints.md` → Error Enums section | 🟡 | 4 |
+| 13 | Create TypeScript interfaces + enums: `Alarm`, `RepeatPattern`, `AlarmGroup`, `AlarmSound`, `AlarmEvent`, `SnoozeState`, ALL domain enums (`ChallengeType`, `AlarmEventType`, `SortField`, etc.), boolean utility functions (`isDisabled`, `isVibrationOff`, `isFixedVolume`) | 1h | `01-data-model.md` → Interfaces + Domain Enums (TypeScript section) + Boolean Semantic Inverses | 🔴 | 2 |
+| 14 | Create `lib/tauri-commands.ts` — typed `invoke()` wrappers with `safeInvoke()` timeout + error toast | 1h | `04-platform-constraints.md` → Frontend Error Handling + IPC Error Response Format, `06-tauri-architecture.md` → IPC | 🟡 | 13 |
 | 15 | Implement alarm CRUD operations in Rust: `insert_alarm()`, `update_alarm()`, `list_alarms()`, `soft_delete_alarm()`, `undo_delete()` | 2h | `01-alarm-crud.md` → Soft-delete timer Rust code | 🟡 | 9, 12 |
 | 16 | Implement event logging: `insert_alarm_event()`, `purge_old_events()` (90-day retention) | 30m | `01-data-model.md` → Event Retention Policy | 🟢 | 8 |
 
