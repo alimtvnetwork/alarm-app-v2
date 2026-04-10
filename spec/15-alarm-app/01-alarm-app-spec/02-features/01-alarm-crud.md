@@ -1,7 +1,7 @@
 # Alarm CRUD
 
-**Version:** 1.6.0  
-**Updated:** 2026-04-09  
+**Version:** 1.7.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
@@ -146,7 +146,7 @@ const sensors = useSensors(
 <div
   role="listitem"
   aria-roledescription="sortable alarm"
-  aria-label={`${alarm.label}, ${alarm.time}, ${alarm.enabled ? 'enabled' : 'disabled'}`}
+  aria-label={`${alarm.Label}, ${alarm.Time}, ${alarm.IsEnabled ? 'enabled' : 'disabled'}`}
   aria-describedby="dnd-instructions"
   tabIndex={0}
 >

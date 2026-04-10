@@ -1,7 +1,7 @@
 # Startup Sequence
 
-**Version:** 1.1.0  
-**Updated:** 2026-04-09  
+**Version:** 1.2.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
@@ -100,10 +100,12 @@ Defines the exact initialization order for the Alarm App on launch. Incorrect or
 ### Step 1 — Resolve App Data Directory
 
 ```rust
+// INTENTIONAL PANIC: App cannot function without data directory.
+// These expect() calls are exempt — startup-critical, no recovery possible.
 let app_dir = app_handle.path().app_data_dir()
-    .expect("Failed to resolve app data directory");
+    .expect("FATAL: Failed to resolve app data directory");
 std::fs::create_dir_all(&app_dir)
-    .expect("Failed to create app data directory");
+    .expect("FATAL: Failed to create app data directory");
 ```
 
 - **Error:** If directory creation fails → show native error dialog, exit with code 1
@@ -114,8 +116,9 @@ std::fs::create_dir_all(&app_dir)
 
 ```rust
 let db_path = app_dir.join("alarm-app.db");
+// INTENTIONAL PANIC: App cannot function without database.
 let conn = Connection::open(&db_path)
-    .expect("Failed to open database");
+    .expect("FATAL: Failed to open database");
 ```
 
 - **Error:** If DB file is locked by another process → show "Another instance may be running" dialog
