@@ -66,7 +66,7 @@ All 5 migration phases have been completed:
 | 9 | `02-features/00-overview.md` | Native descriptions for all features |
 | 10 | `02-features/01-alarm-crud.md` | SQLite persistence via IPC |
 | 11 | `02-features/03-alarm-firing.md` | Rust thread, native audio, OS notifications |
-| 12 | `02-features/04-snooze-system.md` | SQLite snooze_state table |
+| 12 | `02-features/04-snooze-system.md` | SQLite `SnoozeState` table |
 | 13 | `02-features/05-sound-and-vibration.md` | Native audio, platform haptics |
 | 14 | `02-features/06-dismissal-challenges.md` | Native accelerometer |
 | 15 | `02-features/07-alarm-groups.md` | SQLite group state |
@@ -75,7 +75,7 @@ All 5 migration phases have been completed:
 | 18 | `02-features/10-export-import.md` | Native file dialogs, Rust backend |
 | 19 | `02-features/11-sleep-wellness.md` | Native audio, notifications, sensors |
 | 20 | `02-features/12-smart-features.md` | System tray, native APIs |
-| 21 | `02-features/13-analytics.md` | SQLite alarm_events table |
+| 21 | `02-features/13-analytics.md` | SQLite `AlarmEvents` table |
 | 22 | `02-features/14-personalization.md` | SQLite, native file dialog |
 | 23 | `reference/alarm-app-features.md` | Browser → native terminology |
 | 24 | `reference/alarm-clock-features.md` | Browser → native terminology |

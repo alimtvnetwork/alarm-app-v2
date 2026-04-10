@@ -58,8 +58,8 @@
 - **Logging strategy** in `07-startup-sequence.md` v1.1.0 — `tracing` + `tracing-appender` (daily rotation, 7-day retention), 5 log levels, frontend forwarding via `log_from_frontend` IPC
 - **Multi-monitor overlay** in `03-alarm-firing.md` v1.5.0 — `current_monitor()` for visible app, `primary()` when minimized to tray
 - **Export privacy warning** in `10-export-import.md` v1.3.0 — confirmation dialog before export, optional AES-256 ZIP for v2.0+
-- **Challenge calibration** in `06-dismissal-challenges.md` v1.2.0 — operand rules per tier, target solve times, solve time logging in `alarm_events.metadata`, Custom tier (P2), integer-only answers
-- **`alarm_label_snapshot` + `alarm_time_snapshot`** columns on `alarm_events` table — preserves context after alarm deletion (DB-ORPHAN-001)
+- **Challenge calibration** in `06-dismissal-challenges.md` v1.2.0 — operand rules per tier, target solve times, solve time logging in `AlarmEvents.metadata`, Custom tier (P2), integer-only answers
+- **`AlarmLabelSnapshot` + `AlarmTimeSnapshot`** columns on `AlarmEvents` table — preserves context after alarm deletion (DB-ORPHAN-001)
 - **`value_type` column** on `settings` table + typed `get_setting<T>()` Rust helper (DB-SETTINGS-001)
 - **`@dnd-kit/core` v6.x** explicitly specified, `react-beautiful-dnd` rejected as deprecated (FE-DND-001)
 
@@ -77,7 +77,7 @@
 - **BE-VOLUME-001** ✅ — Already resolved by BE-AUDIO-001 (quadratic curve in sound spec)
 - **FE-DND-001** ✅ — @dnd-kit/core specified
 - **FE-OVERLAY-001** ✅ — Multi-monitor overlay behavior defined
-- **DB-ORPHAN-001** ✅ — Denormalized snapshot columns on alarm_events
+- **DB-ORPHAN-001** ✅ — Denormalized snapshot columns on `AlarmEvents`
 - **DB-SETTINGS-001** ✅ — value_type column + get_setting<T>()
 - **SEC-EXPORT-001** ✅ — Export privacy warning dialog
 - **SEC-SOUND-001** ✅ — Already resolved by BE-AUDIO-002/SEC-PATH-001 validation chain
@@ -186,9 +186,9 @@
 #### Added
 - Missed Alarm Recovery section in `03-alarm-firing.md`
 - `RepeatPattern` interface with `cron` type support
-- `maxSnoozeCount` field in Alarm interface
-- `nextFireTime` precomputed field and computation rules
-- `snooze_state` table in SQLite schema
+- `MaxSnoozeCount` field in Alarm interface
+- `NextFireTime` precomputed field and computation rules
+- `SnoozeState` table in SQLite schema
 - Platform-specific wake-event listeners (macOS/Windows/Linux)
 - Auto-dismiss feature with configurable timeout
 - Reference documents: `alarm-app-features.md`, `alarm-clock-features.md` (75 features)

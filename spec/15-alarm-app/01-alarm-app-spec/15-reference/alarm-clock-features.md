@@ -138,7 +138,7 @@ Gradually brighten the screen (or connected smart lights) before the alarm to si
 Automatically skip alarms on public holidays or user-defined days off.
 
 ### 5.8 Missed Alarm Recovery
-On app launch and system wake, detect all missed alarms (where `nextFireTime < now`) and surface "Missed Alarm" notifications immediately. Critical reliability feature for desktop.
+On app launch and system wake, detect all missed alarms (where `NextFireTime < now`) and surface "Missed Alarm" notifications immediately. Critical reliability feature for desktop.
 
 ---
 
@@ -254,7 +254,7 @@ Dedicated reminders tied to alarm times for taking pills, drinking water, or oth
 Flash the device screen or camera LED as a visual alarm — useful for hearing-impaired users.
 
 ### 10.8 Missed Alarm Notifications
-If you somehow sleep through an alarm, send persistent follow-up OS notifications. Powered by `nextFireTime` persistence and system wake detection.
+If you somehow sleep through an alarm, send persistent follow-up OS notifications. Powered by `NextFireTime` persistence and system wake detection.
 
 ### 10.9 Battery-Aware Alarms
 Warn the user if battery is low and the alarm might not fire; optionally reduce background tasks. Native battery API.

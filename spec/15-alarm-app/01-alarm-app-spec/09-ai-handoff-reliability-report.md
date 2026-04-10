@@ -90,7 +90,7 @@
 | 5.8 | `NextFireTime` computation for `cron` type via `croner` crate | 45% | 🟡 Med |
 | 5.9 | **DST spring-forward handling** — skipped time → fire at next valid minute | **70%** | 🔴 Critical |
 | 5.10 | **DST fall-back handling** — fire on first occurrence only, not twice | **70%** | 🔴 Critical |
-| 5.11 | **Timezone change detection** — recalc all nextFireTime on OS tz change | **65%** | 🔴 Critical |
+| 5.11 | **Timezone change detection** — recalc all `NextFireTime` on OS tz change | **65%** | 🔴 Critical |
 | 5.12 | Use `chrono-tz` for IANA timezone resolution, store in settings table | 35% | 🟡 Med |
 
 ### Phase 6: Missed Alarm Recovery (6 tasks) ⚠️ HIGH RISK
@@ -102,7 +102,7 @@
 | 6.3 | **Windows wake detection** — `WM_POWERBROADCAST` listener | **65%** | 🔴 Critical |
 | 6.4 | **Linux wake detection** — `systemd-logind PrepareForSleep` D-Bus signal | **70%** | 🔴 Critical |
 | 6.5 | Missed alarm UI — "MISSED" badge, original time, current time display | 25% | 🟡 Med |
-| 6.6 | Log missed alarms as `type = 'missed'` in alarm_events | 15% | 🟢 Low |
+| 6.6 | Log missed alarms as `type = 'missed'` in `AlarmEvents` | 15% | 🟢 Low |
 
 ### Phase 7: Audio & Sound (7 tasks)
 

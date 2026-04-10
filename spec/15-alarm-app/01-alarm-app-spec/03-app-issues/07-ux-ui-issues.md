@@ -32,7 +32,7 @@
 
 ---
 
-### UX-TZ-001 — Timezone change invalidates nextFireTime
+### UX-TZ-001 — Timezone change invalidates `NextFireTime`
 
 | Field | Value |
 |-------|-------|
