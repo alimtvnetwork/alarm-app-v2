@@ -189,7 +189,7 @@
 4. Load settings from `Settings` table
 5. Initialize system tray with "loading..." state
 6. Start alarm engine background thread
-7. Run missed alarm check (`WHERE next_fire_time < now AND enabled = 1`)
+7. Run missed alarm check (`WHERE NextFireTime < now AND IsEnabled = 1`)
 8. Surface missed alarms (notifications + queue)
 9. Start WebView / render React UI
 10. Update tray with next alarm time

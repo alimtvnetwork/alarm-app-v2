@@ -86,7 +86,7 @@ interface SnoozeState {
 ```rust
 use serde::{Deserialize, Serialize};
 
-/// Rust struct mapping the `alarms` SQLite table row.
+/// Rust struct mapping the `Alarms` SQLite table row.
 /// JSON fields are stored as TEXT in SQLite and must be manually deserialized.
 /// Uses `#[serde(rename_all = "PascalCase")]` so Tauri IPC serializes to PascalCase JSON keys.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -286,7 +286,8 @@ CREATE TABLE AlarmGroups (
 
 CREATE TABLE Settings (
   Key TEXT PRIMARY KEY,
-  Value TEXT NOT NULL
+  Value TEXT NOT NULL,
+  ValueType TEXT NOT NULL DEFAULT 'string'  -- 'string' | 'integer' | 'boolean' | 'json'
 );
 
 CREATE TABLE SnoozeState (
