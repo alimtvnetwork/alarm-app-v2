@@ -20,10 +20,10 @@
 **File:** `00-overview.md` line 122  
 **Problem:** Module inventory says "77 issues found, 69 resolved" — should be "95 found, 77 resolved" after Discovery Phase 7.
 
-### D7-REG-002: `04-snooze-system.md` SnoozeState still uses `NextFireTime` 
+### D7-REG-002: ~~`04-snooze-system.md` SnoozeState still uses `NextFireTime`~~ ✅ Resolved (Fix 22)
 **Severity:** 🔴 Critical  
 **File:** `02-features/04-snooze-system.md` line 43  
-**Problem:** Fix Phase 20 added the correct `SnoozeState` interface to `01-data-model.md` with `SnoozeUntil`, but the snooze spec's own interface definition on line 43 still says `NextFireTime: string`. AI will see two conflicting interfaces and pick the wrong one.
+**Problem:** Fixed `NextFireTime` → `SnoozeUntil` to match the canonical interface in `01-data-model.md`.
 
 ### D7-REG-003: ~~`00-overview.md` tech stack says "via Tauri plugin" for SQLite~~ ✅ Resolved (Fix 21)
 **Severity:** 🟡 Medium  
@@ -94,10 +94,10 @@
 **File:** `02-features/05-sound-and-vibration.md` lines 96, 100, 104  
 **Problem:** Uses `AlarmAppError::RestrictedPath` but this variant doesn't exist in the error enum in `04-platform-constraints.md`. AI will get a compilation error.
 
-### D7-NEW-011: `04-snooze-system.md` uses `EventType = 'Snoozed'` (capitalized)
+### D7-NEW-011: ~~`04-snooze-system.md` uses `EventType = 'Snoozed'` (capitalized)~~ ✅ Resolved (Fix 22)
 **Severity:** 🟡 Medium  
 **File:** `02-features/04-snooze-system.md` line 61  
-**Problem:** `EventType = 'Snoozed'` — but the data model defines event types as lowercase: `"fired" | "snoozed" | "dismissed" | "missed"`. Capital 'S' will cause no match in queries.
+**Problem:** Fixed to `Type = 'snoozed'` — matching the data model's lowercase event types and correct column name.
 
 ### D7-NEW-012: `13-ai-cheat-sheet.md` missing closing code fence
 **Severity:** 🔴 Critical  
@@ -116,8 +116,8 @@
 | Status | Previous | New | Total |
 |--------|:--------:|:---:|:-----:|
 | Total issues | 77 | 18 | **95** |
-| Open | 0 | 14 | **14** |
-| Resolved | 77 | 4 | **81** |
+| Open | 0 | 12 | **12** |
+| Resolved | 77 | 6 | **83** |
 
 ---
 
