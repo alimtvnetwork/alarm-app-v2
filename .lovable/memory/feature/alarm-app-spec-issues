@@ -7,10 +7,10 @@ type: feature
 ## Audit Status
 
 - **Total issues:** 154
-- **Open:** 10
-- **Resolved:** 144
+- **Open:** 4
+- **Resolved:** 150
 - **Discovery phases:** 10 complete
-- **Fix phases:** 42 complete
+- **Fix phases:** 44 complete
 
 ## Issue Distribution
 
@@ -27,24 +27,14 @@ type: feature
 | Discovery Phase 7 | 18 | 0 | 18 |
 | Discovery Phase 8 | 11 | 0 | 11 |
 | Discovery Phase 9 | 30 | 0 | 30 |
-| Discovery Phase 10 | 18 | 10 | 8 |
+| Discovery Phase 10 | 18 | 4 | 14 |
 
-## Fix Phases 40-42 Completed
+## Remaining Open (4 issues — all Low/Medium ambiguity)
 
-- **Fix 40:** D10-001 (stale overview count), D10-005 (missing spec-issues ref in readiness report), D10-009/D10-010 (absolute filesystem paths) — all resolved
-- **Fix 41:** D10-002–004 (version mismatches in readiness report) — all resolved
-- **Fix 42:** D10-006 (duplicate Cargo.toml dependencies) — resolved
-
-## Remaining Open (10 issues)
-
-- D10-007: Settings schema missing ValueType column
-- D10-008: Rust struct comment says `alarms` lowercase
-- D10-011–013: Remaining naming violations in app-issues
-- D10-014: db.ts described as "Frontend DB query helpers"
-- D10-015: Superseded reliability report clarity
-- D10-016: AI cheat sheet Settings column count
-- D10-017: AutoLaunch string boolean confusion
-- D10-018: platform-strategy.md legacy status
+- D10-014: db.ts described as "Frontend DB query helpers" (should be IPC wrappers)
+- D10-015: Superseded reliability report needs clarity label
+- D10-017: AutoLaunch string boolean confusion with ValueType
+- D10-018: platform-strategy.md legacy status needs SUPERSEDED banner
 
 ## Canonical Location
 
