@@ -82,10 +82,10 @@ Optional challenges that must be completed before an alarm can be dismissed. Pre
 Each alarm can have an optional challenge:
 ```typescript
 interface AlarmChallenge {
-  type: 'math' | 'memory' | 'shake' | 'typing' | 'qr' | 'steps';
-  difficulty?: 'easy' | 'medium' | 'hard'; // math only
-  shakeCount?: number; // shake only
-  stepCount?: number;  // steps only
+  Type: 'math' | 'memory' | 'shake' | 'typing' | 'qr' | 'steps';
+  Difficulty?: 'easy' | 'medium' | 'hard'; // math only
+  ShakeCount?: number; // shake only
+  StepCount?: number;  // steps only
 }
 ```
 

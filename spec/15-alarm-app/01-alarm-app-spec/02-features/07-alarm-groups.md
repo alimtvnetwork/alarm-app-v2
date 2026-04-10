@@ -60,7 +60,7 @@ Add `previous_enabled INTEGER` column to the `alarms` table. This stores each al
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `toggle_group` | `{ groupId: string, enabled: boolean }` | `void` |
+| `toggle_group` | `{ GroupId: string, IsEnabled: boolean }` | `void` |
 
 ### Edge Cases
 

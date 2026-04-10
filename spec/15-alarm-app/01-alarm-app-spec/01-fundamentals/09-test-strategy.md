@@ -162,11 +162,11 @@ vi.mock('@tauri-apps/api/core', () => ({
 describe('useAlarms', () => {
   it('should create alarm and add to list', async () => {
     const { invoke } = await import('@tauri-apps/api/core');
-    (invoke as any).mockResolvedValue({ id: '1', time: '07:30', label: 'Test' });
+    (invoke as any).mockResolvedValue({ AlarmId: '1', Time: '07:30', Label: 'Test' });
 
     const { result } = renderHook(() => useAlarms());
     await act(async () => {
-      await result.current.createAlarm({ time: '07:30', label: 'Test' });
+      await result.current.createAlarm({ Time: '07:30', Label: 'Test' });
     });
 
     expect(invoke).toHaveBeenCalledWith('create_alarm', expect.any(Object));

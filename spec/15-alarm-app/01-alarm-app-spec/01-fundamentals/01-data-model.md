@@ -26,24 +26,24 @@ Defines all TypeScript interfaces, SQLite schema, and validation rules for the A
 
 ```typescript
 interface Alarm {
-  id: string;                      // UUID v4
-  time: string;                    // "HH:MM" 24-hour format
-  date: string | null;             // "YYYY-MM-DD" for date-specific alarms, null for recurring/daily
-  label: string;                   // User-defined label, max 50 chars
-  enabled: boolean;                // Toggle state
-  repeat: RepeatPattern;           // Scheduling pattern (replaces recurringDays)
-  groupId: string | null;          // Reference to AlarmGroup.id
-  snoozeDurationMin: number;       // 1–30, default 5
-  maxSnoozeCount: number;          // 1–10, default 3 (0 = snooze disabled)
-  soundFile: string;               // Built-in key OR custom file path
-  vibrationEnabled: boolean;       // Independent vibration toggle
-  gradualVolume: boolean;          // Fade-in volume enabled
-  gradualVolumeDurationSec: number; // 15, 30, or 60 seconds
-  autoDismissMin: number;          // 0 = disabled, 1–60 = auto-stop after N minutes
-  nextFireTime: string | null;     // ISO 8601 — precomputed next fire time
-  deletedAt: string | null;        // ISO 8601 — soft-delete timestamp (null = active)
-  createdAt: string;               // ISO 8601 timestamp
-  updatedAt: string;               // ISO 8601 timestamp
+  AlarmId: string;                 // UUID v4
+  Time: string;                    // "HH:MM" 24-hour format
+  Date: string | null;             // "YYYY-MM-DD" for date-specific alarms, null for recurring/daily
+  Label: string;                   // User-defined label, max 50 chars
+  IsEnabled: boolean;              // Toggle state
+  Repeat: RepeatPattern;           // Scheduling pattern (replaces recurringDays)
+  GroupId: string | null;          // Reference to AlarmGroup.AlarmGroupId
+  SnoozeDurationMin: number;       // 1–30, default 5
+  MaxSnoozeCount: number;          // 1–10, default 3 (0 = snooze disabled)
+  SoundFile: string;               // Built-in key OR custom file path
+  IsVibrationEnabled: boolean;     // Independent vibration toggle
+  IsGradualVolume: boolean;        // Fade-in volume enabled
+  GradualVolumeDurationSec: number; // 15, 30, or 60 seconds
+  AutoDismissMin: number;          // 0 = disabled, 1–60 = auto-stop after N minutes
+  NextFireTime: string | null;     // ISO 8601 — precomputed next fire time
+  DeletedAt: string | null;        // ISO 8601 — soft-delete timestamp (null = active)
+  CreatedAt: string;               // ISO 8601 timestamp
+  UpdatedAt: string;               // ISO 8601 timestamp
 }
 ```
 
@@ -55,10 +55,10 @@ interface Alarm {
 
 ```typescript
 interface RepeatPattern {
-  type: "once" | "daily" | "weekly" | "interval" | "cron";
-  daysOfWeek: number[];       // 0=Sun..6=Sat (for "weekly" type)
-  intervalMinutes: number;    // For "interval" type (e.g., every 120 min)
-  cronExpression: string;     // For "cron" type — parsed by `croner` crate
+  Type: "once" | "daily" | "weekly" | "interval" | "cron";
+  DaysOfWeek: number[];       // 0=Sun..6=Sat (for "weekly" type)
+  IntervalMinutes: number;    // For "interval" type (e.g., every 120 min)
+  CronExpression: string;     // For "cron" type — parsed by `croner` crate
 }
 ```
 
@@ -71,14 +71,16 @@ use serde::{Deserialize, Serialize};
 
 /// Rust struct mapping the `alarms` SQLite table row.
 /// JSON fields are stored as TEXT in SQLite and must be manually deserialized.
-#[derive(Debug, Clone)]
+/// Uses `#[serde(rename_all = "PascalCase")]` so Tauri IPC serializes to PascalCase JSON keys.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct AlarmRow {
-    pub id: String,
+    pub alarm_id: String,
     pub time: String,                     // "HH:MM"
     pub date: Option<String>,            // "YYYY-MM-DD" or NULL
     pub label: String,
-    pub enabled: bool,                    // SQLite INTEGER → bool
-    pub previous_enabled: Option<bool>,
+    pub is_enabled: bool,                 // SQLite INTEGER → bool
+    pub is_previous_enabled: Option<bool>,
     pub repeat_type: String,              // "once"|"daily"|"weekly"|"interval"|"cron"
     pub repeat_days_of_week: String,      // JSON TEXT: "[0,3,5]"
     pub repeat_interval_minutes: i32,
@@ -87,8 +89,8 @@ pub struct AlarmRow {
     pub snooze_duration_min: i32,
     pub max_snooze_count: i32,
     pub sound_file: String,
-    pub vibration_enabled: bool,
-    pub gradual_volume: bool,
+    pub is_vibration_enabled: bool,
+    pub is_gradual_volume: bool,
     pub gradual_volume_duration_sec: i32,
     pub auto_dismiss_min: i32,
     pub next_fire_time: Option<String>,   // ISO 8601
@@ -113,37 +115,37 @@ impl AlarmRow {
         }
     }
 
-    /// Convert from rusqlite::Row
+    /// Convert from rusqlite::Row — column names are PascalCase to match schema
     pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
         Ok(Self {
-            id: row.get("id")?,
-            time: row.get("time")?,
-            date: row.get("date")?,
-            label: row.get("label")?,
-            enabled: row.get::<_, i32>("enabled")? != 0,
-            previous_enabled: row.get::<_, Option<i32>>("previous_enabled")?.map(|v| v != 0),
-            repeat_type: row.get("repeat_type")?,
-            repeat_days_of_week: row.get("repeat_days_of_week")?,
-            repeat_interval_minutes: row.get("repeat_interval_minutes")?,
-            repeat_cron_expression: row.get("repeat_cron_expression")?,
-            group_id: row.get("group_id")?,
-            snooze_duration_min: row.get("snooze_duration_min")?,
-            max_snooze_count: row.get("max_snooze_count")?,
-            sound_file: row.get("sound_file")?,
-            vibration_enabled: row.get::<_, i32>("vibration_enabled")? != 0,
-            gradual_volume: row.get::<_, i32>("gradual_volume")? != 0,
-            gradual_volume_duration_sec: row.get("gradual_volume_duration_sec")?,
-            auto_dismiss_min: row.get("auto_dismiss_min")?,
-            next_fire_time: row.get("next_fire_time")?,
-            deleted_at: row.get("deleted_at")?,
-            created_at: row.get("created_at")?,
-            updated_at: row.get("updated_at")?,
+            alarm_id: row.get("AlarmId")?,
+            time: row.get("Time")?,
+            date: row.get("Date")?,
+            label: row.get("Label")?,
+            is_enabled: row.get::<_, i32>("IsEnabled")? != 0,
+            is_previous_enabled: row.get::<_, Option<i32>>("IsPreviousEnabled")?.map(|v| v != 0),
+            repeat_type: row.get("RepeatType")?,
+            repeat_days_of_week: row.get("RepeatDaysOfWeek")?,
+            repeat_interval_minutes: row.get("RepeatIntervalMinutes")?,
+            repeat_cron_expression: row.get("RepeatCronExpression")?,
+            group_id: row.get("GroupId")?,
+            snooze_duration_min: row.get("SnoozeDurationMin")?,
+            max_snooze_count: row.get("MaxSnoozeCount")?,
+            sound_file: row.get("SoundFile")?,
+            is_vibration_enabled: row.get::<_, i32>("IsVibrationEnabled")? != 0,
+            is_gradual_volume: row.get::<_, i32>("IsGradualVolume")? != 0,
+            gradual_volume_duration_sec: row.get("GradualVolumeDurationSec")?,
+            auto_dismiss_min: row.get("AutoDismissMin")?,
+            next_fire_time: row.get("NextFireTime")?,
+            deleted_at: row.get("DeletedAt")?,
+            created_at: row.get("CreatedAt")?,
+            updated_at: row.get("UpdatedAt")?,
         })
     }
 }
 
-/// Rust enum matching RepeatPattern.type for type-safe matching
-#[derive(Debug, Clone, PartialEq)]
+/// Rust enum matching RepeatPattern.Type for type-safe matching
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum RepeatType {
     Once,
     Daily,
@@ -176,10 +178,10 @@ impl std::str::FromStr for RepeatType {
 
 ```typescript
 interface AlarmGroup {
-  id: string;       // UUID v4
-  name: string;     // Group name, max 30 chars
-  color: string;    // Hex color for visual coding (e.g., "#FF5733")
-  enabled: boolean; // Master toggle — disabling disables all member alarms
+  AlarmGroupId: string;  // UUID v4
+  Name: string;          // Group name, max 30 chars
+  Color: string;         // Hex color for visual coding (e.g., "#FF5733")
+  IsEnabled: boolean;    // Master toggle — disabling disables all member alarms
 }
 ```
 
@@ -187,10 +189,10 @@ interface AlarmGroup {
 
 ```typescript
 interface AlarmSound {
-  id: string;       // Unique identifier
-  name: string;     // Display name
-  fileName: string; // Audio file reference (built-in path)
-  category: 'classic' | 'gentle' | 'nature' | 'digital';
+  AlarmSoundId: string;  // Unique identifier
+  Name: string;          // Display name
+  FileName: string;      // Audio file reference (built-in path)
+  Category: 'classic' | 'gentle' | 'nature' | 'digital';
 }
 ```
 
@@ -198,17 +200,17 @@ interface AlarmSound {
 
 ```typescript
 interface AlarmEvent {
-  id: string;
-  alarmId: string;
-  type: "fired" | "snoozed" | "dismissed" | "missed";
-  firedAt: string;               // ISO 8601
-  dismissedAt: string | null;    // ISO 8601
-  snoozeCount: number;
-  challengeType?: string;
-  challengeSolveTimeSec?: number;
-  sleepQuality?: number;         // 1-5
-  mood?: string;
-  timestamp: string;             // ISO 8601 — when this event occurred
+  AlarmEventId: string;
+  AlarmId: string;
+  Type: "fired" | "snoozed" | "dismissed" | "missed";
+  FiredAt: string;               // ISO 8601
+  DismissedAt: string | null;    // ISO 8601
+  SnoozeCount: number;
+  ChallengeType?: string;
+  ChallengeSolveTimeSec?: number;
+  SleepQuality?: number;         // 1-5
+  Mood?: string;
+  Timestamp: string;             // ISO 8601 — when this event occurred
 }
 ```
 

@@ -78,7 +78,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/01-data-model.md` (TS interface section)  
 **Rule Violated:** `11-key-naming-pascalcase.md` §1 — "JSON response/request keys must be PascalCase"  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all TS interface keys converted to PascalCase with `Is`/`Has` boolean prefixes
 
 | Current (camelCase) | Required (PascalCase) |
 |---------------------|-----------------------|
@@ -110,7 +110,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/01-data-model.md` (Rust struct section)  
 **Rule Violated:** Rust serde default is snake_case; spec doesn't specify `#[serde(rename_all = "PascalCase")]`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — `#[serde(rename_all = "PascalCase")]` added to `AlarmRow` struct, `from_row()` string literals updated
 
 **Impact:** When Tauri serializes Rust → JSON → TypeScript, all keys will be `snake_case` unless `serde` rename is specified. The spec has no mention of serde attributes.
 
@@ -221,7 +221,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Location:** `02-features/13-analytics.md` (lines 48–56)  
 **Rule Violated:** `11-key-naming-pascalcase.md` §1  
 **Cross-ref:** UX-005 in `07-ui-ux-consistency.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all keys converted to PascalCase
 
 | Current (camelCase) | Required (PascalCase) |
 |---------------------|-----------------------|
@@ -241,7 +241,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Location:** `02-features/10-export-import.md` (lines 96–101)  
 **Rule Violated:** `11-key-naming-pascalcase.md` §1  
 **Cross-ref:** UX-006 in `07-ui-ux-consistency.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all keys converted to PascalCase
 
 | Current | Required |
 |---------|----------|
@@ -258,7 +258,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Location:** `02-features/01-alarm-crud.md` (lines 215–220)  
 **Rule Violated:** `11-key-naming-pascalcase.md` §1  
 **Cross-ref:** UX-007 in `07-ui-ux-consistency.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all keys converted to PascalCase
 
 | Current | Required |
 |---------|----------|
@@ -271,4 +271,4 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 ---
 
 ## Issues Found So Far: 15
-## Open: 8 | Resolved: 7
+## Open: 3 | Resolved: 12

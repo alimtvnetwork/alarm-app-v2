@@ -73,27 +73,27 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 |---------|-----------|---------|---------|
 | `create_alarm` | FE → BE | `CreateAlarmPayload` | `Alarm` |
 | `update_alarm` | FE → BE | `UpdateAlarmPayload` | `Alarm` |
-| `delete_alarm` | FE → BE | `{ id: string }` | `void` |
+| `delete_alarm` | FE → BE | `{ AlarmId: string }` | `void` |
 | `get_alarms` | FE → BE | `void` | `Alarm[]` |
-| `toggle_alarm` | FE → BE | `{ id: string, enabled: boolean }` | `void` |
+| `toggle_alarm` | FE → BE | `{ AlarmId: string, IsEnabled: boolean }` | `void` |
 
 #### Group Commands
 
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
-| `create_group` | FE → BE | `{ name: string }` | `AlarmGroup` |
-| `update_group` | FE → BE | `{ id: string, name: string }` | `AlarmGroup` |
-| `delete_group` | FE → BE | `{ id: string }` | `void` |
+| `create_group` | FE → BE | `{ Name: string }` | `AlarmGroup` |
+| `update_group` | FE → BE | `{ AlarmGroupId: string, Name: string }` | `AlarmGroup` |
+| `delete_group` | FE → BE | `{ AlarmGroupId: string }` | `void` |
 | `get_groups` | FE → BE | `void` | `AlarmGroup[]` |
-| `toggle_group` | FE → BE | `{ id: string, enabled: boolean }` | `void` |
+| `toggle_group` | FE → BE | `{ AlarmGroupId: string, IsEnabled: boolean }` | `void` |
 
 #### Alarm Firing Commands
 
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
-| `dismiss_alarm` | FE → BE | `{ alarmId: string }` | `void` |
-| `snooze_alarm` | FE → BE | `{ alarmId: string, durationMin: number }` | `SnoozeState` |
-| `cancel_snooze` | FE → BE | `{ alarmId: string }` | `void` |
+| `dismiss_alarm` | FE → BE | `{ AlarmId: string }` | `void` |
+| `snooze_alarm` | FE → BE | `{ AlarmId: string, DurationMin: number }` | `SnoozeState` |
+| `cancel_snooze` | FE → BE | `{ AlarmId: string }` | `void` |
 | `get_snooze_state` | FE → BE | `void` | `SnoozeState[]` |
 
 #### System Commands
@@ -110,11 +110,11 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 
 | Event | Direction | Payload | Purpose |
 |-------|-----------|---------|---------|
-| `alarm-fired` | BE → FE | `{ alarmId: string, alarm: Alarm }` | Trigger alarm overlay UI |
-| `snooze-expired` | BE → FE | `{ alarmId: string }` | Re-trigger alarm after snooze |
-| `missed-alarm` | BE → FE | `{ alarmId: string, scheduledTime: string }` | Show missed alarm notification |
-| `theme-changed` | BE → FE | `{ theme: "light" \| "dark" }` | OS appearance change detected |
-| `tray-action` | BE → FE | `{ action: string, alarmId?: string }` | User clicked tray menu item |
+| `alarm-fired` | BE → FE | `{ AlarmId: string, Alarm: Alarm }` | Trigger alarm overlay UI |
+| `snooze-expired` | BE → FE | `{ AlarmId: string }` | Re-trigger alarm after snooze |
+| `missed-alarm` | BE → FE | `{ AlarmId: string, ScheduledTime: string }` | Show missed alarm notification |
+| `theme-changed` | BE → FE | `{ Theme: "light" \| "dark" }` | OS appearance change detected |
+| `tray-action` | BE → FE | `{ Action: string, AlarmId?: string }` | User clicked tray menu item |
 
 ### Plugin Integration
 

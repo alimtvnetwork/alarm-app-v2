@@ -15,14 +15,14 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | # | File | Category | Issue Count | Open | Resolved |
 |---|------|----------|:-----------:|:----:|:--------:|
-| 1 | `01-naming-violations.md` | Naming & Convention Violations | 15 | 8 | 7 |
+| 1 | `01-naming-violations.md` | Naming & Convention Violations | 15 | 3 | 12 |
 | 2 | `02-internal-contradictions.md` | Contradictions Between Files | 7 | 5 | 2 |
 | 3 | `03-structural-issues.md` | Folder/File Structure Problems | 5 | 5 | 0 |
 | 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 11 | 10 | 1 |
 | 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 4 | 0 |
 | 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 10 | 5 | 5 |
 | 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 2 | 2 |
-| 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 8 | 7 | 1 |
+| 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 8 | 3 | 5 |
 
 ---
 
@@ -34,8 +34,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 34 |
 | 🟢 Low | 4 |
 | **Grand Total** | **64** |
-| **Open** | **46** |
-| **Resolved** | **18** |
+| **Open** | **37** |
+| **Resolved** | **27** |
 
 ---
 
@@ -51,7 +51,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 1** | **Exemptions & decisions** | **✅ Done (4 resolved)** |
 | **Fix Phase 2** | **sqlx → rusqlite** | **✅ Done (7 resolved)** |
 | **Fix Phase 3** | **DB naming PascalCase** | **✅ Done (5 resolved)** |
-| Fix Phase 4 | TS/Rust serialization keys | 🔴 Pending |
+| **Fix Phase 4** | **TS/Rust serialization keys PascalCase** | **✅ Done (9 resolved)** |
 | Fix Phase 5 | Feature file naming | 🔴 Pending |
 | Fix Phase 6 | Logic & schema gaps | 🔴 Pending |
 | Fix Phase 7 | UI/UX & content gaps | 🔴 Pending |
