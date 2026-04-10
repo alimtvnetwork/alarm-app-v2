@@ -29,36 +29,27 @@ Issues where different spec files contradict each other — the most dangerous c
 ## IC-002: Task Count Contradictions
 
 **Severity:** 🔴 Critical  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — reliability report's 94-task list marked as superseded, `11-atomic-task-breakdown.md` (62 tasks) is authoritative
 
-| File | Claimed Count |
-|------|:-------------:|
-| `09-ai-handoff-reliability-report.md` line 22 | **94 tasks** |
-| `10-ai-handoff-readiness-report.md` line 31 | **62 tasks** |
-| `11-atomic-task-breakdown.md` | **62 tasks** (actual content) |
-
-**Impact:** AI won't know which task list is authoritative.
+**Resolution:** Added deprecation notice to `09-ai-handoff-reliability-report.md` §Atomic Task Breakdown pointing AI to `11-atomic-task-breakdown.md` as the canonical task list.
 
 ---
 
 ## IC-003: TypeScript Interface Missing Fields Present in Rust
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — added `IsPreviousEnabled: boolean | null` to TS `Alarm` interface in Fix Phase 17
 
-**Missing from TS `Alarm` interface but present in Rust struct:**
-- `previousEnabled` (Rust: `previous_enabled: Option<bool>`)
-
-**Impact:** Frontend won't handle group toggle state restoration.
+**Resolution:** Field added to `01-data-model.md` TS interface with comment: "Saved state for group toggle restore (null = no saved state)". Already present in Rust `AlarmRow` struct and SQLite schema.
 
 ---
 
 ## IC-004: alarm_events Schema Missing Resolved Columns
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — added `AlarmLabelSnapshot` and `AlarmTimeSnapshot` columns to `AlarmEvents` schema in Fix Phase 17
 
-**Context:** Issue `DB-ORPHAN-001` was marked resolved, claiming migration `V3__add_alarm_label_cache.sql` adds `alarm_label_snapshot` to `alarm_events`. But the actual schema in `01-data-model.md` does NOT include this column.
+**Resolution:** Added two columns to `AlarmEvents` CREATE TABLE in `01-data-model.md`: `AlarmLabelSnapshot TEXT NOT NULL DEFAULT ''` and `AlarmTimeSnapshot TEXT NOT NULL DEFAULT ''`. Also fixed `AlarmId` foreign key reference from `alarms` to `Alarms`.
 
 ---
 
@@ -127,4 +118,4 @@ Issues where different spec files contradict each other — the most dangerous c
 ---
 
 ## Issues Found So Far: 11
-## Open: 3 | Resolved: 8
+## Open: 0 | Resolved: 11

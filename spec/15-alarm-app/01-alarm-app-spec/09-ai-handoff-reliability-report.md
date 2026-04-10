@@ -19,7 +19,9 @@
 
 ---
 
-## Atomic Task Breakdown (94 tasks)
+## Atomic Task Breakdown (94 tasks — SUPERSEDED)
+
+> **⚠️ Note:** This 94-task breakdown is superseded by the authoritative **62-task breakdown** in `11-atomic-task-breakdown.md`. The 62-task version consolidates related tasks and reflects the current architecture. Use `11-atomic-task-breakdown.md` for implementation. This section is retained for historical context only.
 
 ### Phase 1: Project Scaffolding (9 tasks)
 
