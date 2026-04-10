@@ -261,7 +261,7 @@ This is documented in `07-alarm-groups.md`. The group toggle takes precedence.
 | **WAL mode** | `PRAGMA journal_mode=WAL` at startup Step 4 |
 | **Busy timeout** | `PRAGMA busy_timeout=5000` — wait 5s before `SQLITE_BUSY` |
 | **Single writer** | SQLite handles this automatically in WAL mode |
-| **Connection pool** | 1 writer connection + N reader connections via `sqlx::SqlitePool` |
+| **Connection pool** | 1 writer `Connection` wrapped in `Arc<Mutex<Connection>>` + reader connections via `rusqlite` |
 | **Transactions** | Use for multi-step operations (group toggle, import) |
 | **No ORM** | Direct SQL queries with parameterized binds — no ORM overhead or magic |
 
