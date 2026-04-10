@@ -172,14 +172,14 @@ This is idempotent — if undo already cleared `deleted_at`, the DELETE affects 
 ```
 User is editing alarm at t=07:29:55
 Alarm engine fires alarm at t=07:30:00
-User saves edit at t=07:30:02 → overwrites nextFireTime
+User saves edit at t=07:30:02 → overwrites NextFireTime
 ```
 
-**Safeguard:** Use `updatedAt` optimistic locking:
+**Safeguard:** Use `UpdatedAt` optimistic locking:
 ```rust
-// On update: include WHERE updated_at = {expected}
+// On update: include WHERE UpdatedAt = {expected}
 let rows = conn.execute(
-    "UPDATE alarms SET time=?, ..., updated_at=? WHERE id=? AND updated_at=?",
+    "UPDATE alarms SET Time=?, ..., UpdatedAt=? WHERE AlarmId=? AND UpdatedAt=?",
     params![new_time, new_updated_at, alarm_id, expected_updated_at],
 )?;
 
@@ -244,13 +244,13 @@ User individually toggles alarm 3 ON while group is OFF
 User toggles group ON → should restore original states, but alarm 3 was manually changed
 ```
 
-**Safeguard:** Group toggle ON restores `previous_enabled`, then clears `previous_enabled`:
+**Safeguard:** Group toggle ON restores `IsPreviousEnabled`, then clears `IsPreviousEnabled`:
 ```sql
 -- Group OFF: save state
-UPDATE alarms SET previous_enabled = enabled, enabled = 0 WHERE group_id = ?;
+UPDATE alarms SET IsPreviousEnabled = IsEnabled, IsEnabled = 0 WHERE GroupId = ?;
 
 -- Group ON: restore state (overrides manual changes during OFF)
-UPDATE alarms SET enabled = COALESCE(previous_enabled, enabled), previous_enabled = NULL WHERE group_id = ?;
+UPDATE alarms SET IsEnabled = COALESCE(IsPreviousEnabled, IsEnabled), IsPreviousEnabled = NULL WHERE GroupId = ?;
 ```
 This is documented in `07-alarm-groups.md`. The group toggle takes precedence.
 
