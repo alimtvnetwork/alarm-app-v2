@@ -137,6 +137,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 25** | **Cross-spec deep consistency & AI handoff audit** | **✅ Done (+15 = 372, 57 open)** |
 | **Discovery Phase 26** | **Architecture, IPC registry & stale metrics audit** | **✅ Done (+12 = 384, 69 open)** |
 | **Discovery Phase 27** | **Post-fix regression scan — stale metrics, unfixed Phase 22–26 issues** | **✅ Done (+12 = 396, 81 open)** |
+| **Fix Phase U** | **Comprehensive fix of 81 issues: missing deps, IPC alignment, magic strings, negative booleans, stale metrics, interfaces** | **✅ Done (81 resolved, 0 open)** |
 
 ---
 
