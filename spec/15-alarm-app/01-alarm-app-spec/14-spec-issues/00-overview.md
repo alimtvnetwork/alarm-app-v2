@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.21.0  
+**Version:** 1.22.0  
 **Updated:** 2026-04-10
 
 ---
@@ -44,7 +44,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 27 | `27-fix-phase-e-settings-ui-states.md` | Fix Phase E — Settings Seeding & UI States | 4 resolved | 0 | 4 |
 | 28 | `28-fix-phase-f-remaining.md` | Fix Phase F — PascalCase, Atomic Tasks, Semantic Inverses & Cross-References | 13 resolved | 0 | 13 |
 | 30 | `30-fix-phase-j-final-7.md` | Fix Phase J — Final 7 Issues (ARIA, 0=disabled, IPC, magic strings, exemption) | 7 resolved | 0 | 7 |
-| 31 | `31-discovery-phase-19.md` | Discovery Phase 19 — Post-Completion Regression Audit | 34 | 5 | 29 |
+| 31 | `31-discovery-phase-19.md` | Discovery Phase 19 — Post-Completion Regression Audit | 34 | 0 | 34 |
 
 ---
 
@@ -56,8 +56,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 138 |
 | 🟢 Low | 41 |
 | **Grand Total** | **290** |
-| **Open** | **5** |
-| **Resolved** | **285** |
+| **Open** | **0** |
+| **Resolved** | **290** |
 
 ---
 
