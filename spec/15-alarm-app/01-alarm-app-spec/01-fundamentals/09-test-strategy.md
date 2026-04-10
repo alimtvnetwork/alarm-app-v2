@@ -100,8 +100,9 @@ async fn test_create_alarm_persists_to_db() {
         ..Default::default()
     };
 
+    // Rust struct fields are snake_case; serde serializes to PascalCase for IPC
     let alarm = create_alarm_handler(&conn, payload).await.unwrap();
-    assert_eq!(alarm.time, "07:30");
+    assert_eq!(alarm.time, "07:30");  // Rust field access (snake_case)
     assert!(alarm.next_fire_time.is_some());
 
     // Verify persisted
