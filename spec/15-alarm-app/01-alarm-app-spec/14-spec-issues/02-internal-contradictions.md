@@ -127,5 +127,4 @@ Issues where different spec files contradict each other — the most dangerous c
 ---
 
 ## Issues Found So Far: 11
-## Open: 4 | Resolved: 7
-## Open: 8 | Resolved: 3
+## Open: 3 | Resolved: 8
