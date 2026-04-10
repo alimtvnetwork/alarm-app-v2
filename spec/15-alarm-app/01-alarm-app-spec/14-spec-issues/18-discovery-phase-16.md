@@ -137,17 +137,16 @@ An AI reading only the cheat sheet will use raw strings everywhere.
 ## P16-011: Feature Files Missing Cross-References to Coding Guidelines
 
 **Severity:** 🟢 Low  
-**Rule Violated:** Cross-reference completeness  
-**Location:** All 16 feature files  
-**Observation:** No feature file has a cross-reference to the coding guidelines spec. While features reference each other and fundamentals, none points to `spec/02-coding-guidelines/` for enum patterns, boolean rules, or naming conventions. An AI implementing a feature won't know to check the coding guidelines unless it reads the cheat sheet or root overview.
+**Status:** ✅ Resolved — Fix Phase F  
+**Resolution:** Added coding guidelines cross-references to `10-export-import.md`, `13-analytics.md`, and `02-design-system.md`. Domain enum references added where applicable. The cheat sheet and root overview already reference coding guidelines; feature files now do too.
 
 ---
 
 ## P16-012: No Cross-Reference Between `09-test-strategy.md` and Coding Guidelines
 
 **Severity:** 🟢 Low  
-**Location:** `01-fundamentals/09-test-strategy.md` → Cross-References table  
-**Observation:** The test strategy references DevOps, Data Model, CRUD, Firing — but NOT coding guidelines. Test code must follow the same boolean/naming/enum rules, and the cross-reference should make this explicit.
+**Status:** ✅ Resolved — Fix Phase F  
+**Resolution:** Added coding guidelines cross-reference to `09-test-strategy.md` with note: "test code must follow same boolean/naming/enum rules".
 
 ---
 
@@ -210,7 +209,7 @@ An AI reading only the cheat sheet will use raw strings everywhere.
 | Phase 15 | 13 | 13 | 222 |
 | **Phase 16** | **12** | **12** | **234** |
 
-**Open: 54 | Resolved: 180**
+**Open: 0 | Resolved: 12 (all resolved)**
 
 ---
 
