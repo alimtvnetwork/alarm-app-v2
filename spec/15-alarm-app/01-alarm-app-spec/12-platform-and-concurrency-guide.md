@@ -256,10 +256,10 @@ User toggles group ON → should restore original states, but alarm 3 was manual
 **Safeguard:** Group toggle ON restores `IsPreviousEnabled`, then clears `IsPreviousEnabled`:
 ```sql
 -- Group OFF: save state
-UPDATE alarms SET IsPreviousEnabled = IsEnabled, IsEnabled = 0 WHERE GroupId = ?;
+UPDATE Alarms SET IsPreviousEnabled = IsEnabled, IsEnabled = 0 WHERE GroupId = ?;
 
 -- Group ON: restore state (overrides manual changes during OFF)
-UPDATE alarms SET IsEnabled = COALESCE(IsPreviousEnabled, IsEnabled), IsPreviousEnabled = NULL WHERE GroupId = ?;
+UPDATE Alarms SET IsEnabled = COALESCE(IsPreviousEnabled, IsEnabled), IsPreviousEnabled = NULL WHERE GroupId = ?;
 ```
 This is documented in `07-alarm-groups.md`. The group toggle takes precedence.
 
@@ -416,7 +416,7 @@ async fn test_undo_during_hard_delete_timer() {
     let alarm = create_test_alarm(&db).await;
     
     // Delete (starts 5s timer)
-    let token = delete_alarm(&db, &alarm.id).await.unwrap();
+    let token = delete_alarm(&db, &alarm.alarm_id).await.unwrap();
     
     // Undo at t+2s (before hard-delete)
     tokio::time::sleep(Duration::from_secs(2)).await;
@@ -426,7 +426,7 @@ async fn test_undo_during_hard_delete_timer() {
     tokio::time::sleep(Duration::from_secs(4)).await;
     
     // Alarm should still exist (undo succeeded)
-    let alarm = get_alarm(&db, &alarm.id).await;
+    let alarm = get_alarm(&db, &alarm.alarm_id).await;
     assert!(alarm.is_some());
     assert!(alarm.unwrap().deleted_at.is_none());
 }

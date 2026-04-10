@@ -23,7 +23,7 @@
 
 ## Atomic Task Breakdown (94 tasks — SUPERSEDED)
 
-> **⚠️ Note:** This 94-task breakdown is superseded by the authoritative **62-task breakdown** in `11-atomic-task-breakdown.md`. The 62-task version consolidates related tasks and reflects the current architecture. Use `11-atomic-task-breakdown.md` for implementation. This section is retained for historical context only.
+> **⚠️ Note:** This 94-task breakdown is superseded by the authoritative **62-task breakdown** in `11-atomic-task-breakdown.md`. The 62-task version consolidates related tasks and reflects the current architecture. Use `11-atomic-task-breakdown.md` for implementation. This section is retained for historical context only. Code examples below use outdated naming conventions — do not copy them.
 
 ### Phase 1: Project Scaffolding (9 tasks)
 
@@ -220,7 +220,9 @@
 
 ## Spec Improvements Needed
 
-### 🔴 Critical Gaps (will cause failure)
+> ✅ **ALL RESOLVED:** Every gap listed below has been addressed in subsequent spec updates. The capabilities manifest, Cargo.toml deps, DST code, wake listener code, alarm queue, undo flow, error handling, startup sequence, volume algorithm, sound validation, test strategy, and logging strategy are now fully specified. See `11-atomic-task-breakdown.md` and individual feature specs for the current state.
+
+### 🔴 Critical Gaps (will cause failure) — ✅ ALL RESOLVED
 
 | # | Gap | Recommendation |
 |---|-----|----------------|
@@ -231,7 +233,7 @@
 | 5 | **Wake detection has no code examples** | Add macOS/Windows/Linux code snippets for each OS wake listener |
 | 6 | **No alarm queue behavior defined** | Specify: FIFO queue, show oldest first, dismiss advances to next, timeout applies per-alarm |
 
-### 🟡 Medium Gaps (may cause bugs)
+### 🟡 Medium Gaps (may cause bugs) — ✅ ALL RESOLVED
 
 | # | Gap | Recommendation |
 |---|-----|----------------|
@@ -241,7 +243,7 @@
 | 10 | **Gradual volume lacks algorithm** | Add: `volume = 0.1 + (0.9 * elapsed / duration)`, update every 100ms |
 | 11 | **Custom sound path validation missing** | Define: check file exists, check format, max file size, what if file deleted later |
 
-### 🟢 Minor Gaps (nice to have)
+### 🟢 Minor Gaps (nice to have) — ✅ ALL RESOLVED
 
 | # | Gap | Recommendation |
 |---|-----|----------------|
