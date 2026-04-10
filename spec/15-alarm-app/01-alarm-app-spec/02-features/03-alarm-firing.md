@@ -106,7 +106,7 @@ fn compute_weekly(
     for offset in 0..=7 {
         let date = now_local.date_naive() + Duration::days(offset);
         let weekday_num = date.weekday().num_days_from_sunday();
-        if !repeat.days_of_week.contains(&(weekday_num as u8)) { continue; }
+        if repeat.is_day_excluded(weekday_num as u8) { continue; }
         if let Some(t) = resolve_local_to_utc(date, alarm_time, timezone) {
             if t > now { return Some(t); }
         }
@@ -378,19 +378,40 @@ impl LinuxWakeListener {
 impl WakeListener for LinuxWakeListener {
     fn start(&self, on_wake: Box<dyn Fn() + Send + Sync>) -> Result<(), AlarmAppError> {
         tokio::spawn(async move {
-            let connection = Connection::system().await
-                .expect("Failed to connect to system D-Bus");
+            let connection = match Connection::system().await {
+                Ok(c) => c,
+                Err(e) => {
+                    tracing::warn!(error = %e, "D-Bus unavailable — sleep detection disabled on Linux");
+                    return;
+                }
+            };
 
-            let proxy = Login1ManagerProxy::new(&connection).await
-                .expect("Failed to create login1 proxy");
+            let proxy = match Login1ManagerProxy::new(&connection).await {
+                Ok(p) => p,
+                Err(e) => {
+                    tracing::warn!(error = %e, "login1 proxy failed — sleep detection disabled");
+                    return;
+                }
+            };
 
-            let mut stream = proxy.receive_prepare_for_sleep().await
-                .expect("Failed to subscribe to PrepareForSleep");
+            let mut stream = match proxy.receive_prepare_for_sleep().await {
+                Ok(s) => s,
+                Err(e) => {
+                    tracing::warn!(error = %e, "PrepareForSleep subscription failed");
+                    return;
+                }
+            };
 
             while let Some(signal) = stream.next().await {
-                let args = signal.args().expect("Failed to parse signal args");
-                if !args.start {
-                    // start=false means system just woke up
+                let args = match signal.args() {
+                    Ok(a) => a,
+                    Err(e) => {
+                        tracing::warn!(error = %e, "Failed to parse PrepareForSleep args");
+                        continue;
+                    }
+                };
+                let is_waking = !args.start; // D-Bus protocol: start=false means woke up (exempt: external API)
+                if is_waking {
                     tracing::info!("Linux: System woke from sleep (PrepareForSleep=false)");
                     on_wake();
                 } else {

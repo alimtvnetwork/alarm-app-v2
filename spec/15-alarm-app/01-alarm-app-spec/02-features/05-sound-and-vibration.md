@@ -71,7 +71,8 @@ fn validate_extension(path: &str) -> Result<(), AlarmAppError> {
         .and_then(|e| e.to_str())
         .map(|e| e.to_lowercase())
         .unwrap_or_default();
-    if !ALLOWED_EXTENSIONS.contains(&ext.as_str()) {
+    let is_allowed = ALLOWED_EXTENSIONS.contains(&ext.as_str());
+    if !is_allowed {
         return Err(AlarmAppError::InvalidSoundFormat(ext));
     }
     Ok(())
@@ -126,7 +127,9 @@ fn validate_file_size(canonical: &Path) -> Result<(), AlarmAppError> {
 ```rust
 pub fn resolve_sound_path(sound_file: &str) -> String {
     // Built-in sounds: key lookup (always available)
-    if !sound_file.contains('/') && !sound_file.contains('\\') {
+    let is_plain_filename = !sound_file.contains('/') && !sound_file.contains('\\');
+    // EXEMPT: !contains() on library method is idiomatic for path checking
+    if is_plain_filename {
         return get_builtin_sound_path(sound_file);
     }
 

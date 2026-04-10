@@ -146,7 +146,7 @@ const sensors = useSensors(
 <div
   role="listitem"
   aria-roledescription="sortable alarm"
-  aria-label={`${alarm.label}, ${alarm.time}, ${alarm.enabled ? 'enabled' : 'disabled'}`}
+  aria-label={`${alarm.Label}, ${alarm.Time}, ${alarm.IsEnabled ? 'enabled' : 'disabled'}`}
   aria-describedby="dnd-instructions"
   tabIndex={0}
 >
