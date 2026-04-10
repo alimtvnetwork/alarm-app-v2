@@ -1,6 +1,6 @@
 # Theme System
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -24,9 +24,9 @@ Full dark/light theme toggle with system preference auto-detection. The dark mod
 
 | Mode | Behavior |
 |------|----------|
-| `light` | Warm cream palette |
-| `dark` | Warm charcoal palette |
-| `system` | Follow OS appearance setting |
+| `ThemeMode.Light` | Warm cream palette |
+| `ThemeMode.Dark` | Warm charcoal palette |
+| `ThemeMode.System` | Follow OS appearance setting |
 
 ---
 
@@ -44,7 +44,7 @@ Full dark/light theme toggle with system preference auto-detection. The dark mod
 
 - Sun/moon icon button (`ThemeToggle` component)
 - Positioned in top-right corner of the main layout
-- Cycles: light → dark → system → light
+- Cycles: `ThemeMode.Light` → `ThemeMode.Dark` → `ThemeMode.System` → `ThemeMode.Light`
 - Tooltip shows current mode
 
 ---
@@ -64,8 +64,8 @@ Full dark/light theme toggle with system preference auto-detection. The dark mod
 
 ## Acceptance Criteria
 
-- [ ] Theme toggle switches between light, dark, system
-- [ ] System mode follows OS preference
+- [ ] Theme toggle switches between `ThemeMode.Light`, `ThemeMode.Dark`, `ThemeMode.System`
+- [ ] `ThemeMode.System` follows OS preference
 - [ ] Theme persists across app restarts
 - [ ] All components properly themed (no hardcoded colors)
 - [ ] Smooth transition between themes (150ms)

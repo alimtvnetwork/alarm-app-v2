@@ -751,7 +751,7 @@ When the system timezone changes:
 
 ```
 src-tauri/migrations/
-  V1__initial_schema.sql       — Core tables: alarms, alarm_groups, settings, snooze_state, alarm_events
+  V1__initial_schema.sql       — Core tables: Alarms, AlarmGroups, Settings, SnoozeState, AlarmEvents
   V2__add_event_retention.sql  — Add EventRetentionDays to Settings defaults
   V3__add_alarm_label_cache.sql — Denormalized label on alarm_events (for DB-ORPHAN-001)
   ...

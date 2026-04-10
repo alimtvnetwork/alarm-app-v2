@@ -1,6 +1,6 @@
 # Alarm Firing
 
-**Version:** 1.10.0  
+**Version:** 1.11.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -602,6 +602,8 @@ The 30-second check interval may match multiple alarms. Without queue rules, AI 
 ### Queue Data Structure
 
 ```rust
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "PascalCase")]
 struct AlarmQueue {
     /// Ordered FIFO queue of alarms waiting to display overlay
     pending: VecDeque<FiredAlarm>,
@@ -609,6 +611,8 @@ struct AlarmQueue {
     active: Option<FiredAlarm>,
 }
 
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "PascalCase")]
 struct FiredAlarm {
     alarm_id: String,
     label: String,
