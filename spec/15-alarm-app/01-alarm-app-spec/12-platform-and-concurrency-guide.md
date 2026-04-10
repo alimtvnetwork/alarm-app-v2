@@ -165,7 +165,7 @@ User clicks "Undo A" at t=3s → must cancel A's timer, NOT B's
 ```sql
 DELETE FROM Alarms WHERE AlarmId = ? AND DeletedAt IS NOT NULL
 ```
-This is idempotent — if undo already cleared `deleted_at`, the DELETE affects 0 rows.
+This is idempotent — if undo already cleared `DeletedAt`, the DELETE affects 0 rows.
 
 #### Race 2: Alarm Fire During Edit
 
