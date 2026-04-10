@@ -473,14 +473,22 @@ interface AlarmGroup {
 
 ### AlarmSound
 
+> **Note:** `AlarmSound` is a **read-only in-memory list** derived from bundled audio assets in `src/assets/sounds/`. There is no corresponding SQLite table. The sound list is hardcoded in Rust and returned via the `list_sounds` IPC command. Custom user sounds reference file paths directly via `Alarm.SoundFile`.
+
 ```typescript
 interface AlarmSound {
-  AlarmSoundId: string;  // Unique identifier
-  Name: string;          // Display name
-  FileName: string;      // Audio file reference (built-in path)
+  AlarmSoundId: string;  // Unique identifier (e.g., "classic-beep")
+  Name: string;          // Display name (e.g., "Classic Beep")
+  FileName: string;      // Audio file reference (bundled asset path)
   Category: SoundCategory;
 }
 ```
+
+#### IPC Command
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `list_sounds` | `void` | `AlarmSound[]` |
 
 ### AlarmEvent
 
@@ -626,6 +634,7 @@ pub fn purge_old_events(conn: &Connection) {
 | `Language` | `string` | `"en"` | i18n locale code |
 | `EventRetentionDays` | `number` | `"90"` | Days to keep `AlarmEvents` |
 | `SystemTimezone` | `string` | `""` | IANA timezone string (auto-detected at startup) |
+| `ExportWarningDismissed` | `boolean` | `"false"` | Whether user dismissed the export privacy warning |
 
 ---
 
