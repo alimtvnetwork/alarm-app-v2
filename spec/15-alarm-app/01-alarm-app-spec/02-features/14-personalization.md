@@ -1,6 +1,6 @@
 # Personalization
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -80,6 +80,19 @@ Visual customization, motivational features, and engagement tools. All preferenc
 
 ---
 
+## Acceptance Criteria
+
+- [ ] Theme/skin selection persisted in SQLite `Settings` table via `update_setting` IPC
+- [ ] Custom accent color picker saves hex value to Settings
+- [ ] Custom background image selected via native file dialog, copied to app data dir
+- [ ] `get_daily_quote` returns a different quote each day (rotating through bundled library)
+- [ ] Users can save favorites and add custom quotes via IPC
+- [ ] Streak calculated from `AlarmEvents` — resets if snooze limit exceeded
+- [ ] Streak calendar view shows consecutive on-time wake days
+- [ ] Music integration uses OAuth via system browser + deep link callback
+
+---
+
 ## Cross-References
 
 | Reference | Location |
@@ -88,3 +101,4 @@ Visual customization, motivational features, and engagement tools. All preferenc
 | Design System | `../01-fundamentals/02-design-system.md` |
 | Analytics | `./13-analytics.md` |
 | Tauri Architecture | `../01-fundamentals/06-tauri-architecture-and-framework-comparison.md` |
+| Domain Enums | `../01-fundamentals/01-data-model.md` → Domain Enums section |

@@ -221,6 +221,18 @@ fn log_webhook_result(url: &Url, response: Result<reqwest::Response, reqwest::Er
 
 ---
 
+## Acceptance Criteria
+
+- [ ] Webhook URL validated with 5 SSRF checks (HTTPS, blocked hosts, private IP, standard port, valid URL)
+- [ ] `WebhookError` enum used for all validation failures (never raw strings)
+- [ ] Webhook HTTP client: 5s timeout, no redirects, 1KB max response, 1 retry
+- [ ] Weather briefing shows temp, rain chance, wind after alarm dismissal (when configured)
+- [ ] Location-based alarms hidden on desktop (no GPS); visible on mobile
+- [ ] Voice commands support: set, edit, delete, toggle (when platform speech API available)
+- [ ] Multi-timezone alarms show both local and target time in alarm list
+
+---
+
 ## Cross-References
 
 | Reference | Location |
@@ -228,3 +240,4 @@ fn log_webhook_result(url: &Url, response: Result<reqwest::Response, reqwest::Er
 | Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
 | Alarm Firing | `./03-alarm-firing.md` |
 | Security Issues | `../03-app-issues/05-security-issues.md` → SEC-WEBHOOK-001 |
+| Domain Enums | `../01-fundamentals/01-data-model.md` → Domain Enums section |
