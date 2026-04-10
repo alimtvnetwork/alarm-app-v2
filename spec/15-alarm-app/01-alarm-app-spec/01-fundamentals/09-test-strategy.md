@@ -1,7 +1,7 @@
 # Test Strategy
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-09  
+**Version:** 1.1.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
@@ -296,6 +296,81 @@ export const testAlarm = {
 
 ---
 
+## Layer 5 — Platform-Specific E2E Tests
+
+> See `11-platform-verification-matrix.md` for the full Feature × Platform × Behavior matrix. These tests run on the CI OS matrix (macOS, Windows, Linux).
+
+| Test ID | Platform | Scenario | Expected Result |
+|---------|----------|----------|-----------------|
+| PLAT-01 | All | Alarm fires while app is minimized | Audio plays, notification shown, overlay appears on focus |
+| PLAT-02 | All | System sleep → wake with missed alarm | Missed alarm fires within 5s of wake event |
+| PLAT-03 | macOS | Audio plays over other apps (audio session) | Alarm audio not ducked by music playback |
+| PLAT-04 | All | Tray icon visible after app start | Tray icon rendered in correct format per OS |
+| PLAT-05 | macOS | Tray icon in light + dark menu bar | Template icon auto-inverts correctly |
+| PLAT-06 | All | Notification permission denied → overlay fallback | Overlay shown, one-time hint displayed |
+| PLAT-07 | Linux | `backdrop-filter` fallback on WebKitGTK <2.40 | Solid background shown instead of blur |
+| PLAT-08 | All | Custom sound file playback (WAV, MP3, OGG) | Each format plays without error |
+| PLAT-09 | All | DST spring-forward alarm at 2:30 AM | Fires at 3:00 AM (next valid time) |
+| PLAT-10 | All | DST fall-back alarm at 1:30 AM | Fires once at first occurrence only |
+
+### CI OS Matrix for Platform Tests
+
+```yaml
+# Add to build-and-release.yml
+platform-tests:
+  strategy:
+    matrix:
+      os: [macos-latest, windows-latest, ubuntu-latest]
+  runs-on: ${{ matrix.os }}
+  steps:
+    - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@stable
+    - name: Build app
+      run: cd src-tauri && cargo build --release
+    - name: Run platform tests
+      run: cd src-tauri && cargo test --test platform_tests --release
+```
+
+---
+
+## Layer 6 — Dependency Compatibility Tests
+
+> Verifies that pinned dependency versions compile and interoperate correctly. See `10-dependency-lock.md` for version pins.
+
+| Test ID | Check | Command | Pass Criteria |
+|---------|-------|---------|---------------|
+| DEP-01 | Rust crates compile | `cargo check --all-features` | Exit code 0, no warnings about deprecated APIs |
+| DEP-02 | `rusqlite` ↔ `refinery` compat | `cargo test` on migration runner | Migrations run on in-memory SQLite without error |
+| DEP-03 | Tauri plugin registration | `cargo build` with all plugins in `main.rs` | All `.plugin()` calls compile |
+| DEP-04 | npm packages install | `npm ci` | Exit code 0, no peer dependency warnings |
+| DEP-05 | Frontend build | `vite build` | Exit code 0, bundle under 500KB gzipped |
+| DEP-06 | TypeScript strict check | `tsc --noEmit --strict` | Exit code 0 |
+| DEP-07 | `@tauri-apps/api` ↔ Tauri core | `invoke()` calls compile in TS | No type errors on IPC wrappers |
+
+### CI Dependency Check Job
+
+```yaml
+dep-check:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@stable
+    - uses: actions/setup-node@v4
+      with: { node-version: '20' }
+    - name: Rust compile check
+      run: cd src-tauri && cargo check --all-features 2>&1 | tee /tmp/cargo-check.log
+    - name: Check for deprecation warnings
+      run: "! grep -i 'deprecated' /tmp/cargo-check.log"
+    - name: npm install
+      run: npm ci
+    - name: TypeScript check
+      run: npx tsc --noEmit --strict
+    - name: Vite build
+      run: npx vite build
+```
+
+---
+
 ## Cross-References
 
 | Reference | Location |
@@ -305,7 +380,9 @@ export const testAlarm = {
 | Alarm CRUD | `../02-features/01-alarm-crud.md` |
 | Alarm Firing | `../02-features/03-alarm-firing.md` |
 | App Issues | `../03-app-issues/08-devops-issues.md` → DEVOPS-TEST-001 |
+| Platform Verification Matrix | `./11-platform-verification-matrix.md` |
+| Dependency Lock | `./10-dependency-lock.md` |
 
 ---
 
-*Test strategy — created: 2026-04-09*
+*Test strategy — updated: 2026-04-10*
