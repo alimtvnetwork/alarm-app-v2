@@ -15,30 +15,30 @@
 
 ## Category A: Regressions from Fix Phases 16–20
 
-### D7-REG-001: `00-overview.md` spec issues count still says "69 resolved"
+### D7-REG-001: ~~`00-overview.md` spec issues count still says "69 resolved"~~ ✅ Resolved (Fix 21)
 **Severity:** 🟡 Medium  
 **File:** `00-overview.md` line 122  
-**Problem:** Module inventory says "77 issues found, 69 resolved" — should be "77 resolved" after Fix Phase 20 resolved all remaining issues.
+**Problem:** Module inventory says "77 issues found, 69 resolved" — should be "95 found, 77 resolved" after Discovery Phase 7.
 
 ### D7-REG-002: `04-snooze-system.md` SnoozeState still uses `NextFireTime` 
 **Severity:** 🔴 Critical  
 **File:** `02-features/04-snooze-system.md` line 43  
 **Problem:** Fix Phase 20 added the correct `SnoozeState` interface to `01-data-model.md` with `SnoozeUntil`, but the snooze spec's own interface definition on line 43 still says `NextFireTime: string`. AI will see two conflicting interfaces and pick the wrong one.
 
-### D7-REG-003: `00-overview.md` tech stack says "via Tauri plugin" for SQLite
+### D7-REG-003: ~~`00-overview.md` tech stack says "via Tauri plugin" for SQLite~~ ✅ Resolved (Fix 21)
 **Severity:** 🟡 Medium  
 **File:** `00-overview.md` line 46  
-**Problem:** Tech stack table says "SQLite" with implicit "via Tauri plugin" but line 88 correctly says "via rusqlite + refinery migrations". The tauri-plugin-sql was removed in earlier fixes (NEW-007). The overview still implies the plugin is used.
+**Problem:** Tech stack table said "via Tauri plugin" — fixed to "via rusqlite + refinery migrations".
 
-### D7-REG-004: `00-overview.md` Data Model uses camelCase field names
+### D7-REG-004: ~~`00-overview.md` Data Model uses camelCase field names~~ ✅ Resolved (Fix 21)
 **Severity:** 🔴 Critical  
 **File:** `00-overview.md` lines 57–72  
-**Problem:** The quick-reference data model uses camelCase: `id`, `time`, `label`, `enabled`, `snoozeDurationMin`, `gradualVolume`, `autoDismissMin`, `nextFireTime`, `deletedAt`, `createdAt`/`updatedAt`. These should be PascalCase: `AlarmId`, `Time`, `Label`, `IsEnabled`, `SnoozeDurationMin`, etc. AI will use this as the primary reference.
+**Problem:** All field names converted to PascalCase: `AlarmId`, `Time`, `Label`, `IsEnabled`, `SnoozeDurationMin`, etc.
 
-### D7-REG-005: `00-overview.md` AlarmGroup uses camelCase field names
+### D7-REG-005: ~~`00-overview.md` AlarmGroup uses camelCase field names~~ ✅ Resolved (Fix 21)
 **Severity:** 🟡 Medium  
 **File:** `00-overview.md` lines 81–86  
-**Problem:** AlarmGroup uses `id`, `name`, `color`, `enabled` — should be `AlarmGroupId`, `Name`, `Color`, `IsEnabled`.
+**Problem:** AlarmGroup fields converted to PascalCase: `GroupId`, `Name`, `Color`, `IsEnabled`.
 
 ---
 
@@ -116,8 +116,8 @@
 | Status | Previous | New | Total |
 |--------|:--------:|:---:|:-----:|
 | Total issues | 77 | 18 | **95** |
-| Open | 0 | 18 | **18** |
-| Resolved | 77 | 0 | **77** |
+| Open | 0 | 14 | **14** |
+| Resolved | 77 | 4 | **81** |
 
 ---
 
@@ -125,8 +125,7 @@
 
 | Phase | Issues | Files | Description |
 |-------|--------|-------|-------------|
-| **Fix 21** | D7-REG-004, D7-REG-005 | `00-overview.md` | Fix camelCase Data Model section in root overview |
-| **Fix 22** | D7-REG-001, D7-REG-003 | `00-overview.md` | Fix issue count + SQLite reference |
+| **Fix 21** | D7-REG-001, D7-REG-003, D7-REG-004, D7-REG-005 | `00-overview.md` | ✅ Fixed camelCase Data Model, SQLite ref, issue count |
 | **Fix 23** | D7-REG-002, D7-NEW-011 | `04-snooze-system.md` | Fix SnoozeState.NextFireTime → SnoozeUntil + event type casing |
 | **Fix 24** | D7-NEW-001, D7-NEW-002, D7-NEW-013 | `01-data-model.md` | Fix remaining snake_case in data model prose + validation rules |
 | **Fix 25** | D7-NEW-003, D7-NEW-004 | `03-alarm-firing.md` | Fix snake_case in firing spec |
