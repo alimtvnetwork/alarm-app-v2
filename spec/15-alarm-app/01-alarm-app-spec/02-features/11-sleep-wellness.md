@@ -1,6 +1,6 @@
 # Sleep & Wellness
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -85,6 +85,30 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 
 ---
 
+## IPC Commands
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `log_sleep_quality` | `{ AlarmEventId: string, Quality: number, Mood: string \| null }` | `void` |
+| `play_ambient` | `{ SoundId: string, DurationMin: number }` | `void` |
+| `stop_ambient` | `void` | `void` |
+| `get_bedtime_reminder` | `void` | `{ Bedtime: string \| null, ReminderMinBefore: number }` |
+| `set_bedtime_reminder` | `{ Bedtime: string, ReminderMinBefore: number }` | `void` |
+
+### Ambient Sound IDs
+
+| ID | Name |
+|----|------|
+| `ambient-rain` | Rain |
+| `ambient-ocean` | Ocean Waves |
+| `ambient-forest` | Forest |
+| `ambient-white-noise` | White Noise |
+| `ambient-brown-noise` | Brown Noise |
+| `ambient-fan` | Fan |
+| `ambient-fireplace` | Fireplace |
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Bedtime reminder sends OS-native notification 15–30 min before configured bedtime
@@ -94,7 +118,7 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 - [ ] Ambient sounds play via Rust `rodio` and auto-stop after configured duration
 - [ ] `stop_ambient` immediately stops playback
 - [ ] Sleep cycle tracking hidden on desktop (feature-detected at runtime)
-- [ ] All IPC payload keys use PascalCase (`AlarmId`, `Quality`, `Sound`, `DurationMin`)
+- [ ] All IPC payload keys use PascalCase (`AlarmId`, `Quality`, `SoundId`, `DurationMin`)
 
 ---
 

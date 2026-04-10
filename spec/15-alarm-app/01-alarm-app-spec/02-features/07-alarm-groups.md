@@ -1,6 +1,6 @@
 # Alarm Groups
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-10
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -70,11 +70,70 @@ Add `IsPreviousEnabled INTEGER` column to the `Alarms` table. This stores each a
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `create_group` | `{ Name: string }` | `AlarmGroup` |
-| `update_group` | `{ AlarmGroupId: string, Name: string }` | `AlarmGroup` |
+| `create_group` | `CreateGroupPayload` | `AlarmGroup` |
+| `update_group` | `UpdateGroupPayload` | `AlarmGroup` |
 | `delete_group` | `{ AlarmGroupId: string }` | `void` |
 | `list_groups` | `void` | `AlarmGroup[]` |
 | `toggle_group` | `{ AlarmGroupId: string, IsEnabled: boolean }` | `void` |
+
+### Payload Interfaces
+
+> **Resolves GA1-003, GA1-004.** Defines exactly which fields the frontend sends for group operations.
+
+```typescript
+interface CreateGroupPayload {
+  Name: string;       // Max 50 chars, trimmed, required
+  SortOrder: number;  // Position in list (0-based). Backend assigns next available if omitted
+}
+
+interface UpdateGroupPayload {
+  AlarmGroupId: string;  // Required — identifies the group to update
+  Name?: string;         // Max 50 chars, trimmed
+  SortOrder?: number;    // New position in list
+}
+```
+
+### Rust Command Handler Pattern
+
+> **Resolves GA2-003.** Canonical example of a Tauri IPC command handler. Other under-specified features should reference this pattern.
+
+```rust
+#[tauri::command]
+pub fn create_group(
+    state: tauri::State<'_, AppState>,
+    payload: CreateGroupPayload,
+) -> Result<AlarmGroup, AlarmAppError> {
+    tracing::debug!(name = %payload.name, "create_group called");
+
+    // 1. Validate
+    let name = payload.name.trim();
+    if name.is_empty() || name.len() > 50 {
+        return Err(AlarmAppError::ValidationFailed {
+            field: "Name".into(),
+            message: "Group name must be 1–50 characters".into(),
+        });
+    }
+
+    // 2. DB insert
+    let db = state.db.lock().expect("DB lock");
+    let group_id = uuid::Uuid::new_v4().to_string();
+    db.execute(
+        "INSERT INTO AlarmGroups (AlarmGroupId, Name) VALUES (?1, ?2)",
+        params![&group_id, name],
+    )?;
+
+    // 3. Return created group
+    let group = AlarmGroup { /* ... fields from DB ... */ };
+    tracing::info!(group_id = %group_id, "Group created");
+    Ok(group)
+}
+```
+
+**Frontend call pattern:** Use `safeInvoke` from `02-design-system.md`:
+
+```typescript
+const group = await safeInvoke<AlarmGroup>("create_group", { Name: "Workday", SortOrder: 0 });
+```
 
 ### Edge Cases
 
@@ -111,4 +170,6 @@ Add `IsPreviousEnabled INTEGER` column to the `Alarms` table. This stores each a
 |-----------|----------|
 | Alarm CRUD | `./01-alarm-crud.md` |
 | Data Model | `../01-fundamentals/01-data-model.md` |
+| Design System (UI States) | `../01-fundamentals/02-design-system.md` |
+| File Structure (Zustand Stores) | `../01-fundamentals/03-file-structure.md` |
 | Export/Import | `./10-export-import.md` |
