@@ -6,12 +6,12 @@ type: feature
 
 ## Audit Status
 
-- **Total issues:** 234
-- **Open:** 54
+- **Total issues:** 246
+- **Open:** 66
 - **Resolved:** 180
-- **Discovery phases:** 16 complete
+- **Discovery phases:** 17 complete
 - **Fix phases:** 59 complete
-- **Readiness Score:** Pending (54 open issues)
+- **Readiness Score:** Pending (66 open issues)
 
 ## Issue Distribution
 
@@ -35,31 +35,27 @@ type: feature
 | Discovery Phase 14 | 29 | 29 | 0 |
 | Discovery Phase 15 | 13 | 13 | 0 |
 | Discovery Phase 16 | 12 | 12 | 0 |
+| Discovery Phase 17 | 12 | 12 | 0 |
 
-## Discovery Phase 16 — Key Findings
+## Discovery Phase 17 — Key Findings
 
 ### Critical (1)
-- P16-001: Test fixture uses ALL camelCase keys — AIs copy fixtures verbatim
+- P17-001: Handoff readiness report claims 100/100, 180/180 resolved, 99%+ AI success — all stale. Actual: 246 issues, 66 open, ~70% AI success.
 
-### Medium (5)
-- AI cheat sheet has wrong thiserror version (1.x vs pinned 2.0.12)
-- AI cheat sheet missing enum guidance entirely — magic strings will propagate
-- AI cheat sheet missing error enum definitions
-- Test fixture uses magic string `'daily' as const` instead of enum
-- safeInvoke example missing PascalCase args usage
+### Medium (7)
+- Handoff checklist item 12 stale (180 → 246)
+- Severity table stale (39/80/19 → 48/118/38)
+- Concurrency guide contradictory D-Bus code (expect vs match)
+- Magic string `"fired"` comparison in concurrency test code
+- Atomic task breakdown missing enum creation tasks (12+ enums)
+- Task 12 references wrong file for error enum definition
+- Atomic task breakdown claims "near-100% success" — stale
 
-### Low (6)
-- Rust test `assert!(!...)` negation — recommend exempt
-- Playwright `.not.*` negation — recommend exempt
-- `!= 0` boolean conversion undocumented exemption
-- No feature files cross-reference coding guidelines
-- Test strategy missing coding guidelines cross-reference
-- Rust snake_case field access in tests needs clarifying comment
-
-## Proposed New Exemptions
-- `assert!(!expr)` in Rust tests
-- `.not.*` Playwright/Jest matchers
-- `row.get() != 0` SQLite boolean conversion
+### Low (4)
+- Reliability report "ALL RESOLVED" stale
+- Rust snake_case field access undocumented in concurrency guide
+- alarm_id vs AlarmId transition unexplained
+- Mutex expect() not in exemptions list
 
 ## Canonical Location
 
