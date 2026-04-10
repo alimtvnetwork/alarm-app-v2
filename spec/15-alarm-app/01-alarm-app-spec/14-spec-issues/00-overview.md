@@ -57,7 +57,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 6** | **Analytics schema + cheat sheet regressions** | **✅ Done (3 resolved)** |
 | **Fix Phase 7** | **Concurrency guide regressions** | **✅ Done (2 resolved)** |
 | **Fix Phase 8** | **Firing + snooze prose snake_case** | **✅ Done (1 resolved + CG-006 partial)** |
-| Fix Phase 9 | Groups + sound prose snake_case | 🔴 Pending |
+| **Fix Phase 9** | **Groups + sound prose snake_case** | **✅ Done (CG-006 partial)** |
 | Fix Phase 10 | Architecture contradictions (`tauri-plugin-sql`, intervals, return types) | 🔴 Pending |
 | Fix Phase 11 | `get_alarms` vs `list_alarms` conflict | 🔴 Pending |
 | Fix Phase 12 | Settings keys → PascalCase | 🔴 Pending |

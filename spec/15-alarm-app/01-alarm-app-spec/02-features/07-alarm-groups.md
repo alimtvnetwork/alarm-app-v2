@@ -38,23 +38,23 @@ Alarms can be organized into named groups (e.g., "Workday", "Weekend", "Gym"). G
 
 > **Resolves FE-STATE-001.** Without per-alarm state tracking, re-enabling a group would enable ALL alarms — even those the user had manually disabled.
 
-### Column: `previous_enabled`
+### Column: `IsPreviousEnabled`
 
-Add `previous_enabled INTEGER` column to the `alarms` table. This stores each alarm's `enabled` state before a group toggle-off.
+Add `IsPreviousEnabled INTEGER` column to the `Alarms` table. This stores each alarm's `IsEnabled` state before a group toggle-off.
 
 ### Disable Group Flow
 
-1. For each alarm in the group: save `enabled` → `previous_enabled`
-2. Set all member alarms to `enabled = 0`
-3. Set group `enabled = 0`
-4. Recompute `nextFireTime` (all become NULL)
+1. For each alarm in the group: save `IsEnabled` → `IsPreviousEnabled`
+2. Set all member alarms to `IsEnabled = 0`
+3. Set group `IsEnabled = 0`
+4. Recompute `NextFireTime` (all become NULL)
 
 ### Enable Group Flow
 
-1. For each alarm in the group: restore `enabled` from `previous_enabled`
-2. Set `previous_enabled = NULL` (clear)
-3. Set group `enabled = 1`
-4. Recompute `nextFireTime` for restored-enabled alarms
+1. For each alarm in the group: restore `IsEnabled` from `IsPreviousEnabled`
+2. Set `IsPreviousEnabled = NULL` (clear)
+3. Set group `IsEnabled = 1`
+4. Recompute `NextFireTime` for restored-enabled alarms
 
 ### IPC Commands
 
@@ -66,9 +66,9 @@ Add `previous_enabled INTEGER` column to the `alarms` table. This stores each al
 
 | Scenario | Behavior |
 |----------|----------|
-| User manually toggles alarm while group is off | Writes to `enabled` directly; `previous_enabled` unchanged |
-| Group deleted while disabled | Alarms moved to ungrouped with `enabled = previous_enabled` (restore before move) |
-| `previous_enabled` is NULL when re-enabling | Treat as `enabled = 1` (default on) |
+| User manually toggles alarm while group is off | Writes to `IsEnabled` directly; `IsPreviousEnabled` unchanged |
+| Group deleted while disabled | Alarms moved to ungrouped with `IsEnabled = IsPreviousEnabled` (restore before move) |
+| `IsPreviousEnabled` is NULL when re-enabling | Treat as `IsEnabled = 1` (default on) |
 
 ---
 
