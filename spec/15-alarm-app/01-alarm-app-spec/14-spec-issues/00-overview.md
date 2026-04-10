@@ -27,6 +27,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 10 | `10-discovery-phase-8.md` | Discovery Phase 8 — Remaining Files | 11 | 0 | 11 |
 | 11 | `11-discovery-phase-9.md` | Discovery Phase 9 — Full Grep Scan | 30 | 0 | 30 |
 | 12 | `12-discovery-phase-10.md` | Discovery Phase 10 — Deep Cross-File Audit | 18 | 0 | 18 |
+| 13 | `13-discovery-phase-11.md` | Discovery Phase 11 — Feature Specs Deep Audit | 14 | 14 | 0 |
 
 ---
 
@@ -34,11 +35,11 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 36 |
-| 🟡 Medium | 65 |
-| 🟢 Low | 12 |
-| **Grand Total** | **154** |
-| **Open** | **0** |
+| 🔴 Critical | 39 |
+| 🟡 Medium | 72 |
+| 🟢 Low | 15 |
+| **Grand Total** | **168** |
+| **Open** | **14** |
 | **Resolved** | **154** |
 
 ---
@@ -56,7 +57,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 7** | **Post-fix regression scan (Phases 16–20)** | **✅ Done (+18 = 95)** |
 | **Discovery Phase 8** | **Remaining files scan** | **✅ Done (+11 = 106)** |
 | **Discovery Phase 9** | **Full grep scan** | **✅ Done (+30 = 136)** |
-| **Discovery Phase 10** | **Deep cross-file audit (post-naming)** | **🔴 Open (+18 = 154)** |
+| **Discovery Phase 10** | **Deep cross-file audit (post-naming)** | **✅ Done (+18 = 154)** |
+| **Discovery Phase 11** | **Feature specs & fundamentals deep audit** | **🔴 Open (+14 = 168)** |
 | **Fix Phase 1** | **Exemptions & decisions** | **✅ Done (4 resolved)** |
 | **Fix Phase 2** | **sqlx → rusqlite** | **✅ Done (7 resolved)** |
 | **Fix Phase 3** | **DB naming PascalCase** | **✅ Done (5 resolved)** |
