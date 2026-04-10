@@ -179,7 +179,7 @@ User saves edit at t=07:30:02 → overwrites NextFireTime
 ```rust
 // On update: include WHERE UpdatedAt = {expected}
 let rows = conn.execute(
-    "UPDATE alarms SET Time=?, ..., UpdatedAt=? WHERE AlarmId=? AND UpdatedAt=?",
+    "UPDATE Alarms SET Time=?, ..., UpdatedAt=? WHERE AlarmId=? AND UpdatedAt=?",
     params![new_time, new_updated_at, alarm_id, expected_updated_at],
 )?;
 
@@ -221,17 +221,17 @@ pub struct AlarmEngine {
     currently_firing: HashSet<String>,  // In-memory lock
 }
 
-async fn check_and_fire_alarms(&mut self) {
-    let due = query_due_alarms(&self.pool).await;
+fn check_and_fire_alarms(&mut self, conn: &Connection) {
+    let due = query_due_alarms(conn);
     for alarm in due {
-        if self.currently_firing.contains(&alarm.id) {
+        if self.currently_firing.contains(&alarm.alarm_id) {
             continue;  // Already being processed
         }
-        self.currently_firing.insert(alarm.id.clone());
+        self.currently_firing.insert(alarm.alarm_id.clone());
         
         // Process alarm...
-        self.update_next_fire_time(&alarm).await;
-        self.currently_firing.remove(&alarm.id);
+        self.update_next_fire_time(conn, &alarm);
+        self.currently_firing.remove(&alarm.alarm_id);
     }
 }
 ```

@@ -146,9 +146,7 @@ Violations of the project's own coding guidelines found in spec code samples. Th
 
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/12-platform-and-concurrency-guide.md` (lines 166–167)  
-**Status:** 🔴 Open
-
-**Problem:** Race condition resolution SQL: `WHERE id = ? AND deleted_at IS NOT NULL` — should be `WHERE AlarmId = ? AND DeletedAt IS NOT NULL`. Fix Phases 2–4 missed this file's SQL statements.
+**Status:** ✅ Resolved — already fixed during Fix Phase 5 (table rename pass updated this SQL to `Alarms`/`AlarmId`/`DeletedAt`)
 
 ---
 
@@ -156,13 +154,9 @@ Violations of the project's own coding guidelines found in spec code samples. Th
 
 **Severity:** 🟡 Medium  
 **Location:** `01-fundamentals/12-platform-and-concurrency-guide.md` (lines 227–234)  
-**Status:** 🔴 Open
-
-**Problem:** Two issues:
-1. `alarm.id` — should be `alarm.alarm_id` (Rust struct field) for consistency
-2. `self.pool` — references `SqlitePool` pattern from pre-rusqlite refactor. Should be `conn` or `self.conn`
+**Status:** ✅ Resolved — `alarm.id` → `alarm.alarm_id`, `self.pool` → `conn: &Connection`, removed `async`/`.await`
 
 ---
 
 ## Issues Found So Far: 12
-## Open: 5 | Resolved: 7
+## Open: 3 | Resolved: 9
