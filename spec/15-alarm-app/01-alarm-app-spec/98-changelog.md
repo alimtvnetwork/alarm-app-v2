@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 2.0.0  
+**Version:** 2.3.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -26,6 +26,50 @@
 ---
 
 ## Version History
+
+### v2.3.0 — 2026-04-10
+
+**Theme:** Fix phases E, F, H, I — 34 issues resolved, readiness score upgraded to ~98/100 (A+)
+
+#### Fix Phases
+
+| Phase | Issues | Focus |
+|-------|:------:|-------|
+| E | 4 | Settings seeding strategy with 9 default values, UI states spec (loading/empty/error/populated) for all views |
+| F | 13 | PascalCase fixes, semantic inverse methods (`isDisabled()`, `isVibrationOff()`), single-DB decision doc, atomic task breakdown updates (Task 9b + 13), coding guidelines cross-refs |
+| H | 15 | Stale metrics: root overview, readiness report, consistency reports, changelog — all updated to current counts |
+| I | 2 | Acceptance criteria rollups: `01-fundamentals/97-acceptance-criteria.md` (64 criteria), `02-features/97-acceptance-criteria.md` (133 criteria) |
+
+#### Added
+- **`01-fundamentals/97-acceptance-criteria.md`** (new) — Consolidated rollup of 64 testable criteria from all 11 fundamental specs
+- **`02-features/97-acceptance-criteria.md`** (new) — Consolidated rollup of 133 testable criteria from all 16 feature specs
+- **Boolean Semantic Inverses** in `01-data-model.md` — `isDisabled()`, `isVibrationOff()`, `isFixedVolume()`
+- **Single Database Decision** section in `01-data-model.md` — Documents why single SQLite file, not split-DB
+- **Settings seeding spec** in `01-data-model.md` — 9 default values seeded by V1 migration
+- **UI States spec** in `02-design-system.md` — Loading (skeleton), populated, empty, error states for all views
+- **Task 9b** in `11-atomic-task-breakdown.md` — Rust domain enum implementation task
+- **Serde clarifying comments** in `09-test-strategy.md` and `12-platform-and-concurrency-guide.md`
+
+#### Changed
+- `01-fundamentals/01-data-model.md` → v1.9.0: Semantic inverses, single-DB decision, settings seeding, cross-refs
+- `01-fundamentals/02-design-system.md`: UI states spec, coding guidelines cross-ref
+- `01-fundamentals/09-test-strategy.md`: Serde comment, coding guidelines cross-ref
+- `02-features/10-export-import.md`: Domain enum + coding guidelines cross-refs
+- `02-features/13-analytics.md`: Domain enum + coding guidelines cross-refs
+- `11-atomic-task-breakdown.md` → v1.1.0: Task 9b, expanded Task 13, fixed Task 12 reference
+- `12-platform-and-concurrency-guide.md`: Serde clarifying comments
+- `10-ai-handoff-readiness-report.md` → v2.3.0: ~98/100, 2 open, 254 resolved
+- `99-consistency-report.md` → v2.3.0: Health 98/100
+- `00-overview.md` → v2.2.0: Status ~98/100, 2 open issues
+- `14-spec-issues/00-overview.md` → v1.18.0: Added fix phases E, F, H, I; totals 254/256
+
+#### Status
+- **Total issues:** 256 (254 resolved + 2 open)
+- **Open severity:** 0 critical, 1 medium (P15-016), 1 low (P15-017)
+- **Acceptance criteria:** 197 total (133 feature + 64 fundamental)
+- **Readiness:** ~98/100 (A+)
+
+---
 
 ### v2.2.0 — 2026-04-10
 
