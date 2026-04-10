@@ -335,6 +335,34 @@ windows = { version = "=0.58.0", features = ["Win32_System_Power"] }  # Pin 0.58
 zbus = "=4.4.0"                   # Pin 4.x — 5.x is async-only rewrite
 ```
 
+## npm Dependencies (package.json)
+
+> All versions pinned with `=` to prevent breaking upgrades. See `10-dependency-lock.md` for API surface and breaking change notes.
+
+```json
+{
+  "dependencies": {
+    "@tauri-apps/api": "=2.10.1",
+    "react": "=18.3.1",
+    "react-dom": "=18.3.1",
+    "react-router-dom": "=6.30.0",
+    "zustand": "=4.5.7",
+    "sonner": "=1.7.7",
+    "i18next": "=24.2.3",
+    "react-i18next": "=15.5.3"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "=2.10.1",
+    "typescript": "=5.7.3",
+    "vite": "=5.4.18",
+    "tailwindcss": "=3.4.22",
+    "vitest": "=2.1.8",
+    "@testing-library/react": "=16.1.0",
+    "eslint-plugin-i18next": "=6.1.3"
+  }
+}
+```
+
 ---
 
 ## Component Hierarchy
