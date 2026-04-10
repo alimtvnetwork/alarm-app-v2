@@ -314,11 +314,13 @@ PRAGMA busy_timeout=5000;  -- Wait up to 5s for locks instead of failing immedia
 The `alarm_events` table grows unbounded. A retention policy purges old events on startup.
 
 ```rust
+const DEFAULT_EVENT_RETENTION_DAYS: i64 = 90;
+
 // Run at startup Step 8 (after missed alarm check)
 pub fn purge_old_events(conn: &Connection) {
     let retention_days: i64 = get_setting(conn, "EventRetentionDays")
         .and_then(|v| v.parse().ok())
-        .unwrap_or(90);
+        .unwrap_or(DEFAULT_EVENT_RETENTION_DAYS);
 
     let cutoff = Utc::now() - chrono::Duration::days(retention_days);
     conn.execute(
@@ -402,9 +404,9 @@ Alarms store **local time** (`HH:MM`) as the user-facing value. `nextFireTime` i
 
 ### DST Transition — Spring Forward
 
-If the target local time is **skipped** during DST (e.g., 2:30 AM when clocks jump from 2:00 → 3:00):
-- Fire at the **next valid minute** after the transition (i.e., 3:00 AM)
-- Log the adjustment in `alarm_events` with a note
+If the target local time is **skipped** during DST (e.g., 2:30 AM in the US when clocks jump 2:00→3:00, or 1:30 AM in the EU when clocks jump 1:00→2:00):
+- Walk forward minute-by-minute from the skipped time until the first valid local time is found (timezone-agnostic — works for any DST offset)
+- Log the adjustment in `AlarmEvents` with a note
 
 ### DST Transition — Fall Back
 

@@ -316,6 +316,8 @@ tokio::task::spawn_blocking(move || {
 The alarm engine loop is the most critical code path. It must NEVER stop:
 
 ```rust
+const ALARM_CHECK_INTERVAL_SECS: u64 = 30;
+
 // This is the ONLY acceptable pattern for the engine loop
 loop {
     match self.check_and_fire_alarms().await {
@@ -329,7 +331,7 @@ loop {
             // NEVER break. NEVER return. NEVER panic.
         }
     }
-    tokio::time::sleep(Duration::from_secs(30)).await;
+    tokio::time::sleep(Duration::from_secs(ALARM_CHECK_INTERVAL_SECS)).await;
 }
 ```
 

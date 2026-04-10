@@ -59,12 +59,14 @@ src-tauri/                     ← Rust backend
 ### 1. Engine Loop — NEVER Crash
 
 ```rust
+const ALARM_CHECK_INTERVAL_SECS: u64 = 30;
+
 loop {
     match self.check_and_fire_alarms().await {
         Ok(_) => {},
         Err(e) => tracing::error!(error=%e, "tick failed — CONTINUING"),
     }
-    tokio::time::sleep(Duration::from_secs(30)).await;
+    tokio::time::sleep(Duration::from_secs(ALARM_CHECK_INTERVAL_SECS)).await;
 }
 ```
 
@@ -76,12 +78,21 @@ fn resolve_local_to_utc(date: NaiveDate, time: NaiveTime, tz: &Tz) -> Option<Dat
         LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
         LocalResult::Ambiguous(first, _) => Some(first.with_timezone(&Utc)), // Fall-back: first
         LocalResult::None => {                                                // Spring-forward
-            let t = tz.from_local_datetime(&NaiveDateTime::new(date, NaiveTime::from_hms_opt(3,0,0).unwrap()));
-            match t { LocalResult::Single(dt)|LocalResult::Ambiguous(dt,_) => Some(dt.with_timezone(&Utc)), _ => None }
+            // Walk forward minute-by-minute to find next valid local time (timezone-agnostic)
+            let mut candidate = time;
+            for _ in 0..120 {
+                candidate = candidate + chrono::Duration::minutes(1);
+                match tz.from_local_datetime(&NaiveDateTime::new(date, candidate)) {
+                    LocalResult::Single(dt) | LocalResult::Ambiguous(dt, _) => {
+                        return Some(dt.with_timezone(&Utc));
+                    }
+                    LocalResult::None => continue,
+                }
+            }
+            None
         }
     }
 }
-```
 
 ### 3. SQLite Booleans — Integer Conversion
 

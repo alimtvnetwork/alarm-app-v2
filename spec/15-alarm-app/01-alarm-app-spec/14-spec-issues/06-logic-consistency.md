@@ -62,9 +62,9 @@ Cross-file logic inconsistencies found during Discovery Phase 3 and Phase 6. The
 
 **Severity:** 🔴 Critical  
 **Location:** `02-features/03-alarm-firing.md` (line 135), `01-fundamentals/13-ai-cheat-sheet.md` (line 79)  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — replaced hardcoded `NaiveTime::from_hms_opt(3,0,0)` with timezone-agnostic minute-by-minute walk-forward algorithm in Fix Phase 16
 
-**Problem:** DST fallback is hardcoded to `NaiveTime::from_hms_opt(3, 0, 0)`. DST transitions vary globally: EU = 2:00→3:00, Lord Howe Island = 2:00→2:30, Brazil (historical) = 0:00→1:00. Correct approach: iterate forward minute-by-minute from skipped time until a valid local time is found. AI will copy the hardcoded value and produce incorrect behavior for ~30% of world timezones.
+**Resolution:** Both `03-alarm-firing.md` and `13-ai-cheat-sheet.md` now iterate forward from the skipped time until a valid local time is found. Test table expanded with EU and no-DST scenarios.
 
 ---
 
@@ -117,4 +117,4 @@ Cross-file logic inconsistencies found during Discovery Phase 3 and Phase 6. The
 ---
 
 ## Issues Found: 11
-## Open: 4 | Resolved: 7
+## Open: 3 | Resolved: 8
