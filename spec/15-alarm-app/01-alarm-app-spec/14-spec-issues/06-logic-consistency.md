@@ -15,7 +15,7 @@ Cross-file logic inconsistencies found during Discovery Phase 3 and Phase 6. The
 
 **Severity:** 🔴 Critical  
 **Location:** `02-features/06-dismissal-challenges.md` vs `01-fundamentals/01-data-model.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — added challenge columns to Alarms SQL table, TS Alarm interface, and Rust AlarmRow struct. See CG-007 resolution.
 
 **Problem:** `06-dismissal-challenges.md` defines an `AlarmChallenge` interface with fields `type`, `difficulty`, `shakeCount`, `stepCount`. Neither the TS `Alarm` interface nor the SQL `alarms` table has a `challenge` or `ChallengeType` column. The `ChallengeType` column exists only in `alarm_events` (logging), not in `alarms` (configuration). AI cannot implement challenge-per-alarm without schema support.
 
@@ -117,4 +117,4 @@ Cross-file logic inconsistencies found during Discovery Phase 3 and Phase 6. The
 ---
 
 ## Issues Found: 11
-## Open: 5 | Resolved: 6
+## Open: 4 | Resolved: 7

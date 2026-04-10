@@ -36,7 +36,7 @@ Optional challenges that must be completed before an alarm can be dismissed. Pre
 - All problems produce **integer answers only** (no decimals). Division problems are pre-validated
 - Wrong answers keep the alarm ringing
 - Difficulty configurable per alarm
-- Solve time is logged in `alarm_events.metadata` JSON (`{"solve_time_ms": 4500}`) for future adaptive calibration (P3)
+- Solve time is logged in `AlarmEvents.ChallengeSolveTimeSec` (stored as seconds, e.g. `4.5`) for future adaptive calibration (P3)
 - **Problem generation:** Use `rand` crate. For Hard tier, generate `(a × b) + c` where `a ∈ [2,12]`, `b ∈ [10,30]`, `c ∈ [-50,50]`, ensuring result > 0
 
 ### Memory / Pattern Game (P2)

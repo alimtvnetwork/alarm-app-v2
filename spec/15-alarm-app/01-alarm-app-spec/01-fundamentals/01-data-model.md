@@ -40,6 +40,10 @@ interface Alarm {
   IsGradualVolume: boolean;        // Fade-in volume enabled
   GradualVolumeDurationSec: number; // 15, 30, or 60 seconds
   AutoDismissMin: number;          // 0 = disabled, 1–60 = auto-stop after N minutes
+  ChallengeType: string | null;    // null = no challenge, 'math' | 'memory' | 'shake' | 'typing' | 'qr' | 'steps'
+  ChallengeDifficulty: string | null; // 'easy' | 'medium' | 'hard' (math only)
+  ChallengeShakeCount: number | null; // shake only
+  ChallengeStepCount: number | null;  // steps only
   NextFireTime: string | null;     // ISO 8601 — precomputed next fire time
   DeletedAt: string | null;        // ISO 8601 — soft-delete timestamp (null = active)
   CreatedAt: string;               // ISO 8601 timestamp
@@ -93,6 +97,10 @@ pub struct AlarmRow {
     pub is_gradual_volume: bool,
     pub gradual_volume_duration_sec: i32,
     pub auto_dismiss_min: i32,
+    pub challenge_type: Option<String>,       // null = no challenge
+    pub challenge_difficulty: Option<String>,  // easy|medium|hard (math only)
+    pub challenge_shake_count: Option<i32>,    // shake only
+    pub challenge_step_count: Option<i32>,     // steps only
     pub next_fire_time: Option<String>,   // ISO 8601
     pub deleted_at: Option<String>,       // ISO 8601
     pub created_at: String,
@@ -136,6 +144,10 @@ impl AlarmRow {
             is_gradual_volume: row.get::<_, i32>("IsGradualVolume")? != 0,
             gradual_volume_duration_sec: row.get("GradualVolumeDurationSec")?,
             auto_dismiss_min: row.get("AutoDismissMin")?,
+            challenge_type: row.get("ChallengeType")?,
+            challenge_difficulty: row.get("ChallengeDifficulty")?,
+            challenge_shake_count: row.get("ChallengeShakeCount")?,
+            challenge_step_count: row.get("ChallengeStepCount")?,
             next_fire_time: row.get("NextFireTime")?,
             deleted_at: row.get("DeletedAt")?,
             created_at: row.get("CreatedAt")?,
@@ -240,6 +252,10 @@ CREATE TABLE Alarms (
   IsGradualVolume INTEGER NOT NULL DEFAULT 0,
   GradualVolumeDurationSec INTEGER NOT NULL DEFAULT 30,
   AutoDismissMin INTEGER NOT NULL DEFAULT 0,
+  ChallengeType TEXT,                                -- null = no challenge
+  ChallengeDifficulty TEXT,                          -- easy|medium|hard (math only)
+  ChallengeShakeCount INTEGER,                       -- shake only
+  ChallengeStepCount INTEGER,                        -- steps only
   NextFireTime TEXT,                                 -- ISO 8601 precomputed
   DeletedAt TEXT,                                    -- soft-delete timestamp
   CreatedAt TEXT NOT NULL,

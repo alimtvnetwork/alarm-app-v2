@@ -101,9 +101,7 @@ These prose references must also be updated when column names change to PascalCa
 **Severity:** 🔴 Critical  
 **Location:** `02-features/06-dismissal-challenges.md` vs `01-fundamentals/01-data-model.md`  
 **Cross-ref:** LC-001 in `06-logic-consistency.md`  
-**Status:** 🔴 Open
-
-**Problem:** The `AlarmChallenge` interface is defined in the dismissal challenges spec but has no corresponding columns in the `alarms` table or TS `Alarm` interface. Without schema support, challenge-per-alarm configuration cannot be implemented.
+**Status:** ✅ Resolved — added `ChallengeType`, `ChallengeDifficulty`, `ChallengeShakeCount`, `ChallengeStepCount` columns to Alarms table, TS Alarm interface, and Rust AlarmRow struct
 
 ---
 
@@ -151,11 +149,9 @@ These prose references must also be updated when column names change to PascalCa
 
 **Severity:** 🟡 Medium  
 **Location:** `02-features/06-dismissal-challenges.md` (line 39)  
-**Status:** 🔴 Open
-
-**Problem:** `06-dismissal-challenges.md` references `alarm_events.metadata` JSON containing `{"solve_time_ms": 4500}`. No `Metadata` column exists in the `AlarmEvents` schema. The data model has `ChallengeSolveTimeSec REAL` instead. AI will try to create a non-existent column or use the wrong one.
+**Status:** ✅ Resolved — changed reference from `alarm_events.metadata` JSON to `AlarmEvents.ChallengeSolveTimeSec` column (which already exists in schema)
 
 ---
 
 ## Issues Found So Far: 12
-## Open: 11 | Resolved: 1
+## Open: 9 | Resolved: 3
