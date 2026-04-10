@@ -114,8 +114,9 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `get_settings` | FE → BE | `void` | `Settings` |
 | `update_setting` | FE → BE | `{ Key: string, Value: string }` | `void` |
 | `export_data` | FE → BE | `{ Format: ExportFormat, Scope: ExportScope, AlarmIds?: string[] }` | `string` (file path) |
-| `import_data` | FE → BE | `{ Mode: ImportMode }` | `ImportResult` |
-| `get_next_alarm` | FE → BE | `void` | `NextAlarmInfo \| null` |
+| `import_data` | FE → BE | `{ Mode: ImportMode }` | `ImportPreview` |
+| `confirm_import` | FE → BE | `{ PreviewId: string, Mode: ImportMode, DuplicateAction: DuplicateAction }` | `ImportResult` |
+| `get_next_alarm_time` | FE → BE | `void` | `{ NextFireTime: string \| null, AlarmLabel: string \| null }` |
 
 #### Events (Backend → Frontend)
 
@@ -183,7 +184,7 @@ interface AlarmStore {
   deleteAlarm: (alarmId: string) => Promise<{ UndoToken: string }>;
   toggleAlarm: (alarmId: string, isEnabled: boolean) => Promise<void>;
   toggleGroup: (groupId: string, isEnabled: boolean) => Promise<void>;
-  reorderAlarms: (alarmIds: string[]) => void;
+  // Note: alarm ordering is always by NextFireTime within groups — no custom reorder IPC needed
 }
 
 // stores/useOverlayStore.ts

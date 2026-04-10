@@ -1,7 +1,7 @@
 # Alarm Groups
 
-**Version:** 1.3.0  
-**Updated:** 2026-04-09  
+**Version:** 1.4.0  
+**Updated:** 2026-04-10
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P1 — Should Have  
@@ -71,7 +71,11 @@ Add `IsPreviousEnabled INTEGER` column to the `Alarms` table. This stores each a
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `toggle_group` | `{ GroupId: string, IsEnabled: boolean }` | `void` |
+| `create_group` | `{ Name: string }` | `AlarmGroup` |
+| `update_group` | `{ AlarmGroupId: string, Name: string }` | `AlarmGroup` |
+| `delete_group` | `{ AlarmGroupId: string }` | `void` |
+| `list_groups` | `void` | `AlarmGroup[]` |
+| `toggle_group` | `{ AlarmGroupId: string, IsEnabled: boolean }` | `void` |
 
 ### Edge Cases
 

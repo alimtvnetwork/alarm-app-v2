@@ -47,6 +47,8 @@ When `MaxSnoozeCount = 0`, the Snooze button is never shown — the user must di
 
 ## Snooze State
 
+> See `01-fundamentals/01-data-model.md` → SnoozeState interface for the authoritative definition. Reproduced here for context:
+
 ```typescript
 interface SnoozeState {
   AlarmId: string;
@@ -56,6 +58,16 @@ interface SnoozeState {
 ```
 
 Stored in the `SnoozeState` SQLite table. Cleared on dismiss.
+
+### IPC Commands
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `snooze_alarm` | `{ AlarmId: string, DurationMin: number }` | `SnoozeState` |
+| `get_snooze_state` | `void` | `SnoozeState[]` |
+| `cancel_snooze` | `{ AlarmId: string }` | `void` |
+
+**`cancel_snooze` behavior:** Clears the active snooze for the given alarm. Used when the user dismisses an alarm that was in a snooze cycle, or when the alarm is deleted while a snooze is pending.
 
 ---
 
