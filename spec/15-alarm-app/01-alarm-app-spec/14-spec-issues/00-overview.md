@@ -45,6 +45,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 28 | `28-fix-phase-f-remaining.md` | Fix Phase F — PascalCase, Atomic Tasks, Semantic Inverses & Cross-References | 13 resolved | 0 | 13 |
 | 30 | `30-fix-phase-j-final-7.md` | Fix Phase J — Final 7 Issues (ARIA, 0=disabled, IPC, magic strings, exemption) | 7 resolved | 0 | 7 |
 | 31 | `31-discovery-phase-19.md` | Discovery Phase 19 — Post-Completion Regression Audit | 34 | 0 | 34 |
+| 32 | `32-discovery-phase-20.md` | Discovery Phase 20 — Fresh Audit (IPC, magic strings, Scoring, serde, seedable config) | 21 | 0 | 21 |
+| 33 | `33-discovery-phase-21.md` | Discovery Phase 21 — Post-Phase-20 Regression Scan (stale metrics, version alignment) | 4 | 0 | 4 |
 
 ---
 
@@ -52,12 +54,12 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 69 |
-| 🟡 Medium | 138 |
-| 🟢 Low | 41 |
-| **Grand Total** | **290** |
+| 🔴 Critical | 72 |
+| 🟡 Medium | 196 |
+| 🟢 Low | 43 |
+| **Grand Total** | **311** |
 | **Open** | **0** |
-| **Resolved** | **290** |
+| **Resolved** | **311** |
 
 ---
 
@@ -113,6 +115,15 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase L** | **Magic string union types in IPC/interfaces (8 issues)** | **✅ Done (8 resolved)** |
 | **Fix Phase M** | **camelCase + naming mismatches (10 issues)** | **✅ Done (10 resolved)** |
 | **Fix Phase N** | **Serde attributes, duplicate cross-refs, prose casing (5 issues)** | **✅ Done (5 resolved, 0 open)** |
+| **Fix Phase O** | **Stale "256" metrics → "290" (5 issues)** | **✅ Done (5 resolved)** |
+| **Fix Phase P** | **IPC `get_`→`list_` rename, magic strings (5 issues)** | **✅ Done (5 resolved)** |
+| **Fix Phase Q** | **Scoring tables + metadata for 28 spec files (6 issues)** | **✅ Done (6 resolved)** |
+| **Fix Phase R** | **camelCase/PascalCase boundary, internal structs (3 issues)** | **✅ Done (3 resolved)** |
+| **Fix Phase S** | **Seedable config cross-reference (2 issues)** | **✅ Done (2 resolved)** |
+| **Discovery Phase 19** | **Post-completion regression audit** | **✅ Done (+34 = 290)** |
+| **Discovery Phase 20** | **Fresh audit: IPC, magic strings, Scoring, serde, seedable config** | **✅ Done (+21 = 311)** |
+| **Fix Phase T** | **Stale "290" metrics → "311", version alignment (4 issues)** | **✅ Done (4 resolved)** |
+| **Discovery Phase 21** | **Post-Phase-20 regression scan** | **✅ Done (+4 = 315 found, 315 resolved)** |
 
 ---
 
