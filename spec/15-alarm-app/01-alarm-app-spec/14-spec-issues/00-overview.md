@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.14.0  
+**Version:** 1.15.0  
 **Updated:** 2026-04-10
 
 ---
@@ -30,11 +30,12 @@ This folder tracks all specification quality issues found during the deep audit 
 | 13 | `13-discovery-phase-11.md` | Discovery Phase 11 — Feature Specs Deep Audit | 14 | 0 | 14 |
 | 14 | `14-discovery-phase-12.md` | Discovery Phase 12 — Root-Level Docs Audit | 9 | 0 | 9 |
 | 15 | `15-discovery-phase-13.md` | Discovery Phase 13 — App Issues & Reference Audit | 3 | 0 | 3 |
-| 16 | `16-discovery-phase-14.md` | Discovery Phase 14 — Foundational Alignment Audit | 29 | 29 | 0 |
+| 16 | `16-discovery-phase-14.md` | Discovery Phase 14 — Foundational Alignment Audit | 29 | 18 | 11 |
 | 17 | `17-discovery-phase-15.md` | Discovery Phase 15 — Deep Boolean, Negation & Code Sample Audit | 13 | 13 | 0 |
 | 18 | `18-discovery-phase-16.md` | Discovery Phase 16 — Test Fixtures, Cheat Sheet & Cross-Reference Audit | 12 | 12 | 0 |
 | 19 | `19-discovery-phase-17.md` | Discovery Phase 17 — Execution Guides, Handoff Reports & Concurrency Audit | 12 | 12 | 0 |
 | 20 | `20-discovery-phase-18.md` | Discovery Phase 18 — Changelog, Consistency Reports, Overview & Staleness Audit | 10 | 10 | 0 |
+| 21 | `21-fix-phase-a-domain-enums.md` | Fix Phase A — Domain Enum Definitions | 11 resolved | 0 | 11 |
 
 ---
 
@@ -46,8 +47,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 125 |
 | 🟢 Low | 39 |
 | **Grand Total** | **256** |
-| **Open** | **76** |
-| **Resolved** | **180** |
+| **Open** | **65** |
+| **Resolved** | **191** |
 
 ---
 
@@ -89,6 +90,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 14** | **All remaining prose snake_case** | **✅ Done (CG-006 resolved)** |
 | **Fix Phase 15** | **Function length decomposition** | **✅ Done (GC-001 resolved)** |
 | **Fix Phase 16–20** | **DST, thread safety, Zustand, scheduling, structural, snooze recovery** | **✅ Done (13 resolved)** |
+| **Fix Phase A** | **Domain enum definitions — replace 9 magic string union types** | **✅ Done (11 resolved, 65 open)** |
 
 ---
 
