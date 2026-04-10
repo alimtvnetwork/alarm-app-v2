@@ -831,17 +831,17 @@ CREATE INDEX IdxAlarmsGroup ON Alarms(GroupId);
 CREATE INDEX IdxEventsAlarm ON AlarmEvents(AlarmId);
 CREATE INDEX IdxEventsTimestamp ON AlarmEvents(Timestamp);
 
--- Default settings
-INSERT INTO Settings (Key, Value) VALUES
-  ('Theme', 'system'),
-  ('TimeFormat', '12h'),
-  ('DefaultSnoozeDuration', '5'),
-  ('DefaultSound', 'classic-beep'),
-  ('AutoLaunch', 'false'),
-  ('MinimizeToTray', 'true'),
-  ('Language', 'en'),
-  ('EventRetentionDays', '90'),
-  ('SystemTimezone', '');
+-- Default settings (seeded once via V1 migration — see "Settings Seeding Strategy")
+INSERT INTO Settings (Key, Value, ValueType) VALUES
+  ('Theme', 'System', 'String'),
+  ('TimeFormat', '12h', 'String'),
+  ('DefaultSnoozeDuration', '5', 'Integer'),
+  ('DefaultSound', 'classic-beep', 'String'),
+  ('AutoLaunch', 'false', 'Boolean'),
+  ('MinimizeToTray', 'true', 'Boolean'),
+  ('Language', 'en', 'String'),
+  ('EventRetentionDays', '90', 'Integer'),
+  ('SystemTimezone', '', 'String');
 ```
 
 ---
