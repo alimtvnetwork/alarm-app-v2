@@ -1,15 +1,15 @@
 ---
 name: Alarm App Spec Issues Audit
-description: 372 total spec issues — 315 resolved, 57 open (Discovery Phases 22-25). Missing deps, undefined interfaces, file structure gaps, IPC coverage holes, optional syntax inconsistency.
+description: 384 total spec issues — 315 resolved, 69 open (Discovery Phases 22-26). Missing deps, undefined interfaces, IPC registry divergence, stale metrics.
 type: feature
 ---
 
 ## Audit Status — IN PROGRESS ⚠️
 
-- **Total issues:** 372
-- **Open:** 57 (Discovery Phases 22 + 23 + 24 + 25)
+- **Total issues:** 384
+- **Open:** 69 (Discovery Phases 22–26)
 - **Resolved:** 315
-- **Discovery phases:** 25
+- **Discovery phases:** 26
 - **Fix phases:** 40 (Phases 1–20, A–T)
 
 ## Open Issues Summary
@@ -24,11 +24,14 @@ AlarmOverlay hierarchy contradiction, PascalCase bugs in code samples (timerId, 
 File structure missing 5+ Rust command files for IPC domains (history, wellness, personalization), HistoryFilter `?` optional, font loading undefined, ClockState derivation gap, acceptance criteria raw strings.
 
 ### Phase 25 — 15 issues (2 Critical, 9 Medium, 4 Low)
-AlarmEvent uses `?` optional on 5 fields (violates `| null` convention), `is_day_excluded` negative boolean in firing code, scheduling acceptance criteria raw strings, AlarmChallenge `?` optionals, AlarmSound has no storage mechanism, stale cheat sheet metrics, stale dates on 3 files.
+AlarmEvent uses `?` optional on 5 fields, `is_day_excluded` negative boolean, scheduling acceptance criteria raw strings, AlarmChallenge `?` optionals, AlarmSound no storage mechanism, stale dates.
 
-## Key Finding — Phase 25
+### Phase 26 — 12 issues (3 Critical, 6 Medium, 3 Low)
+Architecture ↔ feature spec IPC divergence (group CRUD, import flow, next-alarm command name), stale overview/readiness metrics (claim 315/315 but 69 open), orphaned IPC commands (cancel_snooze, reorderAlarms).
 
-**P25-001 is systemic.** The `?` optional syntax vs `| null` convention is inconsistent across at least 3 interfaces (AlarmEvent, AlarmChallenge, HistoryFilter). A single sweep should fix all.
+## Key Finding — Phase 26
+
+**Systemic IPC registry divergence.** `06-tauri-architecture.md` has its own IPC command registry that diverges from individual feature specs. Commands exist in one but not the other, with different names and return types.
 
 ## Canonical Location
 
