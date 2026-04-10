@@ -32,7 +32,7 @@
 
 ---
 
-### DB-GROWTH-001 — alarm_events table grows unbounded
+### DB-GROWTH-001 — `AlarmEvents` table grows unbounded
 
 | Field | Value |
 |-------|-------|
@@ -48,7 +48,7 @@
 
 ---
 
-### DB-ORPHAN-001 — Orphaned alarm_events after alarm deletion
+### DB-ORPHAN-001 — Orphaned `AlarmEvents` after alarm deletion
 
 | Field | Value |
 |-------|-------|
@@ -60,7 +60,7 @@
 
 **Root Cause:** Intentional design but poor for analytics.
 
-**Resolution:** Added `alarm_label_snapshot` (TEXT) and `alarm_time_snapshot` (TEXT) denormalized columns to `alarm_events` table in `01-fundamentals/01-data-model.md`. On every event insert, copy the alarm's current label and time to these columns. When `alarm_id` becomes NULL (alarm deleted), the snapshot columns preserve context for history/analytics views. Migration: `ALTER TABLE alarm_events ADD COLUMN alarm_label_snapshot TEXT DEFAULT ''; ALTER TABLE alarm_events ADD COLUMN alarm_time_snapshot TEXT DEFAULT '';`.
+**Resolution:** Added `AlarmLabelSnapshot` (TEXT) and `AlarmTimeSnapshot` (TEXT) denormalized columns to `AlarmEvents` table in `01-fundamentals/01-data-model.md`. On every event insert, copy the alarm's current label and time to these columns. When `AlarmId` becomes NULL (alarm deleted), the snapshot columns preserve context for history/analytics views. Migration: `ALTER TABLE AlarmEvents ADD COLUMN AlarmLabelSnapshot TEXT DEFAULT ''; ALTER TABLE AlarmEvents ADD COLUMN AlarmTimeSnapshot TEXT DEFAULT '';`.
 
 ---
 

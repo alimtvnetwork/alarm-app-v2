@@ -40,11 +40,11 @@
 | **Likelihood** | 30% → 0% |
 | **Status** | ✅ Resolved |
 
-**Description:** If user travels and timezone changes, ISO 8601 `nextFireTime` stored as absolute UTC may fire at the wrong local time.
+**Description:** If user travels and timezone changes, ISO 8601 `NextFireTime` stored as absolute UTC may fire at the wrong local time.
 
-**Root Cause:** `nextFireTime` stored as absolute time vs local time ambiguity.
+**Root Cause:** `NextFireTime` stored as absolute time vs local time ambiguity.
 
-**Resolution:** Added `on_timezone_change()` function to `02-features/03-alarm-firing.md` (v1.4.0) that recalculates all `nextFireTime` values when system timezone changes. Timezone stored in `settings` table as IANA string. Alarms always fire at configured local time.
+**Resolution:** Added `on_timezone_change()` function to `02-features/03-alarm-firing.md` (v1.4.0) that recalculates all `NextFireTime` values when system timezone changes. Timezone stored in `Settings` table as IANA string. Alarms always fire at configured local time.
 
 ---
 
@@ -66,7 +66,7 @@
 - **Medium:** Multiplication, one operand 2–12, other 10–50 (e.g., `23 × 4`). Target solve: <10s.
 - **Hard:** Two-step problems (e.g., `(15 × 3) + 12`). Target solve: <20s.
 - **Custom (P2):** User sets operand ranges and operation types.
-- Solve time logged in `alarm_events.metadata` JSON for future adaptive calibration (P3).
+- Solve time logged in `AlarmEvents.Metadata` JSON for future adaptive calibration (P3).
 - All tiers use integer-only answers (no decimals). Division problems are pre-validated to have integer results.
 
 ---
