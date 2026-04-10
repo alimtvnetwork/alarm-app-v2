@@ -1,6 +1,6 @@
 # Data Model
 
-**Version:** 1.7.0  
+**Version:** 1.8.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -20,6 +20,259 @@ Defines all TypeScript interfaces, SQLite schema, and validation rules for the A
 
 ---
 
+## Domain Enums
+
+> **Resolves P14-003–P14-011.** All domain types that were previously magic string unions are now proper enums. Both TypeScript and Rust definitions are provided. AI agents MUST use these enum types — raw string comparisons are forbidden per `05-magic-strings-and-organization.md` §8.2.
+
+### TypeScript Enums
+
+```typescript
+enum RepeatType {
+  Once = "Once",
+  Daily = "Daily",
+  Weekly = "Weekly",
+  Interval = "Interval",
+  Cron = "Cron",
+}
+
+enum ChallengeType {
+  Math = "Math",
+  Memory = "Memory",
+  Shake = "Shake",
+  Typing = "Typing",
+  Qr = "Qr",
+  Steps = "Steps",
+}
+
+enum ChallengeDifficulty {
+  Easy = "Easy",
+  Medium = "Medium",
+  Hard = "Hard",
+}
+
+enum AlarmEventType {
+  Fired = "Fired",
+  Snoozed = "Snoozed",
+  Dismissed = "Dismissed",
+  Missed = "Missed",
+}
+
+enum SoundCategory {
+  Classic = "Classic",
+  Gentle = "Gentle",
+  Nature = "Nature",
+  Digital = "Digital",
+}
+
+enum SettingsValueType {
+  String = "String",
+  Integer = "Integer",
+  Boolean = "Boolean",
+  Json = "Json",
+}
+
+enum ThemeMode {
+  Light = "Light",
+  Dark = "Dark",
+  System = "System",
+}
+
+enum ExportFormat {
+  Json = "Json",
+  Csv = "Csv",
+  Ics = "Ics",
+}
+
+enum ExportScope {
+  All = "All",
+  Selected = "Selected",
+}
+
+enum DuplicateAction {
+  Skip = "Skip",
+  Overwrite = "Overwrite",
+  Rename = "Rename",
+}
+
+enum ImportMode {
+  Merge = "Merge",
+  Replace = "Replace",
+}
+
+enum SortField {
+  Date = "Date",
+  Label = "Label",
+  SnoozeCount = "SnoozeCount",
+}
+
+enum SortOrder {
+  Asc = "Asc",
+  Desc = "Desc",
+}
+```
+
+### Rust Enums
+
+```rust
+use serde::{Deserialize, Serialize};
+
+/// All domain enums use PascalCase variants and serialize to PascalCase strings.
+/// SQLite stores the PascalCase string value in TEXT columns.
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum RepeatType {
+    Once,
+    Daily,
+    Weekly,
+    Interval,
+    Cron,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ChallengeType {
+    Math,
+    Memory,
+    Shake,
+    Typing,
+    Qr,
+    Steps,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ChallengeDifficulty {
+    Easy,
+    Medium,
+    Hard,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum AlarmEventType {
+    Fired,
+    Snoozed,
+    Dismissed,
+    Missed,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum SoundCategory {
+    Classic,
+    Gentle,
+    Nature,
+    Digital,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum SettingsValueType {
+    String,
+    Integer,
+    Boolean,
+    Json,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ThemeMode {
+    Light,
+    Dark,
+    System,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ExportFormat {
+    Json,
+    Csv,
+    Ics,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ExportScope {
+    All,
+    Selected,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum DuplicateAction {
+    Skip,
+    Overwrite,
+    Rename,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ImportMode {
+    Merge,
+    Replace,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum SortField {
+    Date,
+    Label,
+    SnoozeCount,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum SortOrder {
+    Asc,
+    Desc,
+}
+
+/// FromStr implementations for all enums that are stored as TEXT in SQLite.
+/// Parse from PascalCase string values.
+impl std::str::FromStr for RepeatType {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Once" => Ok(Self::Once),
+            "Daily" => Ok(Self::Daily),
+            "Weekly" => Ok(Self::Weekly),
+            "Interval" => Ok(Self::Interval),
+            "Cron" => Ok(Self::Cron),
+            _ => Err(format!("Unknown RepeatType: {s}")),
+        }
+    }
+}
+
+impl std::str::FromStr for ChallengeType {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Math" => Ok(Self::Math),
+            "Memory" => Ok(Self::Memory),
+            "Shake" => Ok(Self::Shake),
+            "Typing" => Ok(Self::Typing),
+            "Qr" => Ok(Self::Qr),
+            "Steps" => Ok(Self::Steps),
+            _ => Err(format!("Unknown ChallengeType: {s}")),
+        }
+    }
+}
+
+impl std::str::FromStr for AlarmEventType {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Fired" => Ok(Self::Fired),
+            "Snoozed" => Ok(Self::Snoozed),
+            "Dismissed" => Ok(Self::Dismissed),
+            "Missed" => Ok(Self::Missed),
+            _ => Err(format!("Unknown AlarmEventType: {s}")),
+        }
+    }
+}
+```
+
+### Enum Conventions
+
+| Rule | Detail |
+|------|--------|
+| **Variants** | PascalCase (e.g., `RepeatType::Daily`, not `"daily"`) |
+| **SQLite storage** | TEXT column stores PascalCase string (e.g., `"Daily"`) |
+| **Serde** | Default derive — variants serialize as `"Daily"`, `"Fired"`, etc. |
+| **TypeScript values** | String enums with PascalCase values matching Rust |
+| **Comparison** | Always `alarm.ChallengeType === ChallengeType.Math`, never `=== "math"` |
+| **Null** | Use `Option<ChallengeType>` (Rust) / `ChallengeType | null` (TS) for optional fields |
+
+---
+
 ## Interfaces
 
 ### Alarm
@@ -35,14 +288,14 @@ interface Alarm {
   Repeat: RepeatPattern;           // Scheduling pattern (replaces recurringDays)
   GroupId: string | null;          // Reference to AlarmGroup.AlarmGroupId
   SnoozeDurationMin: number;       // 1–30, default 5
-  MaxSnoozeCount: number;          // 1–10, default 3 (0 = snooze disabled)
+  MaxSnoozeCount: number;          // 1–10, default 3 (0 = dismiss only, no snooze)
   SoundFile: string;               // Built-in key OR custom file path
   IsVibrationEnabled: boolean;     // Independent vibration toggle
   IsGradualVolume: boolean;        // Fade-in volume enabled
   GradualVolumeDurationSec: number; // 15, 30, or 60 seconds
-  AutoDismissMin: number;          // 0 = disabled, 1–60 = auto-stop after N minutes
-  ChallengeType: string | null;    // null = no challenge, 'math' | 'memory' | 'shake' | 'typing' | 'qr' | 'steps'
-  ChallengeDifficulty: string | null; // 'easy' | 'medium' | 'hard' (math only)
+  AutoDismissMin: number;          // 0 = manual dismiss only, 1–60 = auto-stop after N minutes
+  ChallengeType: ChallengeType | null;    // null = no challenge
+  ChallengeDifficulty: ChallengeDifficulty | null; // Math only
   ChallengeShakeCount: number | null; // shake only
   ChallengeStepCount: number | null;  // steps only
   NextFireTime: string | null;     // ISO 8601 — precomputed next fire time
@@ -60,7 +313,7 @@ interface Alarm {
 
 ```typescript
 interface RepeatPattern {
-  Type: "once" | "daily" | "weekly" | "interval" | "cron";
+  Type: RepeatType;
   DaysOfWeek: number[];       // 0=Sun..6=Sat (for "weekly" type)
   IntervalMinutes: number;    // For "interval" type (e.g., every 120 min)
   CronExpression: string;     // For "cron" type — parsed by `croner` crate
@@ -100,7 +353,7 @@ pub struct AlarmRow {
     pub label: String,
     pub is_enabled: bool,                 // SQLite INTEGER → bool
     pub is_previous_enabled: Option<bool>,
-    pub repeat_type: String,              // "once"|"daily"|"weekly"|"interval"|"cron"
+    pub repeat_type: RepeatType,          // Enum — stored as PascalCase TEXT in SQLite
     pub repeat_days_of_week: String,      // JSON TEXT: "[0,3,5]"
     pub repeat_interval_minutes: i32,
     pub repeat_cron_expression: String,
@@ -112,8 +365,8 @@ pub struct AlarmRow {
     pub is_gradual_volume: bool,
     pub gradual_volume_duration_sec: i32,
     pub auto_dismiss_min: i32,
-    pub challenge_type: Option<String>,       // null = no challenge
-    pub challenge_difficulty: Option<String>,  // easy|medium|hard (math only)
+    pub challenge_type: Option<ChallengeType>,       // None = no challenge
+    pub challenge_difficulty: Option<ChallengeDifficulty>,  // Math only
     pub challenge_shake_count: Option<i32>,    // shake only
     pub challenge_step_count: Option<i32>,     // steps only
     pub next_fire_time: Option<String>,   // ISO 8601
@@ -131,7 +384,7 @@ impl AlarmRow {
     /// Convert to RepeatPattern for scheduling logic
     pub fn repeat_pattern(&self) -> RepeatPattern {
         RepeatPattern {
-            r#type: self.repeat_type.parse().unwrap_or(RepeatType::Once),
+            r#type: self.repeat_type.clone(),
             days_of_week: self.days_of_week(),
             interval_minutes: self.repeat_interval_minutes as u32,
             cron_expression: self.repeat_cron_expression.clone(),
@@ -139,6 +392,7 @@ impl AlarmRow {
     }
 
     /// Convert from rusqlite::Row — EXEMPT from 15-line limit (field-per-line mapping, no logic)
+    /// Enum fields use `.parse()` to convert PascalCase TEXT → enum variant.
     pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
         Ok(Self {
             alarm_id: row.get("AlarmId")?,
@@ -147,7 +401,7 @@ impl AlarmRow {
             label: row.get("Label")?,
             is_enabled: row.get::<_, i32>("IsEnabled")? != 0,
             is_previous_enabled: row.get::<_, Option<i32>>("IsPreviousEnabled")?.map(|v| v != 0),
-            repeat_type: row.get("RepeatType")?,
+            repeat_type: row.get::<_, String>("RepeatType")?.parse().unwrap_or(RepeatType::Once),
             repeat_days_of_week: row.get("RepeatDaysOfWeek")?,
             repeat_interval_minutes: row.get("RepeatIntervalMinutes")?,
             repeat_cron_expression: row.get("RepeatCronExpression")?,
@@ -159,8 +413,8 @@ impl AlarmRow {
             is_gradual_volume: row.get::<_, i32>("IsGradualVolume")? != 0,
             gradual_volume_duration_sec: row.get("GradualVolumeDurationSec")?,
             auto_dismiss_min: row.get("AutoDismissMin")?,
-            challenge_type: row.get("ChallengeType")?,
-            challenge_difficulty: row.get("ChallengeDifficulty")?,
+            challenge_type: row.get::<_, Option<String>>("ChallengeType")?.and_then(|s| s.parse().ok()),
+            challenge_difficulty: row.get::<_, Option<String>>("ChallengeDifficulty")?.and_then(|s| s.parse().ok()),
             challenge_shake_count: row.get("ChallengeShakeCount")?,
             challenge_step_count: row.get("ChallengeStepCount")?,
             next_fire_time: row.get("NextFireTime")?,
@@ -170,36 +424,15 @@ impl AlarmRow {
         })
     }
 }
-
-/// Rust enum matching RepeatPattern.Type for type-safe matching
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub enum RepeatType {
-    Once,
-    Daily,
-    Weekly,
-    Interval,
-    Cron,
-}
-
-impl std::str::FromStr for RepeatType {
-    type Err = String;
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "once" => Ok(Self::Once),
-            "daily" => Ok(Self::Daily),
-            "weekly" => Ok(Self::Weekly),
-            "interval" => Ok(Self::Interval),
-            "cron" => Ok(Self::Cron),
-            _ => Err(format!("Unknown repeat type: {s}")),
-        }
-    }
-}
+// NOTE: RepeatType, ChallengeType, AlarmEventType, and all other domain enums
+// are defined in the "Domain Enums" section above. Do NOT duplicate here.
 ```
 
 **Key patterns:**
 - SQLite `INTEGER` booleans → Rust `bool` via `row.get::<_, i32>() != 0`
+- SQLite `TEXT` enums → Rust enum via `row.get::<_, String>()?.parse()`
 - JSON TEXT columns → `serde_json::from_str()` with `unwrap_or_default()` (never panic)
-- `Option<String>` for nullable TEXT columns
+- `Option<EnumType>` for nullable enum columns — use `.and_then(|s| s.parse().ok())`
 
 ### AlarmGroup
 
@@ -219,7 +452,7 @@ interface AlarmSound {
   AlarmSoundId: string;  // Unique identifier
   Name: string;          // Display name
   FileName: string;      // Audio file reference (built-in path)
-  Category: 'classic' | 'gentle' | 'nature' | 'digital';
+  Category: SoundCategory;
 }
 ```
 
@@ -229,11 +462,11 @@ interface AlarmSound {
 interface AlarmEvent {
   AlarmEventId: string;
   AlarmId: string;
-  Type: "fired" | "snoozed" | "dismissed" | "missed";
+  Type: AlarmEventType;
   FiredAt: string;               // ISO 8601
   DismissedAt: string | null;    // ISO 8601
   SnoozeCount: number;
-  ChallengeType?: string;
+  ChallengeType?: ChallengeType;
   ChallengeSolveTimeSec?: number;
   SleepQuality?: number;         // 1-5
   Mood?: string;
@@ -358,12 +591,12 @@ pub fn purge_old_events(conn: &Connection) {
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `Theme` | `"light" \| "dark" \| "system"` | Theme preference |
+| `Theme` | `ThemeMode` | Theme preference (use `ThemeMode` enum) |
 | `TimeFormat` | `"12h" \| "24h"` | Clock display format |
 | `DefaultSnoozeDuration` | `number` | Default snooze minutes for new alarms |
 | `DefaultSound` | `string` | Default sound for new alarms |
-| `AutoLaunch` | `boolean` | Start on system boot (ValueType: `"boolean"`, stored as `"true"`/`"false"`) |
-| `MinimizeToTray` | `boolean` | Keep running when window closed (ValueType: `"boolean"`, stored as `"true"`/`"false"`) |
+| `AutoLaunch` | `boolean` | Start on system boot (ValueType: `SettingsValueType.Boolean`, stored as `"true"`/`"false"`) |
+| `MinimizeToTray` | `boolean` | Keep running when window closed (ValueType: `SettingsValueType.Boolean`, stored as `"true"`/`"false"`) |
 | `Language` | `string` | i18n locale code (default: "en") |
 | `EventRetentionDays` | `number` | Days to keep `AlarmEvents` (default: 90) |
 
@@ -376,7 +609,7 @@ pub fn purge_old_events(conn: &Connection) {
 | `Time` | Must match `HH:MM` format, 00:00–23:59 |
 | `Date` | Must match `YYYY-MM-DD` or be null |
 | `Label` | String, 0–50 characters, trimmed |
-| `Repeat.Type` | One of: `once`, `daily`, `weekly`, `interval`, `cron` |
+| `Repeat.Type` | Must be a valid `RepeatType` enum variant |
 | `Repeat.DaysOfWeek` | Array of 0–6, no duplicates, sorted ascending (weekly only) |
 | `Repeat.IntervalMinutes` | Positive integer (interval only) |
 | `Repeat.CronExpression` | Valid cron syntax (cron only) |
@@ -391,7 +624,7 @@ pub fn purge_old_events(conn: &Connection) {
 
 ## One-Time Alarm Behavior
 
-When `repeat.type` is `"once"` and `date` is null, the alarm fires once at the next occurrence of `time` and auto-disables (`IsEnabled: false`). When `date` is set, it fires on that specific date at `time`.
+When `Repeat.Type` is `RepeatType.Once` and `Date` is null, the alarm fires once at the next occurrence of `Time` and auto-disables (`IsEnabled: false`). When `Date` is set, it fires on that specific date at `Time`.
 
 ---
 
