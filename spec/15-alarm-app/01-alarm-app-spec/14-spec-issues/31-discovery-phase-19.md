@@ -152,9 +152,9 @@ Checked against: PascalCase key naming, boolean principles (Is/Has only, no nega
 **P19-001 to P19-004** (SQL defaults) + **P19-005 to P19-011** (prose magic strings)  
 Files: `01-data-model.md`, `03-alarm-firing.md`, `04-snooze-system.md`
 
-### Fix Phase L — Magic String Union Types (8 issues)
+### Fix Phase L — Magic String Union Types (8 issues) ✅ RESOLVED
 **P19-012 to P19-019** (inline union types in interfaces/IPC tables)  
-Files: `02-alarm-scheduling.md`, `06-tauri-architecture*.md`
+Files: `02-alarm-scheduling.md`, `06-tauri-architecture-and-framework-comparison.md`
 
 ### Fix Phase M — camelCase + Naming Fixes (10 issues)
 **P19-020 to P19-029** (PascalCase inconsistencies + naming mismatches)  

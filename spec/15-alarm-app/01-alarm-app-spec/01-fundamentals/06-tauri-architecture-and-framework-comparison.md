@@ -1,6 +1,6 @@
 # Tauri Architecture & Cross-Platform Framework Comparison
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -102,8 +102,8 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 |---------|-----------|---------|---------|
 | `get_settings` | FE → BE | `void` | `Settings` |
 | `update_setting` | FE → BE | `{ Key: string, Value: string }` | `void` |
-| `export_data` | FE → BE | `{ Format: string, Scope: string, AlarmIds?: string[] }` | `string` (file path) |
-| `import_data` | FE → BE | `{ Mode: "Merge" \| "Replace" }` | `ImportResult` |
+| `export_data` | FE → BE | `{ Format: ExportFormat, Scope: ExportScope, AlarmIds?: string[] }` | `string` (file path) |
+| `import_data` | FE → BE | `{ Mode: ImportMode }` | `ImportResult` |
 | `get_next_alarm` | FE → BE | `void` | `NextAlarmInfo \| null` |
 
 #### Events (Backend → Frontend)
@@ -113,7 +113,7 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `alarm-fired` | BE → FE | `{ AlarmId: string, Alarm: Alarm }` | Trigger alarm overlay UI |
 | `snooze-expired` | BE → FE | `{ AlarmId: string }` | Re-trigger alarm after snooze |
 | `missed-alarm` | BE → FE | `{ AlarmId: string, ScheduledTime: string }` | Show missed alarm notification |
-| `theme-changed` | BE → FE | `{ Theme: "light" \| "dark" }` | OS appearance change detected |
+| `theme-changed` | BE → FE | `{ Theme: ThemeMode }` | OS appearance change detected |
 | `tray-action` | BE → FE | `{ Action: string, AlarmId?: string }` | User clicked tray menu item |
 
 ### Plugin Integration
@@ -189,13 +189,13 @@ interface OverlayStore {
 
 // stores/useSettingsStore.ts
 interface SettingsStore {
-  theme: 'light' | 'dark' | 'system';
-  timeFormat: '12h' | '24h';
-  language: string;
-  defaultSnoozeDuration: number;
+  Theme: ThemeMode;             // ThemeMode enum: Light | Dark | System
+  TimeFormat: TimeFormat;       // TimeFormat enum: TwelveHour | TwentyFourHour
+  Language: string;
+  DefaultSnoozeDuration: number;
 
-  fetchSettings: () => Promise<void>;
-  updateSetting: (key: string, value: string) => Promise<void>;
+  FetchSettings: () => Promise<void>;
+  UpdateSetting: (Key: string, Value: string) => Promise<void>;
 }
 ```
 
