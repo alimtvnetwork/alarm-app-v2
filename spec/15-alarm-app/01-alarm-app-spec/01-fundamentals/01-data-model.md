@@ -303,7 +303,7 @@ pub fn purge_old_events(conn: &Connection) {
     let cutoff = Utc::now() - chrono::Duration::days(retention_days);
 
     match conn.execute(
-        "DELETE FROM alarm_events WHERE timestamp < ?1",
+        "DELETE FROM AlarmEvents WHERE Timestamp < ?1",
         params![cutoff.to_rfc3339()],
     ) {
         Ok(deleted) => {
@@ -355,26 +355,26 @@ pub fn purge_old_events(conn: &Connection) {
 
 ## One-Time Alarm Behavior
 
-When `repeat.type` is `"once"` and `date` is null, the alarm fires once at the next occurrence of `time` and auto-disables (`enabled: false`). When `date` is set, it fires on that specific date at `time`.
+When `repeat.type` is `"once"` and `date` is null, the alarm fires once at the next occurrence of `time` and auto-disables (`IsEnabled: false`). When `date` is set, it fires on that specific date at `time`.
 
 ---
 
 ## Soft-Delete Behavior
 
-- Deleting an alarm sets `deletedAt` to current ISO 8601 timestamp
-- A 5-second undo toast appears; if undone, `deletedAt` is set back to null
+- Deleting an alarm sets `DeletedAt` to current ISO 8601 timestamp
+- A 5-second undo toast appears; if undone, `DeletedAt` is set back to null
 - After undo window expires, a background job permanently removes the row
-- All queries filter `WHERE deleted_at IS NULL` by default
+- All queries filter `WHERE DeletedAt IS NULL` by default
 
 ---
 
-## nextFireTime Computation
+## NextFireTime Computation
 
-The `nextFireTime` field is precomputed by the Rust backend whenever an alarm is created, edited, fired, or snoozed. This enables efficient missed-alarm detection:
+The `NextFireTime` field is precomputed by the Rust backend whenever an alarm is created, edited, fired, or snoozed. This enables efficient missed-alarm detection:
 
-1. On create/edit: compute based on `time`, `date`, and `repeat` pattern
+1. On create/edit: compute based on `Time`, `Date`, and `repeat` pattern
 2. On fire: advance to next occurrence (or set null if one-time)
-3. On app launch / system wake: query `WHERE next_fire_time < now AND enabled = 1 AND deleted_at IS NULL`
+3. On app launch / system wake: query `WHERE NextFireTime < now AND IsEnabled = 1 AND DeletedAt IS NULL`
 
 ---
 
@@ -398,14 +398,14 @@ If the target local time **occurs twice** during fall-back:
 
 When the system timezone changes:
 1. Listen for OS timezone change event
-2. Recalculate `nextFireTime` for **all enabled alarms** using the new timezone
+2. Recalculate `NextFireTime` for **all enabled alarms** using the new timezone
 3. Alarms always fire at the configured **local time** in the user's current timezone
 
 ### Implementation
 
 - Use `chrono-tz` crate for IANA timezone resolution
 - Store system timezone in `settings` table (key: `system_timezone`, value: IANA string e.g. `"Asia/Kuala_Lumpur"`)
-- On each 30s alarm check, compare `nextFireTime` (UTC) against `Utc::now()`
+- On each 30s alarm check, compare `NextFireTime` (UTC) against `Utc::now()`
 
 ---
 
