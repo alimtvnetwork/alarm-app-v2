@@ -106,6 +106,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase H** | **Stale metrics: overview, readiness, consistency, changelog** | **✅ Done (15 resolved, 24 open)** |
 | **Fix Phase E** | **Settings seeding strategy + UI states specification** | **✅ Done (4 resolved, 20 open)** |
 | **Fix Phase F** | **PascalCase, atomic tasks, semantic inverses, cross-references** | **✅ Done (13 resolved, 7 open)** |
+| **Fix Phase I** | **Acceptance criteria rollups for features/ and fundamentals/** | **✅ Done (2 resolved, 0 open)** |
 
 ---
 
