@@ -313,7 +313,7 @@ interface Alarm {
 
 ```typescript
 interface RepeatPattern {
-  Type: "once" | "daily" | "weekly" | "interval" | "cron";
+  Type: RepeatType;
   DaysOfWeek: number[];       // 0=Sun..6=Sat (for "weekly" type)
   IntervalMinutes: number;    // For "interval" type (e.g., every 120 min)
   CronExpression: string;     // For "cron" type — parsed by `croner` crate
@@ -353,7 +353,7 @@ pub struct AlarmRow {
     pub label: String,
     pub is_enabled: bool,                 // SQLite INTEGER → bool
     pub is_previous_enabled: Option<bool>,
-    pub repeat_type: String,              // "once"|"daily"|"weekly"|"interval"|"cron"
+    pub repeat_type: RepeatType,          // Enum — stored as PascalCase TEXT in SQLite
     pub repeat_days_of_week: String,      // JSON TEXT: "[0,3,5]"
     pub repeat_interval_minutes: i32,
     pub repeat_cron_expression: String,
@@ -365,8 +365,8 @@ pub struct AlarmRow {
     pub is_gradual_volume: bool,
     pub gradual_volume_duration_sec: i32,
     pub auto_dismiss_min: i32,
-    pub challenge_type: Option<String>,       // null = no challenge
-    pub challenge_difficulty: Option<String>,  // easy|medium|hard (math only)
+    pub challenge_type: Option<ChallengeType>,       // None = no challenge
+    pub challenge_difficulty: Option<ChallengeDifficulty>,  // Math only
     pub challenge_shake_count: Option<i32>,    // shake only
     pub challenge_step_count: Option<i32>,     // steps only
     pub next_fire_time: Option<String>,   // ISO 8601
@@ -472,7 +472,7 @@ interface AlarmSound {
   AlarmSoundId: string;  // Unique identifier
   Name: string;          // Display name
   FileName: string;      // Audio file reference (built-in path)
-  Category: 'classic' | 'gentle' | 'nature' | 'digital';
+  Category: SoundCategory;
 }
 ```
 
@@ -482,11 +482,11 @@ interface AlarmSound {
 interface AlarmEvent {
   AlarmEventId: string;
   AlarmId: string;
-  Type: "fired" | "snoozed" | "dismissed" | "missed";
+  Type: AlarmEventType;
   FiredAt: string;               // ISO 8601
   DismissedAt: string | null;    // ISO 8601
   SnoozeCount: number;
-  ChallengeType?: string;
+  ChallengeType?: ChallengeType;
   ChallengeSolveTimeSec?: number;
   SleepQuality?: number;         // 1-5
   Mood?: string;
