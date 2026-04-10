@@ -87,21 +87,10 @@ interface HistoryFilter {
 
 ## Data Storage
 
-```sql
-CREATE TABLE alarm_events (
-  id TEXT PRIMARY KEY,
-  alarm_id TEXT REFERENCES alarms(id) ON DELETE SET NULL,
-  type TEXT NOT NULL,               -- fired|snoozed|dismissed|missed
-  fired_at TEXT NOT NULL,           -- ISO 8601
-  dismissed_at TEXT,                -- ISO 8601
-  snooze_count INTEGER NOT NULL DEFAULT 0,
-  challenge_type TEXT,
-  challenge_solve_time_sec REAL,
-  sleep_quality INTEGER,            -- 1-5
-  mood TEXT,
-  timestamp TEXT NOT NULL            -- ISO 8601 event occurrence
-);
-```
+> **Single source of truth:** The canonical `AlarmEvents` schema is defined in `01-fundamentals/01-data-model.md`. Do not duplicate it here. Refer to that file for column names, types, and constraints.
+
+**Table:** `AlarmEvents` (11 columns)  
+**Key columns:** `AlarmEventId`, `AlarmId`, `EventType`, `FiredAt`, `DismissedAt`, `SnoozeCount`, `ChallengeType`, `ChallengeSolveTimeSec`, `SleepQuality`, `Mood`, `Timestamp`
 
 ---
 
