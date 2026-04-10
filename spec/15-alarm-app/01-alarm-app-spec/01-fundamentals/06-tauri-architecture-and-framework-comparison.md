@@ -118,15 +118,17 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 
 ### Plugin Integration
 
-| Plugin | Version | Purpose | Platform |
-|--------|---------|---------|----------|
-| `rusqlite` + `refinery` | — | SQLite database + migrations | All |
-| `tauri-plugin-notification` | 2.x | OS notifications | All |
-| `tauri-plugin-dialog` | 2.x | File open/save dialogs | Desktop |
-| `tauri-plugin-shell` | 2.x | Open URLs, system commands | Desktop |
-| `tauri-plugin-updater` | 2.x | Auto-update mechanism | Desktop |
-| `tauri-plugin-os` | 2.x | OS detection, platform info | All |
-| `tauri-plugin-process` | 2.x | App lifecycle, restart | All |
+> All versions pinned with `=` — see `10-dependency-lock.md` for full API surface and breaking change notes.
+
+| Plugin | Pinned Version | Purpose | Key API Methods | Platform |
+|--------|:-:|---------|-----------------|----------|
+| `rusqlite` + `refinery` | `=0.32.1` + `=0.8.14` | SQLite database + migrations | `Connection::open()`, `execute()`, `query_row()`, `embed_migrations!()` | All |
+| `tauri-plugin-notification` | `=2.3.3` | OS notifications | `notification()`, `.show()`, `.request_permission()`, `.is_permission_granted()` | All |
+| `tauri-plugin-dialog` | `=2.7.0` | File open/save dialogs | `dialog()`, `.file().pick_file()`, `.save_file()`, `.message()`, `.ask()` | Desktop |
+| `tauri-plugin-fs` | `=2.5.0` | File validation | `fs()`, `.read_file()`, `.exists()` | All |
+| `tauri-plugin-autostart` | `=2.5.1` | Launch on login | `autostart()`, `.enable()`, `.disable()`, `.is_enabled()` | Desktop |
+| `tauri-plugin-updater` | `=2.10.1` | Auto-update mechanism | `updater()`, `.check()`, `.download_and_install()` | Desktop |
+| `tauri-plugin-global-shortcut` | `=2.3.1` | Keyboard shortcuts | `global_shortcut()`, `.register()`, `.unregister()` | Desktop |
 
 ### Frontend State Management (Resolves UX-STATE-001)
 
