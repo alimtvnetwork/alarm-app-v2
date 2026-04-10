@@ -122,8 +122,8 @@
 ### P14-014: Missing Semantic Inverse Methods Specification
 
 **Severity:** 🟢 Low  
-**Rule Violated:** `12-no-negatives.md` — Every boolean method on objects must have a semantic inverse  
-**Observation:** The spec defines `IsEnabled`, `IsGradualVolume`, `IsVibrationEnabled` etc. but never specifies semantic inverse utilities (e.g., `isDisabled()`, `isVibrationOff()`). While these can be implied, the coding guidelines mandate explicit inverse pairs. An AI will use `!alarm.IsEnabled` instead of a named guard.
+**Status:** ✅ Resolved — Fix Phase F  
+**Resolution:** Added "Boolean Semantic Inverses" section to `01-data-model.md` documenting named guard methods for all boolean fields. See Fix Phase F tracker.
 
 ---
 
@@ -132,9 +132,8 @@
 ### P14-015: Single SQLite File — No Split-DB Consideration
 
 **Severity:** 🟢 Low  
-**Rule Violated:** N/A (informational alignment check)  
-**Location:** `01-data-model.md`, `07-startup-sequence.md`  
-**Observation:** The alarm app uses a single `alarm-app.db` SQLite file. The split-db architecture (`04-split-db-architecture/`) specifies domain-based partitioning (root, config, analytics, cache). For this app, analytics data (`AlarmEvents`) and configuration (`Settings`) could logically be separate databases. However, for a desktop app of this scope, a single file is defensible. **This is a design decision, not a defect.** The spec should document WHY a single DB was chosen vs. split — currently there's zero mention of the split-db pattern.
+**Status:** ✅ Resolved — Fix Phase F  
+**Resolution:** Added "Single Database Decision" section to `01-data-model.md` documenting the design choice and rationale vs split-db architecture.
 
 ---
 
@@ -213,22 +212,20 @@
 ### P14-024: `HistoryFilter.SortBy` Values Use Lowercase
 
 **Severity:** 🟡 Medium  
-**Rule Violated:** PascalCase key naming (`11-key-naming-pascalcase.md`)  
-**Location:** `13-analytics.md` line 54  
-**Observation:** `SortBy?: "date" | "label" | "SnoozeCount"` — if these are serialized values, they should be `"Date" | "Label" | "SnoozeCount"` per PascalCase convention. Or better yet, a `SortField` enum.
+**Status:** ✅ Resolved — Fix Phase A (domain enums)  
+**Resolution:** `SortBy` now uses `SortField` enum (`Date`, `Label`, `SnoozeCount`) and `SortOrder` enum. Raw string values replaced.
 
 ### P14-025: Export IPC Uses `format`, `scope`, `mode` — Lowercase Keys
 
 **Severity:** 🟡 Medium  
-**Rule Violated:** PascalCase key naming  
-**Location:** `10-export-import.md` line 46-48  
-**Observation:** IPC command payload keys are `format`, `scope`, `mode`, `alarmIds`, `duplicateAction`, `previewId`. Per PascalCase serialization rules, these should be `Format`, `Scope`, `Mode`, `AlarmIds`, `DuplicateAction`, `PreviewId`.
+**Status:** ✅ Resolved — Fix Phases A + prior naming fixes  
+**Resolution:** Export IPC payload keys are now PascalCase (`Format: ExportFormat`, `Scope: ExportScope`, `Mode: ImportMode`, `AlarmIds`, `PreviewId`, `DuplicateAction: DuplicateAction`).
 
 ### P14-026: `useClock` Hook Returns `Is24Hour` — Correct, But `Hours`/`Minutes`/`Seconds` Should Be Reviewed
 
 **Severity:** 🟢 Low (informational)  
-**Location:** `08-clock-display.md` line 57-62  
-**Observation:** `ClockState` interface uses PascalCase keys correctly (`Hours`, `Minutes`, `Seconds`, `Is24Hour`). No issue here — this is a positive finding.
+**Status:** ✅ Closed — N/A (positive finding, no issue)  
+**Observation:** `ClockState` interface uses PascalCase keys correctly. No fix needed.
 
 ---
 
@@ -237,15 +234,8 @@
 ### P14-027: No Rust Error Enum Spec (thiserror)
 
 **Severity:** 🔴 Critical  
-**Rule Violated:** Content gap — `thiserror` crate listed in dependencies but no error type defined  
-**Location:** `10-dependency-lock.md` lists `thiserror = "=2.0.12"`, cheat sheet mentions it  
-**Observation:** The `thiserror` crate is pinned but there is NO specification for:
-  - `AlarmAppError` enum variants
-  - `WebhookError` enum variants
-  - Error `Display` implementations
-  - How errors map to IPC error responses
-  - Which errors are recoverable vs fatal
-**AI Risk:** This is the single highest-risk gap. Without it, the AI will create an ad-hoc error type that's inconsistent with the rest of the codebase.
+**Status:** ✅ Resolved — Fix Phase B (error enums)  
+**Resolution:** Complete `AlarmAppError` and `WebhookError` enum specs added to `04-platform-constraints.md` with all variants, `thiserror` derive macros, IPC error response format, and recoverable vs fatal classification.
 
 ### P14-028: No Frontend State Management Spec
 
