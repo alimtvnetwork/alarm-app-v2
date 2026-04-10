@@ -254,26 +254,30 @@ const MAX_UNDO_STACK = 5;
 
 // TS function params are camelCase per language convention; serialized keys are PascalCase
 function onDeleteAlarm(alarmId: string, undoToken: string, label: string) {
-  // If stack is full, oldest entry expires immediately
+  console.debug('onDeleteAlarm', { alarmId, undoToken, label });
+  manageUndoStack(undoToken);
+  const timerId = createUndoTimer(undoToken);
+  undoStack.push({ Token: undoToken, AlarmId: alarmId, Label: label, ExpiresAt: Date.now() + UNDO_TIMEOUT_MS, TimerId: timerId });
+  // Show toast: "Deleted {label} — Undo"
+}
+
+function manageUndoStack(undoToken: string) {
   if (undoStack.length >= MAX_UNDO_STACK) {
     const oldest = undoStack.shift()!;
     clearTimeout(oldest.TimerId);
-    // oldest is permanently deleted (timer already fired on backend)
   }
+}
 
-  const timerId = setTimeout(() => {
-    // Remove from stack after timeout (backend has already hard-deleted)
+function createUndoTimer(undoToken: string): ReturnType<typeof setTimeout> {
+  return setTimeout(() => {
     const idx = undoStack.findIndex(e => e.Token === undoToken);
     if (idx !== -1) undoStack.splice(idx, 1);
     // Remove toast for this entry
   }, UNDO_TIMEOUT_MS);
-
-  undoStack.push({ Token: undoToken, AlarmId: alarmId, Label: label, ExpiresAt: Date.now() + UNDO_TIMEOUT_MS, TimerId: timerId });
-
-  // Show toast: "Deleted {label} — Undo"
 }
 
 async function onUndo(token: string) {
+  console.debug('onUndo', { token });
   const idx = undoStack.findIndex(e => e.Token === token);
   if (idx === -1) return; // Already expired
 

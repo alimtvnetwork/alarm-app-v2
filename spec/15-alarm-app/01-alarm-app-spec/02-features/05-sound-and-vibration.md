@@ -69,6 +69,7 @@ const ALLOWED_EXTENSIONS: &[&str] = &["mp3", "wav", "ogg", "flac"];
 
 /// Validates a custom sound file path. Decomposed into ≤15-line subfunctions.
 pub fn validate_custom_sound(path: &str) -> Result<(), AlarmAppError> {
+    tracing::debug!(path = %path, "validate_custom_sound");
     validate_extension(path)?;
     reject_symlink(path)?;
     let canonical = resolve_canonical(path)?;
