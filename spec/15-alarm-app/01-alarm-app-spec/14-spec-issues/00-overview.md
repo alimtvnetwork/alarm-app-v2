@@ -38,11 +38,11 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 39 |
-| 🟡 Medium | 80 |
-| 🟢 Low | 19 |
-| **Grand Total** | **180** |
-| **Open** | **0** |
+| 🔴 Critical | 45 |
+| 🟡 Medium | 97 |
+| 🟢 Low | 25 |
+| **Grand Total** | **209** |
+| **Open** | **29** |
 | **Resolved** | **180** |
 
 ---
