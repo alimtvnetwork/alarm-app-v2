@@ -99,7 +99,7 @@
 - **Export privacy warning** in `10-export-import.md` v1.3.0 — confirmation dialog before export, optional AES-256 ZIP for v2.0+
 - **Challenge calibration** in `06-dismissal-challenges.md` v1.2.0 — operand rules per tier, target solve times, solve time logging in `AlarmEvents.metadata`, Custom tier (P2), integer-only answers
 - **`AlarmLabelSnapshot` + `AlarmTimeSnapshot`** columns on `AlarmEvents` table — preserves context after alarm deletion (DB-ORPHAN-001)
-- **`value_type` column** on `settings` table + typed `get_setting<T>()` Rust helper (DB-SETTINGS-001)
+- **`ValueType` column** on `Settings` table + typed `get_setting<T>()` Rust helper (DB-SETTINGS-001)
 - **`@dnd-kit/core` v6.x** explicitly specified, `react-beautiful-dnd` rejected as deprecated (FE-DND-001)
 
 #### Changed
@@ -201,7 +201,7 @@
   - `06-performance-issues.md` — 2 issues (PERF-STARTUP-001, PERF-MEMORY-001)
   - `07-ux-ui-issues.md` — 3 issues (UX-DST-001, UX-TZ-001, UX-CHALLENGE-001)
   - `08-devops-issues.md` — 4 issues (DEVOPS-SIGN-001/002, DEVOPS-CI-001, DEVOPS-UPDATE-001)
-- **AI Feasibility Analysis** — `/mnt/documents/alarm-app-ai-feasibility-analysis.md`
+- **AI Feasibility Analysis** — external document (not included in spec repo)
   - 62% overall success probability
   - 32 atomic issues across 9 categories
   - Execution roadmap: 18–29 day estimate, ~30% AI / ~70% human
@@ -270,7 +270,8 @@
 |-----------|----------|
 | Spec Overview | `./00-overview.md` |
 | Issues Folder | `./03-app-issues/00-overview.md` |
-| Feasibility Analysis | `/mnt/documents/alarm-app-ai-feasibility-analysis.md` |
+| Spec Issues Audit | `./14-spec-issues/00-overview.md` |
+| Feasibility Analysis | External document (not included in spec repo) |
 | AI Handoff Readiness Report | `./10-ai-handoff-readiness-report.md` |
 
 ---
