@@ -281,16 +281,20 @@ test:
 
 ```typescript
 // src/test/fixtures.ts
+// All keys MUST be PascalCase — matches IPC serialization format.
+// Enum values MUST use enum constants — never raw strings.
+import { RepeatType } from '@/types/alarm';
+
 export const testAlarm = {
-  time: '07:30',
-  label: 'Test Alarm',
-  repeat: { type: 'daily' as const, daysOfWeek: [], intervalMinutes: 0, cronExpression: '' },
-  snoozeDurationMin: 5,
-  maxSnoozeCount: 3,
-  soundFile: 'classic-beep',
-  gradualVolume: false,
-  gradualVolumeDurationSec: 30,
-  autoDismissMin: 0,
+  Time: '07:30',
+  Label: 'Test Alarm',
+  Repeat: { Type: RepeatType.Daily, DaysOfWeek: [], IntervalMinutes: 0, CronExpression: '' },
+  SnoozeDurationMin: 5,
+  MaxSnoozeCount: 3,
+  SoundFile: 'classic-beep',
+  IsGradualVolume: false,
+  GradualVolumeDurationSec: 30,
+  AutoDismissMin: 0,
 };
 ```
 

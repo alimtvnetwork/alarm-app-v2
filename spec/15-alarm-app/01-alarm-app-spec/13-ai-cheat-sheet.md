@@ -1,6 +1,6 @@
 # AI Cheat Sheet — Alarm App
 
-**Version:** 1.0.0 | **Updated:** 2026-04-09 | **One-page reference for AI coding agents**
+**Version:** 1.1.0 | **Updated:** 2026-04-10 | **One-page reference for AI coding agents**
 
 ---
 
@@ -21,7 +21,7 @@
 | **Logging** | `tracing` + `tracing-appender` | 0.1 / 0.2 |
 | **i18n** | `react-i18next` | latest |
 | **DnD** | `@dnd-kit/core` + `@dnd-kit/sortable` | 6.x |
-| **Errors** | `thiserror` | 1.x |
+| **Errors** | `thiserror` | 2.x |
 
 ---
 
