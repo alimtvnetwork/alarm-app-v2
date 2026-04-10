@@ -81,24 +81,24 @@
 **Problem:** Personalization lists `get_daily_quote`, `save_favorite_quote`, `add_custom_quote` inline without payload/return type definitions. All other feature specs use a table format for IPC commands.  
 **Fix:** Added IPC Commands table with payload and return types.
 
-### D11-012: `02-design-system.md` — Missing `destructive` token for dark mode
+### D11-012: ~~`02-design-system.md` — Missing `destructive` token for dark mode~~ ✅ FIXED (Fix 52)
 **Severity:** 🟡 Medium  
 **Problem:** Light mode palette defines `--destructive: #c0392b` but dark mode palette has no destructive token. AI will either use the light mode red in dark mode (poor contrast) or invent one.  
-**Fix:** Add `--destructive` to dark mode palette (e.g., `#e74c3c` for better visibility on dark backgrounds).
+**Fix:** Added `--destructive: #e74c3c` to dark mode palette (brighter red for better visibility on dark backgrounds).
 
 ---
 
 ## Category D: Structural Issues
 
-### D11-013: `06-dismissal-challenges.md` line 83 — `AlarmChallenge` interface not in data model
+### D11-013: ~~`06-dismissal-challenges.md` line 83 — `AlarmChallenge` interface not in data model~~ ✅ FIXED (Fix 52)
 **Severity:** 🟡 Medium  
 **Problem:** Dismissal challenges defines an `AlarmChallenge` interface (Type, Difficulty, ShakeCount, StepCount) that is not referenced in `01-data-model.md`. The data model uses flat fields on Alarm (`ChallengeType`, `ChallengeDifficulty`, `ChallengeShakeCount`, `ChallengeStepCount`). The interface in the challenges spec implies a nested object, but the actual schema is flat.  
-**Fix:** Either remove the interface and reference the flat Alarm fields, or add a note: "This interface is a convenience wrapper — the data is stored as flat columns on the Alarms table."
+**Fix:** Added note: "This interface is a convenience wrapper — the data is stored as flat columns on the Alarms table."
 
-### D11-014: `02-alarm-scheduling.md` line 41 — Deprecation warning for `recurringDays` field
+### D11-014: ~~`02-alarm-scheduling.md` line 41 — Deprecation warning for `recurringDays` field~~ ✅ FIXED (Fix 52)
 **Severity:** 🟢 Low  
 **Problem:** Deprecation notice says "The `recurringDays` field from v1.0.0 is fully replaced by `RepeatPattern`. Do not use `recurringDays`." This is good for humans but may confuse AI into thinking `recurringDays` exists somewhere and needs migration handling. Since v1.0.0 was spec-only (no code exists), the deprecation note is unnecessary noise.  
-**Fix:** Replace with a simpler note: "Note: scheduling uses `RepeatPattern` exclusively. There is no legacy field."
+**Fix:** Replaced with simpler note: "Scheduling uses `RepeatPattern` exclusively. There is no legacy field."
 
 ---
 
