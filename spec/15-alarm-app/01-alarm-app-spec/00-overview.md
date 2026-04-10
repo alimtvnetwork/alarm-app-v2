@@ -79,7 +79,7 @@ RepeatPattern {
 }
 
 AlarmGroup {
-  GroupId: string (uuid)
+  AlarmGroupId: string (uuid)
   Name: string
   Color: string (hex)
   IsEnabled: boolean
