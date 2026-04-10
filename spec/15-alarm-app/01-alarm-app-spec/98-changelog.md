@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 2.4.0  
+**Version:** 2.5.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -26,6 +26,63 @@
 ---
 
 ## Version History
+
+### v2.5.0 — 2026-04-10
+
+**Theme:** Discovery Phase 19–20 + Fix Phases K–S — 55 additional issues found and resolved, total 311/311
+
+#### Discovery Phases
+
+| Phase | Issues | Focus |
+|-------|:------:|-------|
+| 19 | 34 | Post-completion regression: SQL defaults lowercase, magic strings in prose/code, magic string unions in interfaces, camelCase keys, naming mismatches, missing serde, structural, prose casing |
+| 20 | 21 | Fresh audit: stale 256→290 metrics, IPC `get_`→`list_` naming, magic string `'missed'`, magic number `5000`, missing Scoring tables, serde annotations, seedable config alignment |
+
+#### Fix Phases
+
+| Phase | Issues | Focus |
+|-------|:------:|-------|
+| K | 11 | SQL DEFAULT values PascalCase, magic string literals in prose/code (`'fired'`, `'missed'`, `'snoozed'`) |
+| L | 8 | Magic string union types → domain enum references in IPC/interfaces |
+| M | 10 | camelCase→PascalCase keys, naming mismatches (`sound_id`→`SoundFile`, `get_groups`→`list_groups`) |
+| N | 5 | `#[serde(rename_all)]` on AlarmQueue/FiredAlarm, duplicate Cross-References, prose casing |
+| O | 5 | Stale "256" metrics → "290" across overview, readiness report, consistency report |
+| P | 4 | IPC `get_alarm_events`→`list_alarm_events`, magic string `'missed'`→enum, `UNDO_TIMEOUT_MS` constant |
+| Q | 6 | `## Scoring` tables added to all 27 spec files + Keywords/Cross-References on 4 utility files |
+| R | 4 | camelCase/PascalCase boundary comments, internal structs marked as non-serialized |
+| S | 1 | Seedable config cross-reference table in data model |
+
+#### Added
+- **`## Scoring` tables** on all 27 fundamental + feature spec files (4 criteria each)
+- **Keywords + Cross-References** on 4 utility files (`97-acceptance-criteria.md`, `99-consistency-report.md`)
+- **Seedable Config comparison table** in `01-data-model.md` — documents which concepts apply and which don't
+- **`UNDO_TIMEOUT_MS` constant** in `01-alarm-crud.md` — replaces 3× magic number `5000`
+- **camelCase/PascalCase boundary comment** in `06-tauri-architecture*.md` store definitions
+- **Internal struct annotations** on `MacOsWakeListener` and `WindowsWakeListener`
+
+#### Changed
+- `00-overview.md` → v2.5.0: Status "All 290 Spec Quality Issues Resolved" (now 311 total)
+- `10-ai-handoff-readiness-report.md` → v2.5.0: 290→311 totals, fix phases K–N added, spec coverage versions updated
+- `99-consistency-report.md` → v2.5.0: All references updated to 290/290
+- `01-fundamentals/01-data-model.md` → v1.12.0: Scoring, seedable config table, migration table names PascalCase
+- `01-fundamentals/02-design-system.md` → v1.5.0: Scoring, `list_alarm_events` IPC
+- `01-fundamentals/04-platform-constraints.md` → v1.6.0: Scoring, removed duplicate Cross-References
+- `01-fundamentals/07-startup-sequence.md` → v1.5.0: Scoring, `AlarmEventType::Missed` enum
+- `02-features/01-alarm-crud.md` → v1.10.0: Scoring, `UNDO_TIMEOUT_MS` constant, boundary comment
+- `02-features/02-alarm-scheduling.md` → v2.2.0: Scoring, `RepeatType` enum refs
+- `02-features/03-alarm-firing.md` → v1.13.0: Scoring, serde on AlarmQueue/FiredAlarm, internal struct annotations
+- `02-features/04-snooze-system.md` → v1.5.0: Scoring, enum references
+- `02-features/09-theme-system.md` → v1.4.0: Scoring, `ThemeMode.Light`/`.Dark`/`.System`
+- `02-features/13-analytics.md` → v1.6.0: Scoring, `list_alarm_events` IPC
+- All remaining fundamentals (05–11) and features (05–08, 10–12, 14–16): Scoring tables added, versions bumped
+
+#### Status
+- **Total issues:** 311 (311 resolved + 0 open) ✅
+- **Discovery phases:** 20 complete
+- **Fix phases:** 33+ complete (1–20, A–S)
+- **Readiness:** 100/100 (A+)
+
+---
 
 ### v2.4.0 — 2026-04-10
 
