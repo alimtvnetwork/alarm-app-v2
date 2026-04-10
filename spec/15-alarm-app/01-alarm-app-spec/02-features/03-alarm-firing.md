@@ -253,41 +253,38 @@ impl MacOsWakeListener {
 
 impl WakeListener for MacOsWakeListener {
     fn start(&self, on_wake: Box<dyn Fn() + Send + Sync>) -> Result<(), AlarmAppError> {
-        // Subscribe to NSWorkspaceDidWakeNotification
         let workspace = unsafe { NSWorkspace::sharedWorkspace() };
         let center = unsafe { workspace.notificationCenter() };
-
-        // Register observer for didWakeNotification
-        // When macOS wakes from sleep, this fires immediately
-        unsafe {
-            center.addObserverForName_object_queue_usingBlock(
-                Some(ns_string!("NSWorkspaceDidWakeNotification")),
-                None,
-                None,
-                &Block::new(move |_notification: &NSNotification| {
-                    tracing::info!("macOS: System woke from sleep");
-                    on_wake();
-                }),
-            );
-        }
-
-        // Also listen for willSleepNotification to log sleep time
-        unsafe {
-            center.addObserverForName_object_queue_usingBlock(
-                Some(ns_string!("NSWorkspaceWillSleepNotification")),
-                None,
-                None,
-                &Block::new(|_: &NSNotification| {
-                    tracing::info!("macOS: System entering sleep");
-                }),
-            );
-        }
-
+        register_wake_observer(&center, on_wake);
+        register_sleep_observer(&center);
         Ok(())
     }
 
-    fn stop(&self) {
-        // Remove observers on shutdown
+    fn stop(&self) { /* Remove observers on shutdown */ }
+}
+
+fn register_wake_observer(center: &NSNotificationCenter, on_wake: Box<dyn Fn() + Send + Sync>) {
+    unsafe {
+        center.addObserverForName_object_queue_usingBlock(
+            Some(ns_string!("NSWorkspaceDidWakeNotification")),
+            None, None,
+            &Block::new(move |_: &NSNotification| {
+                tracing::info!("macOS: System woke from sleep");
+                on_wake();
+            }),
+        );
+    }
+}
+
+fn register_sleep_observer(center: &NSNotificationCenter) {
+    unsafe {
+        center.addObserverForName_object_queue_usingBlock(
+            Some(ns_string!("NSWorkspaceWillSleepNotification")),
+            None, None,
+            &Block::new(|_: &NSNotification| {
+                tracing::info!("macOS: System entering sleep");
+            }),
+        );
     }
 }
 ```
