@@ -128,7 +128,7 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
 | `log_sleep_quality` | FE → BE | `{ AlarmEventId: string, Quality: number, Mood: string \| null }` | `void` |
-| `play_ambient` | FE → BE | `{ SoundId: string }` | `void` |
+| `play_ambient` | FE → BE | `{ SoundId: string, DurationMin: number }` | `void` |
 | `stop_ambient` | FE → BE | `void` | `void` |
 
 #### Personalization Commands
