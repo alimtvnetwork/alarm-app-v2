@@ -26,24 +26,24 @@ Defines all TypeScript interfaces, SQLite schema, and validation rules for the A
 
 ```typescript
 interface Alarm {
-  id: string;                      // UUID v4
-  time: string;                    // "HH:MM" 24-hour format
-  date: string | null;             // "YYYY-MM-DD" for date-specific alarms, null for recurring/daily
-  label: string;                   // User-defined label, max 50 chars
-  enabled: boolean;                // Toggle state
-  repeat: RepeatPattern;           // Scheduling pattern (replaces recurringDays)
-  groupId: string | null;          // Reference to AlarmGroup.id
-  snoozeDurationMin: number;       // 1–30, default 5
-  maxSnoozeCount: number;          // 1–10, default 3 (0 = snooze disabled)
-  soundFile: string;               // Built-in key OR custom file path
-  vibrationEnabled: boolean;       // Independent vibration toggle
-  gradualVolume: boolean;          // Fade-in volume enabled
-  gradualVolumeDurationSec: number; // 15, 30, or 60 seconds
-  autoDismissMin: number;          // 0 = disabled, 1–60 = auto-stop after N minutes
-  nextFireTime: string | null;     // ISO 8601 — precomputed next fire time
-  deletedAt: string | null;        // ISO 8601 — soft-delete timestamp (null = active)
-  createdAt: string;               // ISO 8601 timestamp
-  updatedAt: string;               // ISO 8601 timestamp
+  AlarmId: string;                 // UUID v4
+  Time: string;                    // "HH:MM" 24-hour format
+  Date: string | null;             // "YYYY-MM-DD" for date-specific alarms, null for recurring/daily
+  Label: string;                   // User-defined label, max 50 chars
+  IsEnabled: boolean;              // Toggle state
+  Repeat: RepeatPattern;           // Scheduling pattern (replaces recurringDays)
+  GroupId: string | null;          // Reference to AlarmGroup.AlarmGroupId
+  SnoozeDurationMin: number;       // 1–30, default 5
+  MaxSnoozeCount: number;          // 1–10, default 3 (0 = snooze disabled)
+  SoundFile: string;               // Built-in key OR custom file path
+  IsVibrationEnabled: boolean;     // Independent vibration toggle
+  IsGradualVolume: boolean;        // Fade-in volume enabled
+  GradualVolumeDurationSec: number; // 15, 30, or 60 seconds
+  AutoDismissMin: number;          // 0 = disabled, 1–60 = auto-stop after N minutes
+  NextFireTime: string | null;     // ISO 8601 — precomputed next fire time
+  DeletedAt: string | null;        // ISO 8601 — soft-delete timestamp (null = active)
+  CreatedAt: string;               // ISO 8601 timestamp
+  UpdatedAt: string;               // ISO 8601 timestamp
 }
 ```
 
