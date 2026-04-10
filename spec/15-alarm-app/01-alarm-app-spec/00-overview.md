@@ -43,7 +43,7 @@ Complete application specification for the Alarm App — a cross-platform native
 | TypeScript 5 | Type safety |
 | Tailwind CSS v3 | Styling |
 | shadcn/ui | Component library |
-| SQLite | Data persistence (via Tauri plugin) |
+| SQLite | Data persistence (via rusqlite + refinery migrations) |
 | Native Audio | Alarm sound playback (Rust crate / OS API) |
 | OS Notifications | System notifications (Tauri notification plugin) |
 | System Tray | Menu bar / tray integration (Tauri tray plugin) |
@@ -54,35 +54,35 @@ Complete application specification for the Alarm App — a cross-platform native
 
 ```
 Alarm {
-  id: string (uuid)
-  time: string (HH:MM, 24h)
-  date: string | null (YYYY-MM-DD, for date-specific alarms)
-  label: string
-  enabled: boolean
-  repeat: RepeatPattern (once|daily|weekly|interval|cron)
-  groupId: string | null
-  snoozeDurationMin: number (default 5)
-  maxSnoozeCount: number (default 3, 0 = disabled)
-  soundFile: string (built-in key or custom file path)
-  gradualVolume: boolean
-  autoDismissMin: number (0 = disabled)
-  nextFireTime: string | null (precomputed)
-  deletedAt: string | null (soft-delete)
-  createdAt / updatedAt: ISO timestamps
+  AlarmId: string (uuid)
+  Time: string (HH:MM, 24h)
+  Date: string | null (YYYY-MM-DD, for date-specific alarms)
+  Label: string
+  IsEnabled: boolean
+  Repeat: RepeatPattern (once|daily|weekly|interval|cron)
+  GroupId: string | null
+  SnoozeDurationMin: number (default 5)
+  MaxSnoozeCount: number (default 3, 0 = disabled)
+  SoundFile: string (built-in key or custom file path)
+  IsGradualVolume: boolean
+  AutoDismissMin: number (0 = disabled)
+  NextFireTime: string | null (precomputed)
+  DeletedAt: string | null (soft-delete)
+  CreatedAt / UpdatedAt: ISO timestamps
 }
 
 RepeatPattern {
-  type: "once" | "daily" | "weekly" | "interval" | "cron"
-  daysOfWeek: number[] (for weekly)
-  intervalMinutes: number (for interval)
-  cronExpression: string (for cron)
+  Type: "once" | "daily" | "weekly" | "interval" | "cron"
+  DaysOfWeek: number[] (for weekly)
+  IntervalMinutes: number (for interval)
+  CronExpression: string (for cron)
 }
 
 AlarmGroup {
-  id: string (uuid)
-  name: string
-  color: string (hex)
-  enabled: boolean
+  GroupId: string (uuid)
+  Name: string
+  Color: string (hex)
+  IsEnabled: boolean
 }
 
 Storage: SQLite database (via rusqlite + refinery migrations)
@@ -119,7 +119,7 @@ Tables:
 | 11 | [Atomic Task Breakdown](./11-atomic-task-breakdown.md) | **Authoritative** 62 dependency-ordered tasks, effort estimates, risk levels |
 | 12 | [Platform & Concurrency Guide](./12-platform-and-concurrency-guide.md) | Platform gotchas, race condition safeguards, async safety, error recovery |
 | 13 | [AI Cheat Sheet](./13-ai-cheat-sheet.md) | Single-page quick reference for AI coding agents |
-| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 77 issues found, 69 resolved |
+| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 95 issues found, 77 resolved |
 | 15 | [Reference](./15-reference/00-overview.md) | Feature inventories and planning references |
 | 98 | [Changelog](./98-changelog.md) | Version history v1.0.0–v1.7.0 |
 
