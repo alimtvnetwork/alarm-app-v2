@@ -1,6 +1,6 @@
 # Dismissal Challenges
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -82,8 +82,8 @@ Optional challenges that must be completed before an alarm can be dismissed. Pre
 Each alarm can have an optional challenge:
 ```typescript
 interface AlarmChallenge {
-  Type: 'math' | 'memory' | 'shake' | 'typing' | 'qr' | 'steps';
-  Difficulty?: 'easy' | 'medium' | 'hard'; // math only
+  Type: ChallengeType;
+  Difficulty?: ChallengeDifficulty; // math only
   ShakeCount?: number; // shake only
   StepCount?: number;  // steps only
 }
@@ -106,6 +106,19 @@ interface AlarmChallenge {
 
 ---
 
+## Acceptance Criteria
+
+- [ ] Math challenge generates integer-only answers for all difficulty levels
+- [ ] Wrong answer keeps alarm ringing; correct answer dismisses
+- [ ] Solve time logged to `AlarmEvents.ChallengeSolveTimeSec` on successful dismissal
+- [ ] Hard problems use formula `(a × b) + c` with operands in specified ranges and result > 0
+- [ ] Challenge type configurable per alarm via `ChallengeType` enum (never raw strings)
+- [ ] Desktop hides shake and step counter options (feature-detected at runtime)
+- [ ] `get_challenge` returns `null` when no challenge configured
+- [ ] `submit_challenge_answer` returns `{ Correct: false }` on wrong answer without dismissing
+
+---
+
 ## Cross-References
 
 | Reference | Location |
@@ -114,3 +127,4 @@ interface AlarmChallenge {
 | Alarm CRUD | `./01-alarm-crud.md` |
 | Data Model | `../01-fundamentals/01-data-model.md` |
 | Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
+| Domain Enums | `../01-fundamentals/01-data-model.md` → Domain Enums section |

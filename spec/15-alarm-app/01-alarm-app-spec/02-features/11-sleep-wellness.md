@@ -1,7 +1,7 @@
 # Sleep & Wellness
 
-**Version:** 1.1.0  
-**Updated:** 2026-04-08  
+**Version:** 1.2.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** Low  
 **Priority:** P2 — Nice to Have
@@ -56,7 +56,7 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
   - Mood: 😴 😐 😊 😁
   - Optional notes (free text)
 - Data stored in SQLite `AlarmEvents` table for analytics
-- IPC: `log_sleep_quality { alarmId, quality, mood, notes }`
+- IPC: `log_sleep_quality { AlarmId, Quality, Mood, Notes }`
 
 ### Ambient / White Noise Sleep Sounds (P2)
 
@@ -64,7 +64,7 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 - Audio played via Rust `rodio` — not Web Audio API
 - Auto-stop timer: 30 min, 1 hour, until alarm — Rust background timer (reliable)
 - Plays alongside or separate from alarm sounds
-- IPC: `play_ambient { sound, durationMin }`, `stop_ambient`
+- IPC: `play_ambient { Sound, DurationMin }`, `stop_ambient`
 
 ### Sleep Cycle Tracking (P3)
 
@@ -72,6 +72,19 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 - Uses native accelerometer: CoreMotion (iOS), SensorManager (Android)
 - Alarm window (e.g., 6:00–6:30 AM) — ring during lightest phase
 - Rust processes sensor data and determines optimal wake time
+
+---
+
+## Acceptance Criteria
+
+- [ ] Bedtime reminder sends OS-native notification 15–30 min before configured bedtime
+- [ ] Sleep calculator shows optimal bedtimes based on 90-minute cycles for a given wake time
+- [ ] Sleep quality prompt appears after alarm dismissal (optional, configurable)
+- [ ] Quality (1–5), mood, and notes logged to `AlarmEvents` table via IPC
+- [ ] Ambient sounds play via Rust `rodio` and auto-stop after configured duration
+- [ ] `stop_ambient` immediately stops playback
+- [ ] Sleep cycle tracking hidden on desktop (feature-detected at runtime)
+- [ ] All IPC payload keys use PascalCase (`AlarmId`, `Quality`, `Sound`, `DurationMin`)
 
 ---
 
@@ -83,3 +96,4 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 | Sound & Vibration | `./05-sound-and-vibration.md` |
 | Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
 | Tauri Architecture | `../01-fundamentals/06-tauri-architecture-and-framework-comparison.md` |
+| Domain Enums | `../01-fundamentals/01-data-model.md` → Domain Enums section |
