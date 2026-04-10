@@ -1,7 +1,7 @@
 # Alarm Firing
 
-**Version:** 1.6.0  
-**Updated:** 2026-04-09  
+**Version:** 1.7.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
@@ -465,6 +465,67 @@ src-tauri/src/engine/
 | Dismiss button | Stops audio, closes overlay |
 | Snooze button | Stops audio, schedules re-fire (hidden when max snooze reached) |
 | Auto-dismiss countdown | Progress bar if auto-dismiss is enabled |
+| Queue badge | Shows "N more alarms pending" when queue has items |
+
+### AlarmOverlay Lifecycle (Resolves FE-OVERLAY-002)
+
+The overlay is a **separate Tauri window** created by the Rust backend, not a CSS overlay or portal within the main window. This ensures the overlay appears even when the main window is minimized or closed to tray.
+
+#### State Machine
+
+```
+[Hidden] ──alarm-fired──→ [Creating Window] ──window ready──→ [Visible/Active]
+                                                                    │
+                           ┌──dismiss───────────────────────────────┘
+                           │         │
+                           ▼         ▼
+                    [Closing]   [Transitioning]──next in queue──→ [Visible/Active]
+                        │
+                        ▼
+                    [Hidden]
+```
+
+#### Lifecycle Steps
+
+1. **Trigger:** Rust `AlarmEngine` detects due alarm → emits `alarm-fired` event via Tauri
+2. **Window creation:** Rust creates overlay window via `WindowBuilder`:
+   - `always_on_top: true`, `decorations: false`, `resizable: false`, `fullscreen: true`
+   - Positioned on active monitor (or primary if app is in tray)
+3. **Frontend mount:** `AlarmOverlay.tsx` mounts inside the overlay window, reads `useOverlayStore().activeAlarm`
+4. **Audio start:** Rust starts audio playback via `rodio` immediately after emitting event (does not wait for window)
+5. **User action:** Dismiss or snooze → frontend calls IPC → Rust stops audio → frontend updates store
+6. **Queue progression:** `useOverlayStore.dismissCurrent()` pops next alarm from queue or closes window if empty
+7. **Window destruction:** When queue is empty and active alarm dismissed → Rust destroys overlay window
+
+#### Ownership Rules
+
+| Concern | Owner | Rationale |
+|---------|-------|-----------|
+| AlarmQueue (pending + active) | **Rust backend** (`AlarmEngine`) | Must survive frontend reload, ensures reliability |
+| Queue mirror for UI | **Frontend** (`useOverlayStore`) | Read-only mirror synced via IPC events for rendering |
+| Overlay window lifecycle | **Rust backend** | Window creation/destruction requires Tauri API |
+| Overlay content rendering | **Frontend** (React) | UI rendering in WebView |
+| Audio playback | **Rust backend** | Native audio via `rodio`, not subject to WebView limitations |
+| Auto-dismiss timer | **Rust backend** | Timer must fire even if frontend is unresponsive |
+
+#### IPC Sync Protocol
+
+```
+Rust AlarmEngine                    Frontend OverlayStore
+     │                                      │
+     ├──emit("alarm-fired", alarm)─────────→│ showOverlay() or enqueueAlarm()
+     │                                      │
+     │←──invoke("dismiss_alarm", id)────────┤ User clicks Dismiss
+     ├──emit("alarm-dismissed", id)────────→│ dismissCurrent() → show next or close
+     │                                      │
+     │←──invoke("snooze_alarm", id, dur)────┤ User clicks Snooze
+     ├──emit("alarm-snoozed", id)──────────→│ dismissCurrent() → show next or close
+     │                                      │
+     ├──emit("alarm-fired", id)────────────→│ Snooze expired → enqueueAlarm() or showOverlay()
+     │                                      │
+     ├──emit("queue-updated", {len})───────→│ Update badge count
+     │                                      │
+```
 
 ### Multi-Monitor Behavior (Resolves FE-OVERLAY-001)
 
@@ -497,7 +558,11 @@ src-tauri/src/engine/
 
 ## Simultaneous Alarms (Queue System)
 
-> **Resolves BE-QUEUE-001.** Defines behavior when two or more alarms fire within the same 30s check interval.
+> **Resolves BE-QUEUE-001, UX-003.** Defines behavior when two or more alarms fire within the same 30s check interval.
+
+### Ownership (Resolves UX-003)
+
+The **Rust backend** (`AlarmEngine`) is the authoritative owner of the alarm queue. The frontend `useOverlayStore` maintains a **read-only mirror** synced via IPC events (`alarm-fired`, `alarm-dismissed`, `alarm-snoozed`, `queue-updated`). This ensures the queue survives frontend reloads and accurately reflects backend state.
 
 ### Problem
 

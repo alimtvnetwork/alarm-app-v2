@@ -1,9 +1,9 @@
 # Tauri Architecture & Cross-Platform Framework Comparison
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-08  
+**Version:** 1.1.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
-**Ambiguity:** Low
+**Ambiguity:** None
 
 ---
 
@@ -127,6 +127,108 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `tauri-plugin-updater` | 2.x | Auto-update mechanism | Desktop |
 | `tauri-plugin-os` | 2.x | OS detection, platform info | All |
 | `tauri-plugin-process` | 2.x | App lifecycle, restart | All |
+
+### Frontend State Management (Resolves UX-STATE-001)
+
+The frontend uses **Zustand** for global state management. Zustand is chosen over React Context (re-render cascades), Redux (boilerplate overhead), and local state (duplication across components). Each logical domain gets its own Zustand store.
+
+#### Store Architecture
+
+```
+┌─────────────────────────────────────────────────┐
+│                  Zustand Stores                  │
+│  ┌──────────┐ ┌──────────┐ ┌────────────────┐  │
+│  │ useAlarm │ │ useOverlay│ │  useSettings   │  │
+│  │  Store   │ │  Store    │ │    Store       │  │
+│  ├──────────┤ ├──────────┤ ├────────────────┤  │
+│  │ alarms[] │ │ active   │ │ theme          │  │
+│  │ groups[] │ │ queue[]  │ │ timeFormat     │  │
+│  │ loading  │ │ isShown  │ │ snoozeDuration │  │
+│  │ error    │ │ queueLen │ │ language       │  │
+│  └──────────┘ └──────────┘ └────────────────┘  │
+│                     ↕ IPC                        │
+│              Tauri invoke() / listen()            │
+└─────────────────────────────────────────────────┘
+```
+
+#### Store Definitions
+
+```typescript
+// stores/useAlarmStore.ts
+interface AlarmStore {
+  alarms: Alarm[];
+  groups: AlarmGroup[];
+  isLoading: boolean;
+  error: string | null;
+
+  // Actions (each calls Tauri IPC then updates local state)
+  fetchAlarms: () => Promise<void>;
+  createAlarm: (payload: CreateAlarmPayload) => Promise<Alarm>;
+  updateAlarm: (payload: UpdateAlarmPayload) => Promise<Alarm>;
+  deleteAlarm: (alarmId: string) => Promise<{ UndoToken: string }>;
+  toggleAlarm: (alarmId: string, isEnabled: boolean) => Promise<void>;
+  toggleGroup: (groupId: string, isEnabled: boolean) => Promise<void>;
+  reorderAlarms: (alarmIds: string[]) => void;
+}
+
+// stores/useOverlayStore.ts
+interface OverlayStore {
+  activeAlarm: FiredAlarm | null;
+  queue: FiredAlarm[];
+  isVisible: boolean;
+
+  // Actions
+  showOverlay: (alarm: FiredAlarm) => void;
+  enqueueAlarm: (alarm: FiredAlarm) => void;
+  dismissCurrent: () => void;   // Removes active, shows next from queue
+  snoozeCurrent: () => void;    // Removes active, shows next from queue
+  clearQueue: () => void;
+}
+
+// stores/useSettingsStore.ts
+interface SettingsStore {
+  theme: 'light' | 'dark' | 'system';
+  timeFormat: '12h' | '24h';
+  language: string;
+  defaultSnoozeDuration: number;
+
+  fetchSettings: () => Promise<void>;
+  updateSetting: (key: string, value: string) => Promise<void>;
+}
+```
+
+#### IPC Event → Store Update Flow
+
+```typescript
+// In App.tsx or a top-level hook
+import { listen } from '@tauri-apps/api/event';
+
+function useAlarmEvents() {
+  const { enqueueAlarm, showOverlay, activeAlarm } = useOverlayStore();
+  const { fetchAlarms } = useAlarmStore();
+
+  useEffect(() => {
+    const unlisten = listen<FiredAlarmPayload>('alarm-fired', (event) => {
+      const firedAlarm = mapPayloadToFiredAlarm(event.payload);
+      if (activeAlarm) {
+        enqueueAlarm(firedAlarm);  // Already showing an overlay → queue it
+      } else {
+        showOverlay(firedAlarm);   // No active overlay → show immediately
+      }
+    });
+
+    return () => { unlisten.then(fn => fn()); };
+  }, [activeAlarm]);
+}
+```
+
+#### Crate / Package
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `zustand` | ^4.5 | Minimal global state (2KB gzipped, no providers) |
+
+---
 
 ### Build Pipeline
 

@@ -14,9 +14,9 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 ## CG-001: No Frontend State Management Pattern Defined
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — Zustand stores defined with IPC event sync flow in Fix Phase 18
 
-**Problem:** The spec defines React + TypeScript frontend but never specifies whether to use Zustand, Redux, Context API, or React Query. AI will pick arbitrarily.
+**Resolution:** Added `stores/` directory to file structure with `useAlarmStore`, `useOverlayStore`, `useSettingsStore`. Full architecture documented in `06-tauri-architecture.md` including store interfaces and event flow.
 
 **Affected files:** `06-tauri-architecture-and-framework-comparison.md`, all feature specs
 
@@ -142,4 +142,4 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 ---
 
 ## Issues Found So Far: 12
-## Open: 6 | Resolved: 6
+## Open: 5 | Resolved: 7

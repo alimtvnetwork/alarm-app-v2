@@ -14,42 +14,27 @@ Issues with frontend state management patterns, component lifecycle, cross-compo
 ## UX-001: No React State Management Pattern Defined
 
 **Severity:** 🔴 Critical  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — Zustand store architecture defined in Fix Phase 18
 
-**Problem:** Multiple hooks mentioned (`useAlarms`, `useTheme`, `useAlarmFiring`, `useClock`) but NO state management architecture specified — React Context? Zustand? Redux? Local state?
-
-**Impact:**
-- `useAlarms` holds CRUD + toggle + group toggle + drag-drop + SQLite sync — massive hook with no guidance on state sharing
-- `AlarmOverlay` needs alarm data, snooze state, audio state, and challenge config — no prop/state flow defined
-- No specification for how `listen("alarm-fired")` event from Rust triggers UI state updates across components
-- AI will either create a monolithic context or duplicate state across components
+**Resolution:** Added complete Zustand store architecture to `06-tauri-architecture.md`: `useAlarmStore` (CRUD + groups), `useOverlayStore` (active alarm + queue mirror), `useSettingsStore` (theme + preferences). Includes store interfaces, IPC event → store update flow, and architecture diagram. `zustand ^4.5` added to package table. `stores/` directory added to file structure.
 
 ---
 
 ## UX-002: AlarmOverlay Lifecycle Not Specified
 
 **Severity:** 🔴 Critical  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — full lifecycle state machine and ownership rules defined in Fix Phase 18
 
-**Problem:** `AlarmOverlay` is "conditional — shown when alarm fires" but critical details missing:
-- Which component owns overlay state (`isOverlayVisible`, `activeAlarm`)?
-- How does overlay interact with main window — CSS z-index? Portal? Separate Tauri window?
-- `03-alarm-firing.md` says "full-screen overlay blocks all other interaction" — implementation undefined
-- Overlay needs alarm data, snooze state, challenge data, auto-dismiss timer, queue state — no prop/state flow defined
-- Multi-alarm queue: who manages the queue? Frontend or backend? Both files mention it but neither assigns ownership
+**Resolution:** Added AlarmOverlay Lifecycle section to `03-alarm-firing.md` with: state machine diagram (Hidden → Creating → Visible → Transitioning/Closing), 7 lifecycle steps, ownership table (Rust owns queue/audio/window/timer, frontend owns rendering), and IPC sync protocol sequence diagram.
 
 ---
 
 ## UX-003: Alarm Queue State Ownership Ambiguous
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — ownership explicitly assigned in Fix Phase 18
 
-**Problem:** Queue rules defined in `03-alarm-firing.md` (FIFO, max 10, badge) but ownership split:
-- Queue managed by Rust `AlarmEngine.currently_firing` (backend)
-- Overlay rendered by React (frontend)
-- No spec for how frontend knows about queue size, order, or transitions
-- IPC event `alarm-fired` sends one alarm at a time — does frontend maintain its own queue mirror?
+**Resolution:** Rust backend (`AlarmEngine`) is the authoritative queue owner. Frontend `useOverlayStore` is a read-only mirror synced via IPC events. Added ownership section to Queue System in `03-alarm-firing.md` and ownership table to AlarmOverlay Lifecycle.
 
 ---
 
@@ -65,4 +50,4 @@ Issues with frontend state management patterns, component lifecycle, cross-compo
 ---
 
 ## Issues Found So Far: 4
-## Open: 2 | Resolved: 2
+## Open: 0 | Resolved: 4

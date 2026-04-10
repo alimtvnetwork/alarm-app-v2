@@ -18,10 +18,10 @@ This folder tracks all specification quality issues found during the deep audit 
 | 1 | `01-naming-violations.md` | Naming & Convention Violations | 18 | 0 | 18 |
 | 2 | `02-internal-contradictions.md` | Contradictions Between Files | 11 | 0 | 11 |
 | 3 | `03-structural-issues.md` | Folder/File Structure Problems | 5 | 5 | 0 |
-| 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 12 | 6 | 6 |
+| 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 12 | 5 | 7 |
 | 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 1 | 3 |
 | 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 11 | 2 | 9 |
-| 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 3 | 1 |
+| 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 0 | 4 |
 | 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 0 | 12 |
 
 ---
@@ -34,8 +34,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 40 |
 | 🟢 Low | 7 |
 | **Grand Total** | **77** |
-| **Open** | **17** |
-| **Resolved** | **60** |
+| **Open** | **13** |
+| **Resolved** | **64** |
 
 ---
 
