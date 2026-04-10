@@ -1,6 +1,6 @@
 # File Structure
 
-**Version:** 1.8.0  
+**Version:** 1.9.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -55,7 +55,7 @@ src/                          — Frontend (React + TypeScript)
     AlarmList.tsx             — Grouped alarm list with toggles
     AlarmForm.tsx             — Create/edit alarm dialog
     AlarmGroupForm.tsx        — Group create/rename dialog
-    AlarmOverlay.tsx          — Full-screen firing overlay (dismiss/snooze) — rendered in overlay window
+    AlarmOverlay.tsx          — Full-screen firing overlay (dismiss/snooze) — rendered in a **separate Tauri window**, not a child component of Index.tsx (see `03-alarm-firing.md`)
     ThemeToggle.tsx           — Sun/moon icon button
     ExportImport.tsx          — Export button + import via native file dialog
     AlarmCountdown.tsx        — "Alarm in X hours Y minutes" display
@@ -91,8 +91,13 @@ src-tauri/                    — Backend (Rust)
     commands/
       alarm.rs                — Alarm CRUD commands (IPC handlers)
       audio.rs                — Audio playback commands
-      settings.rs             — Settings read/write commands
+      settings.rs             — Settings read/write + theme IPC commands
       export_import.rs        — File export/import commands
+      group.rs                — Group CRUD commands (create, update, delete, list, toggle)
+      challenge.rs            — Dismissal challenge commands (get_challenge, submit_challenge_answer)
+      history.rs              — Alarm event history commands (list_alarm_events, export_history_csv, clear_history)
+      wellness.rs             — Sleep wellness commands (log_sleep_quality, play_ambient, stop_ambient)
+      personalization.rs      — Personalization commands (quotes, streaks, themes, backgrounds)
     engine/
       alarm_engine.rs         — Background alarm checking thread
       scheduler.rs            — Next-alarm calculation, recurring logic
@@ -328,9 +333,14 @@ serde_json = "=1.0.149"
 # Error handling
 thiserror = "=2.0.18"             # Used by AlarmAppError — was missing from prior spec
 
+# HTTP (webhooks)
+reqwest = { version = "=0.12.12", features = ["json", "rustls-tls"], default-features = false }
+url = "=2.5.4"                    # URL parsing for webhook validation
+
 # Utilities
 uuid = { version = "=1.23.0", features = ["v4"] }
 tokio = { version = "=1.51.1", features = ["full"] }
+rand = "=0.8.5"                   # Random number generation (math challenges, etc.)
 tracing = "=0.1.44"               # Structured logging
 tracing-subscriber = { version = "=0.3.23", features = ["env-filter"] }
 tracing-appender = "=0.2.4"       # Log file rotation
@@ -354,6 +364,8 @@ zbus = "=4.4.0"                   # Pin 4.x — 5.x is async-only rewrite
 {
   "dependencies": {
     "@tauri-apps/api": "=2.10.1",
+    "@dnd-kit/core": "=6.1.0",
+    "@dnd-kit/sortable": "=8.0.0",
     "react": "=18.3.1",
     "react-dom": "=18.3.1",
     "react-router-dom": "=6.30.0",
@@ -388,7 +400,9 @@ Index.tsx
   │   ├── AlarmForm (dialog)
   │   └── AlarmGroupForm (dialog)
   ├── ExportImport
-  └── AlarmOverlay (conditional — shown when alarm fires)
+  └── ExportImport
+
+AlarmOverlay.tsx (mounted in separate Tauri overlay window — NOT a child of Index.tsx)
 ```
 
 ---

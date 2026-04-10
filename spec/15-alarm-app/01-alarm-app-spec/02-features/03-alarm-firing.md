@@ -44,10 +44,10 @@ When the current time matches an enabled alarm's `NextFireTime`, the alarm fires
    e. Insert `AlarmEvents` row with `Type = AlarmEventType::Fired`
 4. After firing: Rust recomputes `NextFireTime` based on `repeat` pattern
     - `RepeatType::Once` → set `IsEnabled = 0`, `NextFireTime = NULL`
-   - `daily` → advance by 24 hours (DST-aware — see DST section below)
-   - `weekly` → advance to next matching day (DST-aware)
-   - `interval` → advance by `intervalMinutes`
-   - `cron` → compute next from cron expression (via `croner` crate)
+   - `RepeatType::Daily` → advance by 24 hours (DST-aware — see DST section below)
+    - `RepeatType::Weekly` → advance to next matching day (DST-aware)
+    - `RepeatType::Interval` → advance by `IntervalMinutes`
+    - `RepeatType::Cron` → compute next from cron expression (via `croner` crate)
 
 ---
 
@@ -117,7 +117,7 @@ fn compute_weekly(
     for offset in 0..=7 {
         let date = now_local.date_naive() + Duration::days(offset);
         let weekday_num = date.weekday().num_days_from_sunday();
-        if repeat.is_day_excluded(weekday_num as u8) { continue; }
+        if !repeat.days_of_week.contains(&(weekday_num as u8)) { continue; }
         if let Some(t) = resolve_local_to_utc(date, alarm_time, timezone) {
             if t > now { return Some(t); }
         }
@@ -195,7 +195,7 @@ fn on_timezone_change(conn: &Connection, new_tz: &Tz) {
     let alarms = get_enabled_alarms(conn);
     for alarm in &alarms {
         let new_next = compute_next_fire_time(
-            alarm.time, alarm.date, &alarm.repeat, new_tz, Utc::now()
+            alarm.time, alarm.date, &alarm.repeat_pattern(), new_tz, Utc::now()
         );
         update_next_fire_time(conn, &alarm.alarm_id, new_next);
     }

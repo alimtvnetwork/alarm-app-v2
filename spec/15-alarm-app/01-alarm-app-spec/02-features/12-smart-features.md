@@ -185,6 +185,18 @@ fn build_webhook_client() -> Result<Client, WebhookError> {
         .map_err(|e| WebhookError::RequestFailed(e.to_string()))
 }
 
+/// WebhookPayload sent to user-configured webhook URL on alarm dismiss.
+///
+/// ```typescript
+/// interface WebhookPayload {
+///   AlarmId: string;
+///   AlarmLabel: string;
+///   FiredAt: string;        // ISO 8601
+///   DismissedAt: string;    // ISO 8601
+///   SnoozeCount: number;
+///   AppVersion: string;
+/// }
+/// ```
 pub async fn fire_webhook(url: &Url, payload: &WebhookPayload) -> Result<(), WebhookError> {
     let client = build_webhook_client()?;
     let response = client.post(url.as_str()).json(payload).send().await;

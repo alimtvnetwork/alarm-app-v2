@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 2.5.0  
+**Version:** 2.7.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -26,6 +26,43 @@
 ---
 
 ## Version History
+
+### v2.7.0 — 2026-04-10
+
+**Theme:** Discovery Phases 22–27 + Fix Phase U — 81 additional issues found and resolved, total 396/396
+
+#### Discovery Phases
+
+| Phase | Issues | Focus |
+|-------|:------:|-------|
+| 22 | 18 | Missing deps (dnd-kit, reqwest, url, rand), undefined interfaces (ImportPreview, WebhookPayload, RepeatPattern Rust), group CRUD IPC, AlarmSound storage |
+| 23 | 11 | AlarmOverlay hierarchy, PascalCase code bugs (timerId, undoToken), missing command files, column count |
+| 24 | 13 | File structure missing 5+ Rust command files, HistoryFilter `?` optional, font loading, ClockState derivation |
+| 25 | 15 | AlarmEvent `?` optional, `is_day_excluded` negative boolean, acceptance criteria raw strings, AlarmChallenge `?` |
+| 26 | 12 | IPC registry divergence (group CRUD, import flow, next-alarm name), orphaned commands, stale metrics |
+| 27 | 12 | Post-fix regression scan — confirmed 81 issues still open, stale "315" metrics across root files |
+
+#### Fix Phase U (81 issues)
+
+| Category | Issues | Fixes |
+|----------|:------:|-------|
+| Missing deps | 3 | dnd-kit, reqwest, url, rand added to file-structure |
+| Missing IPC & interfaces | 8 | Group CRUD, ImportPreview, WebhookPayload, get_snooze_state, cancel_snooze, reorderAlarms removed |
+| File structure | 3 | 5 command files added (group, challenge, history, wellness, personalization) |
+| Data model gaps | 4 | ExportWarningDismissed, RepeatPattern Rust, AlarmSound note, Is24Hour derivation |
+| Code & naming | 11 | is_day_excluded→contains, timerId→TimerId, undoToken→UndoToken, enum refs in post-fire/acceptance |
+| Optional syntax | 3 | AlarmEvent/AlarmChallenge/HistoryFilter `?`→`| null` |
+| Architecture alignment | 3 | AlarmOverlay hierarchy, get_next_alarm→get_next_alarm_time, GroupId→AlarmGroupId |
+| Cheat sheet | 4 | 22→26 columns, 12→13 variants, footer version, shadcn note |
+| Stale metrics | 6 | All root files 315→396 |
+
+#### Status
+- **Total issues:** 396 (396 resolved + 0 open) ✅
+- **Discovery phases:** 27 complete
+- **Fix phases:** 41 complete (1–20, A–U)
+- **Readiness:** 100/100 (A+)
+
+---
 
 ### v2.5.0 — 2026-04-10
 

@@ -325,9 +325,24 @@ interface Alarm {
 ```typescript
 interface RepeatPattern {
   Type: RepeatType;
-  DaysOfWeek: number[];       // 0=Sun..6=Sat (for "weekly" type)
-  IntervalMinutes: number;    // For "interval" type (e.g., every 120 min)
-  CronExpression: string;     // For "cron" type — parsed by `croner` crate
+  DaysOfWeek: number[];       // 0=Sun..6=Sat (for RepeatType.Weekly)
+  IntervalMinutes: number;    // For RepeatType.Interval (e.g., every 120 min)
+  CronExpression: string;     // For RepeatType.Cron — parsed by `croner` crate
+}
+```
+
+### RepeatPattern (Rust)
+
+```rust
+/// Rust RepeatPattern struct — used by scheduling logic.
+/// Constructed via `AlarmRow::repeat_pattern()` from flat DB columns.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct RepeatPattern {
+    pub r#type: RepeatType,
+    pub days_of_week: Vec<u8>,
+    pub interval_minutes: u32,
+    pub cron_expression: String,
 }
 ```
 
@@ -458,14 +473,22 @@ interface AlarmGroup {
 
 ### AlarmSound
 
+> **Note:** `AlarmSound` is a **read-only in-memory list** derived from bundled audio assets in `src/assets/sounds/`. There is no corresponding SQLite table. The sound list is hardcoded in Rust and returned via the `list_sounds` IPC command. Custom user sounds reference file paths directly via `Alarm.SoundFile`.
+
 ```typescript
 interface AlarmSound {
-  AlarmSoundId: string;  // Unique identifier
-  Name: string;          // Display name
-  FileName: string;      // Audio file reference (built-in path)
+  AlarmSoundId: string;  // Unique identifier (e.g., "classic-beep")
+  Name: string;          // Display name (e.g., "Classic Beep")
+  FileName: string;      // Audio file reference (bundled asset path)
   Category: SoundCategory;
 }
 ```
+
+#### IPC Command
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `list_sounds` | `void` | `AlarmSound[]` |
 
 ### AlarmEvent
 
@@ -477,10 +500,10 @@ interface AlarmEvent {
   FiredAt: string;               // ISO 8601
   DismissedAt: string | null;    // ISO 8601
   SnoozeCount: number;
-  ChallengeType?: ChallengeType;
-  ChallengeSolveTimeSec?: number;
-  SleepQuality?: number;         // 1-5
-  Mood?: string;
+  ChallengeType: ChallengeType | null;
+  ChallengeSolveTimeSec: number | null;
+  SleepQuality: number | null;         // 1-5
+  Mood: string | null;
   Timestamp: string;             // ISO 8601 — when this event occurred
 }
 ```
@@ -611,6 +634,7 @@ pub fn purge_old_events(conn: &Connection) {
 | `Language` | `string` | `"en"` | i18n locale code |
 | `EventRetentionDays` | `number` | `"90"` | Days to keep `AlarmEvents` |
 | `SystemTimezone` | `string` | `""` | IANA timezone string (auto-detected at startup) |
+| `ExportWarningDismissed` | `boolean` | `"false"` | Whether user dismissed the export privacy warning |
 
 ---
 

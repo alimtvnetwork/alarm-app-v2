@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.32.0  
+**Version:** 1.33.0  
 **Updated:** 2026-04-10
 
 ---
@@ -47,12 +47,13 @@ This folder tracks all specification quality issues found during the deep audit 
 | 31 | `31-discovery-phase-19.md` | Discovery Phase 19 — Post-Completion Regression Audit | 34 | 0 | 34 |
 | 32 | `32-discovery-phase-20.md` | Discovery Phase 20 — Fresh Audit (IPC, magic strings, Scoring, serde, seedable config) | 21 | 0 | 21 |
 | 33 | `33-discovery-phase-21.md` | Discovery Phase 21 — Post-Phase-20 Regression Scan (stale metrics, version alignment) | 4 | 0 | 4 |
-| 34 | `34-discovery-phase-22.md` | Discovery Phase 22 — Fresh Comprehensive Audit (missing deps, undefined interfaces, naming) | 18 | 18 | 0 |
-| 35 | `35-discovery-phase-23.md` | Discovery Phase 23 — Cross-File Consistency & Code Sample Audit | 11 | 11 | 0 |
-| 36 | `36-discovery-phase-24.md` | Discovery Phase 24 — IPC Command Coverage, File Structure Gaps & Interface Consistency | 13 | 13 | 0 |
-| 37 | `37-discovery-phase-25.md` | Discovery Phase 25 — Cross-Spec Deep Consistency & AI Handoff Audit | 15 | 15 | 0 |
-| 38 | `38-discovery-phase-26.md` | Discovery Phase 26 — Architecture, IPC Registry & Stale Metrics Audit | 12 | 12 | 0 |
-| 39 | `39-discovery-phase-27.md` | Discovery Phase 27 — Post-Fix Regression Scan | 12 | 12 | 0 |
+| 34 | `34-discovery-phase-22.md` | Discovery Phase 22 — Fresh Comprehensive Audit (missing deps, undefined interfaces, naming) | 18 | 0 | 18 |
+| 35 | `35-discovery-phase-23.md` | Discovery Phase 23 — Cross-File Consistency & Code Sample Audit | 11 | 0 | 11 |
+| 36 | `36-discovery-phase-24.md` | Discovery Phase 24 — IPC Command Coverage, File Structure Gaps & Interface Consistency | 13 | 0 | 13 |
+| 37 | `37-discovery-phase-25.md` | Discovery Phase 25 — Cross-Spec Deep Consistency & AI Handoff Audit | 15 | 0 | 15 |
+| 38 | `38-discovery-phase-26.md` | Discovery Phase 26 — Architecture, IPC Registry & Stale Metrics Audit | 12 | 0 | 12 |
+| 39 | `39-discovery-phase-27.md` | Discovery Phase 27 — Post-Fix Regression Scan | 12 | 0 | 12 |
+| 40 | `40-fix-phase-u-comprehensive.md` | Fix Phase U — Comprehensive fix of 81 issues from Phases 22–27 | 81 resolved | 0 | 81 |
 
 ---
 
@@ -64,8 +65,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 241 |
 | 🟢 Low | 65 |
 | **Grand Total** | **396** |
-| **Open** | **81** |
-| **Resolved** | **315** |
+| **Open** | **0** |
+| **Resolved** | **396** |
 
 ---
 
@@ -136,6 +137,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 25** | **Cross-spec deep consistency & AI handoff audit** | **✅ Done (+15 = 372, 57 open)** |
 | **Discovery Phase 26** | **Architecture, IPC registry & stale metrics audit** | **✅ Done (+12 = 384, 69 open)** |
 | **Discovery Phase 27** | **Post-fix regression scan — stale metrics, unfixed Phase 22–26 issues** | **✅ Done (+12 = 396, 81 open)** |
+| **Fix Phase U** | **Comprehensive fix of 81 issues: missing deps, IPC alignment, magic strings, negative booleans, stale metrics, interfaces** | **✅ Done (81 resolved, 0 open)** |
 
 ---
 
