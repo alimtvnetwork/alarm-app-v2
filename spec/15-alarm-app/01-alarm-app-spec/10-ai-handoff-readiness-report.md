@@ -66,7 +66,7 @@ All 315 spec quality issues have been resolved across 21 discovery phases and 40
 | 🔴 Critical | 72 |
 | 🟡 Medium | 196 |
 | 🟢 Low | 43 |
-| **Total** | **311** |
+| **Total** | **315** |
 
 ---
 
@@ -199,7 +199,7 @@ All fix phases complete. No remaining work items.
 | Q | 6 | Scoring tables + metadata for all 28 spec files |
 | R | 3 | camelCase/PascalCase boundary clarification, internal struct annotations |
 | S | 2 | Seedable config cross-reference in data model |
-| T | 4 | Stale "290" metrics → "311", version alignment in consistency reports |
+| T | 4 | Stale "290" metrics → "315", version alignment in consistency reports |
 
 ---
 
