@@ -46,6 +46,7 @@ Core architectural decisions, data model definitions, design system tokens, file
 | 08 | `08-devops-setup-guide.md` | Code signing (macOS/Windows), CI/CD pipeline, auto-update key management |
 | 09 | `09-test-strategy.md` | Test layers (Rust unit/integration, frontend, E2E), coverage targets, CI integration |
 | 10 | `10-dependency-lock.md` | Exact version pins for all Rust crates and npm packages, API surface, breaking change notes |
+| 11 | `11-platform-verification-matrix.md` | Feature × Platform × Behavior × Test Method × Fallback for all runtime-dependent features |
 
 ---
 
