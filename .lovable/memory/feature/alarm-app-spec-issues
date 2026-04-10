@@ -7,39 +7,40 @@ type: feature
 ## Audit Status
 
 - **Total issues:** 77
-- **Open:** 48
-- **Resolved:** 29
+- **Open:** 29
+- **Resolved:** 48
 - **Discovery phases:** 6 complete
-- **Fix phases:** 4 complete (1–4), 11 pending (5–15)
+- **Fix phases:** 15 complete (1–15)
 
 ## Issue Distribution
 
 | Category | Count | Open | Resolved |
 |----------|:-----:|:----:|:--------:|
-| Naming Violations | 18 | 6 | 12 |
-| Internal Contradictions | 11 | 9 | 2 |
+| Naming Violations | 18 | 3 | 15 |
+| Internal Contradictions | 11 | 3 | 8 |
 | Structural Issues | 5 | 5 | 0 |
-| Content Gaps | 12 | 11 | 1 |
+| Content Gaps | 12 | 8 | 4 |
 | AI Handoff Risks | 4 | 2 | 2 |
-| Logic Consistency | 11 | 6 | 5 |
+| Logic Consistency | 11 | 4 | 7 |
 | UI/UX Consistency | 4 | 2 | 2 |
-| Guideline Compliance | 12 | 7 | 5 |
+| Guideline Compliance | 12 | 2 | 10 |
 
-## Fix Plan (Pending Phases)
+## All Fix Phases Complete (1–15)
 
-| Phase | Issues | Description |
-|-------|--------|-------------|
-| Fix 5 | NV-016, NV-017 | Rename `alarms` → `Alarms`, `settings` → `Settings` |
-| Fix 6 | GC-009, GC-010 | Analytics schema + cheat sheet regressions |
-| Fix 7 | GC-011, GC-012 | Concurrency guide regressions |
-| Fix 8 | LC-011, CG-006 (partial) | Firing + snooze prose snake_case |
-| Fix 9 | CG-006 (partial) | Groups + sound prose snake_case |
-| Fix 10 | IC-008, IC-009, IC-010, IC-011 | Architecture contradictions |
-| Fix 11 | IC-006 | `get_alarms` vs `list_alarms` |
-| Fix 12 | NV-018 | Settings keys → PascalCase |
-| Fix 13 | CG-007, CG-012, LC-001 | AlarmChallenge schema gaps |
-| Fix 14 | CG-006 (remaining) | All remaining prose snake_case |
-| Fix 15 | GC-001 | Function length decomposition |
+All 15 planned fix phases are done. Remaining 29 open issues need new fix phases.
+
+## Remaining Open Issues (29)
+
+| Category | Open Issues |
+|----------|-------------|
+| Structural (5) | SI-001–005 |
+| Content Gaps (8) | CG-002–005, CG-008–011 |
+| Logic Consistency (4) | LC-002, LC-005–007 |
+| Naming Violations (3) | NV-013, NV-015, NV-016 |
+| Internal Contradictions (3) | IC-002–004 |
+| AI Handoff Risks (2) | AH-003, AH-004 |
+| UI/UX Consistency (2) | UX-008, UX-011 |
+| Guideline Compliance (2) | GC-004, GC-005 |
 
 ## Canonical Location
 
