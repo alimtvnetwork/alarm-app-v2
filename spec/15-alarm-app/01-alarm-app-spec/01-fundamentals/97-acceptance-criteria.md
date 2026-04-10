@@ -1,6 +1,6 @@
 # Fundamentals Acceptance Criteria — Consolidated Rollup
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-10  
 **Purpose:** Testable success criteria for all fundamental/infrastructure specs  
 **Resolves:** P14-002
