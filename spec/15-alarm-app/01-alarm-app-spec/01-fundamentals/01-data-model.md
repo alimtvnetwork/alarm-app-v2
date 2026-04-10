@@ -1,6 +1,6 @@
 # Data Model
 
-**Version:** 1.13.0  
+**Version:** 1.14.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -464,8 +464,9 @@ impl AlarmRow {
 ```typescript
 interface AlarmGroup {
   AlarmGroupId: string;  // UUID v4
-  Name: string;          // Group name, max 30 chars
+  Name: string;          // Group name, max 50 chars
   Color: string;         // Hex color for visual coding (e.g., "#FF5733")
+  Position: number;      // Sort order in list (0-based)
   IsEnabled: boolean;    // Master toggle — disabling disables all member alarms
 }
 ```
@@ -549,6 +550,7 @@ CREATE TABLE AlarmGroups (
   AlarmGroupId TEXT PRIMARY KEY,
   Name TEXT NOT NULL,
   Color TEXT NOT NULL DEFAULT '#6366F1',
+  Position INTEGER NOT NULL DEFAULT 0,
   IsEnabled INTEGER NOT NULL DEFAULT 1
 );
 
