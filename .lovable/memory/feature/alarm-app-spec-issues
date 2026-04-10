@@ -1,15 +1,15 @@
 ---
 name: Alarm App Spec Issues Audit
-description: 357 total spec issues — 315 resolved, 42 open (Discovery Phases 22-24). Missing deps, undefined interfaces, file structure gaps, IPC coverage holes.
+description: 372 total spec issues — 315 resolved, 57 open (Discovery Phases 22-25). Missing deps, undefined interfaces, file structure gaps, IPC coverage holes, optional syntax inconsistency.
 type: feature
 ---
 
 ## Audit Status — IN PROGRESS ⚠️
 
-- **Total issues:** 357
-- **Open:** 42 (Discovery Phases 22 + 23 + 24)
+- **Total issues:** 372
+- **Open:** 57 (Discovery Phases 22 + 23 + 24 + 25)
 - **Resolved:** 315
-- **Discovery phases:** 24
+- **Discovery phases:** 25
 - **Fix phases:** 40 (Phases 1–20, A–T)
 
 ## Open Issues Summary
@@ -23,9 +23,12 @@ AlarmOverlay hierarchy contradiction, PascalCase bugs in code samples (timerId, 
 ### Phase 24 — 13 issues (1 Critical, 9 Medium, 3 Low)
 File structure missing 5+ Rust command files for IPC domains (history, wellness, personalization), HistoryFilter `?` optional, font loading undefined, ClockState derivation gap, acceptance criteria raw strings.
 
-## Key Finding — Phase 24
+### Phase 25 — 15 issues (2 Critical, 9 Medium, 4 Low)
+AlarmEvent uses `?` optional on 5 fields (violates `| null` convention), `is_day_excluded` negative boolean in firing code, scheduling acceptance criteria raw strings, AlarmChallenge `?` optionals, AlarmSound has no storage mechanism, stale cheat sheet metrics, stale dates on 3 files.
 
-**P24-001 is the most impactful open issue.** The file structure only lists 4 Rust command files but feature specs define IPC commands across 8+ domains. This is a superset of P23-006 and P23-007.
+## Key Finding — Phase 25
+
+**P25-001 is systemic.** The `?` optional syntax vs `| null` convention is inconsistent across at least 3 interfaces (AlarmEvent, AlarmChallenge, HistoryFilter). A single sweep should fix all.
 
 ## Canonical Location
 
