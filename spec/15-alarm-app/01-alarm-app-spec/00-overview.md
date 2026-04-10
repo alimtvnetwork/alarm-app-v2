@@ -119,7 +119,7 @@ Tables:
 | 11 | [Atomic Task Breakdown](./11-atomic-task-breakdown.md) | **Authoritative** 62 dependency-ordered tasks, effort estimates, risk levels |
 | 12 | [Platform & Concurrency Guide](./12-platform-and-concurrency-guide.md) | Platform gotchas, race condition safeguards, async safety, error recovery |
 | 13 | [AI Cheat Sheet](./13-ai-cheat-sheet.md) | Single-page quick reference for AI coding agents |
-| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 315/315 issues resolved across 21 discovery + 39 fix phases ✅ |
+| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 315/315 issues resolved across 21 discovery + 40 fix phases ✅ |
 | 15 | [Reference](./15-reference/00-overview.md) | Feature inventories and planning references |
 | 98 | [Changelog](./98-changelog.md) | Version history v1.0.0–v2.5.0 |
 

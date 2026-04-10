@@ -16,7 +16,7 @@
 
 ## Executive Summary
 
-The Alarm App specification is **fully ready for AI handoff**. All 315 spec quality issues have been resolved across 21 discovery phases and 39 fix phases (1–20, A–S). The spec includes 197 consolidated acceptance criteria (133 feature + 64 fundamental), 13 domain enums, complete error handling, and all dependencies pinned.
+The Alarm App specification is **fully ready for AI handoff**. All 315 spec quality issues have been resolved across 21 discovery phases and 40 fix phases (1–20, A–S). The spec includes 197 consolidated acceptance criteria (133 feature + 64 fundamental), 13 domain enums, complete error handling, and all dependencies pinned.
 
 | Metric | Value |
 |--------|-------|
@@ -27,7 +27,7 @@ The Alarm App specification is **fully ready for AI handoff**. All 315 spec qual
 | **Resolved** | 315 (100%) |
 | **Open** | 0 |
 | **Discovery Phases** | 21 complete |
-| **Fix Phases** | 39 (Phases 1–20, A–S) |
+| **Fix Phases** | 40 (Phases 1–20, A–S) |
 | **Spec Files** | 60+ (12 fundamentals + 17 features + 30 issue trackers + 3 execution guides + 10 misc) |
 | **Code Examples** | 45+ Rust/TypeScript blocks (anti-patterns fixed in phases A–G) |
 | **Atomic Tasks** | 62 tasks across 12 phases with dependency graph |
@@ -59,7 +59,7 @@ The Alarm App specification is **fully ready for AI handoff**. All 315 spec qual
 
 ## Issue Resolution Summary
 
-All 315 spec quality issues have been resolved across 21 discovery phases and 39 fix phases.
+All 315 spec quality issues have been resolved across 21 discovery phases and 40 fix phases.
 
 | Category | Resolved |
 |----------|:--------:|
@@ -210,7 +210,7 @@ All fix phases complete. No remaining work items.
 | Spec Overview | `./00-overview.md` |
 | Changelog | `./98-changelog.md` |
 | Issues Overview | `./03-app-issues/00-overview.md` |
-| Spec Issues Audit | `./14-spec-issues/00-overview.md` (311 issues found, 311 resolved across 21 discovery + 39 fix phases) |
+| Spec Issues Audit | `./14-spec-issues/00-overview.md` (311 issues found, 311 resolved across 21 discovery + 40 fix phases) |
 | Atomic Task Breakdown | `./11-atomic-task-breakdown.md` |
 | Platform & Concurrency Guide | `./12-platform-and-concurrency-guide.md` |
 | AI Cheat Sheet | `./13-ai-cheat-sheet.md` |
