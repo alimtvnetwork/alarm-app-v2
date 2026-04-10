@@ -558,7 +558,11 @@ Rust AlarmEngine                    Frontend OverlayStore
 
 ## Simultaneous Alarms (Queue System)
 
-> **Resolves BE-QUEUE-001.** Defines behavior when two or more alarms fire within the same 30s check interval.
+> **Resolves BE-QUEUE-001, UX-003.** Defines behavior when two or more alarms fire within the same 30s check interval.
+
+### Ownership (Resolves UX-003)
+
+The **Rust backend** (`AlarmEngine`) is the authoritative owner of the alarm queue. The frontend `useOverlayStore` maintains a **read-only mirror** synced via IPC events (`alarm-fired`, `alarm-dismissed`, `alarm-snoozed`, `queue-updated`). This ensures the queue survives frontend reloads and accurately reflects backend state.
 
 ### Problem
 
