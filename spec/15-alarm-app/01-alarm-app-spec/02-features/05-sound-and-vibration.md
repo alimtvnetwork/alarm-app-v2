@@ -143,7 +143,7 @@ pub fn resolve_sound_path(sound_file: &str) -> String {
 - Alarm starts at ~10% volume and increases **perceptually** to 100%
 - Duration options: 15, 30, or 60 seconds
 - Implemented in Rust via native audio API — volume ramp controlled by the `audio/gradual_volume.rs` module
-- Per-alarm setting: `gradualVolume: boolean`, `gradualVolumeDurationSec: number`
+- Per-alarm setting: `IsGradualVolume: boolean`, `GradualVolumeDurationSec: number`
 
 ### Volume Curve Algorithm
 
@@ -233,7 +233,7 @@ Call `configure_audio_session()` at **Step 6a** of the startup sequence (paralle
 
 ## Vibration
 
-- Independent toggle per alarm: `vibrationEnabled: boolean`
+- Independent toggle per alarm: `IsVibrationEnabled: boolean`
 - Pattern: 200ms on, 100ms off, repeat
 - **Desktop (macOS/Windows/Linux):** Not available — toggle hidden
 - **Mobile (iOS):** Taptic Engine haptics via native API
