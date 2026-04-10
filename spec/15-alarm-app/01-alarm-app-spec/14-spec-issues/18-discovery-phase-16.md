@@ -52,10 +52,9 @@ export const testAlarm = {
 
 ## P16-003: Integration Test Uses snake_case Field Access
 
-**Severity:** 🟡 Medium  
-**Rule Violated:** Rust struct fields use snake_case (exempt — Rust convention), but the test accesses `alarm.time`, `alarm.next_fire_time`, `alarm.alarm_id` which implies the Rust struct has snake_case fields. This is CORRECT per Rust convention and the serde exemption.  
-**Verdict:** **Not a violation** — Rust fields are snake_case, serde serializes to PascalCase. However, the test should add a comment clarifying this: `// Rust struct fields are snake_case; serde serializes to PascalCase for IPC`.  
-**Severity downgrade:** 🟢 Low (documentation clarity, not a defect)
+**Severity:** 🟢 Low  
+**Status:** ✅ Resolved — Fix Phase F  
+**Resolution:** Added clarifying comment `// Rust struct fields are snake_case; serde serializes to PascalCase for IPC` to integration test code in `09-test-strategy.md`.
 
 ---
 
