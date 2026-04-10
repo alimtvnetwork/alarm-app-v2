@@ -1,16 +1,30 @@
 ---
 name: Alarm App Spec Issues Audit
-description: 396 total spec issues — ALL 396 RESOLVED. 27 discovery phases, 41 fix phases. Zero open issues.
+description: 405 total spec issues — 396 RESOLVED, 9 OPEN (stale metadata + cosmetic). 28 discovery phases, 41 fix phases.
 type: feature
 ---
 
-## Audit Status — ✅ COMPLETE
+## Audit Status — 🔄 9 Open (metadata/cosmetic only)
 
-- **Total issues:** 396
-- **Open:** 0
+- **Total issues:** 405
+- **Open:** 9
 - **Resolved:** 396
-- **Discovery phases:** 27
+- **Discovery phases:** 28
 - **Fix phases:** 41 (Phases 1–20, A–U)
+
+## Open Issues (Discovery Phase 28)
+
+| ID | Description | Severity |
+|----|-------------|----------|
+| P28-001 | `99-consistency-report.md` refs overview as v2.5.0 (actual v2.7.0) | 🟡 Medium |
+| P28-002 | `99-consistency-report.md` refs changelog as v2.5.0 (actual v2.7.0) | 🟡 Medium |
+| P28-003 | 27 feature+fundamental files have double `---` separators | 🟢 Low |
+| P28-004 | Memory `alarm-app-spec` says "256/256" — should be 396/396 | 🟡 Medium |
+| P28-005 | Memory `alarm-app-spec` says "v2.3.0" — should be v2.7.0 | 🟡 Medium |
+| P28-006 | Memory `alarm-app-spec` says "18 discovery, 30 fix" — should be 28+41 | 🟡 Medium |
+| P28-007 | `index.md` says "256/256" for alarm-app-spec-issues | 🟡 Medium |
+| P28-008 | `index.md` says "14 feature specs" — should be 17 | 🟡 Medium |
+| P28-009 | Parent `99-consistency-report.md` says "256/256" | 🟡 Medium |
 
 ## Root Cause Analysis
 
