@@ -1,7 +1,7 @@
 # Smart Features
 
-**Version:** 1.2.0  
-**Updated:** 2026-04-09  
+**Version:** 1.3.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** Medium  
 **Ambiguity:** Medium  
 **Priority:** P3 — Future  
@@ -46,6 +46,40 @@ Advanced features for future iterations: weather briefing, location-based alarms
 #### SSRF Protection (Security)
 
 > **Resolves SEC-WEBHOOK-001.** Webhook URLs are user-configured. Without validation, a malicious URL could target internal services.
+
+**URL Validation Rules:**
+
+#### WebhookError Enum
+
+> **Resolves P15-012.** The `WebhookError` enum is used throughout webhook validation and HTTP code but was never formally defined.
+
+```rust
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum WebhookError {
+    #[error("Invalid URL format")]
+    InvalidUrl,
+
+    #[error("URL must use HTTPS scheme")]
+    InsecureScheme,
+
+    #[error("Blocked host: localhost or internal address")]
+    BlockedHost,
+
+    #[error("URL has no host")]
+    MissingHost,
+
+    #[error("URL resolves to a private/internal IP address")]
+    PrivateIp,
+
+    #[error("Non-standard port: only port 443 is allowed")]
+    NonStandardPort,
+
+    #[error("HTTP request failed: {0}")]
+    RequestFailed(String),
+}
+```
 
 **URL Validation Rules:**
 

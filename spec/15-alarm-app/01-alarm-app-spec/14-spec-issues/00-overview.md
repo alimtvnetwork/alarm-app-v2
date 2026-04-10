@@ -36,6 +36,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 19 | `19-discovery-phase-17.md` | Discovery Phase 17 — Execution Guides, Handoff Reports & Concurrency Audit | 12 | 12 | 0 |
 | 20 | `20-discovery-phase-18.md` | Discovery Phase 18 — Changelog, Consistency Reports, Overview & Staleness Audit | 10 | 10 | 0 |
 | 21 | `21-fix-phase-a-domain-enums.md` | Fix Phase A — Domain Enum Definitions | 11 resolved | 0 | 11 |
+| 22 | `22-fix-phase-b-error-enums.md` | Fix Phase B — Error Enum Definitions & IPC Error Format | 2 resolved | 0 | 2 |
 
 ---
 
@@ -47,8 +48,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 125 |
 | 🟢 Low | 39 |
 | **Grand Total** | **256** |
-| **Open** | **65** |
-| **Resolved** | **191** |
+| **Open** | **63** |
+| **Resolved** | **193** |
 
 ---
 
@@ -91,6 +92,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 15** | **Function length decomposition** | **✅ Done (GC-001 resolved)** |
 | **Fix Phase 16–20** | **DST, thread safety, Zustand, scheduling, structural, snooze recovery** | **✅ Done (13 resolved)** |
 | **Fix Phase A** | **Domain enum definitions — replace 9 magic string union types** | **✅ Done (11 resolved, 65 open)** |
+| **Fix Phase B** | **Error enum definitions — WebhookError + IPC error response format** | **✅ Done (2 resolved, 63 open)** |
 
 ---
 

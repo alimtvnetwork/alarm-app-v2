@@ -1,6 +1,6 @@
 # Platform Constraints
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -170,7 +170,79 @@ pub enum AlarmAppError {
 }
 ```
 
-### Frontend Error Handling
+### IPC Error Response Format
+
+> **Resolves P14-019.** Defines the error envelope returned from all IPC commands so the frontend handles errors consistently.
+
+**Tauri IPC Error Convention:** When a Tauri command returns `Result<T, E>` where `E: Serialize`, the error is serialized to the frontend as a string (the `Display` output). Tauri wraps this in a rejected promise.
+
+```typescript
+// Frontend: All IPC errors arrive as rejected promises with a string message.
+// The safeInvoke wrapper (below) catches these and shows user-friendly toasts.
+
+interface IpcError {
+  Message: string;       // Human-readable error from AlarmAppError::Display
+  Code: string;          // Error variant name for programmatic handling (e.g., "FileNotFound")
+}
+```
+
+**Rust IPC Error Serialization:**
+
+```rust
+use serde::Serialize;
+
+/// Wrapper that serializes AlarmAppError into a structured IPC error.
+/// Tauri commands should return Result<T, IpcErrorResponse>.
+#[derive(Serialize)]
+pub struct IpcErrorResponse {
+    #[serde(rename = "Message")]
+    pub message: String,
+    #[serde(rename = "Code")]
+    pub code: String,
+}
+
+impl From<AlarmAppError> for IpcErrorResponse {
+    fn from(err: AlarmAppError) -> Self {
+        Self {
+            message: err.to_string(),
+            code: error_code(&err),
+        }
+    }
+}
+
+/// Map error variant to a stable string code for frontend matching.
+fn error_code(err: &AlarmAppError) -> String {
+    match err {
+        AlarmAppError::Database(_) => "Database",
+        AlarmAppError::Audio(_) => "Audio",
+        AlarmAppError::IpcTimeout { .. } => "IpcTimeout",
+        AlarmAppError::FileNotFound { .. } => "FileNotFound",
+        AlarmAppError::Migration(_) => "Migration",
+        AlarmAppError::NotificationDenied => "NotificationDenied",
+        AlarmAppError::InvalidSoundFormat(_) => "InvalidSoundFormat",
+        AlarmAppError::SymlinkRejected => "SymlinkRejected",
+        AlarmAppError::SoundFileTooLarge { .. } => "SoundFileTooLarge",
+        AlarmAppError::RestrictedPath => "RestrictedPath",
+        AlarmAppError::ConcurrentModification => "ConcurrentModification",
+        AlarmAppError::Validation(_) => "Validation",
+        AlarmAppError::ExportImport(_) => "ExportImport",
+    }.to_string()
+}
+```
+
+**Frontend Error Display Rules:**
+
+| Error Code | Toast Type | User Message |
+|-----------|-----------|-------------|
+| `Database` | Error | "Failed to save — try again" |
+| `Audio` | Warning | "Could not play sound — using default" |
+| `IpcTimeout` | Error | "Operation timed out — try again" |
+| `FileNotFound` | Warning | "Sound file missing — using default" |
+| `Validation` | Warning | Show `Message` directly (contains field-specific detail) |
+| `SoundFileTooLarge` | Warning | "Sound file must be under 10MB" |
+| Other | Error | Show `Message` directly |
+
+
 
 ```typescript
 // All IPC calls wrapped with timeout + error toast
