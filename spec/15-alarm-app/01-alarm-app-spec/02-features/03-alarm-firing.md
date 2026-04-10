@@ -1,6 +1,6 @@
 # Alarm Firing
 
-**Version:** 1.12.0  
+**Version:** 1.13.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -58,6 +58,38 @@ When the current time matches an enabled alarm's `NextFireTime`, the alarm fires
 
 Alarms are defined in **local time** (`HH:MM`). The `NextFireTime` is stored as **UTC**. The Rust backend converts between them using the IANA timezone from the `Settings` table.
 
+### Constants
+
+```rust
+/// Maximum minutes to advance when resolving a DST spring-forward gap.
+const MAX_DST_ADVANCE_MINUTES: u32 = 120;
+```
+
+### AlarmContext
+
+> **Resolves GA4-015, GA4-016, GA4-018.** Bundles time-related parameters to reduce function signatures from 5 params to 2–3.
+
+```rust
+/// Shared context for all next-fire-time computations.
+struct AlarmContext {
+    now: DateTime<Utc>,
+    now_local: DateTime<Tz>,
+    timezone: Tz,
+}
+
+impl AlarmContext {
+    fn new(timezone: &Tz, now: DateTime<Utc>) -> Self {
+        Self {
+            now,
+            now_local: now.with_timezone(timezone),
+            timezone: timezone.clone(),
+        }
+    }
+
+    fn today(&self) -> NaiveDate { self.now_local.date_naive() }
+}
+```
+
 ### NextFireTime Computation (Rust Pseudocode)
 
 ```rust
@@ -66,72 +98,56 @@ fn compute_next_fire_time(
     alarm_time: NaiveTime,
     alarm_date: Option<NaiveDate>,
     repeat: &RepeatPattern,
-    timezone: &Tz,
-    now: DateTime<Utc>,
+    ctx: &AlarmContext,
 ) -> Option<DateTime<Utc>> {
-    let now_local = now.with_timezone(timezone);
+    tracing::debug!(alarm_time = %alarm_time, repeat_type = ?repeat.r#type, "compute_next_fire_time");
     match repeat.r#type {
-        RepeatType::Once => compute_once(alarm_time, alarm_date, &now_local, timezone),
-        RepeatType::Daily => compute_daily(alarm_time, &now_local, now, timezone),
-        RepeatType::Weekly => compute_weekly(alarm_time, repeat, &now_local, now, timezone),
-        RepeatType::Interval => Some(now + Duration::minutes(repeat.interval_minutes as i64)),
-        RepeatType::Cron => compute_cron(&repeat.cron_expression, &now_local, timezone),
+        RepeatType::Once => compute_once(alarm_time, alarm_date, ctx),
+        RepeatType::Daily => compute_daily(alarm_time, ctx),
+        RepeatType::Weekly => compute_weekly(alarm_time, repeat, ctx),
+        RepeatType::Interval => Some(ctx.now + Duration::minutes(repeat.interval_minutes as i64)),
+        RepeatType::Cron => compute_cron(&repeat.cron_expression, ctx),
     }
 }
 
 fn compute_once(
     alarm_time: NaiveTime,
     alarm_date: Option<NaiveDate>,
-    now_local: &DateTime<Tz>,
-    timezone: &Tz,
+    ctx: &AlarmContext,
 ) -> Option<DateTime<Utc>> {
     let target_date = alarm_date.unwrap_or_else(|| {
-        let today = now_local.date_naive();
-        if alarm_time > now_local.time() { today } else { today + Duration::days(1) }
+        if alarm_time > ctx.now_local.time() { ctx.today() } else { ctx.today() + Duration::days(1) }
     });
-    resolve_local_to_utc(target_date, alarm_time, timezone)
+    resolve_local_to_utc(target_date, alarm_time, &ctx.timezone)
 }
 
-fn compute_daily(
-    alarm_time: NaiveTime,
-    now_local: &DateTime<Tz>,
-    now: DateTime<Utc>,
-    timezone: &Tz,
-) -> Option<DateTime<Utc>> {
-    let today = now_local.date_naive();
-    let candidate = resolve_local_to_utc(today, alarm_time, timezone);
+fn compute_daily(alarm_time: NaiveTime, ctx: &AlarmContext) -> Option<DateTime<Utc>> {
+    let candidate = resolve_local_to_utc(ctx.today(), alarm_time, &ctx.timezone);
     match candidate {
-        Some(t) if t > now => Some(t),
-        _ => resolve_local_to_utc(today + Duration::days(1), alarm_time, timezone),
+        Some(t) if t > ctx.now => Some(t),
+        _ => resolve_local_to_utc(ctx.today() + Duration::days(1), alarm_time, &ctx.timezone),
     }
 }
 
 fn compute_weekly(
     alarm_time: NaiveTime,
     repeat: &RepeatPattern,
-    now_local: &DateTime<Tz>,
-    now: DateTime<Utc>,
-    timezone: &Tz,
+    ctx: &AlarmContext,
 ) -> Option<DateTime<Utc>> {
     for offset in 0..=7 {
-        let date = now_local.date_naive() + Duration::days(offset);
+        let date = ctx.today() + Duration::days(offset);
         let weekday_num = date.weekday().num_days_from_sunday();
         if !repeat.days_of_week.contains(&(weekday_num as u8)) { continue; }
-        if let Some(t) = resolve_local_to_utc(date, alarm_time, timezone) {
-            if t > now { return Some(t); }
-        }
+        let resolved = resolve_local_to_utc(date, alarm_time, &ctx.timezone);
+        if let Some(t) = resolved.filter(|t| *t > ctx.now) { return Some(t); }
     }
     None
 }
 
-fn compute_cron(
-    cron_expr: &str,
-    now_local: &DateTime<Tz>,
-    timezone: &Tz,
-) -> Option<DateTime<Utc>> {
+fn compute_cron(cron_expr: &str, ctx: &AlarmContext) -> Option<DateTime<Utc>> {
     let cron = Cron::new(cron_expr).parse().ok()?;
-    cron.find_next_occurrence(&now_local.naive_local(), false)
-        .and_then(|naive| resolve_local_to_utc(naive.date(), naive.time(), timezone))
+    cron.find_next_occurrence(&ctx.now_local.naive_local(), false)
+        .and_then(|naive| resolve_local_to_utc(naive.date(), naive.time(), &ctx.timezone))
 }
 ```
 
@@ -160,25 +176,28 @@ fn handle_fall_back(first: DateTime<Tz>, date: NaiveDate, time: NaiveTime) -> Da
 
 /// SPRING-FORWARD: time doesn't exist → advance minute-by-minute until valid
 fn handle_spring_forward(date: NaiveDate, skipped_time: NaiveTime, tz: &Tz) -> Option<DateTime<Utc>> {
-    // Walk forward from the skipped time to find the first valid local minute
     let mut candidate = skipped_time;
-    for _ in 0..120 {
+    for _ in 0..MAX_DST_ADVANCE_MINUTES {
         candidate = candidate + chrono::Duration::minutes(1);
-        let naive_dt = NaiveDateTime::new(date, candidate);
-        match tz.from_local_datetime(&naive_dt) {
-            LocalResult::Single(dt) => {
-                tracing::warn!(date = %date, skipped = %skipped_time, resolved = %candidate,
-                    "DST spring-forward: advanced to next valid minute");
-                return Some(dt.with_timezone(&Utc));
-            }
-            LocalResult::Ambiguous(dt, _) => {
-                return Some(dt.with_timezone(&Utc));
-            }
-            LocalResult::None => continue, // still in the gap
+        let resolved = try_resolve_minute(date, candidate, tz);
+        if let Some(utc) = resolved {
+            tracing::warn!(date = %date, skipped = %skipped_time, resolved = %candidate,
+                "DST spring-forward: advanced to next valid minute");
+            return Some(utc);
         }
     }
-    tracing::error!(date = %date, "DST spring-forward: no valid time found within 2 hours");
+    tracing::error!(date = %date, "DST spring-forward: no valid time found within {MAX_DST_ADVANCE_MINUTES} minutes");
     None
+}
+
+/// Try resolving a single local minute to UTC. Returns None if still in DST gap.
+fn try_resolve_minute(date: NaiveDate, time: NaiveTime, tz: &Tz) -> Option<DateTime<Utc>> {
+    let naive_dt = NaiveDateTime::new(date, time);
+    match tz.from_local_datetime(&naive_dt) {
+        LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
+        LocalResult::Ambiguous(dt, _) => Some(dt.with_timezone(&Utc)),
+        LocalResult::None => None,
+    }
 }
 ```
 
@@ -187,14 +206,14 @@ fn handle_spring_forward(date: NaiveDate, skipped_time: NaiveTime, tz: &Tz) -> O
 ```rust
 /// Called on each alarm engine tick and on OS timezone change event
 fn on_timezone_change(conn: &Connection, new_tz: &Tz) {
-    // 1. Update settings table
+    tracing::info!(timezone = %new_tz.name(), "Timezone changed — recomputing all NextFireTime");
     update_setting(conn, "SystemTimezone", new_tz.name());
 
-    // 2. Recalculate nextFireTime for ALL enabled alarms
     let alarms = get_enabled_alarms(conn);
+    let ctx = AlarmContext::new(new_tz, Utc::now());
     for alarm in &alarms {
         let new_next = compute_next_fire_time(
-            alarm.time, alarm.date, &alarm.repeat_pattern(), new_tz, Utc::now()
+            alarm.time, alarm.date, &alarm.repeat_pattern(), &ctx
         );
         update_next_fire_time(conn, &alarm.alarm_id, new_next);
     }
@@ -390,51 +409,59 @@ impl LinuxWakeListener {
 impl WakeListener for LinuxWakeListener {
     fn start(&self, on_wake: Box<dyn Fn() + Send + Sync>) -> Result<(), AlarmAppError> {
         tokio::spawn(async move {
-            let connection = match Connection::system().await {
-                Ok(c) => c,
-                Err(e) => {
-                    tracing::warn!(error = %e, "D-Bus unavailable — sleep detection disabled on Linux");
-                    return;
-                }
-            };
+            let connection = connect_dbus().await;
+            let Some(connection) = connection else { return; };
 
-            let proxy = match Login1ManagerProxy::new(&connection).await {
-                Ok(p) => p,
-                Err(e) => {
-                    tracing::warn!(error = %e, "login1 proxy failed — sleep detection disabled");
-                    return;
-                }
-            };
+            let stream = subscribe_sleep_signals(&connection).await;
+            let Some(mut stream) = stream else { return; };
 
-            let mut stream = match proxy.receive_prepare_for_sleep().await {
-                Ok(s) => s,
-                Err(e) => {
-                    tracing::warn!(error = %e, "PrepareForSleep subscription failed");
-                    return;
-                }
-            };
-
-            while let Some(signal) = stream.next().await {
-                let args = match signal.args() {
-                    Ok(a) => a,
-                    Err(e) => {
-                        tracing::warn!(error = %e, "Failed to parse PrepareForSleep args");
-                        continue;
-                    }
-                };
-                let is_waking = !args.start; // D-Bus protocol: start=false means woke up (exempt: external API)
-                if is_waking {
-                    tracing::info!("Linux: System woke from sleep (PrepareForSleep=false)");
-                    on_wake();
-                } else {
-                    tracing::info!("Linux: System entering sleep (PrepareForSleep=true)");
-                }
-            }
+            process_sleep_signals(&mut stream, &on_wake).await;
         });
         Ok(())
     }
 
     fn stop(&self) {}
+}
+
+/// Connect to the system D-Bus. Returns None if unavailable.
+async fn connect_dbus() -> Option<Connection> {
+    match Connection::system().await {
+        Ok(c) => Some(c),
+        Err(e) => {
+            tracing::warn!(error = %e, "D-Bus unavailable — sleep detection disabled on Linux");
+            None
+        }
+    }
+}
+
+/// Subscribe to PrepareForSleep signals. Returns None on failure.
+async fn subscribe_sleep_signals(connection: &Connection) -> Option<impl Stream<Item = PrepareForSleepSignal>> {
+    let proxy = Login1ManagerProxy::new(connection).await.map_err(|e| {
+        tracing::warn!(error = %e, "login1 proxy failed — sleep detection disabled");
+    }).ok()?;
+    proxy.receive_prepare_for_sleep().await.map_err(|e| {
+        tracing::warn!(error = %e, "PrepareForSleep subscription failed");
+    }).ok()
+}
+
+/// Process incoming sleep/wake signals.
+async fn process_sleep_signals(stream: &mut impl Stream<Item = PrepareForSleepSignal>, on_wake: &(dyn Fn() + Send + Sync)) {
+    while let Some(signal) = stream.next().await {
+        let args = match signal.args() {
+            Ok(a) => a,
+            Err(e) => {
+                tracing::warn!(error = %e, "Failed to parse PrepareForSleep args");
+                continue;
+            }
+        };
+        let is_waking = !args.start; // D-Bus protocol: start=false means woke up (exempt: external API)
+        if is_waking {
+            tracing::info!("Linux: System woke from sleep (PrepareForSleep=false)");
+            on_wake();
+        } else {
+            tracing::info!("Linux: System entering sleep (PrepareForSleep=true)");
+        }
+    }
 }
 ```
 

@@ -255,12 +255,14 @@ fn error_code(err: &AlarmAppError) -> String {
 
 
 ```typescript
+const IPC_TIMEOUT_MS = 5000;
+
 // All IPC calls wrapped with timeout + error toast
 async function safeInvoke<T>(command: string, args?: Record<string, unknown>): Promise<T | null> {
   try {
     const result = await Promise.race([
       invoke<T>(command, args),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), IPC_TIMEOUT_MS))
     ]);
     return result;
   } catch (error) {
