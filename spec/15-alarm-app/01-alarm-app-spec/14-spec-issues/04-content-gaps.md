@@ -48,9 +48,9 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/01-data-model.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — `#[serde(rename_all = "PascalCase")]` added to `AlarmRow` struct in Fix Phase 3
 
-**Problem:** Rust structs need `#[serde(rename_all = "PascalCase")]` to match the coding guideline, but no serde attributes are shown anywhere in the spec. AI will use default snake_case serialization.
+**Problem:** Rust structs need `#[serde(rename_all = "PascalCase")]` to match the coding guideline.
 
 ---
 
