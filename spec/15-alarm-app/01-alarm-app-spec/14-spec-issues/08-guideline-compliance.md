@@ -51,7 +51,7 @@ Violations of the project's own coding guidelines found in spec code samples. Th
 
 **Severity:** 🔴 Critical  
 **Rule Violated:** `02-boolean-principles/01-naming-prefixes.md` — "Every boolean MUST start with `is` or `has`"  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all TS boolean fields now use `Is`/`Has` prefix with PascalCase
 
 **Problem:** TS `Alarm` interface in `01-data-model.md` has 3 boolean fields without prefix:
 
@@ -74,7 +74,7 @@ Also in `AlarmGroup`:
 
 **Severity:** 🔴 Critical  
 **Rule Violated:** `02-boolean-principles/01-naming-prefixes.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — Rust boolean fields renamed with `is_` prefix, serde serializes to `IsEnabled` etc.
 
 **Problem:** Rust `AlarmRow` struct in `01-data-model.md`:
 
@@ -126,7 +126,7 @@ Also in `AlarmGroup`:
 
 **Severity:** 🟡 Medium  
 **Rule Violated:** `11-key-naming-pascalcase.md` §1 — request keys must be PascalCase  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all IPC payload keys converted to PascalCase
 
 **Problem:** IPC payloads in `06-tauri-architecture-and-framework-comparison.md` and feature files use camelCase:
 
@@ -143,7 +143,7 @@ Also in `AlarmGroup`:
 **Severity:** 🔴 Critical  
 **Rule Violated:** Combined NV-001 + GC-003  
 **Cross-ref:** NV-001, CG-004  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — `from_row()` string literals updated to PascalCase column names
 
 **Problem:** `AlarmRow::from_row()` in `01-data-model.md` uses `row.get("snake_case")` — e.g., `row.get("repeat_type")`, `row.get("group_id")`, `row.get("next_fire_time")`. These map to snake_case SQL columns. When columns are renamed to PascalCase, all `from_row()` string literals must also change.
 
@@ -163,4 +163,4 @@ Also in `AlarmGroup`:
 ---
 
 ## Issues Found So Far: 8
-## Open: 7 | Resolved: 1
+## Open: 3 | Resolved: 5
