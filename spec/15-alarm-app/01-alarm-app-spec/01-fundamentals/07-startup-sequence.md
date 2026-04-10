@@ -239,9 +239,11 @@ let (tray, _, _) = tokio::join!(
 ### Step 7 — Start Alarm Engine
 
 ```rust
+const ALARM_CHECK_INTERVAL_SECS: u64 = 30;
+
 let engine = AlarmEngine::new(pool.clone(), event_emitter.clone());
 tokio::spawn(async move {
-    engine.run_loop(Duration::from_secs(30)).await;
+    engine.run_loop(Duration::from_secs(ALARM_CHECK_INTERVAL_SECS)).await;
 });
 ```
 

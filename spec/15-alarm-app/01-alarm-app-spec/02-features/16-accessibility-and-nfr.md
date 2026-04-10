@@ -66,7 +66,7 @@ Defines accessibility standards (WCAG 2.1 AA), performance budgets, and internat
 ### Performance Implementation
 
 - Rust backend uses `tokio` async runtime — no blocking main thread
-- Alarm check uses `tokio::time::interval(Duration::from_secs(30))`
+- Alarm check uses `tokio::time::interval(Duration::from_secs(ALARM_CHECK_INTERVAL_SECS))` where `ALARM_CHECK_INTERVAL_SECS = 30`
 - SQLite connection pooled (single writer, multiple readers)
 - Frontend lazy-loads analytics/history views
 - Audio files bundled but loaded on-demand

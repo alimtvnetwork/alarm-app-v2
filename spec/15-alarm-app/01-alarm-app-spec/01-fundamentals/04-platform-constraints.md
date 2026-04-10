@@ -173,6 +173,8 @@ async function safeInvoke<T>(command: string, args?: Record<string, unknown>): P
 The alarm firing path has **zero tolerance for unhandled errors**. The engine loop must never stop:
 
 ```rust
+const ALARM_CHECK_INTERVAL_SECS: u64 = 30;
+
 // alarm_engine.rs — main loop
 loop {
     match self.check_and_fire_alarms().await {
@@ -182,7 +184,7 @@ loop {
             // NEVER break the loop. Log and continue.
         }
     }
-    tokio::time::sleep(Duration::from_secs(30)).await;
+    tokio::time::sleep(Duration::from_secs(ALARM_CHECK_INTERVAL_SECS)).await;
 }
 ```
 
