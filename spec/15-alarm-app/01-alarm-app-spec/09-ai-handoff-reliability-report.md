@@ -48,8 +48,8 @@
 | 2.5 | Create TypeScript interfaces matching `01-data-model.md` exactly | 15% | 🟢 Low |
 | 2.6 | Create `lib/tauri-commands.ts` — typed invoke() wrappers for all IPC commands | 25% | 🟡 Med |
 | 2.7 | Implement settings key-value read/write in Rust | 20% | 🟢 Low |
-| 2.8 | Implement `alarm_events` insert for fired/snoozed/dismissed/missed types | 20% | 🟢 Low |
-| 2.9 | Implement `snooze_state` table read/write/clear operations | 25% | 🟡 Med |
+| 2.8 | Implement `AlarmEvents` insert for fired/snoozed/dismissed/missed types | 20% | 🟢 Low |
+| 2.9 | Implement `SnoozeState` table read/write/clear operations | 25% | 🟡 Med |
 | 2.10 | SQLite WAL mode + correct app data directory per OS | 40% | 🟡 Med |
 
 ### Phase 3: Alarm CRUD — Frontend (8 tasks)
@@ -70,9 +70,9 @@
 | # | Task | Fail % | Risk Level |
 |---|------|:---:|:---:|
 | 4.1 | `commands/alarm.rs` — create_alarm IPC handler with validation | 25% | 🟡 Med |
-| 4.2 | `commands/alarm.rs` — update_alarm with nextFireTime recomputation | 35% | 🟡 Med |
+| 4.2 | `commands/alarm.rs` — update_alarm with `NextFireTime` recomputation | 35% | 🟡 Med |
 | 4.3 | `commands/alarm.rs` — delete_alarm with undoToken + deferred hard-delete | 55% | 🟠 High |
-| 4.4 | `commands/alarm.rs` — toggle_alarm with nextFireTime recompute on enable | 30% | 🟡 Med |
+| 4.4 | `commands/alarm.rs` — toggle_alarm with `NextFireTime` recompute on enable | 30% | 🟡 Med |
 | 4.5 | `commands/alarm.rs` — duplicate_alarm + move_alarm_to_group | 20% | 🟢 Low |
 | 4.6 | Input validation matching ALL rules from data model (time format, ranges, etc.) | 40% | 🟡 Med |
 
@@ -81,13 +81,13 @@
 | # | Task | Fail % | Risk Level |
 |---|------|:---:|:---:|
 | 5.1 | `engine/alarm_engine.rs` — spawn background thread with 30s check interval | 35% | 🟡 Med |
-| 5.2 | Query `WHERE next_fire_time <= now AND enabled = 1 AND deleted_at IS NULL` | 20% | 🟢 Low |
+| 5.2 | Query `WHERE NextFireTime <= now AND IsEnabled = 1 AND DeletedAt IS NULL` | 20% | 🟢 Low |
 | 5.3 | Emit `alarm-fired` event to frontend via Tauri IPC on match | 30% | 🟡 Med |
-| 5.4 | `nextFireTime` computation for `once` type (disable after fire) | 20% | 🟢 Low |
-| 5.5 | `nextFireTime` computation for `daily` type (+24h) | 15% | 🟢 Low |
-| 5.6 | `nextFireTime` computation for `weekly` type (next matching weekday) | 40% | 🟡 Med |
-| 5.7 | `nextFireTime` computation for `interval` type (+N minutes) | 15% | 🟢 Low |
-| 5.8 | `nextFireTime` computation for `cron` type via `croner` crate | 45% | 🟡 Med |
+| 5.4 | `NextFireTime` computation for `once` type (disable after fire) | 20% | 🟢 Low |
+| 5.5 | `NextFireTime` computation for `daily` type (+24h) | 15% | 🟢 Low |
+| 5.6 | `NextFireTime` computation for `weekly` type (next matching weekday) | 40% | 🟡 Med |
+| 5.7 | `NextFireTime` computation for `interval` type (+N minutes) | 15% | 🟢 Low |
+| 5.8 | `NextFireTime` computation for `cron` type via `croner` crate | 45% | 🟡 Med |
 | 5.9 | **DST spring-forward handling** — skipped time → fire at next valid minute | **70%** | 🔴 Critical |
 | 5.10 | **DST fall-back handling** — fire on first occurrence only, not twice | **70%** | 🔴 Critical |
 | 5.11 | **Timezone change detection** — recalc all nextFireTime on OS tz change | **65%** | 🔴 Critical |
@@ -120,10 +120,10 @@
 
 | # | Task | Fail % | Risk Level |
 |---|------|:---:|:---:|
-| 8.1 | `snooze_alarm` IPC — stop audio, write snooze_state, set snooze_until | 25% | 🟡 Med |
-| 8.2 | Alarm engine checks `snooze_state` table for expired snoozes | 35% | 🟡 Med |
-| 8.3 | Hide snooze button when `snoozeCount >= maxSnoozeCount` | 15% | 🟢 Low |
-| 8.4 | Hide snooze button entirely when `maxSnoozeCount = 0` | 10% | 🟢 Low |
+| 8.1 | `snooze_alarm` IPC — stop audio, write `SnoozeState`, set `SnoozeUntil` | 25% | 🟡 Med |
+| 8.2 | Alarm engine checks `SnoozeState` table for expired snoozes | 35% | 🟡 Med |
+| 8.3 | Hide snooze button when `SnoozeCount >= MaxSnoozeCount` | 15% | 🟢 Low |
+| 8.4 | Hide snooze button entirely when `MaxSnoozeCount = 0` | 10% | 🟢 Low |
 | 8.5 | Snooze state persists across app restart (SQLite-backed) | 20% | 🟢 Low |
 
 ### Phase 9: UI Components (8 tasks)
@@ -208,8 +208,8 @@
 | 8 | **Alarm queue (one overlay at a time)** (9.8) | 50% | AI will likely render multiple overlays simultaneously instead of queuing. Needs a proper queue + sequential display. |
 | 9 | **Gradual volume ramp** (7.5) | 45% | `rodio` volume control requires a custom `Source` wrapper or `Sink` manipulation on a timer. Not trivial. |
 | 10 | **macOS audio session category** (7.7) | 55% | Setting Core Audio session to "alarm" category requires `objc` FFI or specific `rodio` configuration. |
-| 11 | **Cron nextFireTime** (5.8) | 45% | Using `croner` crate correctly for next-occurrence from arbitrary cron expression. |
-| 12 | **Weekly nextFireTime** (5.6) | 40% | Must find next matching weekday correctly, handling week wrapping. Off-by-one errors common. |
+| 11 | **Cron `NextFireTime`** (5.8) | 45% | Using `croner` crate correctly for next-occurrence from arbitrary cron expression. |
+| 12 | **Weekly `NextFireTime`** (5.6) | 40% | Must find next matching weekday correctly, handling week wrapping. Off-by-one errors common. |
 | 13 | **Tauri permission config** (1.2) | 45% | Tauri 2.x capability system is new. Wrong permissions = runtime panics with unhelpful errors. |
 | 14 | **dnd-kit keyboard sensor** (3.7) | 55% | `Ctrl+Shift+↑/↓` keyboard alternative for group reordering requires custom sensor setup. |
 | 15 | **Import validation + merge** (13.3) | 40% | UUID collision handling, schema version mismatch, partial import on error — lots of edge cases. |

@@ -415,7 +415,7 @@ The `NextFireTime` field is precomputed by the Rust backend whenever an alarm is
 
 ## DST & Timezone Handling Rules
 
-Alarms store **local time** (`HH:MM`) as the user-facing value. `nextFireTime` is computed as an absolute UTC timestamp for comparison. The following rules apply:
+Alarms store **local time** (`HH:MM`) as the user-facing value. `NextFireTime` is computed as an absolute UTC timestamp for comparison. The following rules apply:
 
 ### DST Transition — Spring Forward
 

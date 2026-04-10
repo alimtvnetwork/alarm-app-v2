@@ -47,7 +47,7 @@
 
 ## v1.5.0 Changes
 
-- `01-data-model.md` → v1.6.0: added `AlarmRow` Rust struct, `RepeatType` enum, `from_row()`, `days_of_week()` JSON deserializer, `alarm_label_snapshot`/`alarm_time_snapshot` columns on `alarm_events`, `value_type` column + `get_setting<T>()` on `settings`
+- `01-data-model.md` → v1.6.0: added `AlarmRow` Rust struct, `RepeatType` enum, `from_row()`, `days_of_week()` JSON deserializer, `AlarmLabelSnapshot`/`AlarmTimeSnapshot` columns on `AlarmEvents`, `ValueType` column + `get_setting<T>()` on `Settings`
 - `03-file-structure.md` → v1.4.0: added `src/i18n/` directory, `src/test/`, `src-tauri/tests/`, `wake_listener/` module, `platform_macos.rs`
 - `04-platform-constraints.md` → v1.3.0: added WebView CSS Compatibility section, Memory Budget (200MB), `backdrop-filter` in Platform Support Matrix
 - `07-startup-sequence.md` → v1.1.0: added full logging strategy (tracing + tracing-appender, daily rotation, 5 log levels, frontend forwarding IPC)
