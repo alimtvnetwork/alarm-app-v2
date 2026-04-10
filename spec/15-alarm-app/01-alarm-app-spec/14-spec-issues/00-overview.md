@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.15.0  
+**Version:** 1.16.0  
 **Updated:** 2026-04-10
 
 ---
@@ -30,7 +30,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 13 | `13-discovery-phase-11.md` | Discovery Phase 11 — Feature Specs Deep Audit | 14 | 0 | 14 |
 | 14 | `14-discovery-phase-12.md` | Discovery Phase 12 — Root-Level Docs Audit | 9 | 0 | 9 |
 | 15 | `15-discovery-phase-13.md` | Discovery Phase 13 — App Issues & Reference Audit | 3 | 0 | 3 |
-| 16 | `16-discovery-phase-14.md` | Discovery Phase 14 — Foundational Alignment Audit | 29 | 12 | 17 |
+| 16 | `16-discovery-phase-14.md` | Discovery Phase 14 — Foundational Alignment Audit | 29 | 8 | 21 |
 | 17 | `17-discovery-phase-15.md` | Discovery Phase 15 — Deep Boolean, Negation & Code Sample Audit | 13 | 0 | 13 |
 | 18 | `18-discovery-phase-16.md` | Discovery Phase 16 — Test Fixtures, Cheat Sheet & Cross-Reference Audit | 12 | 3 | 9 |
 | 19 | `19-discovery-phase-17.md` | Discovery Phase 17 — Execution Guides, Handoff Reports & Concurrency Audit | 12 | 4 | 8 |
@@ -41,6 +41,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 24 | `24-fix-phase-c-acceptance-criteria.md` | Fix Phase C — Acceptance Criteria & IPC Key Fixes | 6 resolved | 0 | 6 |
 | 25 | `25-fix-phase-g-code-patterns.md` | Fix Phase G — Code Sample Patterns & Exemptions | 12 resolved | 0 | 12 |
 | 26 | `26-fix-phase-h-stale-metrics.md` | Fix Phase H — Stale Metrics Update | 15 resolved | 0 | 15 |
+| 27 | `27-fix-phase-e-settings-ui-states.md` | Fix Phase E — Settings Seeding & UI States | 4 resolved | 0 | 4 |
 
 ---
 
@@ -52,8 +53,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 125 |
 | 🟢 Low | 39 |
 | **Grand Total** | **256** |
-| **Open** | **24** |
-| **Resolved** | **232** |
+| **Open** | **20** |
+| **Resolved** | **236** |
 
 ---
 
@@ -101,6 +102,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase C** | **Acceptance criteria + IPC key fixes for 4 feature files** | **✅ Done (6 resolved, 51 open)** |
 | **Fix Phase G** | **Code sample patterns: expect(), raw negation, exemptions** | **✅ Done (12 resolved, 39 open)** |
 | **Fix Phase H** | **Stale metrics: overview, readiness, consistency, changelog** | **✅ Done (15 resolved, 24 open)** |
+| **Fix Phase E** | **Settings seeding strategy + UI states specification** | **✅ Done (4 resolved, 20 open)** |
 
 ---
 
