@@ -1,6 +1,6 @@
 # AI Cheat Sheet — Alarm App
 
-**Version:** 1.1.0 | **Updated:** 2026-04-10 | **One-page reference for AI coding agents**
+**Version:** 1.2.0 | **Updated:** 2026-04-10 | **One-page reference for AI coding agents**
 
 ---
 
@@ -163,8 +163,8 @@ if event.r#type == "fired" { ... }
 ## Error Enums
 
 ```rust
-// AlarmAppError — 12 variants (see 04-platform-constraints.md)
-// Key variants: Database, Audio, IpcTimeout, FileNotFound, Validation, ExportImport
+// AlarmAppError — 13 variants (see 04-platform-constraints.md)
+// Key variants: Database, Audio, IpcTimeout, FileNotFound, Validation, ExportImport, RestrictedPath, SymlinkRejected
 // WebhookError — 7 variants (see 12-smart-features.md)
 // Key variants: InvalidUrl, InsecureScheme, BlockedHost, PrivateIp, RequestFailed
 // IPC errors return { Message: string, Code: string } — see IpcErrorResponse
@@ -206,7 +206,7 @@ TOTAL: <750ms
 
 ## Database Tables (5)
 
-`Alarms` (22 columns) | `AlarmGroups` (4) | `Settings` (3, key-value with ValueType) | `SnoozeState` (3) | `AlarmEvents` (13)
+`Alarms` (26 columns) | `AlarmGroups` (4) | `Settings` (3, key-value with ValueType) | `SnoozeState` (3) | `AlarmEvents` (13)
 
 **Key PRAGMAs:** `journal_mode=WAL`, `busy_timeout=5000`, `foreign_keys=ON`, `synchronous=NORMAL`
 
@@ -255,4 +255,4 @@ TOTAL: <750ms
 
 ---
 
-*AI Cheat Sheet — Alarm App v1.0.0 — created: 2026-04-09*
+*AI Cheat Sheet — Alarm App v1.2.0 — updated: 2026-04-10*
