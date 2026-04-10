@@ -148,7 +148,7 @@ Checked against: PascalCase key naming, boolean principles (Is/Has only, no nega
 
 ## Fix Plan (Proposed Phases)
 
-### Fix Phase K — SQL Defaults + Critical Magic Strings (4 + 7 = 11 issues)
+### Fix Phase K — SQL Defaults + Critical Magic Strings (4 + 7 = 11 issues) ✅ RESOLVED
 **P19-001 to P19-004** (SQL defaults) + **P19-005 to P19-011** (prose magic strings)  
 Files: `01-data-model.md`, `03-alarm-firing.md`, `04-snooze-system.md`
 

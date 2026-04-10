@@ -1,7 +1,7 @@
 # Snooze System
 
-**Version:** 1.3.0  
-**Updated:** 2026-04-09  
+**Version:** 1.4.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
@@ -58,7 +58,7 @@ Stored in the `SnoozeState` SQLite table. Cleared on dismiss.
 4. **Exact-time snooze trigger:** Rust spawns `tokio::time::sleep_until(snooze_expiry)` per active snooze — does NOT rely on the 30s polling interval
 5. When `SnoozeCount >= MaxSnoozeCount`, "Snooze" button is hidden — only "Dismiss" remains
 6. Remaining snooze count displayed: "Snooze (2 remaining)"
-7. Each snooze event logged in `AlarmEvents` with `Type = 'snoozed'`
+7. Each snooze event logged in `AlarmEvents` with `Type = AlarmEventType::Snoozed`
 
 ### Snooze Timer Implementation
 

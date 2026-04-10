@@ -1,7 +1,7 @@
 # Data Model
 
-**Version:** 1.9.0  
-**Updated:** 2026-04-09  
+**Version:** 1.10.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Resolves:** DB-MIGRATE-001, BE-CONCUR-001, DB-GROWTH-001, FE-STATE-001, DB-SERIAL-001, BE-CRON-001, DB-ORPHAN-001, DB-SETTINGS-001
@@ -488,7 +488,7 @@ CREATE TABLE Alarms (
   Label TEXT NOT NULL DEFAULT '',
   IsEnabled INTEGER NOT NULL DEFAULT 1,
   IsPreviousEnabled INTEGER,                        -- Saved state for group toggle (FE-STATE-001)
-  RepeatType TEXT NOT NULL DEFAULT 'once',           -- once|daily|weekly|interval|cron
+  RepeatType TEXT NOT NULL DEFAULT 'Once',            -- Once|Daily|Weekly|Interval|Cron
   RepeatDaysOfWeek TEXT NOT NULL DEFAULT '[]',       -- JSON array
   RepeatIntervalMinutes INTEGER NOT NULL DEFAULT 0,
   RepeatCronExpression TEXT NOT NULL DEFAULT '',
@@ -501,7 +501,7 @@ CREATE TABLE Alarms (
   GradualVolumeDurationSec INTEGER NOT NULL DEFAULT 30,
   AutoDismissMin INTEGER NOT NULL DEFAULT 0,
   ChallengeType TEXT,                                -- null = no challenge
-  ChallengeDifficulty TEXT,                          -- easy|medium|hard (math only)
+  ChallengeDifficulty TEXT,                          -- Easy|Medium|Hard (math only)
   ChallengeShakeCount INTEGER,                       -- shake only
   ChallengeStepCount INTEGER,                        -- steps only
   NextFireTime TEXT,                                 -- ISO 8601 precomputed
@@ -520,7 +520,7 @@ CREATE TABLE AlarmGroups (
 CREATE TABLE Settings (
   Key TEXT PRIMARY KEY,
   Value TEXT NOT NULL,
-  ValueType TEXT NOT NULL DEFAULT 'string'  -- 'string' | 'integer' | 'boolean' | 'json'
+  ValueType TEXT NOT NULL DEFAULT 'String'  -- 'String' | 'Integer' | 'Boolean' | 'Json'
 );
 
 CREATE TABLE SnoozeState (
@@ -532,7 +532,7 @@ CREATE TABLE SnoozeState (
 CREATE TABLE AlarmEvents (
   AlarmEventId TEXT PRIMARY KEY,
   AlarmId TEXT REFERENCES Alarms(AlarmId) ON DELETE SET NULL,
-  Type TEXT NOT NULL,           -- fired|snoozed|dismissed|missed
+  Type TEXT NOT NULL,           -- Fired|Snoozed|Dismissed|Missed
   FiredAt TEXT NOT NULL,
   DismissedAt TEXT,
   SnoozeCount INTEGER NOT NULL DEFAULT 0,
