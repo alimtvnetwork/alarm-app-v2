@@ -22,7 +22,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 2 | 2 |
 | 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 11 | 4 | 7 |
 | 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 2 | 2 |
-| 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 3 | 9 |
+| 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 2 | 10 |
 
 ---
 
@@ -34,8 +34,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 40 |
 | 🟢 Low | 7 |
 | **Grand Total** | **77** |
-| **Open** | **30** |
-| **Resolved** | **47** |
+| **Open** | **29** |
+| **Resolved** | **48** |
 
 ---
 
@@ -63,7 +63,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 12** | **Settings keys → PascalCase** | **✅ Done (1 resolved)** |
 | **Fix Phase 13** | **AlarmChallenge schema gaps** | **✅ Done (3 resolved: CG-007, CG-012, LC-001)** |
 | **Fix Phase 14** | **All remaining prose snake_case** | **✅ Done (CG-006 resolved)** |
-| Fix Phase 15 | Function length decomposition | 🔴 Pending |
+| **Fix Phase 15** | **Function length decomposition** | **✅ Done (GC-001 resolved)** |
 
 ---
 

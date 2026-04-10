@@ -57,29 +57,40 @@ use std::path::Path;
 const MAX_SOUND_FILE_SIZE: u64 = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_EXTENSIONS: &[&str] = &["mp3", "wav", "ogg", "flac"];
 
+/// Validates a custom sound file path. Decomposed into ≤15-line subfunctions.
 pub fn validate_custom_sound(path: &str) -> Result<(), AlarmAppError> {
-    let p = Path::new(path);
+    validate_extension(path)?;
+    reject_symlink(path)?;
+    let canonical = resolve_canonical(path)?;
+    reject_restricted_path(&canonical)?;
+    validate_file_size(&canonical)
+}
 
-    // 1. Extension check
-    let ext = p.extension()
+fn validate_extension(path: &str) -> Result<(), AlarmAppError> {
+    let ext = Path::new(path).extension()
         .and_then(|e| e.to_str())
         .map(|e| e.to_lowercase())
         .unwrap_or_default();
     if !ALLOWED_EXTENSIONS.contains(&ext.as_str()) {
         return Err(AlarmAppError::InvalidSoundFormat(ext));
     }
+    Ok(())
+}
 
-    // 2. Reject symlinks (prevent path traversal attacks)
-    if p.is_symlink() {
+fn reject_symlink(path: &str) -> Result<(), AlarmAppError> {
+    if Path::new(path).is_symlink() {
         return Err(AlarmAppError::SymlinkRejected);
     }
+    Ok(())
+}
 
-    // 3. Path must be within user-accessible directories
-    //    Reject paths containing "..", absolute system paths
-    let canonical = p.canonicalize()
-        .map_err(|_| AlarmAppError::FileNotFound { path: path.to_string() })?;
+fn resolve_canonical(path: &str) -> Result<std::path::PathBuf, AlarmAppError> {
+    Path::new(path).canonicalize()
+        .map_err(|_| AlarmAppError::FileNotFound { path: path.to_string() })
+}
+
+fn reject_restricted_path(canonical: &Path) -> Result<(), AlarmAppError> {
     let path_str = canonical.to_string_lossy();
-
     #[cfg(target_os = "macos")]
     if path_str.starts_with("/System") || path_str.starts_with("/Library") {
         return Err(AlarmAppError::RestrictedPath);
@@ -92,19 +103,15 @@ pub fn validate_custom_sound(path: &str) -> Result<(), AlarmAppError> {
     if path_str.starts_with("/etc") || path_str.starts_with("/sys") || path_str.starts_with("/proc") {
         return Err(AlarmAppError::RestrictedPath);
     }
+    Ok(())
+}
 
-    // 4. File size check
-    let metadata = std::fs::metadata(&canonical)
-        .map_err(|_| AlarmAppError::FileNotFound { path: path.to_string() })?;
+fn validate_file_size(canonical: &Path) -> Result<(), AlarmAppError> {
+    let metadata = std::fs::metadata(canonical)
+        .map_err(|_| AlarmAppError::FileNotFound { path: canonical.to_string_lossy().to_string() })?;
     if metadata.len() > MAX_SOUND_FILE_SIZE {
         return Err(AlarmAppError::FileTooLarge { max_mb: 10 });
     }
-
-    // 5. File must exist (final check)
-    if !canonical.exists() {
-        return Err(AlarmAppError::FileNotFound { path: path.to_string() });
-    }
-
     Ok(())
 }
 ```
@@ -164,17 +171,16 @@ pub async fn run_gradual_volume(sink: &Sink, duration_sec: u32) {
     loop {
         interval.tick().await;
         let elapsed = start.elapsed();
-
-        if elapsed >= duration {
-            sink.set_volume(1.0);
-            break;
-        }
-
-        // Quadratic curve: feels more natural than linear
-        let t = elapsed.as_secs_f32() / duration.as_secs_f32();
-        let volume = MIN_VOLUME + (1.0 - MIN_VOLUME) * (t * t);
-        sink.set_volume(volume);
+        if elapsed >= duration { sink.set_volume(1.0); break; }
+        sink.set_volume(compute_quadratic_volume(elapsed, duration));
     }
+}
+
+/// Quadratic curve: feels more natural than linear.
+/// t² provides perceptually even increase from 10% → 100%.
+fn compute_quadratic_volume(elapsed: Duration, total: Duration) -> f32 {
+    let t = elapsed.as_secs_f32() / total.as_secs_f32();
+    MIN_VOLUME + (1.0 - MIN_VOLUME) * (t * t)
 }
 ```
 
@@ -193,22 +199,23 @@ pub async fn run_gradual_volume(sink: &Sink, duration_sec: u32) {
 use objc2_av_foundation::{AVAudioSession, AVAudioSessionCategory};
 
 pub fn configure_audio_session() -> Result<(), AlarmAppError> {
-    unsafe {
-        let session = AVAudioSession::sharedInstance();
-
-        // .playback category: audio plays even when DND is on, screen is locked
-        // .duckOthers: reduces other audio volume while alarm plays
-        session.setCategory_withOptions_error(
-            AVAudioSessionCategory::Playback,
-            AVAudioSessionCategoryOptions::DuckOthers,
-        ).map_err(|e| AlarmAppError::Audio(format!("Failed to set audio session: {e}")))?;
-
-        session.setActive_error(true)
-            .map_err(|e| AlarmAppError::Audio(format!("Failed to activate audio session: {e}")))?;
-    }
-
+    let session = unsafe { AVAudioSession::sharedInstance() };
+    set_playback_category(&session)?;
+    activate_session(&session)?;
     tracing::info!("macOS audio session configured: Playback + DuckOthers");
     Ok(())
+}
+
+fn set_playback_category(session: &AVAudioSession) -> Result<(), AlarmAppError> {
+    unsafe { session.setCategory_withOptions_error(
+        AVAudioSessionCategory::Playback,
+        AVAudioSessionCategoryOptions::DuckOthers,
+    ) }.map_err(|e| AlarmAppError::Audio(format!("Failed to set audio session: {e}")))
+}
+
+fn activate_session(session: &AVAudioSession) -> Result<(), AlarmAppError> {
+    unsafe { session.setActive_error(true) }
+        .map_err(|e| AlarmAppError::Audio(format!("Failed to activate audio session: {e}")))
 }
 ```
 

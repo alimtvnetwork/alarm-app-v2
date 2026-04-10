@@ -51,56 +51,77 @@ Alarms are defined in **local time** (`HH:MM`). The `nextFireTime` is stored as 
 ### nextFireTime Computation (Rust Pseudocode)
 
 ```rust
+/// Entry point — delegates to type-specific handlers (each ≤15 lines)
 fn compute_next_fire_time(
-    alarm_time: NaiveTime,        // e.g., 07:30
-    alarm_date: Option<NaiveDate>,// for one-time date-specific alarms
+    alarm_time: NaiveTime,
+    alarm_date: Option<NaiveDate>,
     repeat: &RepeatPattern,
-    timezone: &Tz,                // from chrono-tz, e.g., Asia/Kuala_Lumpur
+    timezone: &Tz,
     now: DateTime<Utc>,
 ) -> Option<DateTime<Utc>> {
     let now_local = now.with_timezone(timezone);
-
     match repeat.r#type {
-        RepeatType::Once => {
-            let target_date = alarm_date.unwrap_or_else(|| {
-                let today = now_local.date_naive();
-                if alarm_time > now_local.time() { today } else { today + Duration::days(1) }
-            });
-            resolve_local_to_utc(target_date, alarm_time, timezone)
-        }
-        RepeatType::Daily => {
-            let today = now_local.date_naive();
-            let candidate = resolve_local_to_utc(today, alarm_time, timezone);
-            match candidate {
-                Some(t) if t > now => Some(t),
-                _ => resolve_local_to_utc(today + Duration::days(1), alarm_time, timezone),
-            }
-        }
-        RepeatType::Weekly => {
-            // Try each of the next 7 days, check if weekday matches daysOfWeek
-            for offset in 0..=7 {
-                let date = now_local.date_naive() + Duration::days(offset);
-                let weekday_num = date.weekday().num_days_from_sunday(); // 0=Sun
-                if repeat.days_of_week.contains(&(weekday_num as u8)) {
-                    let candidate = resolve_local_to_utc(date, alarm_time, timezone);
-                    if let Some(t) = candidate {
-                        if t > now { return Some(t); }
-                    }
-                }
-            }
-            None
-        }
-        RepeatType::Interval => {
-            // Simply add interval minutes to last fire time
-            Some(now + Duration::minutes(repeat.interval_minutes as i64))
-        }
-        RepeatType::Cron => {
-            // Use croner crate to find next match
-            let cron = Cron::new(&repeat.cron_expression).parse().ok()?;
-            cron.find_next_occurrence(&now_local.naive_local(), false)
-                .and_then(|naive| resolve_local_to_utc(naive.date(), naive.time(), timezone))
+        RepeatType::Once => compute_once(alarm_time, alarm_date, &now_local, timezone),
+        RepeatType::Daily => compute_daily(alarm_time, &now_local, now, timezone),
+        RepeatType::Weekly => compute_weekly(alarm_time, repeat, &now_local, now, timezone),
+        RepeatType::Interval => Some(now + Duration::minutes(repeat.interval_minutes as i64)),
+        RepeatType::Cron => compute_cron(&repeat.cron_expression, &now_local, timezone),
+    }
+}
+
+fn compute_once(
+    alarm_time: NaiveTime,
+    alarm_date: Option<NaiveDate>,
+    now_local: &DateTime<Tz>,
+    timezone: &Tz,
+) -> Option<DateTime<Utc>> {
+    let target_date = alarm_date.unwrap_or_else(|| {
+        let today = now_local.date_naive();
+        if alarm_time > now_local.time() { today } else { today + Duration::days(1) }
+    });
+    resolve_local_to_utc(target_date, alarm_time, timezone)
+}
+
+fn compute_daily(
+    alarm_time: NaiveTime,
+    now_local: &DateTime<Tz>,
+    now: DateTime<Utc>,
+    timezone: &Tz,
+) -> Option<DateTime<Utc>> {
+    let today = now_local.date_naive();
+    let candidate = resolve_local_to_utc(today, alarm_time, timezone);
+    match candidate {
+        Some(t) if t > now => Some(t),
+        _ => resolve_local_to_utc(today + Duration::days(1), alarm_time, timezone),
+    }
+}
+
+fn compute_weekly(
+    alarm_time: NaiveTime,
+    repeat: &RepeatPattern,
+    now_local: &DateTime<Tz>,
+    now: DateTime<Utc>,
+    timezone: &Tz,
+) -> Option<DateTime<Utc>> {
+    for offset in 0..=7 {
+        let date = now_local.date_naive() + Duration::days(offset);
+        let weekday_num = date.weekday().num_days_from_sunday();
+        if !repeat.days_of_week.contains(&(weekday_num as u8)) { continue; }
+        if let Some(t) = resolve_local_to_utc(date, alarm_time, timezone) {
+            if t > now { return Some(t); }
         }
     }
+    None
+}
+
+fn compute_cron(
+    cron_expr: &str,
+    now_local: &DateTime<Tz>,
+    timezone: &Tz,
+) -> Option<DateTime<Utc>> {
+    let cron = Cron::new(cron_expr).parse().ok()?;
+    cron.find_next_occurrence(&now_local.naive_local(), false)
+        .and_then(|naive| resolve_local_to_utc(naive.date(), naive.time(), timezone))
 }
 ```
 
@@ -114,36 +135,29 @@ fn resolve_local_to_utc(
     tz: &Tz,
 ) -> Option<DateTime<Utc>> {
     let naive_dt = NaiveDateTime::new(date, time);
-
     match tz.from_local_datetime(&naive_dt) {
-        // Normal case: exactly one valid mapping
         LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
+        LocalResult::Ambiguous(first, _) => Some(handle_fall_back(first, date, time)),
+        LocalResult::None => handle_spring_forward(date, tz),
+    }
+}
 
-        // FALL-BACK: time occurs twice → use the FIRST occurrence
-        LocalResult::Ambiguous(first, _second) => {
-            tracing::info!(
-                date = %date, time = %time,
-                "DST fall-back: ambiguous time, using first occurrence"
-            );
-            Some(first.with_timezone(&Utc))
-        }
+/// FALL-BACK: time occurs twice → use the FIRST occurrence
+fn handle_fall_back(first: DateTime<Tz>, date: NaiveDate, time: NaiveTime) -> DateTime<Utc> {
+    tracing::info!(date = %date, time = %time, "DST fall-back: using first occurrence");
+    first.with_timezone(&Utc)
+}
 
-        // SPRING-FORWARD: time doesn't exist → advance to next valid minute
-        LocalResult::None => {
-            // Find the transition point and use it
-            let transition = tz.from_local_datetime(
-                &NaiveDateTime::new(date, NaiveTime::from_hms_opt(3, 0, 0).unwrap())
-            );
-            tracing::warn!(
-                date = %date, time = %time,
-                "DST spring-forward: time skipped, firing at next valid minute"
-            );
-            match transition {
-                LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
-                LocalResult::Ambiguous(dt, _) => Some(dt.with_timezone(&Utc)),
-                LocalResult::None => None, // Should never happen
-            }
-        }
+/// SPRING-FORWARD: time doesn't exist → advance to next valid minute
+fn handle_spring_forward(date: NaiveDate, tz: &Tz) -> Option<DateTime<Utc>> {
+    let transition = tz.from_local_datetime(
+        &NaiveDateTime::new(date, NaiveTime::from_hms_opt(3, 0, 0).unwrap())
+    );
+    tracing::warn!(date = %date, "DST spring-forward: firing at next valid minute");
+    match transition {
+        LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
+        LocalResult::Ambiguous(dt, _) => Some(dt.with_timezone(&Utc)),
+        LocalResult::None => None,
     }
 }
 ```
@@ -239,41 +253,38 @@ impl MacOsWakeListener {
 
 impl WakeListener for MacOsWakeListener {
     fn start(&self, on_wake: Box<dyn Fn() + Send + Sync>) -> Result<(), AlarmAppError> {
-        // Subscribe to NSWorkspaceDidWakeNotification
         let workspace = unsafe { NSWorkspace::sharedWorkspace() };
         let center = unsafe { workspace.notificationCenter() };
-
-        // Register observer for didWakeNotification
-        // When macOS wakes from sleep, this fires immediately
-        unsafe {
-            center.addObserverForName_object_queue_usingBlock(
-                Some(ns_string!("NSWorkspaceDidWakeNotification")),
-                None,
-                None,
-                &Block::new(move |_notification: &NSNotification| {
-                    tracing::info!("macOS: System woke from sleep");
-                    on_wake();
-                }),
-            );
-        }
-
-        // Also listen for willSleepNotification to log sleep time
-        unsafe {
-            center.addObserverForName_object_queue_usingBlock(
-                Some(ns_string!("NSWorkspaceWillSleepNotification")),
-                None,
-                None,
-                &Block::new(|_: &NSNotification| {
-                    tracing::info!("macOS: System entering sleep");
-                }),
-            );
-        }
-
+        register_wake_observer(&center, on_wake);
+        register_sleep_observer(&center);
         Ok(())
     }
 
-    fn stop(&self) {
-        // Remove observers on shutdown
+    fn stop(&self) { /* Remove observers on shutdown */ }
+}
+
+fn register_wake_observer(center: &NSNotificationCenter, on_wake: Box<dyn Fn() + Send + Sync>) {
+    unsafe {
+        center.addObserverForName_object_queue_usingBlock(
+            Some(ns_string!("NSWorkspaceDidWakeNotification")),
+            None, None,
+            &Block::new(move |_: &NSNotification| {
+                tracing::info!("macOS: System woke from sleep");
+                on_wake();
+            }),
+        );
+    }
+}
+
+fn register_sleep_observer(center: &NSNotificationCenter) {
+    unsafe {
+        center.addObserverForName_object_queue_usingBlock(
+            Some(ns_string!("NSWorkspaceWillSleepNotification")),
+            None, None,
+            &Block::new(|_: &NSNotification| {
+                tracing::info!("macOS: System entering sleep");
+            }),
+        );
     }
 }
 ```

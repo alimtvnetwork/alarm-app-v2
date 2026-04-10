@@ -77,6 +77,8 @@ use serde::{Deserialize, Serialize};
 /// JSON fields are stored as TEXT in SQLite and must be manually deserialized.
 /// Uses `#[serde(rename_all = "PascalCase")]` so Tauri IPC serializes to PascalCase JSON keys.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+/// NOTE: Struct definitions and field-per-line `from_row` mappers are EXEMPT from the
+/// 15-line function limit — they contain no logic, only field declarations.
 #[serde(rename_all = "PascalCase")]
 pub struct AlarmRow {
     pub alarm_id: String,
@@ -123,7 +125,7 @@ impl AlarmRow {
         }
     }
 
-    /// Convert from rusqlite::Row — column names are PascalCase to match schema
+    /// Convert from rusqlite::Row — EXEMPT from 15-line limit (field-per-line mapping, no logic)
     pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
         Ok(Self {
             alarm_id: row.get("AlarmId")?,
