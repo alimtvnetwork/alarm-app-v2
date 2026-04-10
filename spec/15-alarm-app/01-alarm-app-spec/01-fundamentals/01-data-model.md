@@ -20,6 +20,259 @@ Defines all TypeScript interfaces, SQLite schema, and validation rules for the A
 
 ---
 
+## Domain Enums
+
+> **Resolves P14-003–P14-011.** All domain types that were previously magic string unions are now proper enums. Both TypeScript and Rust definitions are provided. AI agents MUST use these enum types — raw string comparisons are forbidden per `05-magic-strings-and-organization.md` §8.2.
+
+### TypeScript Enums
+
+```typescript
+enum RepeatType {
+  Once = "Once",
+  Daily = "Daily",
+  Weekly = "Weekly",
+  Interval = "Interval",
+  Cron = "Cron",
+}
+
+enum ChallengeType {
+  Math = "Math",
+  Memory = "Memory",
+  Shake = "Shake",
+  Typing = "Typing",
+  Qr = "Qr",
+  Steps = "Steps",
+}
+
+enum ChallengeDifficulty {
+  Easy = "Easy",
+  Medium = "Medium",
+  Hard = "Hard",
+}
+
+enum AlarmEventType {
+  Fired = "Fired",
+  Snoozed = "Snoozed",
+  Dismissed = "Dismissed",
+  Missed = "Missed",
+}
+
+enum SoundCategory {
+  Classic = "Classic",
+  Gentle = "Gentle",
+  Nature = "Nature",
+  Digital = "Digital",
+}
+
+enum SettingsValueType {
+  String = "String",
+  Integer = "Integer",
+  Boolean = "Boolean",
+  Json = "Json",
+}
+
+enum ThemeMode {
+  Light = "Light",
+  Dark = "Dark",
+  System = "System",
+}
+
+enum ExportFormat {
+  Json = "Json",
+  Csv = "Csv",
+  Ics = "Ics",
+}
+
+enum ExportScope {
+  All = "All",
+  Selected = "Selected",
+}
+
+enum DuplicateAction {
+  Skip = "Skip",
+  Overwrite = "Overwrite",
+  Rename = "Rename",
+}
+
+enum ImportMode {
+  Merge = "Merge",
+  Replace = "Replace",
+}
+
+enum SortField {
+  Date = "Date",
+  Label = "Label",
+  SnoozeCount = "SnoozeCount",
+}
+
+enum SortOrder {
+  Asc = "Asc",
+  Desc = "Desc",
+}
+```
+
+### Rust Enums
+
+```rust
+use serde::{Deserialize, Serialize};
+
+/// All domain enums use PascalCase variants and serialize to PascalCase strings.
+/// SQLite stores the PascalCase string value in TEXT columns.
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum RepeatType {
+    Once,
+    Daily,
+    Weekly,
+    Interval,
+    Cron,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ChallengeType {
+    Math,
+    Memory,
+    Shake,
+    Typing,
+    Qr,
+    Steps,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ChallengeDifficulty {
+    Easy,
+    Medium,
+    Hard,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum AlarmEventType {
+    Fired,
+    Snoozed,
+    Dismissed,
+    Missed,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum SoundCategory {
+    Classic,
+    Gentle,
+    Nature,
+    Digital,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum SettingsValueType {
+    String,
+    Integer,
+    Boolean,
+    Json,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ThemeMode {
+    Light,
+    Dark,
+    System,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ExportFormat {
+    Json,
+    Csv,
+    Ics,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ExportScope {
+    All,
+    Selected,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum DuplicateAction {
+    Skip,
+    Overwrite,
+    Rename,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum ImportMode {
+    Merge,
+    Replace,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum SortField {
+    Date,
+    Label,
+    SnoozeCount,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum SortOrder {
+    Asc,
+    Desc,
+}
+
+/// FromStr implementations for all enums that are stored as TEXT in SQLite.
+/// Parse from PascalCase string values.
+impl std::str::FromStr for RepeatType {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Once" => Ok(Self::Once),
+            "Daily" => Ok(Self::Daily),
+            "Weekly" => Ok(Self::Weekly),
+            "Interval" => Ok(Self::Interval),
+            "Cron" => Ok(Self::Cron),
+            _ => Err(format!("Unknown RepeatType: {s}")),
+        }
+    }
+}
+
+impl std::str::FromStr for ChallengeType {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Math" => Ok(Self::Math),
+            "Memory" => Ok(Self::Memory),
+            "Shake" => Ok(Self::Shake),
+            "Typing" => Ok(Self::Typing),
+            "Qr" => Ok(Self::Qr),
+            "Steps" => Ok(Self::Steps),
+            _ => Err(format!("Unknown ChallengeType: {s}")),
+        }
+    }
+}
+
+impl std::str::FromStr for AlarmEventType {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Fired" => Ok(Self::Fired),
+            "Snoozed" => Ok(Self::Snoozed),
+            "Dismissed" => Ok(Self::Dismissed),
+            "Missed" => Ok(Self::Missed),
+            _ => Err(format!("Unknown AlarmEventType: {s}")),
+        }
+    }
+}
+```
+
+### Enum Conventions
+
+| Rule | Detail |
+|------|--------|
+| **Variants** | PascalCase (e.g., `RepeatType::Daily`, not `"daily"`) |
+| **SQLite storage** | TEXT column stores PascalCase string (e.g., `"Daily"`) |
+| **Serde** | Default derive — variants serialize as `"Daily"`, `"Fired"`, etc. |
+| **TypeScript values** | String enums with PascalCase values matching Rust |
+| **Comparison** | Always `alarm.ChallengeType === ChallengeType.Math`, never `=== "math"` |
+| **Null** | Use `Option<ChallengeType>` (Rust) / `ChallengeType | null` (TS) for optional fields |
+
+---
+
 ## Interfaces
 
 ### Alarm
@@ -35,14 +288,14 @@ interface Alarm {
   Repeat: RepeatPattern;           // Scheduling pattern (replaces recurringDays)
   GroupId: string | null;          // Reference to AlarmGroup.AlarmGroupId
   SnoozeDurationMin: number;       // 1–30, default 5
-  MaxSnoozeCount: number;          // 1–10, default 3 (0 = snooze disabled)
+  MaxSnoozeCount: number;          // 1–10, default 3 (0 = dismiss only, no snooze)
   SoundFile: string;               // Built-in key OR custom file path
   IsVibrationEnabled: boolean;     // Independent vibration toggle
   IsGradualVolume: boolean;        // Fade-in volume enabled
   GradualVolumeDurationSec: number; // 15, 30, or 60 seconds
-  AutoDismissMin: number;          // 0 = disabled, 1–60 = auto-stop after N minutes
-  ChallengeType: string | null;    // null = no challenge, 'math' | 'memory' | 'shake' | 'typing' | 'qr' | 'steps'
-  ChallengeDifficulty: string | null; // 'easy' | 'medium' | 'hard' (math only)
+  AutoDismissMin: number;          // 0 = manual dismiss only, 1–60 = auto-stop after N minutes
+  ChallengeType: ChallengeType | null;    // null = no challenge
+  ChallengeDifficulty: ChallengeDifficulty | null; // Math only
   ChallengeShakeCount: number | null; // shake only
   ChallengeStepCount: number | null;  // steps only
   NextFireTime: string | null;     // ISO 8601 — precomputed next fire time
