@@ -53,58 +53,63 @@ Advanced features for future iterations: weather briefing, location-based alarms
 use std::net::IpAddr;
 use url::Url;
 
-/// Validate a webhook URL before allowing it to be saved or called.
+const BLOCKED_HOSTS: &[&str] = &[
+    "localhost", "127.0.0.1", "::1", "0.0.0.0",
+    "[::1]", "host.docker.internal", "metadata.google.internal",
+];
+
+/// Validate a webhook URL. Decomposed into ≤15-line subfunctions.
 pub fn validate_webhook_url(url_str: &str) -> Result<Url, WebhookError> {
     let url = Url::parse(url_str).map_err(|_| WebhookError::InvalidUrl)?;
-
-    // 1. Scheme must be HTTPS (reject HTTP in production)
-    if url.scheme() != "https" {
-        return Err(WebhookError::InsecureScheme);
-    }
-
-    // 2. Reject localhost and loopback
-    let host = url.host_str().ok_or(WebhookError::MissingHost)?;
-    let blocked_hosts = ["localhost", "127.0.0.1", "::1", "0.0.0.0",
-                         "[::1]", "host.docker.internal", "metadata.google.internal"];
-    if blocked_hosts.contains(&host) {
-        return Err(WebhookError::BlockedHost);
-    }
-
-    // 3. Resolve DNS and check for private/reserved IP ranges
-    if let Ok(ip) = host.parse::<IpAddr>() {
-        if is_private_ip(&ip) {
-            return Err(WebhookError::PrivateIp);
-        }
-    }
-
-    // 4. Reject non-standard ports (only 443 for HTTPS)
-    if let Some(port) = url.port() {
-        if port != 443 {
-            return Err(WebhookError::NonStandardPort);
-        }
-    }
-
+    require_https(&url)?;
+    reject_blocked_host(&url)?;
+    reject_private_ip(&url)?;
+    reject_non_standard_port(&url)?;
     Ok(url)
+}
+
+fn require_https(url: &Url) -> Result<(), WebhookError> {
+    if url.scheme() != "https" { return Err(WebhookError::InsecureScheme); }
+    Ok(())
+}
+
+fn reject_blocked_host(url: &Url) -> Result<(), WebhookError> {
+    let host = url.host_str().ok_or(WebhookError::MissingHost)?;
+    if BLOCKED_HOSTS.contains(&host) { return Err(WebhookError::BlockedHost); }
+    Ok(())
+}
+
+fn reject_private_ip(url: &Url) -> Result<(), WebhookError> {
+    let host = url.host_str().ok_or(WebhookError::MissingHost)?;
+    if let Ok(ip) = host.parse::<IpAddr>() {
+        if is_private_ip(&ip) { return Err(WebhookError::PrivateIp); }
+    }
+    Ok(())
+}
+
+fn reject_non_standard_port(url: &Url) -> Result<(), WebhookError> {
+    if let Some(port) = url.port() {
+        if port != 443 { return Err(WebhookError::NonStandardPort); }
+    }
+    Ok(())
+}
+
+fn is_private_v4(v4: &std::net::Ipv4Addr) -> bool {
+    v4.is_loopback() || v4.is_private() || v4.is_link_local()
+        || v4.is_broadcast() || v4.is_unspecified()
+        || v4.octets()[0] == 100 // CGNAT
+}
+
+fn is_private_v6(v6: &std::net::Ipv6Addr) -> bool {
+    v6.is_loopback() || v6.is_unspecified()
+        || (v6.segments()[0] & 0xffc0) == 0xfe80  // link-local
+        || (v6.segments()[0] & 0xfe00) == 0xfc00   // unique-local
 }
 
 fn is_private_ip(ip: &IpAddr) -> bool {
     match ip {
-        IpAddr::V4(v4) => {
-            v4.is_loopback()           // 127.0.0.0/8
-            || v4.is_private()         // 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
-            || v4.is_link_local()      // 169.254.0.0/16
-            || v4.is_broadcast()       // 255.255.255.255
-            || v4.is_unspecified()     // 0.0.0.0
-            || v4.octets()[0] == 100   // 100.64.0.0/10 (CGNAT)
-        }
-        IpAddr::V6(v6) => {
-            v6.is_loopback()           // ::1
-            || v6.is_unspecified()     // ::
-            // Link-local: fe80::/10
-            || (v6.segments()[0] & 0xffc0) == 0xfe80
-            // Unique local: fc00::/7
-            || (v6.segments()[0] & 0xfe00) == 0xfc00
-        }
+        IpAddr::V4(v4) => is_private_v4(v4),
+        IpAddr::V6(v6) => is_private_v6(v6),
     }
 }
 ```
@@ -125,25 +130,26 @@ fn is_private_ip(ip: &IpAddr) -> bool {
 ```rust
 use reqwest::Client;
 
-pub async fn fire_webhook(url: &Url, payload: &WebhookPayload) -> Result<(), WebhookError> {
-    let client = Client::builder()
+/// Build HTTP client with security constraints (no redirects, 5s timeout)
+fn build_webhook_client() -> Result<Client, WebhookError> {
+    Client::builder()
         .timeout(std::time::Duration::from_secs(5))
-        .redirect(reqwest::redirect::Policy::none())  // NO redirects
+        .redirect(reqwest::redirect::Policy::none())
         .user_agent("AlarmApp/1.0 Webhook")
-        .build()?;
+        .build()
+        .map_err(|e| WebhookError::RequestFailed(e.to_string()))
+}
 
-    let response = client
-        .post(url.as_str())
-        .json(payload)
-        .send()
-        .await;
+pub async fn fire_webhook(url: &Url, payload: &WebhookPayload) -> Result<(), WebhookError> {
+    let client = build_webhook_client()?;
+    let response = client.post(url.as_str()).json(payload).send().await;
+    log_webhook_result(url, response)
+}
 
+fn log_webhook_result(url: &Url, response: Result<reqwest::Response, reqwest::Error>) -> Result<(), WebhookError> {
     match response {
         Ok(resp) => {
-            tracing::info!(
-                url = %url, status = %resp.status(),
-                "Webhook delivered"
-            );
+            tracing::info!(url = %url, status = %resp.status(), "Webhook delivered");
             Ok(())
         }
         Err(e) => {
