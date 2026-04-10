@@ -254,15 +254,15 @@ tokio::spawn(async move {
 
 ```sql
 SELECT * FROM alarms
-WHERE next_fire_time < datetime('now')
-  AND enabled = 1
-  AND deleted_at IS NULL;
+WHERE NextFireTime < datetime('now')
+  AND IsEnabled = 1
+  AND DeletedAt IS NULL;
 ```
 
 - For each missed alarm:
-  1. Insert `alarm_events` row with `type = 'missed'`
+  1. Insert `AlarmEvents` row with `Type = 'missed'`
   2. Add to alarm queue (see `03-alarm-firing.md` → Simultaneous Alarms)
-  3. Recompute `nextFireTime` for repeating alarms
+  3. Recompute `NextFireTime` for repeating alarms
   4. Dispatch OS notification: "Missed Alarm: {label} at {originalTime}"
 
 ---

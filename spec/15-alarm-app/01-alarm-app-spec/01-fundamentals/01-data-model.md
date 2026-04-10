@@ -220,60 +220,60 @@ interface AlarmEvent {
 
 ```sql
 CREATE TABLE alarms (
-  id TEXT PRIMARY KEY,
-  time TEXT NOT NULL,
-  date TEXT,                                        -- YYYY-MM-DD or NULL
-  label TEXT NOT NULL DEFAULT '',
-  enabled INTEGER NOT NULL DEFAULT 1,
-  previous_enabled INTEGER,                          -- Saved state for group toggle (FE-STATE-001)
-  repeat_type TEXT NOT NULL DEFAULT 'once',          -- once|daily|weekly|interval|cron
-  repeat_days_of_week TEXT NOT NULL DEFAULT '[]',    -- JSON array
-  repeat_interval_minutes INTEGER NOT NULL DEFAULT 0,
-  repeat_cron_expression TEXT NOT NULL DEFAULT '',
-  group_id TEXT REFERENCES alarm_groups(id) ON DELETE SET NULL,
-  snooze_duration_min INTEGER NOT NULL DEFAULT 5,
-  max_snooze_count INTEGER NOT NULL DEFAULT 3,
-  sound_file TEXT NOT NULL DEFAULT 'classic-beep',
-  vibration_enabled INTEGER NOT NULL DEFAULT 0,
-  gradual_volume INTEGER NOT NULL DEFAULT 0,
-  gradual_volume_duration_sec INTEGER NOT NULL DEFAULT 30,
-  auto_dismiss_min INTEGER NOT NULL DEFAULT 0,
-  next_fire_time TEXT,                               -- ISO 8601 precomputed
-  deleted_at TEXT,                                   -- soft-delete timestamp
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL
+  AlarmId TEXT PRIMARY KEY,
+  Time TEXT NOT NULL,
+  Date TEXT,                                        -- YYYY-MM-DD or NULL
+  Label TEXT NOT NULL DEFAULT '',
+  IsEnabled INTEGER NOT NULL DEFAULT 1,
+  IsPreviousEnabled INTEGER,                        -- Saved state for group toggle (FE-STATE-001)
+  RepeatType TEXT NOT NULL DEFAULT 'once',           -- once|daily|weekly|interval|cron
+  RepeatDaysOfWeek TEXT NOT NULL DEFAULT '[]',       -- JSON array
+  RepeatIntervalMinutes INTEGER NOT NULL DEFAULT 0,
+  RepeatCronExpression TEXT NOT NULL DEFAULT '',
+  GroupId TEXT REFERENCES AlarmGroups(AlarmGroupId) ON DELETE SET NULL,
+  SnoozeDurationMin INTEGER NOT NULL DEFAULT 5,
+  MaxSnoozeCount INTEGER NOT NULL DEFAULT 3,
+  SoundFile TEXT NOT NULL DEFAULT 'classic-beep',
+  IsVibrationEnabled INTEGER NOT NULL DEFAULT 0,
+  IsGradualVolume INTEGER NOT NULL DEFAULT 0,
+  GradualVolumeDurationSec INTEGER NOT NULL DEFAULT 30,
+  AutoDismissMin INTEGER NOT NULL DEFAULT 0,
+  NextFireTime TEXT,                                 -- ISO 8601 precomputed
+  DeletedAt TEXT,                                    -- soft-delete timestamp
+  CreatedAt TEXT NOT NULL,
+  UpdatedAt TEXT NOT NULL
 );
 
-CREATE TABLE alarm_groups (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  color TEXT NOT NULL DEFAULT '#6366F1',
-  enabled INTEGER NOT NULL DEFAULT 1
+CREATE TABLE AlarmGroups (
+  AlarmGroupId TEXT PRIMARY KEY,
+  Name TEXT NOT NULL,
+  Color TEXT NOT NULL DEFAULT '#6366F1',
+  IsEnabled INTEGER NOT NULL DEFAULT 1
 );
 
 CREATE TABLE settings (
-  key TEXT PRIMARY KEY,
-  value TEXT NOT NULL
+  Key TEXT PRIMARY KEY,
+  Value TEXT NOT NULL
 );
 
-CREATE TABLE snooze_state (
-  alarm_id TEXT PRIMARY KEY REFERENCES alarms(id) ON DELETE CASCADE,
-  snooze_until TEXT NOT NULL,  -- ISO 8601 timestamp
-  snooze_count INTEGER NOT NULL DEFAULT 1
+CREATE TABLE SnoozeState (
+  AlarmId TEXT PRIMARY KEY REFERENCES alarms(AlarmId) ON DELETE CASCADE,
+  SnoozeUntil TEXT NOT NULL,  -- ISO 8601 timestamp
+  SnoozeCount INTEGER NOT NULL DEFAULT 1
 );
 
-CREATE TABLE alarm_events (
-  id TEXT PRIMARY KEY,
-  alarm_id TEXT REFERENCES alarms(id) ON DELETE SET NULL,
-  type TEXT NOT NULL,           -- fired|snoozed|dismissed|missed
-  fired_at TEXT NOT NULL,
-  dismissed_at TEXT,
-  snooze_count INTEGER NOT NULL DEFAULT 0,
-  challenge_type TEXT,
-  challenge_solve_time_sec REAL,
-  sleep_quality INTEGER,
-  mood TEXT,
-  timestamp TEXT NOT NULL
+CREATE TABLE AlarmEvents (
+  AlarmEventId TEXT PRIMARY KEY,
+  AlarmId TEXT REFERENCES alarms(AlarmId) ON DELETE SET NULL,
+  Type TEXT NOT NULL,           -- fired|snoozed|dismissed|missed
+  FiredAt TEXT NOT NULL,
+  DismissedAt TEXT,
+  SnoozeCount INTEGER NOT NULL DEFAULT 0,
+  ChallengeType TEXT,
+  ChallengeSolveTimeSec REAL,
+  SleepQuality INTEGER,
+  Mood TEXT,
+  Timestamp TEXT NOT NULL
 );
 ```
 
@@ -303,7 +303,7 @@ pub fn purge_old_events(conn: &Connection) {
     let cutoff = Utc::now() - chrono::Duration::days(retention_days);
 
     match conn.execute(
-        "DELETE FROM alarm_events WHERE timestamp < ?1",
+        "DELETE FROM AlarmEvents WHERE Timestamp < ?1",
         params![cutoff.to_rfc3339()],
     ) {
         Ok(deleted) => {
@@ -355,26 +355,26 @@ pub fn purge_old_events(conn: &Connection) {
 
 ## One-Time Alarm Behavior
 
-When `repeat.type` is `"once"` and `date` is null, the alarm fires once at the next occurrence of `time` and auto-disables (`enabled: false`). When `date` is set, it fires on that specific date at `time`.
+When `repeat.type` is `"once"` and `date` is null, the alarm fires once at the next occurrence of `time` and auto-disables (`IsEnabled: false`). When `date` is set, it fires on that specific date at `time`.
 
 ---
 
 ## Soft-Delete Behavior
 
-- Deleting an alarm sets `deletedAt` to current ISO 8601 timestamp
-- A 5-second undo toast appears; if undone, `deletedAt` is set back to null
+- Deleting an alarm sets `DeletedAt` to current ISO 8601 timestamp
+- A 5-second undo toast appears; if undone, `DeletedAt` is set back to null
 - After undo window expires, a background job permanently removes the row
-- All queries filter `WHERE deleted_at IS NULL` by default
+- All queries filter `WHERE DeletedAt IS NULL` by default
 
 ---
 
-## nextFireTime Computation
+## NextFireTime Computation
 
-The `nextFireTime` field is precomputed by the Rust backend whenever an alarm is created, edited, fired, or snoozed. This enables efficient missed-alarm detection:
+The `NextFireTime` field is precomputed by the Rust backend whenever an alarm is created, edited, fired, or snoozed. This enables efficient missed-alarm detection:
 
-1. On create/edit: compute based on `time`, `date`, and `repeat` pattern
+1. On create/edit: compute based on `Time`, `Date`, and `repeat` pattern
 2. On fire: advance to next occurrence (or set null if one-time)
-3. On app launch / system wake: query `WHERE next_fire_time < now AND enabled = 1 AND deleted_at IS NULL`
+3. On app launch / system wake: query `WHERE NextFireTime < now AND IsEnabled = 1 AND DeletedAt IS NULL`
 
 ---
 
@@ -398,14 +398,14 @@ If the target local time **occurs twice** during fall-back:
 
 When the system timezone changes:
 1. Listen for OS timezone change event
-2. Recalculate `nextFireTime` for **all enabled alarms** using the new timezone
+2. Recalculate `NextFireTime` for **all enabled alarms** using the new timezone
 3. Alarms always fire at the configured **local time** in the user's current timezone
 
 ### Implementation
 
 - Use `chrono-tz` crate for IANA timezone resolution
 - Store system timezone in `settings` table (key: `system_timezone`, value: IANA string e.g. `"Asia/Kuala_Lumpur"`)
-- On each 30s alarm check, compare `nextFireTime` (UTC) against `Utc::now()`
+- On each 30s alarm check, compare `NextFireTime` (UTC) against `Utc::now()`
 
 ---
 
@@ -501,13 +501,13 @@ The `V1__initial_schema.sql` file must contain ALL tables from the SQLite Schema
 
 ```sql
 -- Indexes for alarm engine performance
-CREATE INDEX idx_alarms_next_fire ON alarms(next_fire_time) WHERE enabled = 1 AND deleted_at IS NULL;
-CREATE INDEX idx_alarms_group ON alarms(group_id);
-CREATE INDEX idx_events_alarm ON alarm_events(alarm_id);
-CREATE INDEX idx_events_timestamp ON alarm_events(timestamp);
+CREATE INDEX IdxAlarmsNextFire ON alarms(NextFireTime) WHERE IsEnabled = 1 AND DeletedAt IS NULL;
+CREATE INDEX IdxAlarmsGroup ON alarms(GroupId);
+CREATE INDEX IdxEventsAlarm ON AlarmEvents(AlarmId);
+CREATE INDEX IdxEventsTimestamp ON AlarmEvents(Timestamp);
 
 -- Default settings
-INSERT INTO settings (key, value) VALUES
+INSERT INTO settings (Key, Value) VALUES
   ('theme', 'system'),
   ('time_format', '12h'),
   ('default_snooze_duration', '5'),

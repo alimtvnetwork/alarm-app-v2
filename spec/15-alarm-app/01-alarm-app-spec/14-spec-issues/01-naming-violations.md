@@ -16,7 +16,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/01-data-model.md` (lines 222–275)  
 **Rule Violated:** `11-key-naming-pascalcase.md` §1 — "Database column names: `user_id` → `UserId`"  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all columns renamed to PascalCase with `Is`/`Has` boolean prefixes
 
 **Violations (30+ columns):**
 
@@ -46,7 +46,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/01-data-model.md` (lines 222–275)  
 **Rule Violated:** `11-key-naming-pascalcase.md` §1  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — tables renamed: `alarm_events` → `AlarmEvents`, `alarm_groups` → `AlarmGroups`, `snooze_state` → `SnoozeState`
 
 | Current (snake_case) | Required (PascalCase) |
 |----------------------|-----------------------|
@@ -62,7 +62,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 
 **Severity:** 🟡 Medium  
 **Location:** `01-fundamentals/01-data-model.md` (lines 501–504)  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — indexes renamed to PascalCase (`IdxAlarmsNextFire`, etc.)
 
 | Current | Required |
 |---------|----------|
@@ -136,7 +136,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/01-data-model.md` (lines 223, 248, 266)  
 **Rule Violated:** `10-database-conventions/01-naming-conventions.md` §PK — "Primary key MUST be named `{TableName}Id`"  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — PKs renamed: `id` → `AlarmId`, `AlarmGroupId`, `AlarmEventId`
 
 | Table | Current PK | Required PK |
 |-------|-----------|-------------|
@@ -152,7 +152,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/01-data-model.md` (lines 227–237, 251)  
 **Rule Violated:** `10-database-conventions/01-naming-conventions.md` §Boolean — "Every boolean column MUST start with `Is` or `Has`"  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — `enabled` → `IsEnabled`, `previous_enabled` → `IsPreviousEnabled`, `vibration_enabled` → `IsVibrationEnabled`
 
 | Current | Required | Table |
 |---------|----------|-------|
@@ -271,4 +271,4 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 ---
 
 ## Issues Found So Far: 15
-## Open: 13 | Resolved: 2
+## Open: 8 | Resolved: 7
