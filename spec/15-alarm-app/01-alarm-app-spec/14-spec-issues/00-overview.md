@@ -23,7 +23,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 11 | 0 | 11 |
 | 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 0 | 4 |
 | 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 0 | 12 |
-| 9 | `09-discovery-phase-7.md` | Discovery Phase 7 — Regression Scan | 18 | 14 | 4 |
+| 9 | `09-discovery-phase-7.md` | Discovery Phase 7 — Regression Scan | 18 | 12 | 6 |
 
 ---
 
@@ -35,8 +35,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 54 |
 | 🟢 Low | 8 |
 | **Grand Total** | **95** |
-| **Open** | **14** |
-| **Resolved** | **81** |
+| **Open** | **12** |
+| **Resolved** | **83** |
 
 ---
 
@@ -91,7 +91,7 @@ This folder tracks all specification quality issues found during the deep audit 
 5. ~~`06-tauri-architecture.md` contradictions~~ **✅ FIXED**
 6. ~~`02-alarm-scheduling.md` severely outdated~~ **✅ FIXED**
 7. ~~Root `00-overview.md` Data Model section camelCase~~ **✅ FIXED (Fix 21)**
-8. **NEW:** `04-snooze-system.md` SnoozeState interface contradicts data model (D7-REG-002)
+8. ~~`04-snooze-system.md` SnoozeState interface contradicts data model~~ **✅ FIXED (Fix 22)**
 9. **NEW:** Error enum incomplete — `RestrictedPath` variant missing (D7-NEW-010)
 10. **NEW:** AI cheat sheet has broken markdown — unclosed code fence (D7-NEW-012)
 
