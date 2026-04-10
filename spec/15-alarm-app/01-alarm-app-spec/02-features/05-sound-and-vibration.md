@@ -199,22 +199,23 @@ fn compute_quadratic_volume(elapsed: Duration, total: Duration) -> f32 {
 use objc2_av_foundation::{AVAudioSession, AVAudioSessionCategory};
 
 pub fn configure_audio_session() -> Result<(), AlarmAppError> {
-    unsafe {
-        let session = AVAudioSession::sharedInstance();
-
-        // .playback category: audio plays even when DND is on, screen is locked
-        // .duckOthers: reduces other audio volume while alarm plays
-        session.setCategory_withOptions_error(
-            AVAudioSessionCategory::Playback,
-            AVAudioSessionCategoryOptions::DuckOthers,
-        ).map_err(|e| AlarmAppError::Audio(format!("Failed to set audio session: {e}")))?;
-
-        session.setActive_error(true)
-            .map_err(|e| AlarmAppError::Audio(format!("Failed to activate audio session: {e}")))?;
-    }
-
+    let session = unsafe { AVAudioSession::sharedInstance() };
+    set_playback_category(&session)?;
+    activate_session(&session)?;
     tracing::info!("macOS audio session configured: Playback + DuckOthers");
     Ok(())
+}
+
+fn set_playback_category(session: &AVAudioSession) -> Result<(), AlarmAppError> {
+    unsafe { session.setCategory_withOptions_error(
+        AVAudioSessionCategory::Playback,
+        AVAudioSessionCategoryOptions::DuckOthers,
+    ) }.map_err(|e| AlarmAppError::Audio(format!("Failed to set audio session: {e}")))
+}
+
+fn activate_session(session: &AVAudioSession) -> Result<(), AlarmAppError> {
+    unsafe { session.setActive_error(true) }
+        .map_err(|e| AlarmAppError::Audio(format!("Failed to activate audio session: {e}")))
 }
 ```
 
