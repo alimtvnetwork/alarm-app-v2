@@ -78,21 +78,9 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 ## CG-006: Feature Specs Reference snake_case Columns in Prose
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all prose column/field references converted to PascalCase across Fix Phases 8, 9, 14
 
-**Problem:** Feature files reference column names in prose text (not just code blocks), e.g.:
-- `07-alarm-groups.md` line 41: "Column: `previous_enabled`"
-- `07-alarm-groups.md` line 47: "save `enabled` → `previous_enabled`"
-- `03-alarm-firing.md` line 27: "`next_fire_time <= now`"
-- `03-alarm-firing.md` line 486: "Sort by `next_fire_time ASC`"
-- `04-snooze-system.md` line 47: "`snooze_state` SQLite table" (table renamed to `SnoozeState`)
-- `04-snooze-system.md` lines 30–31: `snoozeDurationMin`, `maxSnoozeCount` (camelCase prose)
-- `03-alarm-firing.md` lines 485–487: `next_fire_time`, `enabled`, `created_at` in queue rules
-- `05-sound-and-vibration.md` lines 146, 236: `gradualVolume`, `vibrationEnabled` (camelCase prose)
-
-These prose references must also be updated when column names change to PascalCase.
-
-**Files affected:** `01-alarm-crud.md`, `03-alarm-firing.md`, `04-snooze-system.md`, `05-sound-and-vibration.md`, `07-alarm-groups.md`, `10-export-import.md`, `13-analytics.md`
+**Resolution:** Fixed snake_case and camelCase prose references in: `01-alarm-crud.md`, `03-alarm-firing.md`, `04-snooze-system.md`, `05-sound-and-vibration.md`, `07-alarm-groups.md`, `10-export-import.md`, `99-consistency-report.md`, `03-file-structure.md`, `09-test-strategy.md`. IPC invoke payloads also converted to PascalCase.
 
 ---
 
