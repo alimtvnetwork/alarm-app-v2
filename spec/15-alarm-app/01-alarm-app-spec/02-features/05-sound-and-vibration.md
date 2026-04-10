@@ -171,17 +171,16 @@ pub async fn run_gradual_volume(sink: &Sink, duration_sec: u32) {
     loop {
         interval.tick().await;
         let elapsed = start.elapsed();
-
-        if elapsed >= duration {
-            sink.set_volume(1.0);
-            break;
-        }
-
-        // Quadratic curve: feels more natural than linear
-        let t = elapsed.as_secs_f32() / duration.as_secs_f32();
-        let volume = MIN_VOLUME + (1.0 - MIN_VOLUME) * (t * t);
-        sink.set_volume(volume);
+        if elapsed >= duration { sink.set_volume(1.0); break; }
+        sink.set_volume(compute_quadratic_volume(elapsed, duration));
     }
+}
+
+/// Quadratic curve: feels more natural than linear.
+/// t² provides perceptually even increase from 10% → 100%.
+fn compute_quadratic_volume(elapsed: Duration, total: Duration) -> f32 {
+    let t = elapsed.as_secs_f32() / total.as_secs_f32();
+    MIN_VOLUME + (1.0 - MIN_VOLUME) * (t * t)
 }
 ```
 
