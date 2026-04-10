@@ -6,10 +6,10 @@ type: feature
 
 ## Audit Status
 
-- **Total issues:** 106
-- **Open:** 0 ✅ ALL RESOLVED
+- **Total issues:** 136
+- **Open:** 30
 - **Resolved:** 106
-- **Discovery phases:** 8 complete
+- **Discovery phases:** 9 complete
 - **Fix phases:** 30 complete
 
 ## Issue Distribution
@@ -26,6 +26,21 @@ type: feature
 | Guideline Compliance | 12 | 0 | 12 |
 | Discovery Phase 7 | 18 | 0 | 18 |
 | Discovery Phase 8 | 11 | 0 | 11 |
+| Discovery Phase 9 | 30 | 30 | 0 |
+
+## Proposed Fix Phases (31–39)
+
+| Phase | Issues | Description |
+|-------|--------|-------------|
+| Fix 31 | D9-001–003 | Fix firing spec snake_case/camelCase |
+| Fix 32 | D9-004–005 | Fix CRUD + export-import camelCase |
+| Fix 33 | D9-006–008 | Fix sleep-wellness + test-strategy |
+| Fix 34 | D9-009–011 | Fix fundamentals prose |
+| Fix 35 | D9-012–013 | Fix concurrency guide |
+| Fix 36 | D9-014–017 | Fix reliability report |
+| Fix 37 | D9-018–023 | Fix app issues (historical) |
+| Fix 38 | D9-024–027, D9-030 | Fix reference docs |
+| Fix 39 | D9-028–029 | Fix atomic task breakdown |
 
 ## Canonical Location
 
