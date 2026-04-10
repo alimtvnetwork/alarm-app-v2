@@ -126,8 +126,8 @@
 - **Error handling strategy** in `04-platform-constraints.md` v1.2.0 — `AlarmAppError` enum, 12-error behavior table, `safeInvoke` wrapper
 - **DST handling** in `03-alarm-firing.md` v1.4.0 — `resolve_local_to_utc()`, spring-forward/fall-back rules, 5 test cases
 - **WAL mode** in `01-data-model.md` v1.5.0 — `PRAGMA journal_mode=WAL`, busy_timeout=5000
-- **Event retention** in `01-data-model.md` v1.5.0 — 90-day purge, `event_retention_days` setting
-- **Group toggle state** in `07-alarm-groups.md` v1.2.0 — `previous_enabled` column
+- **Event retention** in `01-data-model.md` v1.5.0 — 90-day purge, `EventRetentionDays` setting
+- **Group toggle state** in `07-alarm-groups.md` v1.2.0 — `IsPreviousEnabled` column
 - **Alarm queue** in `03-alarm-firing.md` v1.3.0 — FIFO `AlarmQueue` struct, overlay sequencing
 - **AI Handoff Reliability Report** — 11 spec gap issues merged into category files
 - **Keyboard accessibility** in `01-alarm-crud.md` v1.4.0 — full keyboard shortcut table, ARIA attributes, dnd-kit KeyboardSensor
@@ -152,8 +152,8 @@
 - **DST & Timezone Handling Rules** — new section in `01-fundamentals/01-data-model.md`
   - Spring-forward: fire at next valid minute
   - Fall-back: fire on first occurrence only
-  - Timezone change: recalculate all `nextFireTime` values
-  - Implementation: `chrono-tz` crate + `system_timezone` setting
+  - Timezone change: recalculate all `NextFireTime` values
+  - Implementation: `chrono-tz` crate + `SystemTimezone` setting
 - **Issues tracking folder** — 7 new category files in `03-app-issues/`
   - `02-frontend-issues.md` — 7 issues (FE-STATE-001/002, FE-DND-001, FE-A11Y-001, FE-OVERLAY-001, FE-RENDER-001, FE-I18N-001)
   - `03-backend-issues.md` — 8 issues (BE-TIMER-001 ✅, BE-AUDIO-001/002, BE-WAKE-001, BE-CRON-001, BE-SNOOZE-001, BE-DELETE-001, BE-CONCUR-001)

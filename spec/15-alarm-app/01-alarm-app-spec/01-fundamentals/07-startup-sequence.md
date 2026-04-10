@@ -158,8 +158,8 @@ let settings = Settings::load_all(&pool).await?;
 settings.ensure_defaults(&pool).await?;
 ```
 
-- Must complete before tray init (needs `time_format` for display)
-- Must complete before engine start (needs `snooze_duration`, etc.)
+- Must complete before tray init (needs `TimeFormat` for display)
+- Must complete before engine start (needs `DefaultSnoozeDuration`, etc.)
 
 ---
 

@@ -295,23 +295,13 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 ## NV-018: Settings Keys in Data Model Use snake_case
 
 **Severity:** 🟡 Medium  
-**Location:** `01-fundamentals/01-data-model.md` (lines 327–334)  
+**Location:** `01-fundamentals/01-data-model.md`  
 **Rule Violated:** `11-key-naming-pascalcase.md` §1 — serialized key-value pairs must be PascalCase  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all settings keys converted to PascalCase across 7 files
 
-**Problem:** Settings table stores key-value pairs. Current keys:
-
-| Current (snake_case) | Required (PascalCase) |
-|----------------------|-----------------------|
-| `theme` | `Theme` |
-| `time_format` | `TimeFormat` |
-| `default_snooze_duration` | `DefaultSnoozeDuration` |
-| `auto_launch` | `AutoLaunch` |
-| `minimize_to_tray` | `MinimizeToTray` |
-| `event_retention_days` | `EventRetentionDays` |
-| `system_timezone` | `SystemTimezone` |
+**Resolution:** Renamed all keys (`theme` → `Theme`, `time_format` → `TimeFormat`, `default_snooze_duration` → `DefaultSnoozeDuration`, `auto_launch` → `AutoLaunch`, `minimize_to_tray` → `MinimizeToTray`, `event_retention_days` → `EventRetentionDays`, `system_timezone` → `SystemTimezone`, `default_sound` → `DefaultSound`, `language` → `Language`) in data model, seed SQL, firing spec, startup sequence, file structure i18n, changelog, and database issues.
 
 ---
 
 ## Issues Found So Far: 18
-## Open: 4 | Resolved: 14
+## Open: 3 | Resolved: 15

@@ -44,7 +44,7 @@
 
 **Root Cause:** Missing data lifecycle management.
 
-**Resolution:** Added event retention policy to `01-fundamentals/01-data-model.md` v1.5.0 with `event_retention_days` setting (default 90), startup purge function in Rust, and `idx_events_timestamp` index for efficient deletion.
+**Resolution:** Added event retention policy to `01-fundamentals/01-data-model.md` v1.5.0 with `EventRetentionDays` setting (default 90), startup purge function in Rust, and `idx_events_timestamp` index for efficient deletion.
 
 ---
 
@@ -72,7 +72,7 @@
 | **Likelihood** | 90% → 0% |
 | **Status** | ✅ Resolved |
 
-**Description:** All values stored as TEXT. Reading `auto_launch` returns string `"true"` not boolean. Every consumer must parse.
+**Description:** All values stored as TEXT. Reading `AutoLaunch` returns string `"true"` not boolean. Every consumer must parse.
 
 **Root Cause:** Key-value design pattern limitation.
 
