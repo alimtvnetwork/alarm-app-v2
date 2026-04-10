@@ -325,9 +325,24 @@ interface Alarm {
 ```typescript
 interface RepeatPattern {
   Type: RepeatType;
-  DaysOfWeek: number[];       // 0=Sun..6=Sat (for "weekly" type)
-  IntervalMinutes: number;    // For "interval" type (e.g., every 120 min)
-  CronExpression: string;     // For "cron" type — parsed by `croner` crate
+  DaysOfWeek: number[];       // 0=Sun..6=Sat (for RepeatType.Weekly)
+  IntervalMinutes: number;    // For RepeatType.Interval (e.g., every 120 min)
+  CronExpression: string;     // For RepeatType.Cron — parsed by `croner` crate
+}
+```
+
+### RepeatPattern (Rust)
+
+```rust
+/// Rust RepeatPattern struct — used by scheduling logic.
+/// Constructed via `AlarmRow::repeat_pattern()` from flat DB columns.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct RepeatPattern {
+    pub r#type: RepeatType,
+    pub days_of_week: Vec<u8>,
+    pub interval_minutes: u32,
+    pub cron_expression: String,
 }
 ```
 
@@ -477,10 +492,10 @@ interface AlarmEvent {
   FiredAt: string;               // ISO 8601
   DismissedAt: string | null;    // ISO 8601
   SnoozeCount: number;
-  ChallengeType?: ChallengeType;
-  ChallengeSolveTimeSec?: number;
-  SleepQuality?: number;         // 1-5
-  Mood?: string;
+  ChallengeType: ChallengeType | null;
+  ChallengeSolveTimeSec: number | null;
+  SleepQuality: number | null;         // 1-5
+  Mood: string | null;
   Timestamp: string;             // ISO 8601 — when this event occurred
 }
 ```
