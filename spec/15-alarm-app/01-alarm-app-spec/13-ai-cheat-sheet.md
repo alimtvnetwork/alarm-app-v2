@@ -59,12 +59,14 @@ src-tauri/                     ← Rust backend
 ### 1. Engine Loop — NEVER Crash
 
 ```rust
+const ALARM_CHECK_INTERVAL_SECS: u64 = 30;
+
 loop {
     match self.check_and_fire_alarms().await {
         Ok(_) => {},
         Err(e) => tracing::error!(error=%e, "tick failed — CONTINUING"),
     }
-    tokio::time::sleep(Duration::from_secs(30)).await;
+    tokio::time::sleep(Duration::from_secs(ALARM_CHECK_INTERVAL_SECS)).await;
 }
 ```
 
