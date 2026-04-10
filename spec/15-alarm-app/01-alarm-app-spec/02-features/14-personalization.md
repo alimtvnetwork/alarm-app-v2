@@ -61,9 +61,9 @@ Visual customization, motivational features, and engagement tools. All preferenc
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `get_daily_quote` | `void` | `{ Text: string, Author: string }` |
-| `save_favorite_quote` | `{ Text: string, Author: string }` | `void` |
-| `add_custom_quote` | `{ Text: string, Author: string }` | `{ QuoteId: string }` |
+| `get_daily_quote` | `void` | `Quote` |
+| `save_favorite_quote` | `{ QuoteId: string }` | `void` |
+| `add_custom_quote` | `{ Text: string, Author: string }` | `Quote` |
 
 ### Theme & Background IPC Commands
 
@@ -88,8 +88,10 @@ Visual customization, motivational features, and engagement tools. All preferenc
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `get_streak_data` | `void` | `{ CurrentStreak: number, LongestStreak: number, CalendarDays: string[] }` |
-| `get_streak_calendar` | `{ Month: number, Year: number }` | `{ Days: { Date: string, IsOnTime: boolean }[] }` |
+| `get_streak_data` | `void` | `StreakData` |
+| `get_streak_calendar` | `{ Month: number, Year: number }` | `StreakCalendarDay[]` |
+
+> **Note:** `Quote`, `StreakData`, and `StreakCalendarDay` interfaces defined in `01-data-model.md`.
 
 ### Music Service Integration (P3)
 

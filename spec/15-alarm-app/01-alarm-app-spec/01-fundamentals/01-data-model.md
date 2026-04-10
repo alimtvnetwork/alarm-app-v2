@@ -510,9 +510,66 @@ interface AlarmEvent {
 }
 ```
 
----
+### Settings
 
-## SQLite Schema
+> **Resolves PL-004.** The `Settings` table is key-value, but the frontend needs a typed interface.
+
+```typescript
+interface Settings {
+  Theme: ThemeMode;
+  ThemeSkin: string;                    // e.g., "default", "midnight"
+  AccentColor: string;                  // Hex color, e.g., "#6366F1"
+  Is24Hour: boolean;
+  DefaultSnoozeDurationMin: number;     // Default: 5
+  DefaultMaxSnoozeCount: number;        // Default: 3
+  AutoDismissMin: number;               // Default: 15
+  EventRetentionDays: number;           // Default: 365
+  IsGradualVolumeEnabled: boolean;
+  GradualVolumeDurationSec: number;     // Default: 30
+  SystemTimezone: string;               // IANA timezone, e.g., "Asia/Kuala_Lumpur"
+}
+```
+
+> **Note:** Stored as individual key-value rows in SQLite `Settings` table. `get_settings` reads all rows and maps them into this typed interface. `update_setting` writes a single key.
+
+### Quote
+
+> **Resolves PL-003.** Used by `get_daily_quote`, `save_favorite_quote`, `add_custom_quote`.
+
+```typescript
+interface Quote {
+  QuoteId: string;
+  Text: string;
+  Author: string;
+  IsFavorite: boolean;
+  IsCustom: boolean;
+}
+```
+
+### StreakData
+
+> **Resolves PL-001.** Returned by `get_streak_data`.
+
+```typescript
+interface StreakData {
+  CurrentStreak: number;     // Consecutive on-time wake days
+  LongestStreak: number;     // All-time longest streak
+  CalendarDays: string[];    // ISO date strings of streak days in current month
+}
+```
+
+### StreakCalendarDay
+
+> **Resolves PL-002.** Element type for `get_streak_calendar` return array.
+
+```typescript
+interface StreakCalendarDay {
+  Date: string;       // YYYY-MM-DD
+  IsOnTime: boolean;  // true = dismissed without exceeding snooze limit
+}
+```
+
+---
 
 ### Tables
 
