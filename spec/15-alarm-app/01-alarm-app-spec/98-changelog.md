@@ -27,9 +27,36 @@
 
 ## Version History
 
+### v2.1.0 — 2026-04-10
+
+**Theme:** Deep quality audit — 76 new issues found across 5 discovery phases, readiness score downgraded to ~70/100
+
+#### Discovery Phases 14–18
+
+| Phase | Issues | Focus |
+|-------|:------:|-------|
+| 14 | 29 | Structural: magic string types (9), missing enums (2), missing IPC error format, missing acceptance criteria (4) |
+| 15 | 13 | Code quality: raw `!` negation (4), `expect()` anti-patterns (3), camelCase IPC keys (2), boolean semantics |
+| 16 | 12 | Test/cheat sheet: camelCase test fixtures (critical), thiserror version mismatch, missing PascalCase examples |
+| 17 | 12 | Execution guides: stale handoff report (critical), missing enum tasks in breakdown, D-Bus contradictions |
+| 18 | 10 | Staleness: root overview 100/100, consistency reports stale, changelog missing phases 14–17 |
+
+#### Changed
+- `00-overview.md` → v2.1.0: Status downgraded from "Complete" to "Conditionally Ready", readiness ~70/100
+- `10-ai-handoff-readiness-report.md` → v2.0.0: Re-scored to ~70/100, 256 issues (76 open), blocking gaps documented
+- `99-consistency-report.md` (root) → v2.0.0: Health score 70/100, open issues listed, stale subfolder reports flagged
+- `14-spec-issues/00-overview.md` → v1.14.0: Added phases 14–18, totals 256/76/180
+
+#### Status
+- **Total issues:** 256 (180 resolved + 76 open)
+- **Discovery phases:** 18 complete (saturation reached — yield declining)
+- **Recommended next step:** Begin fix phases for 76 open issues
+
+---
+
 ### v2.0.0 — 2026-04-10
 
-**Theme:** 100/100 readiness — dependency pinning + platform verification matrix close final 2-point gap
+**Theme:** 100/100 readiness — dependency pinning + platform verification matrix close final 2-point gap (subsequently downgraded by phases 14–18)
 
 #### Added
 - **`10-dependency-lock.md`** (new) in `01-fundamentals/` — 30 Rust crates + 14 npm packages pinned with `=x.y.z` exact versions, API surface documented per dependency, breaking changes flagged (rusqlite 0.31→0.32.1, rodio pin at 0.19, croner pin at 2.0.7, zustand pin at 4.5.7), compatibility matrix, upgrade policy
