@@ -1,7 +1,7 @@
 # Accessibility & Non-Functional Requirements
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-08  
+**Version:** 1.1.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** Low  
 **Priority:** P1 (Accessibility) / P2 (i18n) / P0 (Performance)
@@ -56,8 +56,8 @@ Defines accessibility standards (WCAG 2.1 AA), performance budgets, and internat
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
-| Startup to window visible | < 2 seconds | Cold start on HDD |
-| Idle memory usage | < 150 MB | After app fully loaded |
+| Startup to window visible | < 750ms | Cold start on HDD (see `07-startup-sequence.md` PERF-STARTUP-001) |
+| Idle memory usage | < 200 MB | After app fully loaded (see `04-platform-constraints.md` PERF-MEMORY-001) |
 | Idle CPU usage | ~0% | No busy-wait loops; sleep between checks |
 | Alarm check interval overhead | < 1ms per check | 30-second timer, not continuous polling |
 | SQLite query latency | < 10ms | For CRUD operations |
@@ -88,13 +88,13 @@ Defines accessibility standards (WCAG 2.1 AA), performance budgets, and internat
 
 - All user-facing strings extracted to locale files
 - Default locale: `en` (English)
-- Locale files: `src/locales/{locale}.json`
+- Locale files: `src/i18n/locales/{locale}.json`
 - Date/time formatting respects locale settings
 
 ### i18n-Ready Architecture
 
 ```
-src/locales/
+src/i18n/locales/
   en.json          # English (default)
   ms.json          # Malay
   zh.json          # Chinese
@@ -124,8 +124,8 @@ src/locales/
 - [ ] Screen reader announces alarm states and events
 - [ ] 4.5:1 contrast ratio on all text (both themes)
 - [ ] `prefers-reduced-motion` respected
-- [ ] Startup < 2 seconds on target hardware
-- [ ] Idle memory < 150 MB
+- [ ] Startup < 750ms on target hardware
+- [ ] Idle memory < 200 MB
 - [ ] Idle CPU ~0%
 - [ ] App bundle < 50 MB
 - [ ] 100% offline functionality

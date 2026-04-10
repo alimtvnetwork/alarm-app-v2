@@ -89,7 +89,7 @@ Storage: SQLite database (via rusqlite + refinery migrations)
 Tables:
   Alarms        → Alarm records (with soft-delete, NextFireTime)
   AlarmGroups   → AlarmGroup records (with color)
-  Settings      → Key-value config (theme, locale, defaults)
+  Settings      → Key-value config with ValueType (theme, locale, defaults)
   SnoozeState   → Active snooze tracking
   AlarmEvents   → Alarm history log (fired, snoozed, dismissed, missed)
 ```

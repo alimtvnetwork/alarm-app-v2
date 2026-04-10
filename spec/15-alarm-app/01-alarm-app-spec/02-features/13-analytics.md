@@ -1,7 +1,7 @@
 # Analytics & Alarm History
 
-**Version:** 1.2.0  
-**Updated:** 2026-04-08  
+**Version:** 1.3.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** Low  
 **Priority:** P2 (History) / P3 (Reports)
@@ -89,8 +89,8 @@ interface HistoryFilter {
 
 > **Single source of truth:** The canonical `AlarmEvents` schema is defined in `01-fundamentals/01-data-model.md`. Do not duplicate it here. Refer to that file for column names, types, and constraints.
 
-**Table:** `AlarmEvents` (11 columns)  
-**Key columns:** `AlarmEventId`, `AlarmId`, `Type`, `FiredAt`, `DismissedAt`, `SnoozeCount`, `ChallengeType`, `ChallengeSolveTimeSec`, `SleepQuality`, `Mood`, `Timestamp`
+**Table:** `AlarmEvents` (13 columns)  
+**Key columns:** `AlarmEventId`, `AlarmId`, `Type`, `FiredAt`, `DismissedAt`, `SnoozeCount`, `ChallengeType`, `ChallengeSolveTimeSec`, `SleepQuality`, `Mood`, `AlarmLabelSnapshot`, `AlarmTimeSnapshot`, `Timestamp`
 
 ---
 
