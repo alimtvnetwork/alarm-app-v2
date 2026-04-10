@@ -51,56 +51,77 @@ Alarms are defined in **local time** (`HH:MM`). The `nextFireTime` is stored as 
 ### nextFireTime Computation (Rust Pseudocode)
 
 ```rust
+/// Entry point — delegates to type-specific handlers (each ≤15 lines)
 fn compute_next_fire_time(
-    alarm_time: NaiveTime,        // e.g., 07:30
-    alarm_date: Option<NaiveDate>,// for one-time date-specific alarms
+    alarm_time: NaiveTime,
+    alarm_date: Option<NaiveDate>,
     repeat: &RepeatPattern,
-    timezone: &Tz,                // from chrono-tz, e.g., Asia/Kuala_Lumpur
+    timezone: &Tz,
     now: DateTime<Utc>,
 ) -> Option<DateTime<Utc>> {
     let now_local = now.with_timezone(timezone);
-
     match repeat.r#type {
-        RepeatType::Once => {
-            let target_date = alarm_date.unwrap_or_else(|| {
-                let today = now_local.date_naive();
-                if alarm_time > now_local.time() { today } else { today + Duration::days(1) }
-            });
-            resolve_local_to_utc(target_date, alarm_time, timezone)
-        }
-        RepeatType::Daily => {
-            let today = now_local.date_naive();
-            let candidate = resolve_local_to_utc(today, alarm_time, timezone);
-            match candidate {
-                Some(t) if t > now => Some(t),
-                _ => resolve_local_to_utc(today + Duration::days(1), alarm_time, timezone),
-            }
-        }
-        RepeatType::Weekly => {
-            // Try each of the next 7 days, check if weekday matches daysOfWeek
-            for offset in 0..=7 {
-                let date = now_local.date_naive() + Duration::days(offset);
-                let weekday_num = date.weekday().num_days_from_sunday(); // 0=Sun
-                if repeat.days_of_week.contains(&(weekday_num as u8)) {
-                    let candidate = resolve_local_to_utc(date, alarm_time, timezone);
-                    if let Some(t) = candidate {
-                        if t > now { return Some(t); }
-                    }
-                }
-            }
-            None
-        }
-        RepeatType::Interval => {
-            // Simply add interval minutes to last fire time
-            Some(now + Duration::minutes(repeat.interval_minutes as i64))
-        }
-        RepeatType::Cron => {
-            // Use croner crate to find next match
-            let cron = Cron::new(&repeat.cron_expression).parse().ok()?;
-            cron.find_next_occurrence(&now_local.naive_local(), false)
-                .and_then(|naive| resolve_local_to_utc(naive.date(), naive.time(), timezone))
+        RepeatType::Once => compute_once(alarm_time, alarm_date, &now_local, timezone),
+        RepeatType::Daily => compute_daily(alarm_time, &now_local, now, timezone),
+        RepeatType::Weekly => compute_weekly(alarm_time, repeat, &now_local, now, timezone),
+        RepeatType::Interval => Some(now + Duration::minutes(repeat.interval_minutes as i64)),
+        RepeatType::Cron => compute_cron(&repeat.cron_expression, &now_local, timezone),
+    }
+}
+
+fn compute_once(
+    alarm_time: NaiveTime,
+    alarm_date: Option<NaiveDate>,
+    now_local: &DateTime<Tz>,
+    timezone: &Tz,
+) -> Option<DateTime<Utc>> {
+    let target_date = alarm_date.unwrap_or_else(|| {
+        let today = now_local.date_naive();
+        if alarm_time > now_local.time() { today } else { today + Duration::days(1) }
+    });
+    resolve_local_to_utc(target_date, alarm_time, timezone)
+}
+
+fn compute_daily(
+    alarm_time: NaiveTime,
+    now_local: &DateTime<Tz>,
+    now: DateTime<Utc>,
+    timezone: &Tz,
+) -> Option<DateTime<Utc>> {
+    let today = now_local.date_naive();
+    let candidate = resolve_local_to_utc(today, alarm_time, timezone);
+    match candidate {
+        Some(t) if t > now => Some(t),
+        _ => resolve_local_to_utc(today + Duration::days(1), alarm_time, timezone),
+    }
+}
+
+fn compute_weekly(
+    alarm_time: NaiveTime,
+    repeat: &RepeatPattern,
+    now_local: &DateTime<Tz>,
+    now: DateTime<Utc>,
+    timezone: &Tz,
+) -> Option<DateTime<Utc>> {
+    for offset in 0..=7 {
+        let date = now_local.date_naive() + Duration::days(offset);
+        let weekday_num = date.weekday().num_days_from_sunday();
+        if !repeat.days_of_week.contains(&(weekday_num as u8)) { continue; }
+        if let Some(t) = resolve_local_to_utc(date, alarm_time, timezone) {
+            if t > now { return Some(t); }
         }
     }
+    None
+}
+
+fn compute_cron(
+    cron_expr: &str,
+    now_local: &DateTime<Tz>,
+    timezone: &Tz,
+) -> Option<DateTime<Utc>> {
+    let cron = Cron::new(cron_expr).parse().ok()?;
+    cron.find_next_occurrence(&now_local.naive_local(), false)
+        .and_then(|naive| resolve_local_to_utc(naive.date(), naive.time(), timezone))
 }
 ```
 
