@@ -194,11 +194,12 @@ The Alarm App specification is **ready for AI handoff**. All 43 identified issue
 | Spec Overview | `./00-overview.md` |
 | Changelog | `./98-changelog.md` |
 | Issues Overview | `./03-app-issues/00-overview.md` |
+| Spec Issues Audit | `./14-spec-issues/00-overview.md` (154 issues found, 136 resolved) |
 | Atomic Task Breakdown | `./11-atomic-task-breakdown.md` |
 | Platform & Concurrency Guide | `./12-platform-and-concurrency-guide.md` |
 | AI Cheat Sheet | `./13-ai-cheat-sheet.md` |
 | AI Reliability Report | `./09-ai-handoff-reliability-report.md` |
-| Feasibility Analysis | `/mnt/documents/alarm-app-ai-feasibility-analysis.md` |
+| Feasibility Analysis | External document (not included in spec repo) |
 
 ---
 
