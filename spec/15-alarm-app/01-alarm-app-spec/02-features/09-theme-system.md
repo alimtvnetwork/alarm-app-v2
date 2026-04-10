@@ -53,11 +53,11 @@ Full dark/light theme toggle with system preference auto-detection. The dark mod
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `get_theme` | `void` | `{ Theme: "light" \| "dark" \| "system" }` |
-| `set_theme` | `{ Theme: "light" \| "dark" \| "system" }` | `void` |
+| `get_theme` | `void` | `{ Theme: ThemeMode }` |
+| `set_theme` | `{ Theme: ThemeMode }` | `void` |
 
 **Behavior:**
-- `get_theme` — Reads `Theme` key from `Settings` SQLite table. Defaults to `"system"` if not set.
+- `get_theme` — Reads `Theme` key from `Settings` SQLite table. Defaults to `ThemeMode.System` if not set.
 - `set_theme` — Writes `Theme` key to `Settings` table and emits `theme-changed` event to frontend.
 
 ---
