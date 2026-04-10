@@ -43,9 +43,9 @@ Users can export alarms and groups in multiple formats (JSON, CSV, iCal) and imp
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `export_data` | `{ format: "json" \| "csv" \| "ics", scope: "all" \| "selected", alarmIds?: string[] }` | `string` (saved file path) |
-| `import_data` | `{ mode: "merge" \| "replace" }` | `ImportPreview` |
-| `confirm_import` | `{ previewId: string, mode: "merge" \| "replace", duplicateAction: "skip" \| "overwrite" \| "rename" }` | `ImportResult` |
+| `export_data` | `{ Format: ExportFormat, Scope: ExportScope, AlarmIds?: string[] }` | `string` (saved file path) |
+| `import_data` | `{ Mode: ImportMode }` | `ImportPreview` |
+| `confirm_import` | `{ PreviewId: string, Mode: ImportMode, DuplicateAction: DuplicateAction }` | `ImportResult` |
 
 ---
 

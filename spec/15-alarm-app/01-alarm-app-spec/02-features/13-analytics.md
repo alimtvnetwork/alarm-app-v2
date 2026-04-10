@@ -50,9 +50,9 @@ interface HistoryFilter {
   EndDate?: string;      // ISO 8601
   GroupId?: string;
   AlarmId?: string;
-  EventType?: "fired" | "snoozed" | "dismissed" | "missed";
-  SortBy?: "date" | "label" | "SnoozeCount";
-  SortOrder?: "asc" | "desc";
+  EventType?: AlarmEventType;
+  SortBy?: SortField;
+  SortOrder?: SortOrder;
 }
 ```
 
