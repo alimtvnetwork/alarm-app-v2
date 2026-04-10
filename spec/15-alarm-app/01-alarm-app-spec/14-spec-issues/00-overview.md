@@ -23,7 +23,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 11 | 0 | 11 |
 | 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 0 | 4 |
 | 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 0 | 12 |
-| 9 | `09-discovery-phase-7.md` | Discovery Phase 7 — Regression Scan | 18 | 9 | 9 |
+| 9 | `09-discovery-phase-7.md` | Discovery Phase 7 — Regression Scan | 18 | 7 | 11 |
 
 ---
 
@@ -35,8 +35,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 54 |
 | 🟢 Low | 8 |
 | **Grand Total** | **95** |
-| **Open** | **9** |
-| **Resolved** | **86** |
+| **Open** | **7** |
+| **Resolved** | **88** |
 
 ---
 
