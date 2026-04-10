@@ -314,7 +314,7 @@ CREATE TABLE AlarmEvents (
 
 ### SQLite WAL Mode (Resolves BE-CONCUR-001)
 
-The alarm engine writes `alarm_events` and updates `nextFireTime` while the user may be saving edits. Without WAL, single-writer SQLite queues writes and causes UI lag.
+The alarm engine writes `AlarmEvents` and updates `NextFireTime` while the user may be saving edits. Without WAL, single-writer SQLite queues writes and causes UI lag.
 
 ```sql
 -- Run at startup Step 4 (after migrations)
@@ -326,7 +326,7 @@ PRAGMA busy_timeout=5000;  -- Wait up to 5s for locks instead of failing immedia
 
 ### Event Retention Policy (Resolves DB-GROWTH-001)
 
-The `alarm_events` table grows unbounded. A retention policy purges old events on startup.
+The `AlarmEvents` table grows unbounded. A retention policy purges old events on startup.
 
 ```rust
 const DEFAULT_EVENT_RETENTION_DAYS: i64 = 90;
@@ -364,7 +364,7 @@ pub fn purge_old_events(conn: &Connection) {
 | `AutoLaunch` | `"true" \| "false"` | Start on system boot |
 | `MinimizeToTray` | `"true" \| "false"` | Keep running when window closed |
 | `Language` | `string` | i18n locale code (default: "en") |
-| `EventRetentionDays` | `number` | Days to keep alarm_events (default: 90) |
+| `EventRetentionDays` | `number` | Days to keep `AlarmEvents` (default: 90) |
 
 ---
 
@@ -372,19 +372,19 @@ pub fn purge_old_events(conn: &Connection) {
 
 | Field | Rule |
 |-------|------|
-| `time` | Must match `HH:MM` format, 00:00–23:59 |
-| `date` | Must match `YYYY-MM-DD` or be null |
-| `label` | String, 0–50 characters, trimmed |
-| `repeat.type` | One of: `once`, `daily`, `weekly`, `interval`, `cron` |
-| `repeat.daysOfWeek` | Array of 0–6, no duplicates, sorted ascending (weekly only) |
-| `repeat.intervalMinutes` | Positive integer (interval only) |
-| `repeat.cronExpression` | Valid cron syntax (cron only) |
-| `snoozeDurationMin` | Integer, 1–30 |
-| `maxSnoozeCount` | Integer, 0–10 |
-| `autoDismissMin` | Integer, 0–60 |
-| `groupId` | Must reference existing group or be null |
-| `soundFile` | Must reference built-in sound key or valid file path |
-| `nextFireTime` | Valid ISO 8601 or null |
+| `Time` | Must match `HH:MM` format, 00:00–23:59 |
+| `Date` | Must match `YYYY-MM-DD` or be null |
+| `Label` | String, 0–50 characters, trimmed |
+| `Repeat.Type` | One of: `once`, `daily`, `weekly`, `interval`, `cron` |
+| `Repeat.DaysOfWeek` | Array of 0–6, no duplicates, sorted ascending (weekly only) |
+| `Repeat.IntervalMinutes` | Positive integer (interval only) |
+| `Repeat.CronExpression` | Valid cron syntax (cron only) |
+| `SnoozeDurationMin` | Integer, 1–30 |
+| `MaxSnoozeCount` | Integer, 0–10 |
+| `AutoDismissMin` | Integer, 0–60 |
+| `GroupId` | Must reference existing group or be null |
+| `SoundFile` | Must reference built-in sound key or valid file path |
+| `NextFireTime` | Valid ISO 8601 or null |
 
 ---
 
