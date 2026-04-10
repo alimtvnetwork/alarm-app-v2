@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 1.9.0  
+**Version:** 2.0.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -26,6 +26,35 @@
 ---
 
 ## Version History
+
+### v2.0.0 — 2026-04-10
+
+**Theme:** 100/100 readiness — dependency pinning + platform verification matrix close final 2-point gap
+
+#### Added
+- **`10-dependency-lock.md`** (new) in `01-fundamentals/` — 30 Rust crates + 14 npm packages pinned with `=x.y.z` exact versions, API surface documented per dependency, breaking changes flagged (rusqlite 0.31→0.32.1, rodio pin at 0.19, croner pin at 2.0.7, zustand pin at 4.5.7), compatibility matrix, upgrade policy
+- **`11-platform-verification-matrix.md`** (new) in `01-fundamentals/` — Feature × Platform × Expected Behavior × Test Method × Fallback tables for alarm timing, audio playback, notifications, system tray, WebView CSS, notification permission flows (macOS/Windows/Linux)
+- **Platform E2E tests** (PLAT-01 through PLAT-10) in `09-test-strategy.md` — alarm firing while minimized, sleep/wake missed alarms, audio sessions, tray icons, CSS fallbacks, DST boundaries
+- **Dependency compatibility tests** (DEP-01 through DEP-07) in `09-test-strategy.md` — cargo check, migration compat, plugin registration, npm install, vite build, tsc strict, IPC type check
+- **Tray icon asset requirements** in `02-design-system.md` — per-platform format, sizes, color mode rules
+- **npm `package.json` section** in `03-file-structure.md` — all frontend deps pinned with `=x.y.z`
+- **`thiserror` crate** added to Cargo.toml — was used in `AlarmAppError` but never listed
+
+#### Changed
+- `00-overview.md` → v2.0.0: Readiness score 100/100, fundamentals count 12
+- `01-fundamentals/00-overview.md` → v1.4.0: Added files 10, 11 to inventory
+- `01-fundamentals/02-design-system.md` → v1.2.0: Tray icon assets section
+- `01-fundamentals/03-file-structure.md` → v1.6.0: Cargo.toml exact pins, npm section, thiserror added
+- `01-fundamentals/06-tauri-architecture.md` → v1.2.0: Plugin versions + API signatures
+- `01-fundamentals/09-test-strategy.md` → v1.1.0: Platform E2E + dep compat test layers
+- `10-ai-handoff-readiness-report.md` → v1.3.0: 100/100 score, 12 fundamentals, 6 test layers, dep pins
+- All `99-consistency-report.md` files updated to reflect v2.0.0
+
+#### Gap Resolution (98 → 100)
+- **Gap 1 (Platform Runtime Testing, -1pt):** ✅ Resolved — platform verification matrix with testable assertions per OS
+- **Gap 2 (Third-Party API Surface, -1pt):** ✅ Resolved — all 44 dependencies pinned with exact versions + API surface documented
+
+---
 
 ### v1.9.0 — 2026-04-10
 
