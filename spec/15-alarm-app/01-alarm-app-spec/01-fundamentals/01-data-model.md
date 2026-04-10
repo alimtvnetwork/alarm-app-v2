@@ -31,6 +31,7 @@ interface Alarm {
   Date: string | null;             // "YYYY-MM-DD" for date-specific alarms, null for recurring/daily
   Label: string;                   // User-defined label, max 50 chars
   IsEnabled: boolean;              // Toggle state
+  IsPreviousEnabled: boolean | null; // Saved state for group toggle restore (null = no saved state)
   Repeat: RepeatPattern;           // Scheduling pattern (replaces recurringDays)
   GroupId: string | null;          // Reference to AlarmGroup.AlarmGroupId
   SnoozeDurationMin: number;       // 1–30, default 5
@@ -284,7 +285,7 @@ CREATE TABLE SnoozeState (
 
 CREATE TABLE AlarmEvents (
   AlarmEventId TEXT PRIMARY KEY,
-  AlarmId TEXT REFERENCES alarms(AlarmId) ON DELETE SET NULL,
+  AlarmId TEXT REFERENCES Alarms(AlarmId) ON DELETE SET NULL,
   Type TEXT NOT NULL,           -- fired|snoozed|dismissed|missed
   FiredAt TEXT NOT NULL,
   DismissedAt TEXT,
@@ -293,6 +294,8 @@ CREATE TABLE AlarmEvents (
   ChallengeSolveTimeSec REAL,
   SleepQuality INTEGER,
   Mood TEXT,
+  AlarmLabelSnapshot TEXT NOT NULL DEFAULT '',  -- Preserves label after alarm deletion (DB-ORPHAN-001)
+  AlarmTimeSnapshot TEXT NOT NULL DEFAULT '',   -- Preserves time after alarm deletion (DB-ORPHAN-001)
   Timestamp TEXT NOT NULL
 );
 ```

@@ -217,21 +217,30 @@ Engine tick at t=30 runs BEFORE nextFireTime update completes → matches again
 
 **Safeguard:** Mark alarm as "firing" in memory before starting fire sequence:
 ```rust
+use std::sync::{Arc, Mutex};
+use std::collections::HashSet;
+
 pub struct AlarmEngine {
-    currently_firing: HashSet<String>,  // In-memory lock
+    currently_firing: Arc<Mutex<HashSet<String>>>,  // Thread-safe in-memory lock
 }
 
-fn check_and_fire_alarms(&mut self, conn: &Connection) {
+fn check_and_fire_alarms(&self, conn: &Connection) {
     let due = query_due_alarms(conn);
+    let mut firing = self.currently_firing.lock()
+        .expect("currently_firing mutex poisoned");
     for alarm in due {
-        if self.currently_firing.contains(&alarm.alarm_id) {
+        if firing.contains(&alarm.alarm_id) {
             continue;  // Already being processed
         }
-        self.currently_firing.insert(alarm.alarm_id.clone());
-        
+        firing.insert(alarm.alarm_id.clone());
+        drop(firing);  // Release lock during processing
+
         // Process alarm...
         self.update_next_fire_time(conn, &alarm);
-        self.currently_firing.remove(&alarm.alarm_id);
+
+        let mut firing = self.currently_firing.lock()
+            .expect("currently_firing mutex poisoned");
+        firing.remove(&alarm.alarm_id);
     }
 }
 ```
