@@ -1,19 +1,30 @@
 ---
 name: Alarm App Spec Issues Audit
-description: All 256 spec quality issues resolved — 18 discovery phases, 29 fix phases, 100/100 readiness, audit complete
+description: 249 of 256 spec quality issues resolved — 18 discovery phases, 29 fix phases, ~95/100 readiness
 type: feature
 ---
 
-## Audit Status — COMPLETE ✅
+## Audit Status — NEAR COMPLETE
 
 - **Total issues:** 256
-- **Open:** 0
-- **Resolved:** 256
+- **Open:** 7 (0 critical, 2 medium, 5 low)
+- **Resolved:** 249
 - **Discovery phases:** 18
 - **Fix phases:** 29 (Phases 1–20, A–I)
-- **Readiness Score:** 100/100 (A+)
+- **Readiness Score:** ~95/100 (A)
 
-## Issue Distribution (all resolved)
+## Open Issues (7)
+
+### Medium (2)
+- **P14-001:** Stale subfolder consistency reports (fundamentals + features)
+- **P14-002:** Missing cross-refs to coding guidelines in 2 feature files
+
+### Low (5)
+- `0 = disabled` comments (exempt but unfixed) — 3 instances
+- Stale atomic task breakdown (missing enum tasks) — 1
+- Minor settings seeding doc gap — 1
+
+## Issue Distribution (all categories)
 
 | Category | Count |
 |----------|:-----:|
