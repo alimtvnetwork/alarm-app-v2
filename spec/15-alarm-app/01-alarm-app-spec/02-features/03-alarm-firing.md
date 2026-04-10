@@ -30,9 +30,9 @@ When the current time matches an enabled alarm's `NextFireTime`, the alarm fires
    b. Rust emits an `alarm-fired` event to the frontend via Tauri IPC
    c. Frontend shows full-screen `AlarmOverlay` with alarm label
    d. Rust dispatches OS-native notification (via Tauri notification plugin)
-   e. Insert `AlarmEvents` row with `Type = 'fired'`
+   e. Insert `AlarmEvents` row with `Type = AlarmEventType::Fired`
 4. After firing: Rust recomputes `NextFireTime` based on `repeat` pattern
-   - `once` → set `IsEnabled = 0`, `NextFireTime = NULL`
+    - `RepeatType::Once` → set `IsEnabled = 0`, `NextFireTime = NULL`
    - `daily` → advance by 24 hours (DST-aware — see DST section below)
    - `weekly` → advance to next matching day (DST-aware)
    - `interval` → advance by `intervalMinutes`
@@ -457,7 +457,7 @@ src-tauri/src/engine/
 
 - Missed alarms show with a distinct "Missed Alarm" badge in the overlay
 - Display: alarm label + original scheduled time + "Missed at HH:MM"
-- Log as `Type = 'missed'` in `AlarmEvents` table
+- Log as `Type = AlarmEventType::Missed` in `AlarmEvents` table
 - Recalculate `NextFireTime` for repeating alarms
 
 ### Guarantee
@@ -470,7 +470,7 @@ src-tauri/src/engine/
 
 - Optional per-alarm setting: `AutoDismissMin` (0 = manual dismiss only, 1–60 minutes)
 - If an alarm fires and is not dismissed/snoozed within N minutes, it auto-dismisses
-- Audio stops, overlay closes, event logged as `type = 'dismissed'` with note `auto`
+- Audio stops, overlay closes, event logged as `Type = AlarmEventType::Dismissed` with note `auto`
 - Default: 0 (manual dismiss only) — user must manually dismiss
 
 ---
@@ -569,7 +569,7 @@ Rust AlarmEngine                    Frontend OverlayStore
 - [ ] `NextFireTime` recomputed after every fire event
 - [ ] Missed alarms detected and surfaced on app launch
 - [ ] Missed alarms detected and surfaced on system wake (all 3 platforms)
-- [ ] Missed alarms logged with `Type = 'missed'` in `AlarmEvents`
+- [ ] Missed alarms logged with `Type = AlarmEventType::Missed` in `AlarmEvents`
 - [ ] Auto-dismiss stops alarm after configured minutes if unacknowledged
 - [ ] Only one alarm overlay can be active at a time (queue if multiple fire simultaneously)
 - [ ] Queued alarms fire in FIFO order (earliest `NextFireTime` first)
@@ -593,7 +593,7 @@ The 30-second check interval may match multiple alarms. Without queue rules, AI 
 
 1. **Detection:** On each 30s tick, query returns all alarms where `NextFireTime <= now AND IsEnabled = 1`
 2. **Ordering:** Sort matched alarms by `NextFireTime ASC` (earliest first), then `CreatedAt ASC` (tiebreaker)
-3. **Immediate logging:** ALL matched alarms insert `AlarmEvents` row with `EventType = 'Fired'` immediately — do not wait for overlay display
+3. **Immediate logging:** ALL matched alarms insert `AlarmEvents` row with `Type = AlarmEventType::Fired` immediately — do not wait for overlay display
 4. **Overlay sequencing:** Show only the first alarm's overlay. Queue the rest in memory
 5. **Progression:** When user dismisses or snoozes the current overlay → show next alarm from queue
 6. **Auto-dismiss:** Each queued alarm's `AutoDismissMin` timer starts when its overlay is shown (not when it enters the queue)
