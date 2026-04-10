@@ -97,7 +97,7 @@ src-tauri/                    — Backend (Rust)
   tauri.conf.json             — App config, permissions, window settings
   Cargo.toml                  — Rust dependencies
   migrations/                 — SQLite migration files (numbered SQL, managed by `refinery`)
-    V1__initial_schema.sql    — Tables: alarms, alarm_groups, settings, snooze_state, alarm_events
+    V1__initial_schema.sql    — Tables: Alarms, AlarmGroups, Settings, SnoozeState, AlarmEvents
     V2__*.sql                 — Future schema changes (sequential numbering)
   icons/                      — App icons (macOS .icns, Windows .ico, etc.)
   tests/                      — Rust integration tests

@@ -134,10 +134,10 @@ async fn test_soft_delete_and_undo() {
 |------|----------|
 | Create → read → update → delete flow | Full CRUD lifecycle |
 | Soft-delete → undo within 5s | Undo token mechanism |
-| Group toggle off → individual states saved | `previous_enabled` column |
+| Group toggle off → individual states saved | `IsPreviousEnabled` column |
 | Group toggle on → individual states restored | State restoration |
 | Duplicate alarm | New UUID, "(Copy)" label, all fields copied |
-| Move alarm to group | `group_id` updated correctly |
+| Move alarm to group | `GroupId` updated correctly |
 | Missed alarm detection query | WHERE clause returns correct alarms |
 | Event retention purge | Old events deleted, recent kept |
 

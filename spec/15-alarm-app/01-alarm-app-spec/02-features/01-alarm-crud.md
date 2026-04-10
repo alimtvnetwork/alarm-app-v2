@@ -37,7 +37,7 @@ Users can create new alarms by setting a time (hour and minute), optional date, 
 ### Duplicate
 
 - One-click clone of any alarm: copies all fields, generates new UUID, appends "(Copy)" to label
-- IPC command: `invoke("duplicate_alarm", { alarmId })`
+- IPC command: `invoke("duplicate_alarm", { AlarmId })`
 
 ### Delete (Soft-Delete with Undo)
 
@@ -48,8 +48,8 @@ Users can create new alarms by setting a time (hour and minute), optional date, 
 - If undone: clears `DeletedAt` back to null
 - **Timer mechanism:** `tokio::spawn` with `tokio::time::sleep(Duration::from_secs(5))`, then `DELETE FROM Alarms WHERE AlarmId = ? AND DeletedAt IS NOT NULL`
 - **Crash recovery:** On app startup, purge all rows where `DeletedAt < now - 5 seconds` (cleanup pass)
-- IPC command: `invoke("delete_alarm", { alarmId })` → returns `{ undoToken }`
-- Undo IPC: `invoke("undo_delete_alarm", { undoToken })`
+- IPC command: `invoke("delete_alarm", { AlarmId })` → returns `{ UndoToken }`
+- Undo IPC: `invoke("undo_delete_alarm", { UndoToken })`
 
 ```rust
 // Soft-delete timer
@@ -84,8 +84,8 @@ pub fn cleanup_stale_soft_deletes(conn: &Connection) {
 ### Toggle
 
 - Quick enable/disable without opening edit form
-- IPC command: `invoke("toggle_alarm", { alarmId, enabled })`
-- Rust recomputes `nextFireTime` when enabling
+- IPC command: `invoke("toggle_alarm", { AlarmId, IsEnabled })`
+- Rust recomputes `NextFireTime` when enabling
 
 ---
 
@@ -95,8 +95,8 @@ pub fn cleanup_stale_soft_deletes(conn: &Connection) {
 
 - Alarms can be dragged between groups in the alarm list
 - Drop target highlights the target group
-- On drop: updates `groupId` in SQLite
-- IPC command: `invoke("move_alarm_to_group", { alarmId, groupId })`
+- On drop: updates `GroupId` in SQLite
+- IPC command: `invoke("move_alarm_to_group", { AlarmId, GroupId })`
 - Null `GroupId` = "Ungrouped" section
 
 ### Keyboard & Screen Reader Accessibility (WCAG 2.1 AA)
