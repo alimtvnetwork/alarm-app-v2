@@ -88,7 +88,7 @@ The 11 issues from the AI Handoff Reliability Report have been merged into categ
 
 ## Cross-References
 
-- [AI Feasibility Analysis](/mnt/documents/alarm-app-ai-feasibility-analysis.md) — Source of original 32 issues
+- AI Feasibility Analysis — External document (not included in spec repo)
 - [AI Handoff Reliability Report](../09-ai-handoff-reliability-report.md) — Source of 11 spec gap issues
 - Parent folder's `00-overview.md` for broader context
 

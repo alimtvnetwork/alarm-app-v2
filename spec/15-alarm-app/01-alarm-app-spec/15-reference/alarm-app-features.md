@@ -241,7 +241,7 @@ Building the alarm app as a **native cross-platform application** (Tauri 2.x) pr
 | UX & Design | 10 |
 | Native Platform Capabilities | 10 |
 | Import / Export | 3 |
-| **Total** | **~190+** |
+| **Total** | **69** |
 
 ---
 

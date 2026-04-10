@@ -66,7 +66,7 @@
 - **Medium:** Multiplication, one operand 2–12, other 10–50 (e.g., `23 × 4`). Target solve: <10s.
 - **Hard:** Two-step problems (e.g., `(15 × 3) + 12`). Target solve: <20s.
 - **Custom (P2):** User sets operand ranges and operation types.
-- Solve time logged in `AlarmEvents.Metadata` JSON for future adaptive calibration (P3).
+- Solve time logged in `AlarmEvents.ChallengeSolveTimeSec` (stored as seconds, e.g. `4.5`) for future adaptive calibration (P3).
 - All tiers use integer-only answers (no decimals). Division problems are pre-validated to have integer results.
 
 ---
