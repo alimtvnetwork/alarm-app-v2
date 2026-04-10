@@ -16,24 +16,24 @@
 
 | # | File | Version | Status |
 |---|------|---------|--------|
-| 1 | `00-overview.md` | 1.2.0 | ✅ Present |
-| 2 | `01-alarm-crud.md` | 1.7.0 | ✅ Updated (PascalCase ARIA attrs) |
-| 3 | `02-alarm-scheduling.md` | 2.0.0 | ✅ Present |
-| 4 | `03-alarm-firing.md` | 1.8.0 | ✅ Updated (D-Bus graceful degradation, named booleans) |
-| 5 | `04-snooze-system.md` | 1.3.0 | ✅ Present |
-| 6 | `05-sound-and-vibration.md` | 1.5.0 | ✅ Updated (named booleans for path checks) |
-| 7 | `06-dismissal-challenges.md` | 1.4.0 | ✅ Updated (enum types, acceptance criteria, IPC commands) |
-| 8 | `07-alarm-groups.md` | 1.2.0 | ✅ Present |
-| 9 | `08-clock-display.md` | 1.2.0 | ✅ Present |
-| 10 | `09-theme-system.md` | 1.2.0 | ✅ Present (ThemeMode enum) |
-| 11 | `10-export-import.md` | 1.3.0 | ✅ Updated (PascalCase keys, enum types, coding guidelines cross-ref) |
-| 12 | `11-sleep-wellness.md` | 1.2.0 | ✅ Updated (PascalCase IPC keys, acceptance criteria) |
-| 13 | `12-smart-features.md` | 1.3.0 | ✅ Updated (WebhookError enum, acceptance criteria) |
-| 14 | `13-analytics.md` | 1.3.0 | ✅ Updated (HistoryFilter with enum types, coding guidelines cross-ref) |
-| 15 | `14-personalization.md` | 1.3.0 | ✅ Updated (IPC commands for quotes/streaks/themes, acceptance criteria) |
-| 16 | `15-keyboard-shortcuts.md` | 1.0.0 | ✅ Present |
-| 17 | `16-accessibility-and-nfr.md` | 1.1.0 | ✅ Updated (i18n locale path, performance budgets) |
-| 18 | `97-acceptance-criteria.md` | 1.0.0 | ✅ **New** — Consolidated rollup of 133 testable criteria |
+| 1 | `00-overview.md` | 1.3.0 | ✅ Present |
+| 2 | `01-alarm-crud.md` | 1.10.0 | ✅ Updated (PascalCase ARIA, UNDO_TIMEOUT_MS constant, Scoring) |
+| 3 | `02-alarm-scheduling.md` | 2.2.0 | ✅ Updated (RepeatType enum refs, Scoring) |
+| 4 | `03-alarm-firing.md` | 1.12.0 | ✅ Updated (D-Bus graceful degradation, serde on AlarmQueue/FiredAlarm, internal struct annotations, Scoring) |
+| 5 | `04-snooze-system.md` | 1.5.0 | ✅ Updated (enum references, Scoring) |
+| 6 | `05-sound-and-vibration.md` | 1.6.0 | ✅ Updated (named booleans for path checks, Scoring) |
+| 7 | `06-dismissal-challenges.md` | 1.5.0 | ✅ Updated (enum types, acceptance criteria, IPC commands, Scoring) |
+| 8 | `07-alarm-groups.md` | 1.3.0 | ✅ Present (Scoring added) |
+| 9 | `08-clock-display.md` | 1.3.0 | ✅ Present (Scoring added) |
+| 10 | `09-theme-system.md` | 1.4.0 | ✅ Updated (ThemeMode enum throughout, Scoring) |
+| 11 | `10-export-import.md` | 1.4.0 | ✅ Updated (PascalCase keys, enum types, Scoring) |
+| 12 | `11-sleep-wellness.md` | 1.3.0 | ✅ Updated (PascalCase IPC keys, acceptance criteria, Scoring) |
+| 13 | `12-smart-features.md` | 1.4.0 | ✅ Updated (WebhookError enum, acceptance criteria, Scoring) |
+| 14 | `13-analytics.md` | 1.6.0 | ✅ Updated (HistoryFilter with enums, `list_alarm_events` IPC, Scoring) |
+| 15 | `14-personalization.md` | 1.4.0 | ✅ Updated (IPC commands for quotes/streaks/themes, Scoring) |
+| 16 | `15-keyboard-shortcuts.md` | 1.1.0 | ✅ Present (Scoring added) |
+| 17 | `16-accessibility-and-nfr.md` | 1.2.0 | ✅ Updated (i18n locale path, performance budgets, Scoring) |
+| 18 | `97-acceptance-criteria.md` | 1.0.0 | ✅ Consolidated rollup of 133 testable criteria (Keywords + Cross-Refs added) |
 
 ---
 
