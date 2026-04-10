@@ -226,11 +226,13 @@ function useAlarmEvents() {
 
 #### Crate / Package
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `zustand` | ^4.5 | Minimal global state (2KB gzipped, no providers) |
-| `sonner` | ^1.5 | Toast notifications (success/error/info) — used by `safeInvoke` and undo system |
-| `react-router-dom` | ^6.x | Client-side routing (Index + Settings pages) |
+> All versions pinned with `=` — see `10-dependency-lock.md` for breaking change notes.
+
+| Package | Pinned Version | Purpose |
+|---------|:-:|---------|
+| `zustand` | `=4.5.7` | Minimal global state (2KB gzipped, no providers). ⚠️ Do not upgrade to v5 — changes `create()` import |
+| `sonner` | `=1.7.7` | Toast notifications (success/error/info) — used by `safeInvoke` and undo system. ⚠️ Do not upgrade to v2 |
+| `react-router-dom` | `=6.30.0` | Client-side routing (Index + Settings pages). ⚠️ Do not upgrade to v7 — Remix merger rewrite |
 
 ---
 
