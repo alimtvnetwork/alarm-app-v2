@@ -120,7 +120,7 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 
 | Plugin | Version | Purpose | Platform |
 |--------|---------|---------|----------|
-| `tauri-plugin-sql` | 2.x | SQLite database | All |
+| `rusqlite` + `refinery` | — | SQLite database + migrations | All |
 | `tauri-plugin-notification` | 2.x | OS notifications | All |
 | `tauri-plugin-dialog` | 2.x | File open/save dialogs | Desktop |
 | `tauri-plugin-shell` | 2.x | Open URLs, system commands | Desktop |

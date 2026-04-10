@@ -29,7 +29,7 @@
 | 1.2 | Configure `tauri.conf.json` — permissions: notification, dialog, sql, tray, global-shortcut | 45% | 🟡 Med |
 | 1.3 | Add React 18 + Vite 5 + TypeScript 5 to frontend | 10% | 🟢 Low |
 | 1.4 | Add Tailwind CSS v3 + shadcn/ui setup | 10% | 🟢 Low |
-| 1.5 | Configure Cargo.toml — rodio, rusqlite/tauri-plugin-sql, chrono, chrono-tz, croner, uuid, serde | 35% | 🟡 Med |
+| 1.5 | Configure Cargo.toml — rodio, rusqlite, refinery, chrono, chrono-tz, croner, uuid, serde | 35% | 🟡 Med |
 | 1.6 | Create `src-tauri/migrations/V1__initial_schema.sql` with all 5 tables | 25% | 🟡 Med |
 | 1.7 | Set up `refinery` crate for SQLite migration runner | 50% | 🟠 High |
 | 1.8 | Create file structure matching `03-file-structure.md` exactly | 20% | 🟢 Low |

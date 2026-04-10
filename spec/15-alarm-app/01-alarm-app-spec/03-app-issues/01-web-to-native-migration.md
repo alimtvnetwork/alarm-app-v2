@@ -39,7 +39,7 @@ All 5 migration phases have been completed:
 
 | Area | Web (Before) | Native (After) |
 |------|-------------|----------------|
-| Storage | localStorage | SQLite via `tauri-plugin-sql` |
+| Storage | localStorage | SQLite via `rusqlite` |
 | Audio | Web Audio API | Rust `rodio` crate |
 | Notifications | Browser Notification API | OS-native via `tauri-plugin-notification` |
 | Background timers | `setInterval` (throttled) | Rust background thread (`tokio`) |
