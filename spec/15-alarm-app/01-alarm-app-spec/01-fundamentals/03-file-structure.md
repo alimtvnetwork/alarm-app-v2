@@ -308,9 +308,7 @@ chrono = { version = "0.4", features = ["serde"] }
 chrono-tz = "0.10"                # IANA timezone database
 croner = "2.0"                    # Cron expression parsing
 
-# Database
-refinery = { version = "0.8", features = ["rusqlite"] }  # Migration runner
-rusqlite = { version = "0.31", features = ["bundled"] }   # SQLite (bundled)
+# Database (declared above under Tauri plugins section)
 
 # Serialization
 serde = { version = "1", features = ["derive"] }

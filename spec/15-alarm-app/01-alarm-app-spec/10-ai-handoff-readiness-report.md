@@ -84,9 +84,9 @@ The Alarm App specification is **ready for AI handoff**. All 43 identified issue
 
 | Doc | Version | Coverage | AI-Ready? |
 |-----|---------|----------|:---------:|
-| `01-data-model.md` | 1.6.0 | Full schema, Rust AlarmRow, RepeatType, JSON deserializers, WAL, migrations, retention | ✅ |
+| `01-data-model.md` | 1.7.0 | Full schema, Rust AlarmRow, RepeatType, JSON deserializers, WAL, migrations, retention | ✅ |
 | `02-design-system.md` | 1.0.0 | Color palette, typography, spacing, component styling | ✅ |
-| `03-file-structure.md` | 1.4.0 | Full src/ + src-tauri/ tree, Cargo.toml deps, i18n setup, eslint config | ✅ |
+| `03-file-structure.md` | 1.5.0 | Full src/ + src-tauri/ tree, Cargo.toml deps, i18n setup, eslint config | ✅ |
 | `04-platform-constraints.md` | 1.3.0 | Error handling (12 errors), WebView CSS compat, memory budget (200MB) | ✅ |
 | `05-platform-strategy.md` | 1.0.0 | Legacy — superseded by Tauri architecture doc | ⚠️ |
 | `06-tauri-architecture.md` | 1.0.0 | Tauri 2.x architecture, IPC, plugins, build pipeline | ✅ |
@@ -100,7 +100,7 @@ The Alarm App specification is **ready for AI handoff**. All 43 identified issue
 |-----|---------|----------|:------------:|:---------:|
 | `01-alarm-crud.md` | 1.6.0 | P0 | Rust soft-delete, TS undo stack, ARIA attrs | ✅ |
 | `02-alarm-scheduling.md` | 1.0.0 | P0 | — | ✅ |
-| `03-alarm-firing.md` | 1.5.0 | P0 | Rust compute_next_fire_time, DST, WakeListener (3 platforms), AlarmQueue | ✅ |
+| `03-alarm-firing.md` | 1.7.0 | P0 | Rust compute_next_fire_time, DST, WakeListener (3 platforms), AlarmQueue | ✅ |
 | `04-snooze-system.md` | 1.3.0 | P0 | Rust tokio::sleep_until | ✅ |
 | `05-sound-and-vibration.md` | 1.4.0 | P0/P1 | Rust validate_custom_sound, gradual_volume, macOS audio session | ✅ |
 | `06-dismissal-challenges.md` | 1.2.0 | P1/P2 | Operand rules, solve time logging | ✅ |
