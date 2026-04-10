@@ -135,36 +135,29 @@ fn resolve_local_to_utc(
     tz: &Tz,
 ) -> Option<DateTime<Utc>> {
     let naive_dt = NaiveDateTime::new(date, time);
-
     match tz.from_local_datetime(&naive_dt) {
-        // Normal case: exactly one valid mapping
         LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
+        LocalResult::Ambiguous(first, _) => Some(handle_fall_back(first, date, time)),
+        LocalResult::None => handle_spring_forward(date, tz),
+    }
+}
 
-        // FALL-BACK: time occurs twice → use the FIRST occurrence
-        LocalResult::Ambiguous(first, _second) => {
-            tracing::info!(
-                date = %date, time = %time,
-                "DST fall-back: ambiguous time, using first occurrence"
-            );
-            Some(first.with_timezone(&Utc))
-        }
+/// FALL-BACK: time occurs twice → use the FIRST occurrence
+fn handle_fall_back(first: DateTime<Tz>, date: NaiveDate, time: NaiveTime) -> DateTime<Utc> {
+    tracing::info!(date = %date, time = %time, "DST fall-back: using first occurrence");
+    first.with_timezone(&Utc)
+}
 
-        // SPRING-FORWARD: time doesn't exist → advance to next valid minute
-        LocalResult::None => {
-            // Find the transition point and use it
-            let transition = tz.from_local_datetime(
-                &NaiveDateTime::new(date, NaiveTime::from_hms_opt(3, 0, 0).unwrap())
-            );
-            tracing::warn!(
-                date = %date, time = %time,
-                "DST spring-forward: time skipped, firing at next valid minute"
-            );
-            match transition {
-                LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
-                LocalResult::Ambiguous(dt, _) => Some(dt.with_timezone(&Utc)),
-                LocalResult::None => None, // Should never happen
-            }
-        }
+/// SPRING-FORWARD: time doesn't exist → advance to next valid minute
+fn handle_spring_forward(date: NaiveDate, tz: &Tz) -> Option<DateTime<Utc>> {
+    let transition = tz.from_local_datetime(
+        &NaiveDateTime::new(date, NaiveTime::from_hms_opt(3, 0, 0).unwrap())
+    );
+    tracing::warn!(date = %date, "DST spring-forward: firing at next valid minute");
+    match transition {
+        LocalResult::Single(dt) => Some(dt.with_timezone(&Utc)),
+        LocalResult::Ambiguous(dt, _) => Some(dt.with_timezone(&Utc)),
+        LocalResult::None => None,
     }
 }
 ```

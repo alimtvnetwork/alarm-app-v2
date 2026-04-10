@@ -57,29 +57,40 @@ use std::path::Path;
 const MAX_SOUND_FILE_SIZE: u64 = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_EXTENSIONS: &[&str] = &["mp3", "wav", "ogg", "flac"];
 
+/// Validates a custom sound file path. Decomposed into ≤15-line subfunctions.
 pub fn validate_custom_sound(path: &str) -> Result<(), AlarmAppError> {
-    let p = Path::new(path);
+    validate_extension(path)?;
+    reject_symlink(path)?;
+    let canonical = resolve_canonical(path)?;
+    reject_restricted_path(&canonical)?;
+    validate_file_size(&canonical)
+}
 
-    // 1. Extension check
-    let ext = p.extension()
+fn validate_extension(path: &str) -> Result<(), AlarmAppError> {
+    let ext = Path::new(path).extension()
         .and_then(|e| e.to_str())
         .map(|e| e.to_lowercase())
         .unwrap_or_default();
     if !ALLOWED_EXTENSIONS.contains(&ext.as_str()) {
         return Err(AlarmAppError::InvalidSoundFormat(ext));
     }
+    Ok(())
+}
 
-    // 2. Reject symlinks (prevent path traversal attacks)
-    if p.is_symlink() {
+fn reject_symlink(path: &str) -> Result<(), AlarmAppError> {
+    if Path::new(path).is_symlink() {
         return Err(AlarmAppError::SymlinkRejected);
     }
+    Ok(())
+}
 
-    // 3. Path must be within user-accessible directories
-    //    Reject paths containing "..", absolute system paths
-    let canonical = p.canonicalize()
-        .map_err(|_| AlarmAppError::FileNotFound { path: path.to_string() })?;
+fn resolve_canonical(path: &str) -> Result<std::path::PathBuf, AlarmAppError> {
+    Path::new(path).canonicalize()
+        .map_err(|_| AlarmAppError::FileNotFound { path: path.to_string() })
+}
+
+fn reject_restricted_path(canonical: &Path) -> Result<(), AlarmAppError> {
     let path_str = canonical.to_string_lossy();
-
     #[cfg(target_os = "macos")]
     if path_str.starts_with("/System") || path_str.starts_with("/Library") {
         return Err(AlarmAppError::RestrictedPath);
@@ -92,19 +103,15 @@ pub fn validate_custom_sound(path: &str) -> Result<(), AlarmAppError> {
     if path_str.starts_with("/etc") || path_str.starts_with("/sys") || path_str.starts_with("/proc") {
         return Err(AlarmAppError::RestrictedPath);
     }
+    Ok(())
+}
 
-    // 4. File size check
-    let metadata = std::fs::metadata(&canonical)
-        .map_err(|_| AlarmAppError::FileNotFound { path: path.to_string() })?;
+fn validate_file_size(canonical: &Path) -> Result<(), AlarmAppError> {
+    let metadata = std::fs::metadata(canonical)
+        .map_err(|_| AlarmAppError::FileNotFound { path: canonical.to_string_lossy().to_string() })?;
     if metadata.len() > MAX_SOUND_FILE_SIZE {
         return Err(AlarmAppError::FileTooLarge { max_mb: 10 });
     }
-
-    // 5. File must exist (final check)
-    if !canonical.exists() {
-        return Err(AlarmAppError::FileNotFound { path: path.to_string() });
-    }
-
     Ok(())
 }
 ```
