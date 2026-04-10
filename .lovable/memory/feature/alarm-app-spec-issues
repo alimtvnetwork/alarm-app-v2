@@ -6,12 +6,12 @@ type: feature
 
 ## Audit Status
 
-- **Total issues:** 222
-- **Open:** 42
+- **Total issues:** 234
+- **Open:** 54
 - **Resolved:** 180
-- **Discovery phases:** 15 complete
+- **Discovery phases:** 16 complete
 - **Fix phases:** 59 complete
-- **Readiness Score:** Pending (42 open issues)
+- **Readiness Score:** Pending (54 open issues)
 
 ## Issue Distribution
 
@@ -34,24 +34,32 @@ type: feature
 | Discovery Phase 13 | 3 | 0 | 3 |
 | Discovery Phase 14 | 29 | 29 | 0 |
 | Discovery Phase 15 | 13 | 13 | 0 |
+| Discovery Phase 16 | 12 | 12 | 0 |
 
-## Discovery Phase 15 — Key Findings
+## Discovery Phase 16 — Key Findings
 
 ### Critical (1)
-- P15-012: WebhookError enum used in code (7 variants) but never defined
+- P16-001: Test fixture uses ALL camelCase keys — AIs copy fixtures verbatim
 
-### Medium (9)
-- 4 raw `!` negation violations in Rust code samples (P3 rule)
-- `0 = disabled` negative semantics in 5 comment locations (P2 rule)
-- 8 `expect()` calls in non-test code — 5 should use `?` with Result
-- camelCase IPC payload keys in sleep-wellness (2 commands)
-- AlarmEvents table missing columns for sleep quality/mood data
-- Personalization file missing IPC commands for 3/5 features
+### Medium (5)
+- AI cheat sheet has wrong thiserror version (1.x vs pinned 2.0.12)
+- AI cheat sheet missing enum guidance entirely — magic strings will propagate
+- AI cheat sheet missing error enum definitions
+- Test fixture uses magic string `'daily' as const` instead of enum
+- safeInvoke example missing PascalCase args usage
 
-### Low (3)
-- D-Bus `!args.start` — borderline exempt (external API)
-- `!= 0` boolean conversion pattern undocumented as exempt
-- url.scheme() != "https" — exempt per library API rule but recommend named constant
+### Low (6)
+- Rust test `assert!(!...)` negation — recommend exempt
+- Playwright `.not.*` negation — recommend exempt
+- `!= 0` boolean conversion undocumented exemption
+- No feature files cross-reference coding guidelines
+- Test strategy missing coding guidelines cross-reference
+- Rust snake_case field access in tests needs clarifying comment
+
+## Proposed New Exemptions
+- `assert!(!expr)` in Rust tests
+- `.not.*` Playwright/Jest matchers
+- `row.get() != 0` SQLite boolean conversion
 
 ## Canonical Location
 
