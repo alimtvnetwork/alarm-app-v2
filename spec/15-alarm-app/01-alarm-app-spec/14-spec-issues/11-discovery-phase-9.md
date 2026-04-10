@@ -160,21 +160,25 @@
 | Status | Previous | New | Total |
 |--------|:--------:|:---:|:-----:|
 | Total issues | 106 | 30 | **136** |
-| Open | 0 | 30 | **30** |
-| Resolved | 106 | 0 | **106** |
+| Open | 0 | 0 | **0** |
+| Resolved | 106 | 30 | **136** |
 
 ---
 
-## Proposed Fix Phases
+## Fix Phases 31–39: ALL COMPLETE ✅
 
-| Phase | Issues | Files | Description |
-|-------|--------|-------|-------------|
-| **Fix 31** | D9-001–003 | `03-alarm-firing.md` | Fix all snake_case/camelCase in firing spec (~8 replacements) |
-| **Fix 32** | D9-004–005 | `01-alarm-crud.md`, `10-export-import.md` | Fix `nextFireTime`→`NextFireTime`, `groupId`→`GroupId` |
-| **Fix 33** | D9-006–008 | `11-sleep-wellness.md`, `09-test-strategy.md` | Fix table + field names |
-| **Fix 34** | D9-009–011 | `01-data-model.md`, `04-platform-constraints.md`, `99-consistency-report.md` | Fix fundamentals prose |
-| **Fix 35** | D9-012–013 | `12-platform-and-concurrency-guide.md` | Fix `snooze_state`→`SnoozeState` |
-| **Fix 36** | D9-014–017 | `09-ai-handoff-reliability-report.md` | Fix all snake_case/camelCase in reliability report |
-| **Fix 37** | D9-018–023 | `03-app-issues/` (3 files) | Fix historical issue descriptions |
-| **Fix 38** | D9-024–027, D9-030 | `15-reference/` (2 files) | Fix reference doc table names |
-| **Fix 39** | D9-028–029 | `11-atomic-task-breakdown.md` | Fix remaining `nextFireTime` refs |
+All 30 issues resolved. Fix Phases 31–39 applied across 14+ files.
+
+### Final Verification (Post-Fix)
+
+Full grep scan confirmed **zero prose violations** remain. The only remaining pattern matches are inside **code blocks** (Rust code, TypeScript interfaces, test fixtures, pseudocode) where snake_case/camelCase is correct per language convention:
+
+| File | Line | Context | Exemption |
+|------|------|---------|-----------|
+| `06-tauri-architecture-and-framework-comparison.md` | 97 | IPC command `get_snooze_state` | Tauri command name (snake_case correct) |
+| `06-tauri-architecture-and-framework-comparison.md` | 170 | TypeScript `groupId` param | TS interface code (camelCase correct) |
+| `09-test-strategy.md` | 289, 293 | Test fixture `maxSnoozeCount`, `autoDismissMin` | TS test code (camelCase correct) |
+| `12-platform-and-concurrency-guide.md` | 213–215 | Pseudocode `nextFireTime` | Inside code fence (runtime variable) |
+| `01-data-model.md` | 464, 466 | SQL migration filenames | Refinery convention (snake_case required) |
+
+**Verdict: 🟢 CLEAN BILL OF HEALTH**
