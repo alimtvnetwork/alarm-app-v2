@@ -1,6 +1,6 @@
 # Dismissal Challenges
 
-**Version:** 1.6.0  
+**Version:** 1.7.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -152,6 +152,18 @@ interface AlarmChallenge {
 **Behavior:**
 - `get_challenge` — Returns the challenge configuration for the firing alarm. Returns `null` if no challenge is configured.
 - `submit_challenge_answer` — Validates the user's answer. If correct, logs `SolveTimeSec` to `AlarmEvents.ChallengeSolveTimeSec` and allows dismissal. If incorrect, returns `Correct: false` and the alarm continues firing.
+
+---
+
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Math challenge generates negative result | Re-generate — all answers must be > 0 |
+| User closes overlay window during challenge | Alarm continues firing; overlay re-opens after 3 seconds |
+| Shake challenge on desktop (no accelerometer) | Option hidden at runtime; alarm falls back to `ChallengeType.None` |
+| QR code scanner permission denied | Show toast with permission instructions; fall back to `ChallengeType.None` |
+| Challenge solve time exceeds 5 minutes | Log `SolveTimeSec` as-is; no timeout (alarm keeps firing) |
 
 ---
 

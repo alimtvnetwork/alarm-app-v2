@@ -1,6 +1,6 @@
 # Export / Import
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -206,6 +206,19 @@ interface ImportResult {
 
 - "Don't show again" preference stored in `Settings` table (`ExportWarningDismissed`)
 - **P2+ enhancement:** Offer optional password-protected ZIP export using `zip` crate with AES-256 encryption
+
+---
+
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Import file with 0 valid alarms | Show "No valid alarms found" error toast; abort import |
+| Import file > 5 MB | Reject with size limit error |
+| CSV with missing required columns | Show descriptive error listing missing columns |
+| iCal with unsupported `RRULE` frequency | Skip that alarm; show warning with count of skipped entries |
+| Import with duplicate `AlarmId` (merge mode) | Prompt: skip, overwrite, or rename |
+| Export when no alarms exist | Show "Nothing to export" toast; do not open file dialog |
 
 ---
 

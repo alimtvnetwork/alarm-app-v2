@@ -1,6 +1,6 @@
 # Alarm CRUD
 
-**Version:** 1.11.0  
+**Version:** 1.12.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -208,6 +208,21 @@ const sensors = useSensors(
 - [ ] Screen reader announces all state changes via `aria-live` region
 - [ ] No drag-only interactions — every action has a keyboard equivalent
 - [ ] Focus indicator visible on all interactive elements (2px outline min)
+
+---
+
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Create alarm with time in the past (today) | `NextFireTime` set to next day at that time |
+| Edit alarm while it is currently firing | Queue update; apply after dismiss/snooze |
+| Delete alarm while snooze is active | Cancel snooze timer, remove `SnoozeState` row |
+| Duplicate alarm in a full group (if group limit exists) | Show validation error, do not create |
+| Toggle off alarm that is currently snoozed | Cancel snooze, clear `SnoozeState`, set `IsEnabled = false` |
+| Undo delete after 5-second window expires | Undo no longer available; alarm permanently deleted |
+| Drag alarm to its own group | No-op — no IPC call made |
+| Create alarm with label > 100 chars | Truncate to 100 chars with toast warning |
 
 ---
 

@@ -1,6 +1,6 @@
 # Sound & Vibration
 
-**Version:** 1.6.0  
+**Version:** 1.7.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -271,6 +271,19 @@ Call `configure_audio_session()` at **Step 6a** of the startup sequence (paralle
 | `list_sounds` | `void` | `AlarmSound[]` |
 | `set_custom_sound` | `{ FilePath: string }` | `AlarmSound` |
 | `validate_custom_sound` | `{ FilePath: string }` | `{ IsValid: boolean, Error: string \| null }` |
+
+---
+
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Custom sound file deleted from filesystem | Fall back to `classic-beep`; show warning in overlay |
+| Custom sound file > 10 MB | `validate_custom_sound` returns `IsValid: false` with size error |
+| Audio device disconnected at fire time | Retry audio output device discovery; fall back to system default |
+| Sound file is a symlink | Reject — `validate_custom_sound` returns `IsValid: false` |
+| Volume ramp with system volume at 0 | Ramp has no audible effect; alarm fires silently (OS-level mute respected) |
+| Two alarms fire simultaneously with different sounds | Each plays its own sound via separate `rodio::Sink` instances |
 
 ---
 
