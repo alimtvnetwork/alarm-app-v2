@@ -40,7 +40,7 @@ src-tauri/                     ← Rust backend
   src/main.rs                   ← 9-step startup sequence
   src/commands/alarm.rs         ← IPC handlers (CRUD)
   src/engine/alarm_engine.rs    ← 30s tick loop (NEVER breaks)
-  src/engine/scheduler.rs       ← nextFireTime computation
+  src/engine/scheduler.rs       ← NextFireTime computation
   src/engine/wake_listener/     ← Platform wake detection (3 files)
   src/audio/player.rs           ← rodio playback
   src/audio/gradual_volume.rs   ← Quadratic t² volume curve
