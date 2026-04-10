@@ -1,13 +1,13 @@
 # Logic Consistency Issues
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-09
+**Version:** 1.1.0  
+**Updated:** 2026-04-10
 
 ---
 
 ## Summary
 
-Cross-file logic inconsistencies found during Discovery Phase 3. These are issues where two or more spec files contradict each other in logic flow, data types, or expected behavior.
+Cross-file logic inconsistencies found during Discovery Phase 3 and Phase 6. These are issues where two or more spec files contradict each other in logic flow, data types, or expected behavior.
 
 ---
 
@@ -38,8 +38,6 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 **Extends:** IC-001  
 **Status:** ✅ Resolved — converted to `conn.execute()` with `rusqlite` API
 
-**Problem:** `sqlx::query(...)` used in the delete timer and cleanup functions. These are the ONLY code samples for soft-delete/undo behavior — AI will copy them verbatim and get compile errors.
-
 ---
 
 ## LC-004: on_timezone_change Uses SqlitePool (sqlx) with async But rusqlite Is Sync
@@ -49,8 +47,6 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 **Extends:** IC-001  
 **Status:** ✅ Resolved — changed to `fn on_timezone_change(conn: &Connection, new_tz: &Tz)`, removed `.await`
 
-**Problem:** `fn on_timezone_change(pool: &SqlitePool, new_tz: &Tz)` used `.await` inside. `rusqlite` is synchronous — no `SqlitePool`, no `.await`.
-
 ---
 
 ## LC-005: Startup Step 2 Uses SqlitePool::connect (sqlx API)
@@ -59,8 +55,6 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 **Location:** `01-fundamentals/07-startup-sequence.md` (line 117)  
 **Extends:** IC-001  
 **Status:** ✅ Resolved — changed to `Connection::open(&db_path)`
-
-**Problem:** Was using `SqlitePool::connect(...)` (sqlx API). Now uses `Connection::open()` (rusqlite).
 
 ---
 
@@ -81,8 +75,6 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 **Extends:** IC-001  
 **Status:** ✅ Resolved — converted to `conn.execute()` with `rusqlite` API
 
-**Problem:** Was using `sqlx::query(...)`. Now uses `conn.execute(..., params![...])` (rusqlite).
-
 ---
 
 ## LC-008: currently_firing HashSet Not Thread-Safe
@@ -102,8 +94,6 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 **Extends:** IC-001  
 **Status:** ✅ Resolved — converted to `conn.execute()` with `params![]`
 
-**Problem:** Was using `sqlx::query(...)`. Now uses `conn.execute(..., params![...])` (rusqlite).
-
 ---
 
 ## LC-010: Snooze Crash Recovery Not in Startup Sequence
@@ -116,5 +106,22 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 
 ---
 
-## Issues Found: 10
-## Open: 5 | Resolved: 5
+## LC-011: Missed Alarm Query Uses snake_case and Invalid Event Type
+
+**Severity:** 🔴 Critical  
+**Location:** `02-features/03-alarm-firing.md` (line 192)  
+**Status:** 🔴 Open
+
+**Problem:** Missed alarm detection query:
+```
+next_fire_time < now AND enabled = 1 AND deleted_at IS NULL AND type != 'acknowledged'
+```
+
+Two issues:
+1. All column references use snake_case — should be `NextFireTime`, `IsEnabled`, `DeletedAt`
+2. `'acknowledged'` is not a valid `AlarmEventType` enum value. Valid values per data model: `Fired`, `Snoozed`, `Dismissed`, `Missed`. AI will implement a filter for a non-existent event type.
+
+---
+
+## Issues Found: 11
+## Open: 6 | Resolved: 5
