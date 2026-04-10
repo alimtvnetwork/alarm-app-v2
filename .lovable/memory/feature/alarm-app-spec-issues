@@ -1,58 +1,31 @@
 ---
 name: Alarm App Spec Issues Audit
-description: 344 total spec issues — 315 resolved, 29 open (Discovery Phases 22-23). Missing deps, undefined interfaces, naming violations, code sample bugs.
+description: 357 total spec issues — 315 resolved, 42 open (Discovery Phases 22-24). Missing deps, undefined interfaces, file structure gaps, IPC coverage holes.
 type: feature
 ---
 
 ## Audit Status — IN PROGRESS ⚠️
 
-- **Total issues:** 344
-- **Open:** 29 (Discovery Phases 22 + 23)
+- **Total issues:** 357
+- **Open:** 42 (Discovery Phases 22 + 23 + 24)
 - **Resolved:** 315
-- **Discovery phases:** 23
+- **Discovery phases:** 24
 - **Fix phases:** 40 (Phases 1–20, A–T)
-- **Readiness Score:** Pending re-assessment after fixes
 
-## Open Issues (Phase 22 — 18 issues)
+## Open Issues Summary
 
-### 🔴 Critical (8)
-- P22-001: Missing `@dnd-kit/core` + `@dnd-kit/sortable` from npm deps
-- P22-002: Missing `reqwest` + `url` crates from Cargo.toml
-- P22-003: Missing `rand` crate from Cargo.toml
-- P22-004: Missing group CRUD IPC commands (only `toggle_group` exists)
-- P22-005: `ExportWarningDismissed` setting not in data model
-- P22-006: `ImportPreview` interface undefined
-- P22-007: `WebhookPayload` interface undefined
-- P22-008: `RepeatPattern` Rust struct undefined
+### Phase 22 — 18 issues (8 Critical, 7 Medium, 3 Low)
+Missing deps (dnd-kit, reqwest, url, rand), missing group CRUD IPC, undefined interfaces (ImportPreview, WebhookPayload, RepeatPattern Rust), enum violations, stale counts.
 
-### 🟡 Medium (7)
-- P22-009–P22-015: Enum/naming violations, stale counts, optional syntax
+### Phase 23 — 11 issues (2 Critical, 7 Medium, 2 Low)
+AlarmOverlay hierarchy contradiction, PascalCase bugs in code samples (timerId, undoToken), missing command files (group.rs, challenge.rs), cheat sheet wrong column count.
 
-### 🟢 Low (3)
-- P22-016–P22-018: Double separators, version mismatch, shadcn clarification
+### Phase 24 — 13 issues (1 Critical, 9 Medium, 3 Low)
+File structure missing 5+ Rust command files for IPC domains (history, wellness, personalization), HistoryFilter `?` optional, font loading undefined, ClockState derivation gap, acceptance criteria raw strings.
 
-## Open Issues (Phase 23 — 11 issues)
+## Key Finding — Phase 24
 
-### 🔴 Critical (2)
-- P23-001: AlarmOverlay in component hierarchy contradicts separate-window spec
-- P23-002: `entry.timerId` camelCase bug — UndoEntry defines `TimerId` (PascalCase)
-
-### 🟡 Medium (7)
-- P23-003: `undoToken` camelCase IPC key should be `UndoToken`
-- P23-004: `Type = "weekly"` raw string in scheduling
-- P23-005: AlarmChallenge uses `?` optional instead of `| null`
-- P23-006: Missing `commands/group.rs` in file structure
-- P23-007: Missing `commands/challenge.rs` in file structure
-- P23-008: `log_from_frontend` IPC command not in any IPC table
-- P23-009: Cheat sheet says Alarms has "22 columns", actual is 26
-
-### 🟢 Low (2)
-- P23-010: SnoozeState interface duplicated across files
-- P23-011: Fundamentals files missing Priority metadata
-
-## Suggested Fix Phases
-- Phase U–Y: Fix Phase 22 issues (deps, interfaces, data model, enums, cosmetic)
-- Phase Z–AD: Fix Phase 23 issues (file structure, PascalCase bugs, enum/optional, cheat sheet, duplication)
+**P24-001 is the most impactful open issue.** The file structure only lists 4 Rust command files but feature specs define IPC commands across 8+ domains. This is a superset of P23-006 and P23-007.
 
 ## Canonical Location
 

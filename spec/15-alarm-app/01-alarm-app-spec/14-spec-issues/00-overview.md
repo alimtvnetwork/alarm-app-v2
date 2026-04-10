@@ -49,6 +49,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 33 | `33-discovery-phase-21.md` | Discovery Phase 21 — Post-Phase-20 Regression Scan (stale metrics, version alignment) | 4 | 0 | 4 |
 | 34 | `34-discovery-phase-22.md` | Discovery Phase 22 — Fresh Comprehensive Audit (missing deps, undefined interfaces, naming) | 18 | 18 | 0 |
 | 35 | `35-discovery-phase-23.md` | Discovery Phase 23 — Cross-File Consistency & Code Sample Audit | 11 | 11 | 0 |
+| 36 | `36-discovery-phase-24.md` | Discovery Phase 24 — IPC Command Coverage, File Structure Gaps & Interface Consistency | 13 | 13 | 0 |
 
 ---
 
@@ -56,11 +57,11 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 82 |
-| 🟡 Medium | 210 |
-| 🟢 Low | 52 |
-| **Grand Total** | **344** |
-| **Open** | **29** |
+| 🔴 Critical | 83 |
+| 🟡 Medium | 219 |
+| 🟢 Low | 55 |
+| **Grand Total** | **357** |
+| **Open** | **42** |
 | **Resolved** | **315** |
 
 ---
@@ -128,6 +129,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 21** | **Post-Phase-20 regression scan** | **✅ Done (+4 = 315, all resolved)** |
 | **Discovery Phase 22** | **Fresh comprehensive audit (deps, interfaces, naming)** | **✅ Done (+18 = 333, 18 open)** |
 | **Discovery Phase 23** | **Cross-file consistency & code sample audit** | **✅ Done (+11 = 344, 29 open)** |
+| **Discovery Phase 24** | **IPC command coverage, file structure gaps, interface consistency** | **✅ Done (+13 = 357, 42 open)** |
 
 ---
 
