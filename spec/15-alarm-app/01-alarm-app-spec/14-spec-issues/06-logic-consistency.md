@@ -81,9 +81,9 @@ Cross-file logic inconsistencies found during Discovery Phase 3 and Phase 6. The
 
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/12-platform-and-concurrency-guide.md` (line 219)  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — wrapped in `Arc<Mutex<HashSet<String>>>` with proper lock/drop pattern in Fix Phase 17
 
-**Problem:** `currently_firing: HashSet<String>` in `AlarmEngine` is not `Send + Sync` — cannot be shared across async tasks without `Arc<Mutex<>>`. Engine runs in `tokio::spawn` — needs `Arc<Mutex<HashSet<String>>>` or `DashSet`. AI will get a compile error on the `Sync` bound.
+**Resolution:** `AlarmEngine.currently_firing` changed from `HashSet<String>` to `Arc<Mutex<HashSet<String>>>`. Lock is acquired, checked, inserted, then dropped before processing. Re-acquired for removal. Uses `.expect()` for poisoned mutex (acceptable — unrecoverable).
 
 ---
 
