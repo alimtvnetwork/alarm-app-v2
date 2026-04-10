@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 2.7.0  
+**Version:** 2.8.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -26,6 +26,31 @@
 ---
 
 ## Version History
+
+### v2.8.0 — 2026-04-10
+
+**Theme:** Gap Analysis Remediation — 25 tasks across 5 sessions, AI failure risk ~25% → ~3%
+
+#### Session Summary
+
+| Session | Tasks | Focus |
+|---------|:-----:|-------|
+| 1 | 1–7 | IPC payloads, validation rules, error swallowing fixes, contradiction resolution, IPC registry |
+| 2 | 8–11 | Routing table, missing components in file structure, IPC tables in 6 feature specs, group payloads |
+| 3 | 12–16 | Overlay/challenge interaction, import end-to-end flow, overlay window config, search/select-all |
+| 4 | 17–21 | Magic values → named constants, logging, oversized function refactoring, nesting flattening, AlarmContext struct |
+| 5 | 22–25 | Cross-references in all 17 specs, ambiguous directives eliminated, edge case tables in 10 P0/P1 specs |
+
+#### Key Changes
+
+- **15 spec files updated** across features and fundamentals
+- **Named constants:** `MAX_DST_ADVANCE_MINUTES` (120), `IPC_TIMEOUT_MS` (5000)
+- **AlarmContext struct** reduces scheduling function parameters from 5 → 2–3
+- **Edge Cases tables** added to 10 P0/P1 feature specs
+- **Zero ambiguous directives** remaining (grep-verified)
+- **All 17 feature specs** now have Cross-References tables
+
+---
 
 ### v2.7.0 — 2026-04-10
 

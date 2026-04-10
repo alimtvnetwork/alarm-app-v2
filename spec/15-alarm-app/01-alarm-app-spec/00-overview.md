@@ -1,7 +1,7 @@
 # Alarm App Spec
 
-**Version:** 2.7.0  
-**Status:** ✅ Ready — All 405 Spec Quality Issues Resolved (100/100 Readiness Score)  
+**Version:** 2.8.0  
+**Status:** ✅ Ready — All 405 Spec Quality Issues Resolved + 25 Gap Analysis Tasks Complete (100/100 Readiness Score)  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -121,7 +121,7 @@ Tables:
 | 13 | [AI Cheat Sheet](./13-ai-cheat-sheet.md) | Single-page quick reference for AI coding agents |
 | 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 405/405 issues resolved across 28 discovery + 42 fix phases ✅ |
 | 15 | [Reference](./15-reference/00-overview.md) | Feature inventories and planning references |
-| 98 | [Changelog](./98-changelog.md) | Version history v1.0.0–v2.5.0 |
+| 98 | [Changelog](./98-changelog.md) | Version history v1.0.0–v2.8.0 |
 
 ---
 
