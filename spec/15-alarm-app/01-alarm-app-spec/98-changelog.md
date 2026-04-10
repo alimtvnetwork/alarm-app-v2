@@ -152,8 +152,8 @@
 - **DST & Timezone Handling Rules** — new section in `01-fundamentals/01-data-model.md`
   - Spring-forward: fire at next valid minute
   - Fall-back: fire on first occurrence only
-  - Timezone change: recalculate all `nextFireTime` values
-  - Implementation: `chrono-tz` crate + `system_timezone` setting
+  - Timezone change: recalculate all `NextFireTime` values
+  - Implementation: `chrono-tz` crate + `SystemTimezone` setting
 - **Issues tracking folder** — 7 new category files in `03-app-issues/`
   - `02-frontend-issues.md` — 7 issues (FE-STATE-001/002, FE-DND-001, FE-A11Y-001, FE-OVERLAY-001, FE-RENDER-001, FE-I18N-001)
   - `03-backend-issues.md` — 8 issues (BE-TIMER-001 ✅, BE-AUDIO-001/002, BE-WAKE-001, BE-CRON-001, BE-SNOOZE-001, BE-DELETE-001, BE-CONCUR-001)
