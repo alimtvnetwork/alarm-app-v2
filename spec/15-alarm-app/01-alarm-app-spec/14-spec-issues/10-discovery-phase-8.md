@@ -17,49 +17,49 @@
 
 ## Issues
 
-### D8-001: `14-personalization.md` line 19 — `settings` and `alarm_events` lowercase
+### D8-001: ~~`14-personalization.md` line 19 — `settings` and `alarm_events` lowercase~~ ✅ Resolved (Fix 28)
 **Severity:** 🟡 Medium  
-**Problem:** "persisted in SQLite `settings` table; streak data in `alarm_events`" — should be `Settings` and `AlarmEvents`.
+**Problem:** Fixed `settings` → `Settings` and `alarm_events` → `AlarmEvents`.
 
-### D8-002: `14-personalization.md` line 27 — `settings` lowercase
+### D8-002: ~~`14-personalization.md` line 27 — `settings` lowercase~~ ✅ Resolved (Fix 28)
 **Severity:** 🟡 Medium  
-**Problem:** "SQLite `settings` table" — should be `Settings`.
+**Problem:** Fixed `settings` → `Settings`.
 
-### D8-003: `14-personalization.md` line 29 — `alarm_events` snake_case
+### D8-003: ~~`14-personalization.md` line 29 — `alarm_events` snake_case~~ ✅ Resolved (Fix 28)
 **Severity:** 🟡 Medium  
-**Problem:** "SQLite `alarm_events` table queries" — should be `AlarmEvents`.
+**Problem:** Fixed `alarm_events` → `AlarmEvents`.
 
-### D8-004: `14-personalization.md` line 40 — `settings` lowercase
+### D8-004: ~~`14-personalization.md` line 40 — `settings` lowercase~~ ✅ Resolved (Fix 28)
 **Severity:** 🟡 Medium  
-**Problem:** "persisted in SQLite `settings`" — should be `Settings`.
+**Problem:** Fixed `settings` → `Settings`.
 
-### D8-005: `14-personalization.md` line 54 — `alarm_events` snake_case
+### D8-005: ~~`14-personalization.md` line 54 — `alarm_events` snake_case~~ ✅ Resolved (Fix 28)
 **Severity:** 🟡 Medium  
-**Problem:** "from SQLite `alarm_events` table" — should be `AlarmEvents`.
+**Problem:** Fixed `alarm_events` → `AlarmEvents`.
 
-### D8-006: `16-accessibility-and-nfr.md` line 108 — `settings` lowercase + `language` snake_case key
+### D8-006: ~~`16-accessibility-and-nfr.md` line 108 — `settings` lowercase + `language` snake_case key~~ ✅ Resolved (Fix 29)
 **Severity:** 🟡 Medium  
-**Problem:** "stored in `settings` SQLite table (`key = 'language'`)" — should be `Settings` table and key `Language`.
+**Problem:** Fixed `settings` → `Settings` and `key = 'language'` → `Key = 'Language'`.
 
-### D8-007: `11-atomic-task-breakdown.md` line 6 — task count says 52, should be 62
+### D8-007: ~~`11-atomic-task-breakdown.md` line 6 — task count says 52, should be 62~~ ✅ Resolved (Fix 30)
 **Severity:** 🟡 Medium  
-**Problem:** Header says "Total Tasks: 52" but document contains 62 tasks, and the root overview calls it "62 dependency-ordered tasks".
+**Problem:** Fixed "Total Tasks: 52" → "Total Tasks: 62".
 
-### D8-008: `11-atomic-task-breakdown.md` line 83 — `snooze_state` snake_case
+### D8-008: ~~`11-atomic-task-breakdown.md` line 83 — `snooze_state` snake_case~~ ✅ Resolved (Fix 30)
 **Severity:** 🟡 Medium  
-**Problem:** "write snooze_state" — should be `SnoozeState`.
+**Problem:** Fixed `snooze_state` → `SnoozeState`.
 
-### D8-009: `11-atomic-task-breakdown.md` line 84 — `snooze_state` snake_case
+### D8-009: ~~`11-atomic-task-breakdown.md` line 84 — `snooze_state` snake_case~~ ✅ Resolved (Fix 30)
 **Severity:** 🟡 Medium  
-**Problem:** "check `snooze_state`" — should be `SnoozeState`.
+**Problem:** Fixed `snooze_state` → `SnoozeState`.
 
-### D8-010: `11-atomic-task-breakdown.md` line 85 — `alarm_event` snake_case
+### D8-010: ~~`11-atomic-task-breakdown.md` line 85 — `alarm_event` snake_case~~ ✅ Resolved (Fix 30)
 **Severity:** 🟡 Medium  
-**Problem:** "log alarm_event" — should be `AlarmEvent` (or `AlarmEvents` table).
+**Problem:** Fixed `alarm_event` → `AlarmEvent`.
 
-### D8-011: `11-atomic-task-breakdown.md` line 50 — error variant count says 12, now 13
+### D8-011: ~~`11-atomic-task-breakdown.md` line 50 — error variant count says 12, now 13~~ ✅ Resolved (Fix 30)
 **Severity:** 🟢 Low  
-**Problem:** "all 12 error variants" — should be 13 after `RestrictedPath` was added in Fix Phase 26.
+**Problem:** Fixed "all 12 error variants" → "all 13 error variants".
 
 ---
 
@@ -68,8 +68,8 @@
 | Status | Previous | New | Total |
 |--------|:--------:|:---:|:-----:|
 | Total issues | 95 | 11 | **106** |
-| Open | 0 | 11 | **11** |
-| Resolved | 95 | 0 | **95** |
+| Open | 0 | 0 | **0** |
+| Resolved | 95 | 11 | **106** |
 
 ---
 
