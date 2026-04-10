@@ -277,7 +277,7 @@ Add to `src-tauri/capabilities/default.json`:
 
 ## Cargo.toml Dependencies
 
-> **Resolves DEVOPS-CARGO-001.** All crate versions pinned to prevent incompatible version selection.
+> **Resolves DEVOPS-CARGO-001.** All crate versions pinned with `=` to prevent incompatible version selection. See `10-dependency-lock.md` for API surface documentation and breaking change notes.
 
 ```toml
 [package]
@@ -287,49 +287,52 @@ edition = "2021"
 
 [dependencies]
 # Tauri core
-tauri = { version = "2", features = ["tray-icon", "global-shortcut"] }
-tauri-build = { version = "2", features = [] }
+tauri = { version = "=2.10.3", features = ["tray-icon", "global-shortcut"] }
+tauri-build = { version = "=2.5.6", features = [] }
 
 # Tauri plugins
-rusqlite = { version = "0.31", features = ["bundled"] }
-refinery = { version = "0.8", features = ["rusqlite"] }
-tauri-plugin-notification = "2"
-tauri-plugin-dialog = "2"
-tauri-plugin-fs = "2"
-tauri-plugin-autostart = "2"
-tauri-plugin-updater = "2"
-tauri-plugin-global-shortcut = "2"
+tauri-plugin-notification = "=2.3.3"
+tauri-plugin-dialog = "=2.7.0"
+tauri-plugin-fs = "=2.5.0"
+tauri-plugin-autostart = "=2.5.1"
+tauri-plugin-updater = "=2.10.1"
+tauri-plugin-global-shortcut = "=2.3.1"
+
+# Database
+rusqlite = { version = "=0.32.1", features = ["bundled"] }  # Pin 0.32.x — refinery 0.8.x compat
+refinery = { version = "=0.8.14", features = ["rusqlite"] }
 
 # Audio
-rodio = "0.19"                    # Cross-platform audio playback
+rodio = "=0.19.0"                 # Pin 0.19 — 0.20+ breaks OutputStream API
 
 # Date/time
-chrono = { version = "0.4", features = ["serde"] }
-chrono-tz = "0.10"                # IANA timezone database
-croner = "2.0"                    # Cron expression parsing
-
-# Database (declared above under Tauri plugins section)
+chrono = { version = "=0.4.44", features = ["serde"] }
+chrono-tz = "=0.10.4"             # IANA timezone database
+croner = "=2.0.7"                 # Pin 2.x — 3.0 rewrites Cron constructor
 
 # Serialization
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+serde = { version = "=1.0.228", features = ["derive"] }
+serde_json = "=1.0.149"
+
+# Error handling
+thiserror = "=2.0.18"             # Used by AlarmAppError — was missing from prior spec
 
 # Utilities
-uuid = { version = "1", features = ["v4"] }
-tokio = { version = "1", features = ["full"] }
-tracing = "0.1"                   # Structured logging
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-tracing-appender = "0.2"          # Log file rotation
+uuid = { version = "=1.23.0", features = ["v4"] }
+tokio = { version = "=1.51.1", features = ["full"] }
+tracing = "=0.1.44"               # Structured logging
+tracing-subscriber = { version = "=0.3.23", features = ["env-filter"] }
+tracing-appender = "=0.2.4"       # Log file rotation
 
 # Platform-specific (conditional)
 [target.'cfg(target_os = "macos")'.dependencies]
-objc2 = "0.5"                     # macOS FFI for wake events, audio session
+objc2 = "=0.5.2"                  # Pin 0.5.x — 0.6 restructures modules
 
 [target.'cfg(target_os = "windows")'.dependencies]
-windows = { version = "0.58", features = ["Win32_System_Power"] }
+windows = { version = "=0.58.0", features = ["Win32_System_Power"] }  # Pin 0.58 — 0.59+ changes feature gates
 
 [target.'cfg(target_os = "linux")'.dependencies]
-zbus = "4"                        # D-Bus for systemd-logind wake events
+zbus = "=4.4.0"                   # Pin 4.x — 5.x is async-only rewrite
 ```
 
 ---
