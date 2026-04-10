@@ -13,7 +13,6 @@
 `theme`, `dark-mode`, `light-mode`, `toggle`, `system-preference`
 
 ---
----
 
 ## Scoring
 

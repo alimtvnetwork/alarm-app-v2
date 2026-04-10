@@ -14,7 +14,6 @@
 `firing`, `trigger`, `overlay`, `dismiss`, `audio`, `notification`, `native`, `missed-alarm`, `auto-dismiss`, `next-fire-time`
 
 ---
----
 
 ## Scoring
 

@@ -12,7 +12,6 @@
 `tauri`, `rust`, `architecture`, `ipc`, `plugins`, `build`, `framework`, `comparison`, `native`, `cross-platform`
 
 ---
----
 
 ## Scoring
 

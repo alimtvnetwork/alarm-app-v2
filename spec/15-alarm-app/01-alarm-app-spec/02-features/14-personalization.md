@@ -13,7 +13,6 @@
 `personalization`, `themes`, `quotes`, `streak`, `music`, `skins`, `native`
 
 ---
----
 
 ## Scoring
 

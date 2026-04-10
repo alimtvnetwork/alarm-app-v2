@@ -13,7 +13,6 @@
 `data-model`, `types`, `interfaces`, `storage`, `validation`, `sqlite`, `repeat-pattern`
 
 ---
----
 
 ## Scoring
 

@@ -14,7 +14,6 @@
 `export`, `import`, `json`, `csv`, `ical`, `ics`, `backup`, `merge`, `replace`, `native`, `file-dialog`, `duplicate-handling`
 
 ---
----
 
 ## Scoring
 

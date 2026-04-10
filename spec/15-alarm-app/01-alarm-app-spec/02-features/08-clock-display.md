@@ -13,7 +13,6 @@
 `clock`, `analog`, `digital`, `svg`, `countdown`, `time`
 
 ---
----
 
 ## Scoring
 

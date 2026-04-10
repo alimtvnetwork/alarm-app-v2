@@ -15,7 +15,6 @@
 `platform`, `cross-platform`, `framework`, `native`, `desktop`, `mobile`, `macOS`
 
 ---
----
 
 ## Scoring
 

@@ -13,7 +13,6 @@
 `platform`, `constraints`, `native`, `audio`, `notifications`, `storage`, `cross-platform`
 
 ---
----
 
 ## Scoring
 

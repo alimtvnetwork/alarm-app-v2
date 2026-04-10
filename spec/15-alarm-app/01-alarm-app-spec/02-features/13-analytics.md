@@ -13,7 +13,6 @@
 `analytics`, `history`, `log`, `snooze`, `trends`, `reports`, `statistics`, `filter`, `csv-export`
 
 ---
----
 
 ## Scoring
 

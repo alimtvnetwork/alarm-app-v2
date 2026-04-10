@@ -12,7 +12,6 @@
 `design`, `colors`, `typography`, `spacing`, `theme`, `tailwind`
 
 ---
----
 
 ## Scoring
 

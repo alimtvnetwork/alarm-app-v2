@@ -14,7 +14,6 @@
 `testing`, `unit-test`, `integration-test`, `e2e`, `coverage`, `ci`, `vitest`, `tauri-driver`
 
 ---
----
 
 ## Scoring
 

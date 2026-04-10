@@ -13,7 +13,6 @@
 `sleep`, `bedtime`, `wellness`, `calculator`, `mood`, `ambient`, `native`, `audio`
 
 ---
----
 
 ## Scoring
 

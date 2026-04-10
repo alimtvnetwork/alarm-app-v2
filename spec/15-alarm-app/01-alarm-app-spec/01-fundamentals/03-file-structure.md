@@ -13,7 +13,6 @@
 `file-structure`, `components`, `hooks`, `organization`, `tauri`, `rust`
 
 ---
----
 
 ## Scoring
 

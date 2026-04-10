@@ -12,7 +12,6 @@
 `dependencies`, `versions`, `crates`, `npm`, `pinning`, `compatibility`, `breaking-changes`
 
 ---
----
 
 ## Scoring
 

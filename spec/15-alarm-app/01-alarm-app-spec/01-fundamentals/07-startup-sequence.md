@@ -14,7 +14,6 @@
 `startup`, `initialization`, `boot`, `sequence`, `migration`, `tray`, `engine`, `missed-alarm`
 
 ---
----
 
 ## Scoring
 
