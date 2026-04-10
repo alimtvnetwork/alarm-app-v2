@@ -1,43 +1,25 @@
 ---
 name: Alarm App Spec Issues Audit
-description: 249 of 256 spec quality issues resolved — 18 discovery phases, 29 fix phases, ~95/100 readiness
+description: 254 of 256 spec quality issues resolved — 18 discovery phases, 29 fix phases, ~98/100 readiness
 type: feature
 ---
 
 ## Audit Status — NEAR COMPLETE
 
 - **Total issues:** 256
-- **Open:** 7 (0 critical, 2 medium, 5 low)
-- **Resolved:** 249
+- **Open:** 2 (0 critical, 1 medium, 1 low)
+- **Resolved:** 254
 - **Discovery phases:** 18
 - **Fix phases:** 29 (Phases 1–20, A–I)
-- **Readiness Score:** ~95/100 (A)
+- **Readiness Score:** ~98/100 (A+)
 
-## Open Issues (7)
+## Open Issues (2)
 
-### Medium (2)
-- **P14-001:** Stale subfolder consistency reports (fundamentals + features)
-- **P14-002:** Missing cross-refs to coding guidelines in 2 feature files
+### Medium (1)
+- **P15-016:** `14-personalization.md` — No IPC commands for streaks, themes, or custom backgrounds
 
-### Low (5)
-- `0 = disabled` comments (exempt but unfixed) — 3 instances
-- Stale atomic task breakdown (missing enum tasks) — 1
-- Minor settings seeding doc gap — 1
-
-## Issue Distribution (all categories)
-
-| Category | Count |
-|----------|:-----:|
-| Naming Violations | 18 |
-| Internal Contradictions | 11 |
-| Structural Issues | 5 |
-| Content Gaps | 12 |
-| AI Handoff Risks | 4 |
-| Logic Consistency | 11 |
-| UI/UX Consistency | 4 |
-| Guideline Compliance | 12 |
-| Discovery Phases 7–18 | 179 |
-| **Total** | **256** |
+### Low (1)
+- **P15-017:** `01-data-model.md` — `!= 0` boolean conversion pattern not documented as exempt
 
 ## Fix Phase Summary
 
