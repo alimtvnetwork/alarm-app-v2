@@ -70,10 +70,10 @@
 
 ## Category D: Cross-File Contradiction
 
-### D12-009: `11-atomic-task-breakdown.md` line 7 vs `10-ai-handoff-readiness-report.md` line 186 — Estimated days differ
+### D12-009: ~~`11-atomic-task-breakdown.md` line 7 vs `10-ai-handoff-readiness-report.md` line 186 — Estimated days differ~~ ✅ FIXED (Fix 58)
 **Severity:** 🟢 Low  
-**Problem:** Task breakdown says "20–26 days". Readiness report says "18–24 days". Minor discrepancy.  
-**Fix:** Align to the task breakdown's "20–26 days" as the authoritative estimate (it has the detailed per-task breakdown).
+**Problem:** Task breakdown says "20–26 days". Readiness report said "18–24 days". Minor discrepancy.  
+**Fix:** Aligned readiness report to "20–26 days" (task breakdown is authoritative).
 
 ---
 
@@ -82,8 +82,8 @@
 | Status | Previous | New | Total |
 |--------|:--------:|:---:|:-----:|
 | Total issues | 168 | 9 | **177** |
-| Open | 0 | 9 | **9** |
-| Resolved | 168 | 0 | **168** |
+| Open | 0 | 0 | **0** |
+| Resolved | 168 | 9 | **177** |
 
 ---
 
@@ -91,8 +91,8 @@
 
 | Phase | Issues | Files | Description |
 |-------|--------|-------|-------------|
-| **Fix 54** | D12-001, D12-005, D12-006 | `13-ai-cheat-sheet.md`, `12-platform-and-concurrency-guide.md` | Fix AlarmEvents count, table name, and field name in cheat sheet + concurrency guide |
-| **Fix 55** | D12-002, D12-003 | `10-ai-handoff-readiness-report.md` | Update stale version numbers and issue counts |
-| **Fix 56** | D12-004, D12-008 | `09-ai-handoff-reliability-report.md` | Add resolved banners to stale sections |
-| **Fix 57** | D12-007 | `99-consistency-report.md` (root) | Add full root-level file inventory |
-| **Fix 58** | D12-009 | `10-ai-handoff-readiness-report.md` | Align estimated days to task breakdown |
+| ~~**Fix 54**~~ | ~~D12-001, D12-005, D12-006~~ | ~~`13-ai-cheat-sheet.md`, `12-platform-and-concurrency-guide.md`~~ | ~~Fix AlarmEvents count, table name, and field name~~ ✅ |
+| ~~**Fix 55**~~ | ~~D12-002, D12-003~~ | ~~`10-ai-handoff-readiness-report.md`~~ | ~~Update stale version numbers and issue counts~~ ✅ |
+| ~~**Fix 56**~~ | ~~D12-004, D12-008~~ | ~~`09-ai-handoff-reliability-report.md`~~ | ~~Add resolved banners to stale sections~~ ✅ |
+| ~~**Fix 57**~~ | ~~D12-007~~ | ~~`99-consistency-report.md` (root)~~ | ~~Add full root-level file inventory~~ ✅ |
+| ~~**Fix 58**~~ | ~~D12-009~~ | ~~`10-ai-handoff-readiness-report.md`~~ | ~~Align estimated days to task breakdown~~ ✅ |
