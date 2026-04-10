@@ -384,7 +384,7 @@ impl AlarmRow {
     /// Convert to RepeatPattern for scheduling logic
     pub fn repeat_pattern(&self) -> RepeatPattern {
         RepeatPattern {
-            r#type: self.repeat_type.parse().unwrap_or(RepeatType::Once),
+            r#type: self.repeat_type.clone(),
             days_of_week: self.days_of_week(),
             interval_minutes: self.repeat_interval_minutes as u32,
             cron_expression: self.repeat_cron_expression.clone(),
@@ -392,6 +392,7 @@ impl AlarmRow {
     }
 
     /// Convert from rusqlite::Row — EXEMPT from 15-line limit (field-per-line mapping, no logic)
+    /// Enum fields use `.parse()` to convert PascalCase TEXT → enum variant.
     pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
         Ok(Self {
             alarm_id: row.get("AlarmId")?,
@@ -400,7 +401,7 @@ impl AlarmRow {
             label: row.get("Label")?,
             is_enabled: row.get::<_, i32>("IsEnabled")? != 0,
             is_previous_enabled: row.get::<_, Option<i32>>("IsPreviousEnabled")?.map(|v| v != 0),
-            repeat_type: row.get("RepeatType")?,
+            repeat_type: row.get::<_, String>("RepeatType")?.parse().unwrap_or(RepeatType::Once),
             repeat_days_of_week: row.get("RepeatDaysOfWeek")?,
             repeat_interval_minutes: row.get("RepeatIntervalMinutes")?,
             repeat_cron_expression: row.get("RepeatCronExpression")?,
@@ -412,8 +413,8 @@ impl AlarmRow {
             is_gradual_volume: row.get::<_, i32>("IsGradualVolume")? != 0,
             gradual_volume_duration_sec: row.get("GradualVolumeDurationSec")?,
             auto_dismiss_min: row.get("AutoDismissMin")?,
-            challenge_type: row.get("ChallengeType")?,
-            challenge_difficulty: row.get("ChallengeDifficulty")?,
+            challenge_type: row.get::<_, Option<String>>("ChallengeType")?.and_then(|s| s.parse().ok()),
+            challenge_difficulty: row.get::<_, Option<String>>("ChallengeDifficulty")?.and_then(|s| s.parse().ok()),
             challenge_shake_count: row.get("ChallengeShakeCount")?,
             challenge_step_count: row.get("ChallengeStepCount")?,
             next_fire_time: row.get("NextFireTime")?,
@@ -423,36 +424,15 @@ impl AlarmRow {
         })
     }
 }
-
-/// Rust enum matching RepeatPattern.Type for type-safe matching
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub enum RepeatType {
-    Once,
-    Daily,
-    Weekly,
-    Interval,
-    Cron,
-}
-
-impl std::str::FromStr for RepeatType {
-    type Err = String;
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "once" => Ok(Self::Once),
-            "daily" => Ok(Self::Daily),
-            "weekly" => Ok(Self::Weekly),
-            "interval" => Ok(Self::Interval),
-            "cron" => Ok(Self::Cron),
-            _ => Err(format!("Unknown repeat type: {s}")),
-        }
-    }
-}
+// NOTE: RepeatType, ChallengeType, AlarmEventType, and all other domain enums
+// are defined in the "Domain Enums" section above. Do NOT duplicate here.
 ```
 
 **Key patterns:**
 - SQLite `INTEGER` booleans → Rust `bool` via `row.get::<_, i32>() != 0`
+- SQLite `TEXT` enums → Rust enum via `row.get::<_, String>()?.parse()`
 - JSON TEXT columns → `serde_json::from_str()` with `unwrap_or_default()` (never panic)
-- `Option<String>` for nullable TEXT columns
+- `Option<EnumType>` for nullable enum columns — use `.and_then(|s| s.parse().ok())`
 
 ### AlarmGroup
 
