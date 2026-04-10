@@ -122,7 +122,52 @@ Extension → Not symlink → Not system path → Size < 10MB → File exists
 
 ---
 
-## 10 Cross-Platform Warnings
+## Domain Enums — Zero Tolerance for Magic Strings
+
+> All domain types are defined as proper enums in `01-data-model.md`. **NEVER use raw string comparisons.**
+
+| Enum | Variants | Used In |
+|------|----------|---------|
+| `RepeatType` | `Once`, `Daily`, `Weekly`, `Interval`, `Cron` | Alarm scheduling |
+| `ChallengeType` | `Math`, `Memory`, `Shake`, `Typing`, `Qr`, `Steps` | Dismissal challenges |
+| `ChallengeDifficulty` | `Easy`, `Medium`, `Hard` | Math challenge only |
+| `AlarmEventType` | `Fired`, `Snoozed`, `Dismissed`, `Missed` | AlarmEvents table |
+| `SoundCategory` | `Classic`, `Gentle`, `Nature`, `Digital` | Built-in sounds |
+| `ThemeMode` | `Light`, `Dark`, `System` | Theme setting |
+| `ExportFormat` | `Json`, `Csv`, `Ics` | Export/import |
+| `ImportMode` | `Merge`, `Replace` | Import |
+| `DuplicateAction` | `Skip`, `Overwrite`, `Rename` | Import conflict |
+| `SortField` | `Date`, `Label`, `SnoozeCount` | Analytics filter |
+
+```typescript
+// ✅ CORRECT — use enum
+if (alarm.ChallengeType === ChallengeType.Math) { ... }
+// ❌ WRONG — raw string
+if (alarm.ChallengeType === 'math') { ... }
+```
+
+```rust
+// ✅ CORRECT — use enum
+match event.r#type {
+    AlarmEventType::Fired => { ... }
+    AlarmEventType::Missed => { ... }
+    _ => {}
+}
+// ❌ WRONG — raw string
+if event.r#type == "fired" { ... }
+```
+
+## Error Enums
+
+```rust
+// AlarmAppError — 12 variants (see 04-platform-constraints.md)
+// Key variants: Database, Audio, IpcTimeout, FileNotFound, Validation, ExportImport
+// WebhookError — 7 variants (see 12-smart-features.md)
+// Key variants: InvalidUrl, InsecureScheme, BlockedHost, PrivateIp, RequestFailed
+// IPC errors return { Message: string, Code: string } — see IpcErrorResponse
+```
+
+
 
 | # | Warning | Platform |
 |---|---------|----------|
