@@ -84,25 +84,25 @@
 **File:** `02-features/10-export-import.md` line 131  
 **Problem:** Fixed `settings` → `Settings` and `export_warning_dismissed` → `ExportWarningDismissed`.
 
-### D7-NEW-009: `05-sound-and-vibration.md` error variant `FileTooLarge` doesn't match enum
+### D7-NEW-009: ~~`05-sound-and-vibration.md` error variant `FileTooLarge` doesn't match enum~~ ✅ Resolved (Fix 26)
 **Severity:** 🟡 Medium  
 **File:** `02-features/05-sound-and-vibration.md` line 113  
-**Problem:** Uses `AlarmAppError::FileTooLarge { max_mb: 10 }` but the error enum in `04-platform-constraints.md` defines `SoundFileTooLarge { size_bytes, max_bytes }`. Field names and variant name differ.
+**Problem:** Fixed `AlarmAppError::FileTooLarge { max_mb: 10 }` → `AlarmAppError::SoundFileTooLarge { size_bytes, max_bytes }` to match canonical enum.
 
-### D7-NEW-010: `05-sound-and-vibration.md` error variant `RestrictedPath` not in enum
+### D7-NEW-010: ~~`05-sound-and-vibration.md` error variant `RestrictedPath` not in enum~~ ✅ Resolved (Fix 26)
 **Severity:** 🟡 Medium  
 **File:** `02-features/05-sound-and-vibration.md` lines 96, 100, 104  
-**Problem:** Uses `AlarmAppError::RestrictedPath` but this variant doesn't exist in the error enum in `04-platform-constraints.md`. AI will get a compilation error.
+**Problem:** Added `RestrictedPath` variant to canonical `AlarmAppError` enum in `04-platform-constraints.md`.
 
 ### D7-NEW-011: ~~`04-snooze-system.md` uses `EventType = 'Snoozed'` (capitalized)~~ ✅ Resolved (Fix 22)
 **Severity:** 🟡 Medium  
 **File:** `02-features/04-snooze-system.md` line 61  
 **Problem:** Fixed to `Type = 'snoozed'` — matching the data model's lowercase event types and correct column name.
 
-### D7-NEW-012: `13-ai-cheat-sheet.md` missing closing code fence
+### D7-NEW-012: ~~`13-ai-cheat-sheet.md` missing closing code fence~~ ✅ Resolved (Fix 27)
 **Severity:** 🔴 Critical  
 **File:** `13-ai-cheat-sheet.md` line 96  
-**Problem:** Pattern 2 (DST Resolution) code block starts at line 75 with ` ```rust` but never closes. The ` ``` ` is missing before `### 3.` on line 97. This breaks markdown rendering — all subsequent content appears as code.
+**Problem:** Added missing ` ``` ` closing fence after DST Resolution code block.
 
 ### D7-NEW-013: ~~`00-overview.md` validation rules use camelCase~~ ✅ Resolved (Fix 23)
 **Severity:** 🟡 Medium  
@@ -116,8 +116,8 @@
 | Status | Previous | New | Total |
 |--------|:--------:|:---:|:-----:|
 | Total issues | 77 | 18 | **95** |
-| Open | 0 | 3 | **3** |
-| Resolved | 77 | 15 | **92** |
+| Open | 0 | 0 | **0** |
+| Resolved | 77 | 18 | **95** |
 
 ---
 
