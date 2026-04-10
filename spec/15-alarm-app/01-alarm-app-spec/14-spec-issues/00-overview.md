@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.13.0  
+**Version:** 1.14.0  
 **Updated:** 2026-04-10
 
 ---
@@ -34,6 +34,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 17 | `17-discovery-phase-15.md` | Discovery Phase 15 — Deep Boolean, Negation & Code Sample Audit | 13 | 13 | 0 |
 | 18 | `18-discovery-phase-16.md` | Discovery Phase 16 — Test Fixtures, Cheat Sheet & Cross-Reference Audit | 12 | 12 | 0 |
 | 19 | `19-discovery-phase-17.md` | Discovery Phase 17 — Execution Guides, Handoff Reports & Concurrency Audit | 12 | 12 | 0 |
+| 20 | `20-discovery-phase-18.md` | Discovery Phase 18 — Changelog, Consistency Reports, Overview & Staleness Audit | 10 | 10 | 0 |
 
 ---
 
@@ -41,11 +42,11 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 48 |
-| 🟡 Medium | 118 |
-| 🟢 Low | 38 |
-| **Grand Total** | **246** |
-| **Open** | **66** |
+| 🔴 Critical | 50 |
+| 🟡 Medium | 125 |
+| 🟢 Low | 39 |
+| **Grand Total** | **256** |
+| **Open** | **76** |
 | **Resolved** | **180** |
 
 ---
@@ -71,6 +72,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 15** | **Deep boolean, negation & code sample audit** | **✅ Done (+13 = 222, 42 open)** |
 | **Discovery Phase 16** | **Test fixtures, cheat sheet & cross-reference audit** | **✅ Done (+12 = 234, 54 open)** |
 | **Discovery Phase 17** | **Execution guides, handoff reports & concurrency audit** | **✅ Done (+12 = 246, 66 open)** |
+| **Discovery Phase 18** | **Changelog, consistency reports, overview & staleness audit** | **✅ Done (+10 = 256, 76 open)** |
 | **Fix Phase 1** | **Exemptions & decisions** | **✅ Done (4 resolved)** |
 | **Fix Phase 2** | **sqlx → rusqlite** | **✅ Done (7 resolved)** |
 | **Fix Phase 3** | **DB naming PascalCase** | **✅ Done (5 resolved)** |

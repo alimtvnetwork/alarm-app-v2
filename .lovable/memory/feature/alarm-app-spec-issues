@@ -6,12 +6,13 @@ type: feature
 
 ## Audit Status
 
-- **Total issues:** 246
-- **Open:** 66
+- **Total issues:** 256
+- **Open:** 76
 - **Resolved:** 180
-- **Discovery phases:** 17 complete
+- **Discovery phases:** 18 complete
 - **Fix phases:** 59 complete
-- **Readiness Score:** Pending (66 open issues)
+- **Readiness Score:** Pending (76 open issues)
+- **Discovery saturation:** Reached — yield declining, recommend starting fix phases
 
 ## Issue Distribution
 
@@ -36,26 +37,29 @@ type: feature
 | Discovery Phase 15 | 13 | 13 | 0 |
 | Discovery Phase 16 | 12 | 12 | 0 |
 | Discovery Phase 17 | 12 | 12 | 0 |
+| Discovery Phase 18 | 10 | 10 | 0 |
 
-## Discovery Phase 17 — Key Findings
+## Discovery Phase 18 — Key Findings
 
-### Critical (1)
-- P17-001: Handoff readiness report claims 100/100, 180/180 resolved, 99%+ AI success — all stale. Actual: 246 issues, 66 open, ~70% AI success.
+### Critical (2)
+- P18-001: Root overview claims 100/100, uses magic string unions and "disabled" language
+- P18-002: Root consistency report claims 100/100 and 180/180 — stale across multiple lines
 
 ### Medium (7)
-- Handoff checklist item 12 stale (180 → 246)
-- Severity table stale (39/80/19 → 48/118/38)
-- Concurrency guide contradictory D-Bus code (expect vs match)
-- Magic string `"fired"` comparison in concurrency test code
-- Atomic task breakdown missing enum creation tasks (12+ enums)
-- Task 12 references wrong file for error enum definition
-- Atomic task breakdown claims "near-100% success" — stale
+- Features consistency report claims 100/100 without flagging open issues
+- Changelog missing phases 14–17 entry (v2.1.0 needed)
+- Changelog v2.0.0 "100/100" now contradicted by 76 open issues
+- Fundamentals consistency report stale
+- Root overview module 14 description stale (180 → 256)
+- Root overview module 10 description stale (100/100 → pending)
+- Root overview data model uses magic string union types
 
-### Low (4)
-- Reliability report "ALL RESOLVED" stale
-- Rust snake_case field access undocumented in concurrency guide
-- alarm_id vs AlarmId transition unexplained
-- Mutex expect() not in exemptions list
+### Low (1)
+- Root overview "disabled" language in data model comments
+
+## Discovery Saturation
+
+After 5 phases (14–18), yield is declining: 29 → 13 → 12 → 12 → 10. Most remaining issues are stale metrics cascading from the same root cause. **Recommend starting fix phases.**
 
 ## Canonical Location
 
