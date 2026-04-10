@@ -437,7 +437,7 @@ src-tauri/src/engine/
 - Missed alarms show with a distinct "Missed Alarm" badge in the overlay
 - Display: alarm label + original scheduled time + "Missed at HH:MM"
 - Log as `type = 'missed'` in `alarm_events` table
-- Recalculate `nextFireTime` for repeating alarms
+- Recalculate `NextFireTime` for repeating alarms
 
 ### Guarantee
 
@@ -538,20 +538,20 @@ Rust AlarmEngine                    Frontend OverlayStore
 
 ## Acceptance Criteria
 
-- [ ] Alarm fires within 30 seconds of `nextFireTime`
+- [ ] Alarm fires within 30 seconds of `NextFireTime`
 - [ ] Native audio plays immediately on fire (Rust backend)
 - [ ] Full-screen overlay blocks all other interaction
 - [ ] Dismiss stops audio and closes overlay
 - [ ] Snooze stops audio and re-triggers after configured duration
 - [ ] OS notification fires alongside in-app overlay
 - [ ] One-time alarms auto-disable after firing
-- [ ] `nextFireTime` recomputed after every fire event
+- [ ] `NextFireTime` recomputed after every fire event
 - [ ] Missed alarms detected and surfaced on app launch
 - [ ] Missed alarms detected and surfaced on system wake (all 3 platforms)
 - [ ] Missed alarms logged with `Type = 'missed'` in `AlarmEvents`
 - [ ] Auto-dismiss stops alarm after configured minutes if unacknowledged
 - [ ] Only one alarm overlay can be active at a time (queue if multiple fire simultaneously)
-- [ ] Queued alarms fire in FIFO order (earliest `nextFireTime` first)
+- [ ] Queued alarms fire in FIFO order (earliest `NextFireTime` first)
 - [ ] Queue badge shows count of pending alarms on overlay
 
 ---
