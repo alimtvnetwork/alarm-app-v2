@@ -1,0 +1,46 @@
+---
+name: Alarm App Spec Issues Audit
+description: Tracking all spec quality issues found during deep audit — naming violations, contradictions, structural problems, content gaps, AI handoff risks, logic consistency, UI/UX, guideline compliance
+type: feature
+---
+
+## Audit Status
+
+- **Total issues:** 77
+- **Open:** 48
+- **Resolved:** 29
+- **Discovery phases:** 6 complete
+- **Fix phases:** 4 complete (1–4), 11 pending (5–15)
+
+## Issue Distribution
+
+| Category | Count | Open | Resolved |
+|----------|:-----:|:----:|:--------:|
+| Naming Violations | 18 | 6 | 12 |
+| Internal Contradictions | 11 | 9 | 2 |
+| Structural Issues | 5 | 5 | 0 |
+| Content Gaps | 12 | 11 | 1 |
+| AI Handoff Risks | 4 | 2 | 2 |
+| Logic Consistency | 11 | 6 | 5 |
+| UI/UX Consistency | 4 | 2 | 2 |
+| Guideline Compliance | 12 | 7 | 5 |
+
+## Fix Plan (Pending Phases)
+
+| Phase | Issues | Description |
+|-------|--------|-------------|
+| Fix 5 | NV-016, NV-017 | Rename `alarms` → `Alarms`, `settings` → `Settings` |
+| Fix 6 | GC-009, GC-010 | Analytics schema + cheat sheet regressions |
+| Fix 7 | GC-011, GC-012 | Concurrency guide regressions |
+| Fix 8 | LC-011, CG-006 (partial) | Firing + snooze prose snake_case |
+| Fix 9 | CG-006 (partial) | Groups + sound prose snake_case |
+| Fix 10 | IC-008, IC-009, IC-010, IC-011 | Architecture contradictions |
+| Fix 11 | IC-006 | `get_alarms` vs `list_alarms` |
+| Fix 12 | NV-018 | Settings keys → PascalCase |
+| Fix 13 | CG-007, CG-012, LC-001 | AlarmChallenge schema gaps |
+| Fix 14 | CG-006 (remaining) | All remaining prose snake_case |
+| Fix 15 | GC-001 | Function length decomposition |
+
+## Canonical Location
+
+All issues tracked in: `spec/15-alarm-app/01-alarm-app-spec/14-spec-issues/`
