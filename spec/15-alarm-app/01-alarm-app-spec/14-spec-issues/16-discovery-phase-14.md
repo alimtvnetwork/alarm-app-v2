@@ -20,17 +20,14 @@
 ### P14-001: Missing `97-acceptance-criteria.md` in Feature Folder
 
 **Severity:** 🟡 Medium  
-**Rule Violated:** Spec authoring guide — Reserved file `97` recommended for acceptance criteria  
-**Location:** `02-features/`  
-**Observation:** The features folder has no consolidated `97-acceptance-criteria.md`. Each feature has inline acceptance criteria sections, but there is no single document that rolls up all acceptance criteria for the app. An AI doing implementation would have to visit 17 files to collect all criteria.  
-**Risk:** Medium — scattered criteria increase the chance of AI missing acceptance criteria during implementation.
+**Status:** ✅ Resolved — Fix Phase I  
+**Resolution:** Created `02-features/97-acceptance-criteria.md` — consolidated rollup of 133 acceptance criteria from all 16 feature files, grouped by feature with summary table.
 
 ### P14-002: Missing `97-acceptance-criteria.md` in Fundamentals Folder
 
 **Severity:** 🟡 Medium  
-**Rule Violated:** Spec authoring guide — Reserved file `97`  
-**Location:** `01-fundamentals/`  
-**Observation:** No consolidated acceptance criteria file for fundamentals (startup sequence success criteria, migration success criteria, WAL verification, etc.).
+**Status:** ✅ Resolved — Fix Phase I  
+**Resolution:** Created `01-fundamentals/97-acceptance-criteria.md` — consolidated rollup of 64 acceptance criteria from all 11 fundamental specs, covering data model, startup sequence, test strategy, platform constraints, and more.
 
 ---
 
