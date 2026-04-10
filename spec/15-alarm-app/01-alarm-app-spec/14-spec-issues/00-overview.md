@@ -20,7 +20,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 3 | `03-structural-issues.md` | Folder/File Structure Problems | 5 | 5 | 0 |
 | 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 12 | 11 | 1 |
 | 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 2 | 2 |
-| 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 11 | 6 | 5 |
+| 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 11 | 5 | 6 |
 | 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 2 | 2 |
 | 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 3 | 9 |
 
@@ -34,8 +34,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 40 |
 | 🟢 Low | 7 |
 | **Grand Total** | **77** |
-| **Open** | **41** |
-| **Resolved** | **36** |
+| **Open** | **40** |
+| **Resolved** | **37** |
 
 ---
 
@@ -56,7 +56,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 5** | **`alarms` → `Alarms`, `settings` → `Settings` tables** | **✅ Done (2 resolved)** |
 | **Fix Phase 6** | **Analytics schema + cheat sheet regressions** | **✅ Done (3 resolved)** |
 | **Fix Phase 7** | **Concurrency guide regressions** | **✅ Done (2 resolved)** |
-| Fix Phase 8 | Firing + snooze prose snake_case | 🔴 Pending |
+| **Fix Phase 8** | **Firing + snooze prose snake_case** | **✅ Done (1 resolved + CG-006 partial)** |
 | Fix Phase 9 | Groups + sound prose snake_case | 🔴 Pending |
 | Fix Phase 10 | Architecture contradictions (`tauri-plugin-sql`, intervals, return types) | 🔴 Pending |
 | Fix Phase 11 | `get_alarms` vs `list_alarms` conflict | 🔴 Pending |

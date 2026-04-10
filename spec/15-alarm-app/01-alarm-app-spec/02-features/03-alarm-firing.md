@@ -162,7 +162,7 @@ fn on_timezone_change(conn: &Connection, new_tz: &Tz) {
         let new_next = compute_next_fire_time(
             alarm.time, alarm.date, &alarm.repeat, new_tz, Utc::now()
         );
-        update_next_fire_time(conn, &alarm.id, new_next);
+        update_next_fire_time(conn, &alarm.alarm_id, new_next);
     }
 
     tracing::info!(timezone = %new_tz, count = alarms.len(), "Recalculated all alarm times");
@@ -188,7 +188,7 @@ This is the most important reliability feature. Desktop computers sleep, shut do
 ### Strategy
 
 1. **Persist `nextFireTime`** for every enabled alarm in SQLite
-2. **On app launch:** query all alarms where `next_fire_time < now AND enabled = 1 AND deleted_at IS NULL AND type != 'acknowledged'` → fire missed alarm notifications
+2. **On app launch:** query all alarms where `NextFireTime < now AND IsEnabled = 1 AND DeletedAt IS NULL` → fire missed alarm notifications
 3. **On system wake:** same check via OS power event listener (see Platform Wake-Event Listeners below)
 4. **On every 30s tick:** check if any alarm's `nextFireTime <= now`
 5. **After firing:** update `nextFireTime` based on repeat pattern, or disable if one-time
@@ -482,9 +482,9 @@ The 30-second check interval may match multiple alarms. Without queue rules, AI 
 
 ### Queue Rules
 
-1. **Detection:** On each 30s tick, query returns all alarms where `next_fire_time <= now AND enabled = 1`
-2. **Ordering:** Sort matched alarms by `next_fire_time ASC` (earliest first), then `created_at ASC` (tiebreaker)
-3. **Immediate logging:** ALL matched alarms insert `alarm_events` row with `type = 'fired'` immediately — do not wait for overlay display
+1. **Detection:** On each 30s tick, query returns all alarms where `NextFireTime <= now AND IsEnabled = 1`
+2. **Ordering:** Sort matched alarms by `NextFireTime ASC` (earliest first), then `CreatedAt ASC` (tiebreaker)
+3. **Immediate logging:** ALL matched alarms insert `AlarmEvents` row with `EventType = 'Fired'` immediately — do not wait for overlay display
 4. **Overlay sequencing:** Show only the first alarm's overlay. Queue the rest in memory
 5. **Progression:** When user dismisses or snoozes the current overlay → show next alarm from queue
 6. **Auto-dismiss:** Each queued alarm's `autoDismissMin` timer starts when its overlay is shown (not when it enters the queue)

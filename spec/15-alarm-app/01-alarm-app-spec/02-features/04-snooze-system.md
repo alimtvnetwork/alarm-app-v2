@@ -17,7 +17,7 @@
 
 ## Description
 
-When an alarm fires, the user can snooze it to delay re-triggering by a configurable interval. Each alarm has its own `maxSnoozeCount` to prevent infinite postponing.
+When an alarm fires, the user can snooze it to delay re-triggering by a configurable interval. Each alarm has its own `MaxSnoozeCount` to prevent infinite postponing.
 
 ---
 
@@ -27,10 +27,10 @@ Per-alarm settings (stored on `Alarm` record):
 
 | Setting | Field | Default | Range |
 |---------|-------|---------|-------|
-| Snooze duration | `snoozeDurationMin` | 5 minutes | 1–30 minutes |
-| Max snooze count | `maxSnoozeCount` | 3 | 0–10 (0 = snooze disabled) |
+| Snooze duration | `SnoozeDurationMin` | 5 minutes | 1–30 minutes |
+| Max snooze count | `MaxSnoozeCount` | 3 | 0–10 (0 = snooze disabled) |
 
-When `maxSnoozeCount = 0`, the Snooze button is never shown — the user must dismiss.
+When `MaxSnoozeCount = 0`, the Snooze button is never shown — the user must dismiss.
 
 ---
 
@@ -44,7 +44,7 @@ interface SnoozeState {
 }
 ```
 
-Stored in the `snooze_state` SQLite table. Cleared on dismiss.
+Stored in the `SnoozeState` SQLite table. Cleared on dismiss.
 
 ---
 
@@ -54,11 +54,11 @@ Stored in the `snooze_state` SQLite table. Cleared on dismiss.
 
 1. User taps "Snooze" → frontend calls `invoke("snooze_alarm", { alarmId, duration })`
 2. Rust backend stops audio, writes snooze state to SQLite
-3. `snoozeCount` increments, `snooze_until` set to now + duration
+3. `SnoozeCount` increments, `SnoozeUntil` set to now + duration
 4. **Exact-time snooze trigger:** Rust spawns `tokio::time::sleep_until(snooze_expiry)` per active snooze — does NOT rely on the 30s polling interval
-5. When `snoozeCount >= maxSnoozeCount`, "Snooze" button is hidden — only "Dismiss" remains
+5. When `SnoozeCount >= MaxSnoozeCount`, "Snooze" button is hidden — only "Dismiss" remains
 6. Remaining snooze count displayed: "Snooze (2 remaining)"
-7. Each snooze event logged in `alarm_events` with `type = 'snoozed'`
+7. Each snooze event logged in `AlarmEvents` with `EventType = 'Snoozed'`
 
 ### Snooze Timer Implementation
 
@@ -79,7 +79,7 @@ pub async fn schedule_snooze(engine: Arc<AlarmEngine>, alarm_id: String, duratio
 }
 ```
 
-**Crash recovery:** On startup, query `snooze_state` table for active snoozes. If `snooze_until` is in the future, spawn a new `sleep_until` task. If `snooze_until` is in the past, fire immediately as a missed alarm.
+**Crash recovery:** On startup, query `SnoozeState` table for active snoozes. If `SnoozeUntil` is in the future, spawn a new `sleep_until` task. If `SnoozeUntil` is in the past, fire immediately as a missed alarm.
 
 ---
 
@@ -87,11 +87,11 @@ pub async fn schedule_snooze(engine: Arc<AlarmEngine>, alarm_id: String, duratio
 
 - [ ] Snooze delays alarm by per-alarm configured duration
 - [ ] Snooze count displayed on overlay
-- [ ] Snooze button hidden when `maxSnoozeCount` reached
-- [ ] Snooze button never shown when `maxSnoozeCount = 0`
+- [ ] Snooze button hidden when `MaxSnoozeCount` reached
+- [ ] Snooze button never shown when `MaxSnoozeCount = 0`
 - [ ] Snooze state persists across app restart
 - [ ] Dismissing clears snooze state from SQLite
-- [ ] Each snooze event logged in `alarm_events` table
+- [ ] Each snooze event logged in `AlarmEvents` table
 
 ---
 
