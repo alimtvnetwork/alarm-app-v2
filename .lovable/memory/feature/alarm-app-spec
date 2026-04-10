@@ -1,33 +1,42 @@
 ---
 name: Alarm App Spec
-description: Cross-platform native alarm app (Tauri 2.x) — 17 feature specs, 12 fundamentals, 180/180 issues resolved, P0-P3 priority matrix, 100/100 readiness score
+description: Cross-platform native alarm app (Tauri 2.x) — 17 feature specs, 12 fundamentals, 249/256 issues resolved, P0-P3 priority matrix, ~95/100 readiness score
 type: feature
 ---
 
 ## Overview
 
-- **Spec version:** v2.0.0
-- **Readiness score:** 100/100 (A+)
-- **AI success rate:** 99%+
-- **Total spec issues:** 180 found, 180 resolved (13 discovery phases, 59 fix phases)
+- **Spec version:** v2.2.0
+- **Readiness score:** ~95/100 (A)
+- **AI success rate:** 97–98%
+- **Total spec issues:** 256 found, 249 resolved (18 discovery phases, 28 fix phase trackers)
+- **Open issues:** 7 (0 critical, 2 medium, 5 low)
 - **App issues:** 43 found, 43 resolved
-- **Spec files:** 57+ (12 fundamentals + 17 features + 15 issue trackers + 3 execution guides + 10 misc)
+- **Spec files:** 57+ (12 fundamentals + 17 features + 28 issue trackers + 3 execution guides + 10 misc)
 
 ## Architecture
 
 - **Framework:** Tauri 2.x (Rust backend + WebView frontend)
-- **Frontend:** React 18.3.1 + Vite 5.4.18 + TypeScript 5.7.3 + Tailwind CSS 3.4.22 + shadcn/ui
+- **Frontend:** React 18.3.1 + Vite 5.4.18 + TypeScript 5.7.3 + Tailwind CSS 3.4.22 + shadcn/ui + Zustand 4.5.7
 - **Backend:** Rust (alarm engine, audio, notifications, storage)
-- **Database:** SQLite (rusqlite 0.32.1 + refinery 0.8.14 migrations, WAL mode)
+- **Database:** Single SQLite file (rusqlite 0.32.1 + refinery 0.8.14 migrations, WAL mode)
 - **Tables:** Alarms, AlarmGroups, Settings, SnoozeState, AlarmEvents (all PascalCase)
+- **Domain enums:** 13 TypeScript + Rust enums (RepeatType, ChallengeType, AlarmEventType, SortField, etc.)
+- **Error enums:** AlarmAppError (13 variants) + WebhookError (4 variants) with thiserror 2.0.12
+- **State management:** Zustand — useAlarmStore, useOverlayStore, useSettingsStore
 - **All dependencies pinned with `=x.y.z`** — see `10-dependency-lock.md`
 
 ## Key Specs
 
-- `01-fundamentals/` — 12 docs: data model, design system, file structure, platform constraints, Tauri architecture, startup sequence, devops, test strategy, dependency lock, platform verification matrix
+- `01-fundamentals/` — 12 docs: data model (incl. domain enums, boolean inverses, settings seeding, single-DB decision), design system (incl. UI states spec), file structure, platform constraints (incl. error enums, code pattern exemptions), Tauri architecture (incl. Zustand stores), startup sequence, devops, test strategy, dependency lock, platform verification matrix
 - `02-features/` — 17 docs: CRUD, scheduling, firing, snooze, sound, challenges, groups, clock, theme, export, wellness, smart, analytics, personalization, keyboard, accessibility
 - `03-app-issues/` — 43/43 resolved
-- `14-spec-issues/` — 180/180 resolved across 13 discovery phases
+- `14-spec-issues/` — 256 found, 249 resolved across 18 discovery phases + 28 fix phase trackers
+
+## Remaining Open Issues (7)
+
+- P14-001/P14-002 (Medium): Missing consolidated 97-acceptance-criteria.md rollup files
+- 5 low-severity documentation clarifications
 
 ## Canonical Location
 
