@@ -1,124 +1,148 @@
 
 
-# Discovery Phase 4: UI/UX + Frontend State Consistency Audit
+# Audit Report: Discovery Phase 6 — Post-Fix Regression + Deep Compliance Scan
 
-## Audit Scope
-Deep scan of all UI components, frontend state patterns, React hooks, Tauri IPC naming, event flow, and cross-file UI behavior consistency.
+## Findings Summary
+
+I found **19 new issues** across the alarm app spec. These fall into two groups:
+1. **Regressions** — violations introduced during Fix Phases 2–4 (7 issues)
+2. **Previously missed** — issues that were never tracked (12 issues)
 
 ---
 
-## New Issues Found: 11
+## Category A: Regressions Introduced During Fix Phases
 
-### UI State Issues
+### REG-001: `alarms` table name still lowercase
+**Severity:** 🔴 Critical  
+**File:** `01-data-model.md` line 224  
+`CREATE TABLE alarms (` — should be `Alarms`. Fix Phase 3 renamed `alarm_events` → `AlarmEvents` and `alarm_groups` → `AlarmGroups` but missed the main table.
 
-**UX-001: No React State Management Pattern Defined** (Critical)
-- Multiple hooks mentioned (`useAlarms`, `useTheme`, `useAlarmFiring`, `useClock`) but NO state management architecture specified
-- Is it React Context? Zustand? Redux? Just local state?
-- `useAlarms` holds CRUD + toggle + group toggle + drag-drop + SQLite sync — massive hook with no guidance on state sharing
-- AI will either create a monolithic context or duplicate state across components
-- `AlarmOverlay` needs access to alarm data from `useAlarms`, snooze state, and audio state — how does it get them?
-- No specification for how `listen("alarm-fired")` event from Rust triggers UI state updates across components
+### REG-002: `settings` table name still lowercase
+**Severity:** 🟡 Medium  
+**File:** `01-data-model.md` line 256  
+`CREATE TABLE settings (` — should be `Settings`.
 
-**UX-002: AlarmOverlay Lifecycle Not Specified** (Critical)
-- `AlarmOverlay` is "conditional — shown when alarm fires" but:
-  - No spec for which component owns the overlay state (`isOverlayVisible`, `activeAlarm`)
-  - No spec for how overlay interacts with the main window (does it replace the page? Is it a portal? A separate Tauri window?)
-  - `03-alarm-firing.md` says "full-screen overlay blocks all other interaction" — but how? CSS z-index? Window fullscreen? Separate window?
-  - The overlay needs alarm data, snooze state, challenge data, auto-dismiss timer, queue state — no prop/state flow defined
-  - Multi-alarm queue: who manages the queue? Frontend or backend? Both files mention it but neither assigns ownership
+### REG-003: `snooze_state` table reference in snooze spec still lowercase
+**Severity:** 🟡 Medium  
+**File:** `04-snooze-system.md` line 47  
+Prose: "Stored in the `snooze_state` SQLite table" — table was renamed to `SnoozeState` in data model but snooze spec prose wasn't updated.
 
-**UX-003: Alarm Queue State Ownership Ambiguous** (Medium)
-- `03-alarm-firing.md` defines queue rules (FIFO, max 10, badge)
-- Queue is managed by Rust `AlarmEngine.currently_firing` but overlay is React
-- No spec for how frontend knows about queue size, order, or transitions between queued alarms
-- IPC event `alarm-fired` sends one alarm at a time — does the frontend maintain its own queue mirror?
+### REG-004: `13-analytics.md` duplicate schema still uses snake_case
+**Severity:** 🔴 Critical  
+**File:** `13-analytics.md` lines 91–103  
+The full `CREATE TABLE alarm_events` block with all snake_case columns was never updated. This directly contradicts the PascalCase schema in `01-data-model.md`. (This is also the tracked IC-005 — duplicate schema — but the content itself was never fixed.)
 
-### Naming Violations (Frontend)
+### REG-005: `13-ai-cheat-sheet.md` code samples use snake_case
+**Severity:** 🔴 Critical  
+**File:** `13-ai-cheat-sheet.md` lines 89–91  
+`row.get("enabled")`, `row.get("repeat_days_of_week")` — still snake_case. Fix Phase 4 updated `01-data-model.md` but didn't touch the cheat sheet.
 
-**UX-004: IPC Event Names Use kebab-case** (Medium)
-- `alarm-fired` event in `03-alarm-firing.md` — Tauri events use kebab-case by convention
-- But all IPC command names use `snake_case` (e.g., `create_alarm`, `toggle_alarm`)
-- Inconsistency between event naming (kebab) and command naming (snake) — neither is PascalCase
-- Need exemption decision: are Tauri events/commands exempt from PascalCase?
+### REG-006: `12-platform-and-concurrency-guide.md` Race 1 SQL uses `id` and `deleted_at`
+**Severity:** 🔴 Critical  
+**File:** `12-platform-and-concurrency-guide.md` line 166–167  
+`WHERE id = ? AND deleted_at IS NOT NULL` — should be `AlarmId` and `DeletedAt`.
 
-**UX-005: TS HistoryFilter Uses camelCase Keys** (Medium)
-- `13-analytics.md` line 48-56: `HistoryFilter` interface uses `startDate`, `endDate`, `groupId`, `alarmId`, `eventType`, `sortBy`, `sortOrder`
-- All should be PascalCase per coding guidelines: `StartDate`, `EndDate`, `GroupId`, etc.
+### REG-007: `12-platform-and-concurrency-guide.md` Race 4 uses `alarm.id`
+**Severity:** 🟡 Medium  
+**File:** `12-platform-and-concurrency-guide.md` lines 227–234  
+`alarm.id` should be `alarm.alarm_id` (Rust field) or the struct should reference `AlarmId` consistently. Also `self.pool` references don't match the `rusqlite` refactor (should be `conn`).
 
-**UX-006: ImportResult Uses camelCase Keys** (Medium)
-- `10-export-import.md` line 96-101: `imported`, `skipped`, `overwritten`, `errors` — all lowercase
-- Should be PascalCase: `Imported`, `Skipped`, `Overwritten`, `Errors`
+---
 
-**UX-007: UndoEntry Interface Uses camelCase** (Medium)
-- `01-alarm-crud.md` line 215-220: `token`, `alarmId`, `label`, `expiresAt`, `timerId`
-- Should be PascalCase: `Token`, `AlarmId`, `Label`, `ExpiresAt`, `TimerId`
+## Category B: Previously Missed Issues
 
-### Cross-File UI Inconsistencies
+### NEW-001: `04-snooze-system.md` configuration table uses camelCase field names in prose
+**Severity:** 🟡 Medium  
+**File:** `04-snooze-system.md` lines 30–31  
+`snoozeDurationMin`, `maxSnoozeCount` — serialized key references in prose should be PascalCase: `SnoozeDurationMin`, `MaxSnoozeCount`.
 
-**UX-008: Scheduling Spec Uses Stale `recurringDays` Term** (Medium)
-- `02-alarm-scheduling.md` line 27: `recurringDays` — this term was replaced by `RepeatPattern` in the data model
-- "One-time alarms (empty `recurringDays`) auto-disable" contradicts the `repeat.type = "once"` pattern defined in `01-data-model.md`
-- AI will be confused about which pattern to implement
+### NEW-002: `03-alarm-firing.md` missed alarm query uses snake_case
+**Severity:** 🔴 Critical  
+**File:** `03-alarm-firing.md` line 192  
+`next_fire_time < now AND enabled = 1 AND deleted_at IS NULL AND type != 'acknowledged'` — all snake_case column refs, and `'acknowledged'` is not a valid event type (should be one of: fired, snoozed, dismissed, missed).
 
-**UX-009: Settings Page Component Not Specified** (Medium)
-- Multiple features reference "Settings page" (theme, i18n, retention days, shortcut reference, bedtime)
-- No `Settings.tsx` or settings page component exists in the file structure (`03-file-structure.md`)
-- The component hierarchy shows `Index.tsx` with all components — no routing or page navigation defined
-- How does the user navigate to Settings? A dialog? A page? A drawer?
+### NEW-003: `03-alarm-firing.md` queue rules use snake_case
+**Severity:** 🟡 Medium  
+**File:** `03-alarm-firing.md` lines 485–487  
+`next_fire_time`, `enabled`, `created_at` in prose — should be PascalCase.
 
-**UX-010: No Error Toast Component in File Structure** (Low)
-- `04-platform-constraints.md` references `toast.error()` extensively
-- `01-alarm-crud.md` references `UndoToast` component
-- No toast library specified (Sonner? react-hot-toast? Custom?)
-- File structure doesn't list a toast component
+### NEW-004: `07-alarm-groups.md` still references `previous_enabled` and `enabled` in prose
+**Severity:** 🟡 Medium  
+**File:** `07-alarm-groups.md` lines 41–71  
+Multiple references to `previous_enabled`, `enabled` — should be `IsPreviousEnabled`, `IsEnabled`. (Tracked as CG-006 but listed as "open" — the content was never fixed.)
 
-**UX-011: `02-alarm-scheduling.md` Severely Outdated** (Medium)
-- Version 1.0.0 vs all other feature files at 1.1.0–1.6.0
-- Still references `recurringDays` (deprecated)
-- Doesn't mention `interval` or `cron` repeat types (added in data model)
-- Quick Alarm / Holiday features mentioned but no IPC commands, no Rust logic, no data model integration
-- AI will find contradictory scheduling information between this file and data model
+### NEW-005: `05-sound-and-vibration.md` uses camelCase in prose
+**Severity:** 🟡 Medium  
+**File:** `05-sound-and-vibration.md` lines 146, 236  
+`gradualVolume: boolean`, `vibrationEnabled: boolean` — serialized field references should be PascalCase.
+
+### NEW-006: Alarm Engine check interval contradiction
+**Severity:** 🟡 Medium  
+**Files:** `06-tauri-architecture.md` line 56 says "1-second interval timer"; `03-alarm-firing.md`, `07-startup-sequence.md`, `12-platform-and-concurrency-guide.md` all say "30-second check interval".
+
+### NEW-007: `tauri-plugin-sql` vs `rusqlite` contradiction
+**Severity:** 🔴 Critical  
+**File:** `06-tauri-architecture.md` line 59  
+Storage module lists `tauri-plugin-sql` (SQLite) — but the entire project uses `rusqlite` directly. AI will install the wrong crate.
+
+### NEW-008: `delete_alarm` return type contradicts between files
+**Severity:** 🟡 Medium  
+**Files:** `06-tauri-architecture.md` line 76 says `delete_alarm` returns `void`; `01-alarm-crud.md` line 285 says it returns `{ UndoToken: string }`.
+
+### NEW-009: `export_data` IPC payload contradicts between files
+**Severity:** 🟡 Medium  
+**Files:** `06-tauri-architecture.md` line 105 says `export_data` payload is `void`; `10-export-import.md` line 46 says `{ format, scope, alarmIds? }`.
+
+### NEW-010: `get_alarms` vs `list_alarms` IPC command name conflict
+**Severity:** 🟡 Medium  
+**Files:** `06-tauri-architecture.md` line 77 uses `get_alarms`; `01-alarm-crud.md` line 290 uses `list_alarms`. (This is IC-006 — still open, just confirming it persists.)
+
+### NEW-011: Settings keys in data model use snake_case
+**Severity:** 🟡 Medium  
+**File:** `01-data-model.md` lines 327–334  
+`theme`, `time_format`, `default_snooze_duration`, `auto_launch`, `minimize_to_tray`, `event_retention_days`, `system_timezone` — these are serialized key-value pairs stored in the `settings` table. Per the PascalCase mandate, keys should be `Theme`, `TimeFormat`, `DefaultSnoozeDuration`, etc.
+
+### NEW-012: `alarm_events.metadata` JSON field referenced but doesn't exist
+**Severity:** 🟡 Medium  
+**File:** `06-dismissal-challenges.md` line 39  
+`alarm_events.metadata` JSON `{"solve_time_ms": 4500}` — no `Metadata` column exists in the `AlarmEvents` schema. The data model has `ChallengeSolveTimeSec REAL` instead.
 
 ---
 
 ## Updated Totals
 
-| Category | Previous | New | Total |
-|----------|:--------:|:---:|:-----:|
-| Naming Violations | 12 | 3 | 15 |
-| Internal Contradictions | 7 | 0 | 7 |
-| Structural Issues | 5 | 0 | 5 |
-| Content Gaps | 7 | 4 | 11 |
-| AI Handoff Risks | 4 | 0 | 4 |
-| Logic Consistency | 10 | 0 | 10 |
-| **UI/UX Consistency (NEW)** | 0 | 4 | **4** |
-| **Grand Total** | **45** | **11** | **56** |
-
-## Severity Breakdown (All 56 Issues)
-
-| Severity | Count |
-|----------|:-----:|
-| Critical | 22 |
-| Medium | 31 |
-| Low | 3 |
+| Status | Previous | New | Total |
+|--------|:--------:|:---:|:-----:|
+| Total issues | 64 | 19 | **83** |
+| Open | 37 | 19 | **56** |
+| Resolved | 27 | 0 | **27** |
 
 ---
 
-## Implementation Plan
+## Proposed Next Steps (Phase-by-Phase Fix Plan)
 
-1. **Create** `14-spec-issues/07-ui-ux-consistency.md` with UX-001 through UX-004
-2. **Update** `14-spec-issues/01-naming-violations.md` — add UX-005, UX-006, UX-007
-3. **Update** `14-spec-issues/04-content-gaps.md` — add UX-008, UX-009, UX-010, UX-011
-4. **Update** `14-spec-issues/00-overview.md` — add category 7, update totals to 56, mark Phase 4 done
-5. **Update** `mem://feature/alarm-app-spec-issues` — sync with new totals and phase status
+Each phase is deliberately small (2–4 issues) for reliable execution.
+
+| Phase | Issues | Description |
+|-------|--------|-------------|
+| Fix 5 | REG-001, REG-002 | Rename `alarms` → `Alarms`, `settings` → `Settings` tables everywhere |
+| Fix 6 | REG-004, REG-005 | Fix `13-analytics.md` duplicate schema + `13-ai-cheat-sheet.md` code samples |
+| Fix 7 | REG-003, REG-006, REG-007 | Fix remaining snake_case in snooze spec + concurrency guide |
+| Fix 8 | NEW-001, NEW-002, NEW-003 | Fix snake_case prose in firing + snooze specs |
+| Fix 9 | NEW-004, NEW-005 | Fix snake_case prose in groups + sound specs |
+| Fix 10 | NEW-006, NEW-007, NEW-008, NEW-009 | Fix contradictions in `06-tauri-architecture.md` |
+| Fix 11 | NEW-010, IC-006 | Resolve `get_alarms` vs `list_alarms` conflict |
+| Fix 12 | NEW-011 | Settings keys → PascalCase |
+| Fix 13 | NEW-012, LC-001 | Fix AlarmChallenge schema gaps |
+| Fix 14 | CG-006 | Fix all remaining snake_case prose across all feature files |
+| Fix 15 | GC-001 (partial) | Break down longest functions (start with `compute_next_fire_time`) |
 
 ---
 
-## Key Insights
+## Plan for This Session
 
-1. **State management is the #1 frontend risk.** Without specifying React Context, Zustand, or similar, AI will create inconsistent state patterns. The alarm overlay alone needs data from 4+ sources (alarm data, snooze state, challenge config, queue state, auto-dismiss timer).
-
-2. **The scheduling spec is dangerously outdated.** It still uses `recurringDays` which was replaced by `RepeatPattern` with 5 types. An AI reading files in order will hit `02-alarm-scheduling.md` before `01-data-model.md` and implement the wrong model.
-
-3. **Every TS interface in every feature file uses camelCase.** The PascalCase mandate for serialized keys means ALL interfaces across all 16 feature files need conversion. This is systemic, not isolated.
+1. **Write all 19 new issues** to the `14-spec-issues/` files (add to appropriate category files)
+2. **Update `00-overview.md`** with new totals (83 issues, 56 open)
+3. **Update `05-ai-handoff-risks.md`** — AH-001 and AH-004 should be marked resolved (sqlx fixed, serde added)
+4. **Update memory** with new issue counts and fix plan
 
