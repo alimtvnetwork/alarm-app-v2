@@ -314,11 +314,13 @@ PRAGMA busy_timeout=5000;  -- Wait up to 5s for locks instead of failing immedia
 The `alarm_events` table grows unbounded. A retention policy purges old events on startup.
 
 ```rust
+const DEFAULT_EVENT_RETENTION_DAYS: i64 = 90;
+
 // Run at startup Step 8 (after missed alarm check)
 pub fn purge_old_events(conn: &Connection) {
     let retention_days: i64 = get_setting(conn, "EventRetentionDays")
         .and_then(|v| v.parse().ok())
-        .unwrap_or(90);
+        .unwrap_or(DEFAULT_EVENT_RETENTION_DAYS);
 
     let cutoff = Utc::now() - chrono::Duration::days(retention_days);
     conn.execute(
