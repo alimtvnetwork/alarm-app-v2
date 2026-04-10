@@ -173,11 +173,11 @@ Add `eslint-plugin-i18next` to prevent hardcoded strings in JSX:
     "delete_confirm": "Delete group? Alarms will be moved to Ungrouped."
   },
   "settings": {
-    "theme": "Theme",
-    "time_format": "Time Format",
-    "language": "Language",
-    "sound": "Default Sound",
-    "retention": "Event History (days)"
+    "Theme": "Theme",
+    "TimeFormat": "Time Format",
+    "Language": "Language",
+    "DefaultSound": "Default Sound",
+    "EventRetentionDays": "Event History (days)"
   },
   "error": {
     "save_failed": "Failed to save — try again",

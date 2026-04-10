@@ -298,40 +298,38 @@ The `alarm_events` table grows unbounded. A retention policy purges old events o
 ```rust
 // Run at startup Step 8 (after missed alarm check)
 pub fn purge_old_events(conn: &Connection) {
-    let retention_days: i64 = get_setting(conn, "event_retention_days")
+    let retention_days: i64 = get_setting(conn, "EventRetentionDays")
         .and_then(|v| v.parse().ok())
         .unwrap_or(90);
 
     let cutoff = Utc::now() - chrono::Duration::days(retention_days);
-
-    match conn.execute(
+    conn.execute(
         "DELETE FROM AlarmEvents WHERE Timestamp < ?1",
         params![cutoff.to_rfc3339()],
-    ) {
-        Ok(deleted) => {
-            tracing::info!(deleted, retention_days, "Purged old alarm events");
-        }
-        Err(e) => {
-            tracing::error!(error = %e, "Failed to purge old events");
-        }
-    }
+    ).ok();
+
+    tracing::info!(
+        retention_days = retention_days,
+        cutoff = %cutoff,
+        "Purged old alarm events"
+    );
 }
 ```
 
-**Settings key:** `event_retention_days` (default: `90`). Configurable in Settings UI.
+**Settings key:** `EventRetentionDays` (default: `90`). Configurable in Settings UI.
 
 ### Settings Keys
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `theme` | `"light" \| "dark" \| "system"` | Theme preference |
-| `time_format` | `"12h" \| "24h"` | Clock display format |
-| `default_snooze_duration` | `number` | Default snooze minutes for new alarms |
-| `default_sound` | `string` | Default sound for new alarms |
-| `auto_launch` | `"true" \| "false"` | Start on system boot |
-| `minimize_to_tray` | `"true" \| "false"` | Keep running when window closed |
-| `language` | `string` | i18n locale code (default: "en") |
-| `event_retention_days` | `number` | Days to keep alarm_events (default: 90) |
+| `Theme` | `"light" \| "dark" \| "system"` | Theme preference |
+| `TimeFormat` | `"12h" \| "24h"` | Clock display format |
+| `DefaultSnoozeDuration` | `number` | Default snooze minutes for new alarms |
+| `DefaultSound` | `string` | Default sound for new alarms |
+| `AutoLaunch` | `"true" \| "false"` | Start on system boot |
+| `MinimizeToTray` | `"true" \| "false"` | Keep running when window closed |
+| `Language` | `string` | i18n locale code (default: "en") |
+| `EventRetentionDays` | `number` | Days to keep alarm_events (default: 90) |
 
 ---
 
@@ -406,7 +404,7 @@ When the system timezone changes:
 ### Implementation
 
 - Use `chrono-tz` crate for IANA timezone resolution
-- Store system timezone in `settings` table (key: `system_timezone`, value: IANA string e.g. `"Asia/Kuala_Lumpur"`)
+- Store system timezone in Settings table (key: `SystemTimezone`, value: IANA string e.g. `"Asia/Kuala_Lumpur"`)
 - On each 30s alarm check, compare `NextFireTime` (UTC) against `Utc::now()`
 
 ---
@@ -510,15 +508,15 @@ CREATE INDEX IdxEventsTimestamp ON AlarmEvents(Timestamp);
 
 -- Default settings
 INSERT INTO Settings (Key, Value) VALUES
-  ('theme', 'system'),
-  ('time_format', '12h'),
-  ('default_snooze_duration', '5'),
-  ('default_sound', 'classic-beep'),
-  ('auto_launch', 'false'),
-  ('minimize_to_tray', 'true'),
-  ('language', 'en'),
-  ('event_retention_days', '90'),
-  ('system_timezone', '');
+  ('Theme', 'system'),
+  ('TimeFormat', '12h'),
+  ('DefaultSnoozeDuration', '5'),
+  ('DefaultSound', 'classic-beep'),
+  ('AutoLaunch', 'false'),
+  ('MinimizeToTray', 'true'),
+  ('Language', 'en'),
+  ('EventRetentionDays', '90'),
+  ('SystemTimezone', '');
 ```
 
 ---

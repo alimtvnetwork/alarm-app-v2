@@ -154,7 +154,7 @@ fn resolve_local_to_utc(
 /// Called on each alarm engine tick and on OS timezone change event
 fn on_timezone_change(conn: &Connection, new_tz: &Tz) {
     // 1. Update settings table
-    update_setting(conn, "system_timezone", new_tz.name());
+    update_setting(conn, "SystemTimezone", new_tz.name());
 
     // 2. Recalculate nextFireTime for ALL enabled alarms
     let alarms = get_enabled_alarms(conn);
