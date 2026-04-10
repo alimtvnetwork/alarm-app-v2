@@ -1,15 +1,15 @@
 ---
 name: Alarm App Spec Issues Audit
-description: 384 total spec issues — 315 resolved, 69 open (Discovery Phases 22-26). Missing deps, undefined interfaces, IPC registry divergence, stale metrics.
+description: 396 total spec issues — 315 resolved, 81 open (Discovery Phases 22-27). Stale metrics, unfixed IPC divergence, negative booleans, magic strings in acceptance criteria.
 type: feature
 ---
 
 ## Audit Status — IN PROGRESS ⚠️
 
-- **Total issues:** 384
-- **Open:** 69 (Discovery Phases 22–26)
+- **Total issues:** 396
+- **Open:** 81 (Discovery Phases 22–27)
 - **Resolved:** 315
-- **Discovery phases:** 26
+- **Discovery phases:** 27
 - **Fix phases:** 40 (Phases 1–20, A–T)
 
 ## Open Issues Summary
@@ -29,9 +29,27 @@ AlarmEvent uses `?` optional on 5 fields, `is_day_excluded` negative boolean, sc
 ### Phase 26 — 12 issues (3 Critical, 6 Medium, 3 Low)
 Architecture ↔ feature spec IPC divergence (group CRUD, import flow, next-alarm command name), stale overview/readiness metrics (claim 315/315 but 69 open), orphaned IPC commands (cancel_snooze, reorderAlarms).
 
-## Key Finding — Phase 26
+### Phase 27 — 12 issues (2 Critical, 7 Medium, 3 Low)
+**Regression scan** — confirmed Phase 22–26 issues remain unfixed in actual files:
+- Stale "315" metrics in overview, readiness, consistency (should be 384+)
+- `14-spec-issues/00-overview.md` still showed 69 open
+- `is_day_excluded` negative boolean still in alarm-firing code
+- `get_next_alarm` vs `get_next_alarm_time` IPC name mismatch persists
+- Orphaned `cancel_snooze` and `reorderAlarms` still in architecture
+- Magic strings `"once"`, `"weekly"` in acceptance criteria
+- Changelog missing v2.6.0 entry
 
-**Systemic IPC registry divergence.** `06-tauri-architecture.md` has its own IPC command registry that diverges from individual feature specs. Commands exist in one but not the other, with different names and return types.
+## Root Cause Analysis — Recurring Pattern
+
+### RC-6: Stale Metrics Never Updated After Fix Cycles
+Every fix cycle resolves spec issues but fails to update the 4 metric files (`00-overview.md`, `10-ai-handoff-readiness-report.md`, `99-consistency-report.md`, `14-spec-issues/00-overview.md`). This has happened in Fix Phases H, O, T, and now again after Phases 22–26.
+
+**Prevention:** After ANY fix phase, immediately grep for the old count across ALL root-level files and update every occurrence.
+
+### RC-7: "Fixed" Without Verification
+Issues were reported as resolved without running grep to confirm the fix is present in the actual file. The `is_day_excluded`, IPC name mismatch, and orphaned commands were claimed fixed but remain in the source files.
+
+**Prevention:** After claiming a fix, run `grep -rn "old_pattern"` to confirm zero remaining occurrences. If grep still finds the pattern, the fix is incomplete.
 
 ## Canonical Location
 
