@@ -76,12 +76,12 @@
 
 **Root Cause:** Key-value design pattern limitation.
 
-**Resolution:** Added `value_type` column (TEXT, one of: `boolean`, `integer`, `string`, `json`) to `settings` table in `01-fundamentals/01-data-model.md` and a typed Rust helper:
+**Resolution:** Added `ValueType` column (TEXT, one of: `boolean`, `integer`, `string`, `json`) to `Settings` table in `01-fundamentals/01-data-model.md` and a typed Rust helper:
 
 ```rust
 pub fn get_setting<T: FromSettingValue>(conn: &Connection, key: &str) -> Result<T, AlarmAppError> {
     let row = conn.query_row(
-        "SELECT value, value_type FROM settings WHERE key = ?", [key],
+        "SELECT Value, ValueType FROM Settings WHERE Key = ?", [key],
         |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?))
     )?;
     T::from_setting(&row.0, &row.1)
