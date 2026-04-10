@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.21.0  
+**Version:** 1.22.0  
 **Updated:** 2026-04-10
 
 ---
@@ -44,7 +44,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 27 | `27-fix-phase-e-settings-ui-states.md` | Fix Phase E — Settings Seeding & UI States | 4 resolved | 0 | 4 |
 | 28 | `28-fix-phase-f-remaining.md` | Fix Phase F — PascalCase, Atomic Tasks, Semantic Inverses & Cross-References | 13 resolved | 0 | 13 |
 | 30 | `30-fix-phase-j-final-7.md` | Fix Phase J — Final 7 Issues (ARIA, 0=disabled, IPC, magic strings, exemption) | 7 resolved | 0 | 7 |
-| 31 | `31-discovery-phase-19.md` | Discovery Phase 19 — Post-Completion Regression Audit | 34 | 5 | 29 |
+| 31 | `31-discovery-phase-19.md` | Discovery Phase 19 — Post-Completion Regression Audit | 34 | 0 | 34 |
 
 ---
 
@@ -56,8 +56,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 138 |
 | 🟢 Low | 41 |
 | **Grand Total** | **290** |
-| **Open** | **5** |
-| **Resolved** | **285** |
+| **Open** | **0** |
+| **Resolved** | **290** |
 
 ---
 
@@ -109,6 +109,10 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase F** | **PascalCase, atomic tasks, semantic inverses, cross-references** | **✅ Done (13 resolved, 7 open)** |
 | **Fix Phase I** | **Acceptance criteria rollups for features/ and fundamentals/** | **✅ Done (2 resolved, 0 open)** |
 | **Fix Phase J** | **Final 7: ARIA, 0=disabled framing, personalization IPC, magic strings, exemption** | **✅ Done (7 resolved, 0 open)** |
+| **Fix Phase K** | **SQL defaults PascalCase + critical magic strings (11 issues)** | **✅ Done (11 resolved)** |
+| **Fix Phase L** | **Magic string union types in IPC/interfaces (8 issues)** | **✅ Done (8 resolved)** |
+| **Fix Phase M** | **camelCase + naming mismatches (10 issues)** | **✅ Done (10 resolved)** |
+| **Fix Phase N** | **Serde attributes, duplicate cross-refs, prose casing (5 issues)** | **✅ Done (5 resolved, 0 open)** |
 
 ---
 

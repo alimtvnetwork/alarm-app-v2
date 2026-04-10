@@ -1,6 +1,6 @@
 # Platform Constraints
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -369,9 +369,6 @@ loop {
 | Wake lock / prevent sleep | ✅ | ✅ | ⚠️ Varies | ✅ | ✅ |
 | backdrop-filter CSS | ✅ | ✅ | ⚠️ Distro-dependent | ✅ | ✅ |
 
----
-
-## Cross-References
 ---
 
 ## Code Pattern Exemptions
