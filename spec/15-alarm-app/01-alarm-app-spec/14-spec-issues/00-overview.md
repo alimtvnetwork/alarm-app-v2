@@ -15,13 +15,13 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | # | File | Category | Issue Count | Open | Resolved |
 |---|------|----------|:-----------:|:----:|:--------:|
-| 1 | `01-naming-violations.md` | Naming & Convention Violations | 18 | 3 | 15 |
+| 1 | `01-naming-violations.md` | Naming & Convention Violations | 18 | 0 | 18 |
 | 2 | `02-internal-contradictions.md` | Contradictions Between Files | 11 | 3 | 8 |
 | 3 | `03-structural-issues.md` | Folder/File Structure Problems | 5 | 5 | 0 |
-| 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 12 | 8 | 4 |
-| 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 2 | 2 |
+| 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 12 | 7 | 5 |
+| 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 1 | 3 |
 | 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 11 | 4 | 7 |
-| 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 2 | 2 |
+| 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 3 | 1 |
 | 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 2 | 10 |
 
 ---
@@ -34,8 +34,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 40 |
 | 🟢 Low | 7 |
 | **Grand Total** | **77** |
-| **Open** | **29** |
-| **Resolved** | **48** |
+| **Open** | **25** |
+| **Resolved** | **52** |
 
 ---
 
