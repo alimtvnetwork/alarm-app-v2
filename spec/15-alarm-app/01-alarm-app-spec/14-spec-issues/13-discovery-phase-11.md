@@ -33,15 +33,15 @@
 **Problem:** NFR spec line 91 says locale files at `src/locales/{locale}.json` and line 97 shows `src/locales/`. But `03-file-structure.md` defines the path as `src/i18n/locales/`. AI will create files in the wrong directory.  
 **Fix:** Updated NFR spec to use `src/i18n/locales/`.
 
-### D11-004: `06-dismissal-challenges.md` — No IPC command definitions
+### D11-004: ~~`06-dismissal-challenges.md` — No IPC command definitions~~ ✅ FIXED (Fix 50)
 **Severity:** 🟡 Medium  
 **Problem:** The dismissal challenges spec defines 6 challenge types with configuration but has zero IPC command definitions. AI needs to know what Tauri commands to implement (e.g., `validate_challenge_answer`, `get_math_problem`).  
-**Fix:** Add IPC Commands section with at minimum `get_challenge`, `submit_challenge_answer`.
+**Fix:** Added IPC Commands section with `get_challenge` and `submit_challenge_answer`.
 
-### D11-005: `08-clock-display.md` — No IPC command or hook definitions
+### D11-005: ~~`08-clock-display.md` — No IPC command or hook definitions~~ ✅ FIXED (Fix 50)
 **Severity:** 🟡 Medium  
 **Problem:** Clock display mentions `useClock` hook (line 64 of scheduling spec references it) but `08-clock-display.md` doesn't define it. Also no IPC for getting next alarm time for countdown display.  
-**Fix:** Add `useClock` hook specification and reference `get_next_alarm_time` IPC.
+**Fix:** Added `useClock` hook specification and `get_next_alarm_time` IPC command.
 
 ---
 
@@ -57,29 +57,29 @@
 **Problem:** The root overview's Data Model section lists tables as: `Alarms`, `AlarmGroups`, `Settings`, `SnoozeState`, `AlarmEvents`. This matches but the Settings description says "Key-value config" — doesn't mention `ValueType` column which was added in Fix 43. Minor but AI reading overview first gets incomplete picture.  
 **Fix:** Added `with ValueType` to Settings description in overview.
 
-### D11-008: `02-features/00-overview.md` line 6 — Updated date still says 2026-04-08
+### D11-008: ~~`02-features/00-overview.md` line 6 — Updated date still says 2026-04-08~~ ✅ FIXED (Fix 51)
 **Severity:** 🟢 Low  
 **Problem:** Features overview hasn't been updated since original creation despite multiple feature spec updates in April 9-10.  
-**Fix:** Update to 2026-04-10.
+**Fix:** Updated to 2026-04-10.
 
-### D11-009: `01-fundamentals/00-overview.md` line 43 — `05-platform-strategy.md` description doesn't mention SUPERSEDED
+### D11-009: ~~`01-fundamentals/00-overview.md` line 43 — `05-platform-strategy.md` description doesn't mention SUPERSEDED~~ ✅ FIXED (Fix 51)
 **Severity:** 🟡 Medium  
 **Problem:** Fundamentals overview describes `05-platform-strategy.md` as "Legacy platform strategy (superseded by ...)" but doesn't match the new SUPERSEDED banner we just added. Should be consistent.  
-**Fix:** Update description to include "⚠️ SUPERSEDED" to match the file's banner.
+**Fix:** Updated description to include "⚠️ SUPERSEDED" to match the file's banner.
 
 ---
 
 ## Category C: AI Handoff Risks / Ambiguity
 
-### D11-010: `09-theme-system.md` — No IPC commands defined
+### D11-010: ~~`09-theme-system.md` — No IPC commands defined~~ ✅ FIXED (Fix 50)
 **Severity:** 🟡 Medium  
 **Problem:** Theme system describes `useTheme` hook and Settings storage but defines zero IPC commands. AI needs `get_theme`, `set_theme` IPC commands to communicate with Rust backend.  
-**Fix:** Add IPC Commands section: `get_theme` → `string`, `set_theme` → `{ Theme: string }`.
+**Fix:** Added IPC Commands section: `get_theme` → `{ Theme: string }`, `set_theme` → `{ Theme: string }` → `void`.
 
-### D11-011: `14-personalization.md` lines 49 — IPC commands listed inline without types
+### D11-011: ~~`14-personalization.md` lines 49 — IPC commands listed inline without types~~ ✅ FIXED (Fix 53)
 **Severity:** 🟢 Low  
 **Problem:** Personalization lists `get_daily_quote`, `save_favorite_quote`, `add_custom_quote` inline without payload/return type definitions. All other feature specs use a table format for IPC commands.  
-**Fix:** Add IPC Commands table with payload and return types.
+**Fix:** Added IPC Commands table with payload and return types.
 
 ### D11-012: `02-design-system.md` — Missing `destructive` token for dark mode
 **Severity:** 🟡 Medium  
@@ -107,8 +107,8 @@
 | Status | Previous | New | Total |
 |--------|:--------:|:---:|:-----:|
 | Total issues | 154 | 14 | **168** |
-| Open | 0 | 9 | **9** |
-| Resolved | 154 | 5 | **159** |
+| Open | 0 | 0 | **0** |
+| Resolved | 154 | 14 | **168** |
 
 ---
 
@@ -119,7 +119,7 @@
 | ~~**Fix 47**~~ | ~~D11-001, D11-002~~ | ~~`16-accessibility-and-nfr.md`~~ | ~~Align memory and startup budgets to authoritative values~~ ✅ |
 | ~~**Fix 48**~~ | ~~D11-003~~ | ~~`16-accessibility-and-nfr.md`~~ | ~~Fix i18n locale path to match file-structure~~ ✅ |
 | ~~**Fix 49**~~ | ~~D11-006, D11-007~~ | ~~`13-analytics.md`, `00-overview.md`~~ | ~~Fix AlarmEvents column count, Settings description~~ ✅ |
-| **Fix 50** | D11-004, D11-005, D11-010 | `06-dismissal-challenges.md`, `08-clock-display.md`, `09-theme-system.md` | Add missing IPC command definitions |
-| **Fix 51** | D11-008, D11-009 | `02-features/00-overview.md`, `01-fundamentals/00-overview.md` | Update stale dates and descriptions |
-| **Fix 52** | D11-012, D11-013, D11-014 | `02-design-system.md`, `06-dismissal-challenges.md`, `02-alarm-scheduling.md` | Dark mode destructive token, challenge interface note, deprecation cleanup |
-| **Fix 53** | D11-011 | `14-personalization.md` | Format IPC commands as standard table |
+| ~~**Fix 50**~~ | ~~D11-004, D11-005, D11-010~~ | ~~`06-dismissal-challenges.md`, `08-clock-display.md`, `09-theme-system.md`~~ | ~~Add missing IPC command definitions~~ ✅ |
+| ~~**Fix 51**~~ | ~~D11-008, D11-009~~ | ~~`02-features/00-overview.md`, `01-fundamentals/00-overview.md`~~ | ~~Update stale dates and descriptions~~ ✅ |
+| ~~**Fix 52**~~ | ~~D11-012, D11-013, D11-014~~ | ~~`02-design-system.md`, `06-dismissal-challenges.md`, `02-alarm-scheduling.md`~~ | ~~Dark mode destructive token, challenge interface note, deprecation cleanup~~ ✅ |
+| ~~**Fix 53**~~ | ~~D11-011~~ | ~~`14-personalization.md`~~ | ~~Format IPC commands as standard table~~ ✅ |
