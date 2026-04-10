@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.7.0  
+**Version:** 1.8.0  
 **Updated:** 2026-04-10
 
 ---
@@ -23,6 +23,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 11 | 0 | 11 |
 | 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 0 | 4 |
 | 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 0 | 12 |
+| 9 | `09-discovery-phase-7.md` | Discovery Phase 7 — Regression Scan | 18 | 18 | 0 |
 
 ---
 
@@ -30,11 +31,11 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 30 |
-| 🟡 Medium | 40 |
-| 🟢 Low | 7 |
-| **Grand Total** | **77** |
-| **Open** | **0** |
+| 🔴 Critical | 33 |
+| 🟡 Medium | 54 |
+| 🟢 Low | 8 |
+| **Grand Total** | **95** |
+| **Open** | **18** |
 | **Resolved** | **77** |
 
 ---
@@ -49,6 +50,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | Discovery Phase 4 | UI/UX + frontend state consistency | ✅ Done (+11 = 56) |
 | Discovery Phase 5 | Coding guideline compliance check | ✅ Done (+8 = 64) |
 | Discovery Phase 6 | Post-fix regression + deep compliance scan | ✅ Done (+13 = 77) |
+| **Discovery Phase 7** | **Post-fix regression scan (Phases 16–20)** | **✅ Done (+18 = 95)** |
 | **Fix Phase 1** | **Exemptions & decisions** | **✅ Done (4 resolved)** |
 | **Fix Phase 2** | **sqlx → rusqlite** | **✅ Done (7 resolved)** |
 | **Fix Phase 3** | **DB naming PascalCase** | **✅ Done (5 resolved)** |
@@ -58,12 +60,13 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 7** | **Concurrency guide regressions** | **✅ Done (2 resolved)** |
 | **Fix Phase 8** | **Firing + snooze prose snake_case** | **✅ Done (1 resolved + CG-006 partial)** |
 | **Fix Phase 9** | **Groups + sound prose snake_case** | **✅ Done (CG-006 partial)** |
-| **Fix Phase 10** | **Architecture contradictions (`tauri-plugin-sql`, intervals, return types)** | **✅ Done (4 resolved)** |
-| **Fix Phase 11** | **`get_alarms` → `list_alarms` standardization** | **✅ Done (1 resolved)** |
+| **Fix Phase 10** | **Architecture contradictions** | **✅ Done (4 resolved)** |
+| **Fix Phase 11** | **`get_alarms` → `list_alarms`** | **✅ Done (1 resolved)** |
 | **Fix Phase 12** | **Settings keys → PascalCase** | **✅ Done (1 resolved)** |
-| **Fix Phase 13** | **AlarmChallenge schema gaps** | **✅ Done (3 resolved: CG-007, CG-012, LC-001)** |
+| **Fix Phase 13** | **AlarmChallenge schema gaps** | **✅ Done (3 resolved)** |
 | **Fix Phase 14** | **All remaining prose snake_case** | **✅ Done (CG-006 resolved)** |
 | **Fix Phase 15** | **Function length decomposition** | **✅ Done (GC-001 resolved)** |
+| **Fix Phase 16–20** | **DST, thread safety, Zustand, scheduling, structural, snooze recovery** | **✅ Done (13 resolved)** |
 
 ---
 
@@ -82,11 +85,15 @@ This folder tracks all specification quality issues found during the deep audit 
 ## Key Insights
 
 1. ~~The `sqlx` vs `rusqlite` contradiction~~ **✅ FIXED**
-2. ~~Database columns/tables/indexes/PKs snake_case~~ **✅ FIXED — all PascalCase with Is/Has booleans**
-3. **22 functions exceed the 15-line limit** — linter will reject on first run.
-4. **Feature files still contain snake_case/camelCase** in prose, code samples, and duplicate schemas (GC-009–012, CG-006).
-5. **`06-tauri-architecture.md` has 4 contradictions** — wrong driver, wrong interval, wrong return types (IC-008–011).
-6. **`02-alarm-scheduling.md` severely outdated** (v1.0.0), contradicts data model.
+2. ~~Database columns/tables/indexes/PKs snake_case~~ **✅ FIXED**
+3. ~~22 functions exceed 15-line limit~~ **✅ FIXED**
+4. ~~Feature files snake_case/camelCase in prose~~ **✅ FIXED**
+5. ~~`06-tauri-architecture.md` contradictions~~ **✅ FIXED**
+6. ~~`02-alarm-scheduling.md` severely outdated~~ **✅ FIXED**
+7. **NEW:** Root `00-overview.md` Data Model section still uses camelCase field names (D7-REG-004/005)
+8. **NEW:** `04-snooze-system.md` SnoozeState interface contradicts data model (D7-REG-002)
+9. **NEW:** Error enum incomplete — `RestrictedPath` variant missing (D7-NEW-010)
+10. **NEW:** AI cheat sheet has broken markdown — unclosed code fence (D7-NEW-012)
 
 ---
 
