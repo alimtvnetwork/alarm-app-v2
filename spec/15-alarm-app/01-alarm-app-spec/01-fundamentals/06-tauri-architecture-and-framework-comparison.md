@@ -1,6 +1,6 @@
 # Tauri Architecture & Cross-Platform Framework Comparison
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -172,7 +172,82 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `theme-changed` | BE → FE | `{ Theme: ThemeMode }` | OS appearance change detected |
 | `tray-action` | BE → FE | `{ Action: string, AlarmId?: string }` | User clicked tray menu item |
 
+### Overlay Window Configuration
+
+> **Resolves GA3-030, GA3-031.** The `AlarmOverlay` is a separate Tauri window, not a component in the main window.
+
+#### `tauri.conf.json` — Multi-Window Setup
+
+```json
+{
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Alarm App",
+        "width": 400,
+        "height": 700,
+        "resizable": true,
+        "fullscreen": false
+      },
+      {
+        "label": "overlay",
+        "title": "Alarm",
+        "visible": false,
+        "alwaysOnTop": true,
+        "decorations": false,
+        "fullscreen": true,
+        "resizable": false,
+        "skipTaskbar": true,
+        "url": "/overlay"
+      }
+    ]
+  }
+}
+```
+
+#### Rust — Show/Hide Overlay Window
+
+```rust
+use tauri::Manager;
+
+/// Show the overlay window when an alarm fires.
+pub fn show_overlay(app: &tauri::AppHandle, alarm: &Alarm) -> Result<(), AlarmAppError> {
+    tracing::debug!(alarm_id = %alarm.alarm_id, "Showing overlay window");
+    let window = app.get_webview_window("overlay")
+        .ok_or(AlarmAppError::WindowNotFound { label: "overlay".into() })?;
+    window.show()?;
+    window.set_focus()?;
+    // Emit alarm data to the overlay window
+    window.emit("alarm-overlay-data", alarm)?;
+    Ok(())
+}
+
+/// Hide the overlay window after dismiss/snooze.
+pub fn hide_overlay(app: &tauri::AppHandle) -> Result<(), AlarmAppError> {
+    tracing::debug!("Hiding overlay window");
+    let window = app.get_webview_window("overlay")
+        .ok_or(AlarmAppError::WindowNotFound { label: "overlay".into() })?;
+    window.hide()?;
+    Ok(())
+}
+```
+
+#### Frontend — Overlay Entry Point
+
+`AlarmOverlay.tsx` is the root component for the `/overlay` route, rendered only in the overlay window. It listens for `alarm-overlay-data` events to display the firing alarm.
+
+```tsx
+// src/pages/Overlay.tsx — separate entry for the overlay window
+import { AlarmOverlay } from '@/components/AlarmOverlay';
+
+export default function OverlayPage() {
+  return <AlarmOverlay />;
+}
+```
+
 ### Plugin Integration
+
 
 > All versions pinned with `=` — see `10-dependency-lock.md` for full API surface and breaking change notes.
 

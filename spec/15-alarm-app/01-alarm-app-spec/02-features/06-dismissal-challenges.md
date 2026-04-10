@@ -1,6 +1,6 @@
 # Dismissal Challenges
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -103,6 +103,45 @@ interface AlarmChallenge {
 
 ---
 
+## Overlay + Challenge Interaction Flow
+
+> **Resolves GA2-021, GA2-022.** Defines exactly how challenges integrate with the `AlarmOverlay`.
+
+### Flow
+
+1. Alarm fires → `AlarmOverlay` opens in separate Tauri window
+2. Overlay shows: alarm label, current time, **Snooze** button, **Dismiss** button
+3. User taps **Dismiss**:
+   - **No challenge configured** (`ChallengeType = null`): alarm dismissed immediately
+   - **Challenge configured**: Dismiss button is replaced by `ChallengePanel` component
+4. `ChallengePanel` renders the challenge (math input, shake progress, typing field, etc.)
+5. User submits answer → frontend calls `submit_challenge_answer`
+6. If correct: alarm dismissed, overlay closes, event logged with `ChallengeSolveTimeSec`
+7. If incorrect: error feedback ("Wrong answer — try again"), alarm continues ringing, challenge stays visible
+8. User can still tap **Snooze** at any time during a challenge (snooze is never blocked)
+
+### Missed Alarms + Challenges
+
+- **Missed alarms skip the challenge** — they auto-resolve as `Type = AlarmEventType::Missed`
+- Rationale: the user wasn't present to solve the challenge; forcing it retroactively is pointless
+- `ChallengeType` is still logged on the missed event for analytics, but `ChallengeSolveTimeSec = null`
+
+### UI State Machine
+
+```
+┌─────────────┐     Dismiss     ┌──────────────┐    Correct    ┌───────────┐
+│  Overlay    │ ──────────────► │  Challenge   │ ────────────► │ Dismissed │
+│  (ringing)  │                 │  (ringing)   │               │  (quiet)  │
+└──────┬──────┘                 └──────┬───────┘               └───────────┘
+       │ Snooze                        │ Snooze
+       ▼                               ▼
+┌─────────────┐                 ┌──────────────┐
+│  Snoozed    │                 │  Snoozed     │
+└─────────────┘                 └──────────────┘
+```
+
+---
+
 ## IPC Commands
 
 | Command | Payload | Returns |
@@ -135,6 +174,8 @@ interface AlarmChallenge {
 |-----------|----------|
 | Alarm Firing | `./03-alarm-firing.md` |
 | Alarm CRUD | `./01-alarm-crud.md` |
+| Design System (UI States) | `../01-fundamentals/02-design-system.md` |
+| File Structure (ChallengePanel) | `../01-fundamentals/03-file-structure.md` |
 | Data Model | `../01-fundamentals/01-data-model.md` |
 | Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |
 | Domain Enums | `../01-fundamentals/01-data-model.md` → Domain Enums section |
