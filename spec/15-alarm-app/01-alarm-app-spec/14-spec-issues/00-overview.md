@@ -30,6 +30,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 13 | `13-discovery-phase-11.md` | Discovery Phase 11 — Feature Specs Deep Audit | 14 | 0 | 14 |
 | 14 | `14-discovery-phase-12.md` | Discovery Phase 12 — Root-Level Docs Audit | 9 | 0 | 9 |
 | 15 | `15-discovery-phase-13.md` | Discovery Phase 13 — App Issues & Reference Audit | 3 | 0 | 3 |
+| 16 | `16-discovery-phase-14.md` | Discovery Phase 14 — Foundational Alignment Audit | 29 | 29 | 0 |
 
 ---
 
