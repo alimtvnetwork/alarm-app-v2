@@ -1,19 +1,19 @@
 ---
 name: Alarm App Spec Issues Audit
-description: 333 total spec issues — 315 resolved, 18 open (Discovery Phase 22). Missing deps, undefined interfaces, naming violations.
+description: 344 total spec issues — 315 resolved, 29 open (Discovery Phases 22-23). Missing deps, undefined interfaces, naming violations, code sample bugs.
 type: feature
 ---
 
 ## Audit Status — IN PROGRESS ⚠️
 
-- **Total issues:** 333
-- **Open:** 18 (Discovery Phase 22)
+- **Total issues:** 344
+- **Open:** 29 (Discovery Phases 22 + 23)
 - **Resolved:** 315
-- **Discovery phases:** 22
+- **Discovery phases:** 23
 - **Fix phases:** 40 (Phases 1–20, A–T)
 - **Readiness Score:** Pending re-assessment after fixes
 
-## Open Issues (Phase 22)
+## Open Issues (Phase 22 — 18 issues)
 
 ### 🔴 Critical (8)
 - P22-001: Missing `@dnd-kit/core` + `@dnd-kit/sortable` from npm deps
@@ -26,25 +26,33 @@ type: feature
 - P22-008: `RepeatPattern` Rust struct undefined
 
 ### 🟡 Medium (7)
-- P22-009: Firing logic uses lowercase repeat types instead of enum refs
-- P22-010: `is_day_excluded` negative naming violates boolean guidelines
-- P22-011: Cheat sheet says 12 AlarmAppError variants, actual is 13
-- P22-012: `&alarm.repeat` field doesn't exist on AlarmRow
-- P22-013: AlarmEvent uses `?` optional instead of `| null`
-- P22-014: Acceptance criteria use raw string `"once"` instead of enum
-- P22-015: AlarmSound interface defined but no storage mechanism
+- P22-009–P22-015: Enum/naming violations, stale counts, optional syntax
 
 ### 🟢 Low (3)
-- P22-016: Double `---` separators in 28 files
-- P22-017: Cheat sheet footer version mismatch
-- P22-018: shadcn/ui clarification needed
+- P22-016–P22-018: Double separators, version mismatch, shadcn clarification
+
+## Open Issues (Phase 23 — 11 issues)
+
+### 🔴 Critical (2)
+- P23-001: AlarmOverlay in component hierarchy contradicts separate-window spec
+- P23-002: `entry.timerId` camelCase bug — UndoEntry defines `TimerId` (PascalCase)
+
+### 🟡 Medium (7)
+- P23-003: `undoToken` camelCase IPC key should be `UndoToken`
+- P23-004: `Type = "weekly"` raw string in scheduling
+- P23-005: AlarmChallenge uses `?` optional instead of `| null`
+- P23-006: Missing `commands/group.rs` in file structure
+- P23-007: Missing `commands/challenge.rs` in file structure
+- P23-008: `log_from_frontend` IPC command not in any IPC table
+- P23-009: Cheat sheet says Alarms has "22 columns", actual is 26
+
+### 🟢 Low (2)
+- P23-010: SnoozeState interface duplicated across files
+- P23-011: Fundamentals files missing Priority metadata
 
 ## Suggested Fix Phases
-- Phase U: Missing deps (3 issues)
-- Phase V: Missing IPC + interfaces (4 issues)
-- Phase W: Data model gaps (2 issues)
-- Phase X: Enum/naming violations (4 issues)
-- Phase Y: Cosmetic fixes (5 issues)
+- Phase U–Y: Fix Phase 22 issues (deps, interfaces, data model, enums, cosmetic)
+- Phase Z–AD: Fix Phase 23 issues (file structure, PascalCase bugs, enum/optional, cheat sheet, duplication)
 
 ## Canonical Location
 
