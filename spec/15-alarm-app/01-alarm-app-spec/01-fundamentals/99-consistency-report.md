@@ -1,6 +1,6 @@
 # Consistency Report: Fundamentals
 
-**Version:** 1.6.0  
+**Version:** 1.7.0  
 **Generated:** 2026-04-10  
 **Health Score:** 100/100 (A+)
 
@@ -11,9 +11,9 @@
 | # | File | Version | Status |
 |---|------|---------|--------|
 | 1 | `00-overview.md` | 1.3.0 | ✅ Present |
-| 2 | `01-data-model.md` | 1.7.0 | ✅ Updated (Settings ValueType column, AutoLaunch boolean type, Alarms table comment fix) |
-| 3 | `02-design-system.md` | 1.0.0 | ✅ Present |
-| 4 | `03-file-structure.md` | 1.5.0 | ✅ Updated (db.ts → IPC query wrappers, duplicate Cargo deps removed) |
+| 2 | `01-data-model.md` | 1.7.0 | ✅ Present |
+| 3 | `02-design-system.md` | 1.1.0 | ✅ Updated (dark mode destructive token added) |
+| 4 | `03-file-structure.md` | 1.5.0 | ✅ Present |
 | 5 | `04-platform-constraints.md` | 1.3.0 | ✅ Present |
 | 6 | `05-platform-strategy.md` | 1.0.0 | ⚠️ Legacy — SUPERSEDED banner added, retained for framework evaluation context |
 | 7 | `06-tauri-architecture-and-framework-comparison.md` | 1.1.0 | ✅ Present (authoritative Tauri architecture) |
@@ -49,13 +49,11 @@
 
 ---
 
-## v1.6.0 Changes (Fix Phases 21–46)
+## v1.7.0 Changes (Fix Phases 47–59)
 
-- `01-data-model.md` v1.7.0: Added `ValueType` column to Settings schema, fixed `alarms` → `Alarms` table comment, AutoLaunch/MinimizeToTray typed as boolean, PascalCase naming throughout
-- `03-file-structure.md` v1.5.0: Removed duplicate `rusqlite`/`refinery` Cargo.toml entries, `db.ts` description changed from "Frontend DB query helpers" to "IPC query wrappers"
-- `05-platform-strategy.md`: Added SUPERSEDED banner pointing to `06-tauri-architecture-and-framework-comparison.md`
-- `04-platform-constraints.md` v1.3.0: PascalCase naming fixes in pseudocode
-- `09-test-strategy.md` v1.0.0: PascalCase naming fixes in test examples
+- `02-design-system.md` v1.1.0: Added dark mode `--destructive` token (D11-006)
+- `16-accessibility-and-nfr.md` v1.1.0: Fixed i18n locale path (D11-004)
+- All files verified: PascalCase compliance, no stale cross-references, memory/startup budgets aligned
 
 ---
 
