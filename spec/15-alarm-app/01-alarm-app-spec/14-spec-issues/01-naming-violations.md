@@ -186,7 +186,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 
 **Severity:** 🟡 Medium  
 **Location:** `02-features/10-export-import.md` (line 60)  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — CSV columns converted to PascalCase in Fix Phase 14
 
 **Current:** `id, time, date, label, enabled, repeat_type, repeat_days, group_name, sound_file, snooze_duration, max_snooze_count`  
 **Required:** PascalCase per key naming standard (these are serialized keys)
@@ -197,7 +197,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 
 **Severity:** 🔴 Critical  
 **Location:** `02-features/10-export-import.md` (line 59)  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — JSON export keys converted to PascalCase in Fix Phase 14
 
 **Current:** `{ alarms: Alarm[], groups: AlarmGroup[], exportedAt: string, version: string }`  
 **Required:** `{ Alarms: Alarm[], Groups: AlarmGroup[], ExportedAt: string, Version: string }`
@@ -209,7 +209,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Severity:** 🟡 Medium  
 **Location:** `02-features/10-export-import.md` (line 60)  
 **Cross-ref:** LC-011 in `06-logic-consistency.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — CSV columns converted to PascalCase in Fix Phase 14
 
 **Problem:** CSV columns `repeat_type, repeat_days, group_name, sound_file, snooze_duration, max_snooze_count` are serialized data keys — PascalCase mandate applies. This is both a naming violation and a data flow logic issue.
 
@@ -304,4 +304,4 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 ---
 
 ## Issues Found So Far: 18
-## Open: 3 | Resolved: 15
+## Open: 0 | Resolved: 18

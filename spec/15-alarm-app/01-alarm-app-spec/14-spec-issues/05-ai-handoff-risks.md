@@ -27,11 +27,9 @@ Issues specifically rated by their likelihood to cause AI execution failure duri
 
 **Severity:** 🔴 Critical — AI will follow examples, not guidelines  
 **Root cause:** NV-001 through NV-005  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all code examples converted to PascalCase across Fix Phases 3–14
 
-**Problem:** Every single code example in the spec uses snake_case for DB columns and camelCase for TS. The coding guidelines say PascalCase. AI will copy examples verbatim → inconsistent with guidelines.
-
-**Note:** Data model (`01-data-model.md`) was fixed in Fix Phases 3–4, but multiple feature files still contain snake_case and camelCase references (see GC-009, GC-010, GC-011, CG-006).
+**Resolution:** Data model fixed in Phases 3–4, feature files fixed in Phases 8–9 and 14. All code samples now use PascalCase for DB columns, TS keys, and serialized fields.
 
 ---
 
@@ -54,7 +52,7 @@ Issues specifically rated by their likelihood to cause AI execution failure duri
 ---
 
 ## Issues Found So Far: 4
-## Open: 2 | Resolved: 2
+## Open: 1 | Resolved: 3
 
 ---
 
