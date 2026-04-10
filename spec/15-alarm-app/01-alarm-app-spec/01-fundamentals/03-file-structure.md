@@ -251,7 +251,6 @@ Add to `src-tauri/capabilities/default.json`:
 | Category | Permissions | Purpose |
 |----------|-------------|---------|
 | Core | `core:default`, `core:window:*`, `core:app:*`, `core:event:*` | Window management, app lifecycle, IPC events |
-| Core | `core:default`, `core:window:*`, `core:app:*`, `core:event:*` | Window management, app lifecycle, IPC events |
 | Notification | `notification:*` | OS-native alarm notifications |
 | Dialog | `dialog:*` | File open/save for import/export, confirmation dialogs |
 | Filesystem | `fs:allow-read-file`, `fs:allow-exists` | Custom sound file validation |
