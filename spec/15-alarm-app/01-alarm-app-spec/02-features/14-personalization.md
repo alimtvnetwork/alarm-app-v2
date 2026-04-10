@@ -16,7 +16,7 @@
 
 ## Description
 
-Visual customization, motivational features, and engagement tools. All preferences persisted in SQLite `settings` table; streak data in `alarm_events`.
+Visual customization, motivational features, and engagement tools. All preferences persisted in SQLite `Settings` table; streak data in `AlarmEvents`.
 
 ---
 
@@ -24,9 +24,9 @@ Visual customization, motivational features, and engagement tools. All preferenc
 
 | Aspect | Web (Previous) | Native (Tauri) |
 |--------|---------------|----------------|
-| Theme/skin storage | localStorage | SQLite `settings` table |
+| Theme/skin storage | localStorage | SQLite `Settings` table |
 | Custom backgrounds | CSS background-image | Native file picker + app data directory |
-| Streak data | localStorage | SQLite `alarm_events` table queries |
+| Streak data | localStorage | SQLite `AlarmEvents` table queries |
 | Music integration | Web Audio API | Native audio APIs / OS media frameworks |
 | Quote storage | Bundled JSON | SQLite or bundled asset file |
 
@@ -37,7 +37,7 @@ Visual customization, motivational features, and engagement tools. All preferenc
 ### Themes & Skins (P2)
 
 - Beyond light/dark: gradient, minimal, retro, nature-inspired
-- Custom accent color picker — persisted in SQLite `settings`
+- Custom accent color picker — persisted in SQLite `Settings`
 - Clock font style options: digital, analog, minimal
 - Custom background images — selected via native file dialog (`tauri-plugin-dialog`), copied to app data directory
 
@@ -51,7 +51,7 @@ Visual customization, motivational features, and engagement tools. All preferenc
 ### Wake-Up Streak Tracker (P2)
 
 - Count consecutive days waking on time (dismissed without excessive snoozing)
-- Calculated from SQLite `alarm_events` table (dismiss timestamps, snooze counts)
+- Calculated from SQLite `AlarmEvents` table (dismiss timestamps, snooze counts)
 - Calendar view with streak visualization
 - Streak resets if snooze limit exceeded
 - Gamification: badges for milestones (7 days, 30 days, 100 days)

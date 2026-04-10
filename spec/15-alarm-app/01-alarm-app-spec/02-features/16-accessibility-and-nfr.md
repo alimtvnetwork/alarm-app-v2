@@ -105,7 +105,7 @@ src/locales/
 
 - Use `i18next` + `react-i18next` for frontend string management
 - Settings page: language selector dropdown
-- Selected locale stored in `settings` SQLite table (`key = 'language'`)
+- Selected locale stored in `Settings` SQLite table (`Key = 'Language'`)
 - Tauri IPC passes locale to Rust backend for notification strings
 
 ### Phase Plan

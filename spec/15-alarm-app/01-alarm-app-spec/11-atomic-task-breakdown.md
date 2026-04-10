@@ -3,7 +3,7 @@
 **Version:** 1.0.0  
 **Updated:** 2026-04-09  
 **Purpose:** Dependency-ordered atomic coding tasks for AI execution at near-100% success  
-**Total Tasks:** 52  
+**Total Tasks:** 62  
 **Estimated Total:** 20–26 days
 
 ---
@@ -47,7 +47,7 @@
 | 9 | Implement `storage/models.rs` — `AlarmRow`, `RepeatType`, `AlarmGroupRow`, `SettingsRow`, `SnoozeStateRow`, `AlarmEventRow` with `from_row()` | 2h | `01-data-model.md` → Rust Data Mapping | 🟡 | 8 |
 | 10 | Implement `RepeatPattern` JSON serialization: `days_of_week()` from TEXT, `repeat_pattern()` builder | 1h | `01-data-model.md` → AlarmRow impl | 🔴 | 9 |
 | 11 | Implement settings key-value CRUD: `get_setting<T>()`, `update_setting()`, `Settings::load_all()`, `ensure_defaults()` | 1h | `01-data-model.md` → Settings Keys + DB-SETTINGS-001 | 🟡 | 8 |
-| 12 | Implement `AlarmAppError` enum with `thiserror` — all 12 error variants | 30m | `04-platform-constraints.md` → Rust Error Type | 🟢 | 4 |
+| 12 | Implement `AlarmAppError` enum with `thiserror` — all 13 error variants | 30m | `04-platform-constraints.md` → Rust Error Type | 🟢 | 4 |
 | 13 | Create TypeScript interfaces: `Alarm`, `RepeatPattern`, `AlarmGroup`, `AlarmSound`, `AlarmEvent`, `SnoozeState` | 30m | `01-data-model.md` → Interfaces | 🟢 | 2 |
 | 14 | Create `lib/tauri-commands.ts` — typed `invoke()` wrappers with `safeInvoke()` timeout + error toast | 1h | `04-platform-constraints.md` → Frontend Error Handling, `06-tauri-architecture.md` → IPC | 🟡 | 13 |
 | 15 | Implement alarm CRUD operations in Rust: `insert_alarm()`, `update_alarm()`, `list_alarms()`, `soft_delete_alarm()`, `undo_delete()` | 2h | `01-alarm-crud.md` → Soft-delete timer Rust code | 🟡 | 9, 12 |
@@ -80,9 +80,9 @@
 
 | # | Task | Effort | Spec Reference | Risk | Depends On |
 |---|------|--------|----------------|:----:|:----------:|
-| 25 | Implement `snooze_alarm` IPC handler — stop audio, write snooze_state, use `tokio::time::sleep_until()` for exact-time trigger | 1.5h | `04-snooze-system.md` → Snooze Timer Implementation | 🟡 | 22 |
-| 26 | Implement snooze crash recovery — on startup, check `snooze_state` for expired/active snoozes | 30m | `04-snooze-system.md` → Crash recovery | 🟡 | 25 |
-| 27 | Implement `dismiss_alarm` IPC handler — stop audio, clear snooze_state, log alarm_event | 30m | `03-alarm-firing.md` → Firing Logic | 🟢 | 22 |
+| 25 | Implement `snooze_alarm` IPC handler — stop audio, write `SnoozeState`, use `tokio::time::sleep_until()` for exact-time trigger | 1.5h | `04-snooze-system.md` → Snooze Timer Implementation | 🟡 | 22 |
+| 26 | Implement snooze crash recovery — on startup, check `SnoozeState` for expired/active snoozes | 30m | `04-snooze-system.md` → Crash recovery | 🟡 | 25 |
+| 27 | Implement `dismiss_alarm` IPC handler — stop audio, clear `SnoozeState`, log `AlarmEvent` | 30m | `03-alarm-firing.md` → Firing Logic | 🟢 | 22 |
 
 **Phase 4 checkpoint:** Snooze persists across restart. Expired snooze re-fires. Max snooze count enforced.
 
