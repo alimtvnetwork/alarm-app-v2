@@ -295,20 +295,23 @@ The `alarm_events` table grows unbounded. A retention policy purges old events o
 
 ```rust
 // Run at startup Step 8 (after missed alarm check)
-pub async fn purge_old_events(pool: &SqlitePool) {
-    let retention_days: i64 = get_setting(pool, "event_retention_days")
-        .await
+pub fn purge_old_events(conn: &Connection) {
+    let retention_days: i64 = get_setting(conn, "event_retention_days")
         .and_then(|v| v.parse().ok())
         .unwrap_or(90);
 
     let cutoff = Utc::now() - chrono::Duration::days(retention_days);
 
-    let result = sqlx::query("DELETE FROM alarm_events WHERE timestamp < ?")
-        .bind(cutoff.to_rfc3339())
-        .execute(pool).await;
-
-    if let Ok(r) = result {
-        tracing::info!(deleted = r.rows_affected(), retention_days, "Purged old alarm events");
+    match conn.execute(
+        "DELETE FROM alarm_events WHERE timestamp < ?1",
+        params![cutoff.to_rfc3339()],
+    ) {
+        Ok(deleted) => {
+            tracing::info!(deleted, retention_days, "Purged old alarm events");
+        }
+        Err(e) => {
+            tracing::error!(error = %e, "Failed to purge old events");
+        }
     }
 }
 ```

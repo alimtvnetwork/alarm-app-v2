@@ -178,15 +178,12 @@ User saves edit at t=07:30:02 → overwrites nextFireTime
 **Safeguard:** Use `updatedAt` optimistic locking:
 ```rust
 // On update: include WHERE updated_at = {expected}
-let rows = sqlx::query(
-    "UPDATE alarms SET time=?, ..., updated_at=? WHERE id=? AND updated_at=?"
-)
-.bind(new_updated_at)
-.bind(alarm_id)
-.bind(expected_updated_at)
-.execute(pool).await?;
+let rows = conn.execute(
+    "UPDATE alarms SET time=?, ..., updated_at=? WHERE id=? AND updated_at=?",
+    params![new_time, new_updated_at, alarm_id, expected_updated_at],
+)?;
 
-if rows.rows_affected() == 0 {
+if rows == 0 {
     // Alarm was modified by engine — reload and retry
     return Err(AlarmAppError::ConcurrentModification);
 }

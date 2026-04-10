@@ -152,17 +152,17 @@ fn resolve_local_to_utc(
 
 ```rust
 /// Called on each alarm engine tick and on OS timezone change event
-fn on_timezone_change(pool: &SqlitePool, new_tz: &Tz) {
+fn on_timezone_change(conn: &Connection, new_tz: &Tz) {
     // 1. Update settings table
-    update_setting(pool, "system_timezone", new_tz.name()).await;
+    update_setting(conn, "system_timezone", new_tz.name());
 
     // 2. Recalculate nextFireTime for ALL enabled alarms
-    let alarms = get_enabled_alarms(pool).await;
-    for alarm in alarms {
+    let alarms = get_enabled_alarms(conn);
+    for alarm in &alarms {
         let new_next = compute_next_fire_time(
             alarm.time, alarm.date, &alarm.repeat, new_tz, Utc::now()
         );
-        update_next_fire_time(pool, &alarm.id, new_next).await;
+        update_next_fire_time(conn, &alarm.id, new_next);
     }
 
     tracing::info!(timezone = %new_tz, count = alarms.len(), "Recalculated all alarm times");
