@@ -126,8 +126,8 @@
 - **Error handling strategy** in `04-platform-constraints.md` v1.2.0 — `AlarmAppError` enum, 12-error behavior table, `safeInvoke` wrapper
 - **DST handling** in `03-alarm-firing.md` v1.4.0 — `resolve_local_to_utc()`, spring-forward/fall-back rules, 5 test cases
 - **WAL mode** in `01-data-model.md` v1.5.0 — `PRAGMA journal_mode=WAL`, busy_timeout=5000
-- **Event retention** in `01-data-model.md` v1.5.0 — 90-day purge, `event_retention_days` setting
-- **Group toggle state** in `07-alarm-groups.md` v1.2.0 — `previous_enabled` column
+- **Event retention** in `01-data-model.md` v1.5.0 — 90-day purge, `EventRetentionDays` setting
+- **Group toggle state** in `07-alarm-groups.md` v1.2.0 — `IsPreviousEnabled` column
 - **Alarm queue** in `03-alarm-firing.md` v1.3.0 — FIFO `AlarmQueue` struct, overlay sequencing
 - **AI Handoff Reliability Report** — 11 spec gap issues merged into category files
 - **Keyboard accessibility** in `01-alarm-crud.md` v1.4.0 — full keyboard shortcut table, ARIA attributes, dnd-kit KeyboardSensor
