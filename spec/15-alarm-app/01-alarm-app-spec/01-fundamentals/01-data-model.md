@@ -1,6 +1,6 @@
 # Data Model
 
-**Version:** 1.13.0  
+**Version:** 1.14.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
