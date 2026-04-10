@@ -57,9 +57,9 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🔴 Critical | 72 |
 | 🟡 Medium | 196 |
 | 🟢 Low | 43 |
-| **Grand Total** | **311** |
+| **Grand Total** | **315** |
 | **Open** | **0** |
-| **Resolved** | **311** |
+| **Resolved** | **315** |
 
 ---
 
