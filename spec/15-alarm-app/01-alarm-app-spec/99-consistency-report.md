@@ -1,6 +1,6 @@
 # Consistency Report: Alarm App Spec
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Generated:** 2026-04-10  
 **Health Score:** 100/100 (A+)
 
@@ -14,11 +14,11 @@
 |---|------|--------|
 | 1 | `00-overview.md` | ✅ Present (v1.3.0) |
 | 2 | `09-ai-handoff-reliability-report.md` | ✅ Present (v1.0.0 — supplementary, 94-task breakdown superseded) |
-| 3 | `10-ai-handoff-readiness-report.md` | ✅ Present (v1.1.0 — 96/100 readiness score) |
+| 3 | `10-ai-handoff-readiness-report.md` | ✅ Present (v1.2.0 — 98/100 readiness score, 180/180 issues) |
 | 4 | `11-atomic-task-breakdown.md` | ✅ Present (v1.0.0 — 62 authoritative tasks, 12 phases) |
-| 5 | `12-platform-and-concurrency-guide.md` | ✅ Present (v1.0.0 — platform matrix, race conditions, async safety) |
-| 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.0.0 — one-page AI reference) |
-| 7 | `98-changelog.md` | ✅ Present (v1.8.0 — full version history) |
+| 5 | `12-platform-and-concurrency-guide.md` | ✅ Present (v1.0.0 — PascalCase table names, corrected field refs) |
+| 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.0.0 — AlarmEvents 13 columns) |
+| 7 | `98-changelog.md` | ✅ Present (v1.9.0 — full version history) |
 
 ### Reference Documents
 
@@ -32,10 +32,10 @@
 
 | # | Folder | `00-overview.md` | `99-consistency-report.md` | Status |
 |---|--------|-------------------|----------------------------|--------|
-| 1 | `01-fundamentals/` | ✅ | ✅ (v1.6.0) | ✅ Compliant (10 docs) |
-| 2 | `02-features/` | ✅ | ✅ (v1.6.0) | ✅ Compliant (17 docs) |
+| 1 | `01-fundamentals/` | ✅ | ✅ (v1.7.0) | ✅ Compliant (10 docs) |
+| 2 | `02-features/` | ✅ | ✅ (v1.7.0) | ✅ Compliant (17 docs) |
 | 3 | `03-app-issues/` | ✅ | ✅ (v1.4.0) | ✅ Compliant (10 docs, 43/43 issues resolved) |
-| 4 | `14-spec-issues/` | ✅ | — | ✅ Compliant (14 discovery phases, 177/177 resolved) |
+| 4 | `14-spec-issues/` | ✅ | — | ✅ Compliant (15 discovery phases, 180/180 resolved) |
 
 ---
 
@@ -50,7 +50,7 @@
 | `98-changelog.md` listed in root overview | ✅ |
 | Technology decisions consistent across specs | ✅ |
 | All 43 app issues resolved with spec cross-refs | ✅ |
-| All 177 spec issues resolved | ✅ |
+| All 180 spec issues resolved across 13 discovery phases | ✅ |
 | `@dnd-kit/core` in CRUD ↔ FE-DND-001 | ✅ |
 | `croner` v2.0 in data model ↔ firing spec ↔ BE-CRON-001 | ✅ |
 | `refinery` in file structure ↔ DB-MIGRATE-001 | ✅ |
@@ -67,13 +67,15 @@
 
 ---
 
-## v1.5.0 Changes Summary
+## v1.6.0 Changes Summary
 
 | Area | Changes |
 |------|---------|
-| Root docs | Added full inventory of 7 root-level documents + reference folder |
-| Spec issues | `14-spec-issues/` added — 177 issues across 14 discovery phases, all resolved |
-| Cross-refs | Added validation checks for NFR budget alignment, column counts, IPC definitions, PascalCase compliance |
+| Root docs | Readiness report re-scored to 98/100 (v1.2.0), changelog bumped to v1.9.0 |
+| Fundamentals | Design system v1.1.0 (dark mode token), accessibility v1.1.0 (i18n path fix) |
+| Features | Firing (budget fixes), dismissal-challenges/personalization (IPC commands), NFR (locale path) |
+| Spec issues | `14-spec-issues/` — 180 issues across 15 files (13 discovery + overview + consistency), all resolved |
+| Cross-refs | Verified: 0 broken links, 0 stale references, final grep clean |
 
 ---
 

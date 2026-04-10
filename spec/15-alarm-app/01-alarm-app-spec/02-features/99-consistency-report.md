@@ -1,6 +1,6 @@
 # Consistency Report: Features
 
-**Version:** 1.6.0  
+**Version:** 1.7.0  
 **Generated:** 2026-04-10  
 **Health Score:** 100/100 (A+)
 
@@ -13,20 +13,20 @@
 | 1 | `00-overview.md` | 1.2.0 | ✅ Present |
 | 2 | `01-alarm-crud.md` | 1.6.0 | ✅ Updated (PascalCase naming in pseudocode) |
 | 3 | `02-alarm-scheduling.md` | 2.0.0 | ✅ Present |
-| 4 | `03-alarm-firing.md` | 1.7.0 | ✅ Updated (PascalCase: NextFireTime, AlarmEvents, SnoozeState) |
+| 4 | `03-alarm-firing.md` | 1.7.0 | ✅ Present |
 | 5 | `04-snooze-system.md` | 1.3.0 | ✅ Present |
 | 6 | `05-sound-and-vibration.md` | 1.4.0 | ✅ Present |
-| 7 | `06-dismissal-challenges.md` | 1.2.0 | ✅ Present |
+| 7 | `06-dismissal-challenges.md` | 1.3.0 | ✅ Updated (IPC commands added, AlarmChallenge clarified) |
 | 8 | `07-alarm-groups.md` | 1.2.0 | ✅ Present |
-| 9 | `08-clock-display.md` | 1.1.0 | ✅ Present |
-| 10 | `09-theme-system.md` | 1.1.0 | ✅ Present |
-| 11 | `10-export-import.md` | 1.3.0 | ✅ Updated (PascalCase in export schema references) |
-| 12 | `11-sleep-wellness.md` | 1.1.0 | ✅ Updated (PascalCase in settings references) |
+| 9 | `08-clock-display.md` | 1.2.0 | ✅ Present |
+| 10 | `09-theme-system.md` | 1.2.0 | ✅ Present |
+| 11 | `10-export-import.md` | 1.3.0 | ✅ Present |
+| 12 | `11-sleep-wellness.md` | 1.1.0 | ✅ Present |
 | 13 | `12-smart-features.md` | 1.2.0 | ✅ Present |
-| 14 | `13-analytics.md` | 1.2.0 | ✅ Present |
-| 15 | `14-personalization.md` | 1.1.0 | ✅ Present |
+| 14 | `13-analytics.md` | 1.3.0 | ✅ Present |
+| 15 | `14-personalization.md` | 1.2.0 | ✅ Updated (IPC commands added) |
 | 16 | `15-keyboard-shortcuts.md` | 1.0.0 | ✅ Present |
-| 17 | `16-accessibility-and-nfr.md` | 1.0.0 | ✅ Present |
+| 17 | `16-accessibility-and-nfr.md` | 1.1.0 | ✅ Updated (i18n locale path fixed, performance budgets aligned) |
 
 ---
 
@@ -56,12 +56,13 @@
 
 ---
 
-## v1.6.0 Changes (Fix Phases 21–46)
+## v1.7.0 Changes (Fix Phases 47–59)
 
-- `01-alarm-crud.md` v1.6.0: PascalCase naming in soft-delete pseudocode (`NextFireTime`, `MaxSnoozeCount`)
-- `03-alarm-firing.md` v1.7.0: PascalCase in all table/column references, wake listener pseudocode
-- `10-export-import.md` v1.3.0: PascalCase in export schema references
-- `11-sleep-wellness.md` v1.1.0: PascalCase in settings references
+- `03-alarm-firing.md` v1.7.0: Fixed memory budget (150MB → 200MB), startup budget (2s → 750ms)
+- `05-sound-and-vibration.md` v1.4.0: Added missing IPC commands
+- `06-dismissal-challenges.md` v1.3.0: Added missing IPC commands, clarified AlarmChallenge interface
+- `14-personalization.md` v1.2.0: Added missing IPC commands
+- `16-accessibility-and-nfr.md` v1.1.0: Fixed i18n locale path
 
 ---
 
