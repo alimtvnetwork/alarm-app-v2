@@ -1,7 +1,7 @@
 # Export / Import
 
-**Version:** 1.4.0  
-**Updated:** 2026-04-09  
+**Version:** 1.5.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P1 — Should Have  
@@ -74,16 +74,35 @@ Users can export alarms and groups in multiple formats (JSON, CSV, iCal) and imp
 
 ## Import
 
+> **Resolves GA2-006, GA2-023, GA3-025.** Full end-to-end import flow.
+
+### End-to-End User Flow
+
+```
+1. Click "Import"     → Native file dialog opens (filtered by format)
+2. Select file        → Rust reads & validates file
+3. Parse              → Rust returns ImportPreview to frontend
+4. Preview            → Frontend shows preview table: alarm count, group count, duplicates, errors
+5. Choose strategy    → User selects duplicate action (Skip / Overwrite / Rename)
+6. Confirm            → Frontend calls confirm_import with PreviewId + strategy
+7. Result             → Success toast: "Imported 5 alarms, skipped 2 duplicates"
+                        Error toast: "Import failed: 3 validation errors"
+```
+
 ### Step 1: File Selection & Validation
 
-- Button opens native file picker (filter by selected format)
+- "Import" button in `ExportImport` component (rendered on Index page, also accessible via `Ctrl+I`)
+- Opens native file picker via `tauri-plugin-dialog` (filter: `.json`, `.csv`, `.ics`)
 - Rust reads and validates file against expected schema
-- On invalid file: return errors immediately
+- On invalid file: return `ImportPreview` with `Errors` array populated; frontend shows error toast
 
 ### Step 2: Import Preview
 
-- Show preview table of what will be imported: alarm count, group count, any issues
-- Highlight duplicates (matched by `id`)
+- Frontend receives `ImportPreview` and shows a modal dialog:
+  - Total alarms / groups to import
+  - List of duplicates (matched by `AlarmId`)
+  - Any validation warnings
+- User reviews and decides whether to proceed
 
 ### Step 3: Duplicate Handling
 
@@ -96,7 +115,13 @@ Users can export alarms and groups in multiple formats (JSON, CSV, iCal) and imp
 ### Step 4: Apply
 
 - **Merge** — Add imported alarms alongside existing (handle duplicates per user choice)
-- **Replace** — Clear all existing data, load from file (with confirmation dialog)
+- **Replace** — Clear all existing data, load from file (with confirmation dialog: "This will delete all existing alarms. Continue?")
+
+### Cancel / Timeout
+
+- User can close the preview modal to cancel import — no IPC call needed
+- Backend garbage-collects preview state after 5 minutes if `confirm_import` is never called
+- Preview state is stored in Rust memory (not SQLite) — keyed by `PreviewId`
 
 ---
 
@@ -126,6 +151,31 @@ interface ImportResult {
   Errors: string[];
 }
 ```
+
+---
+
+## iCal RRULE Mapping
+
+> **Resolves GA2-024, GA3-025.** Maps iCal `RRULE` to `RepeatPattern` on import.
+
+| iCal RRULE | RepeatType | Mapping Notes |
+|-----------|------------|---------------|
+| (no RRULE) | `Once` | Single occurrence |
+| `FREQ=DAILY` | `Daily` | Direct mapping |
+| `FREQ=WEEKLY;BYDAY=MO,WE,FR` | `Weekly` | `BYDAY` → `DaysOfWeek` (MO=1, TU=2, ..., SU=0) |
+| `FREQ=MINUTELY;INTERVAL=90` | `Interval` | `INTERVAL` → `IntervalMinutes` |
+| `FREQ=HOURLY;INTERVAL=2` | `Interval` | Convert to minutes: `INTERVAL * 60` |
+| `FREQ=MONTHLY`, `FREQ=YEARLY` | `Once` | **Unmappable** — import as one-time with warning |
+| Complex RRULE (BYMONTHDAY, BYSETPOS, etc.) | `Once` | **Unmappable** — import as one-time with warning in `ImportPreview.Errors` |
+
+### CSV Import Rules
+
+- **Headers required** — first row must contain column names
+- **Column order** — does not matter; matched by header name
+- **Extra columns** — ignored silently
+- **Missing required columns** — error: "Missing required column: {name}"
+- **Required columns:** `Time`, `Label`
+- **Optional columns:** all others (defaults applied from data model)
 
 ---
 
