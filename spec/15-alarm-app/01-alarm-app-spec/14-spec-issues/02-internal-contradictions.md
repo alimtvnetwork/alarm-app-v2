@@ -97,61 +97,40 @@ Issues where different spec files contradict each other — the most dangerous c
 ## IC-008: Alarm Engine Check Interval Contradiction
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — architecture overview updated from "1-second" to "30-second" to match all other files
 
-**The contradiction:**
-
-| File | Stated Interval |
-|------|----------------|
-| `06-tauri-architecture.md` line 56 | 1-second interval timer |
-| `03-alarm-firing.md` | 30-second check interval |
-| `07-startup-sequence.md` | 30-second check interval |
-| `12-platform-and-concurrency-guide.md` | 30-second check interval |
-
-**Impact:** AI will implement either 1s or 30s depending on which file it reads first. 1s vs 30s has significant CPU and battery implications.
+**Resolution:** `06-tauri-architecture.md` line 56 changed from "1-second interval timer" to "30-second interval timer". Three other files already said 30s — now all 4 are consistent.
 
 ---
 
 ## IC-009: `tauri-plugin-sql` vs `rusqlite` — Second Driver Conflict
 
 **Severity:** 🔴 Critical  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all `tauri-plugin-sql` references replaced with `rusqlite` + `refinery`
 
-**Location:** `01-fundamentals/06-tauri-architecture-and-framework-comparison.md` (line 59)
-
-**Problem:** Storage module lists `tauri-plugin-sql` (SQLite) as a dependency. The entire project uses `rusqlite` directly (confirmed by IC-001 resolution). AI will install `tauri-plugin-sql` from `Cargo.toml` dependencies and get a completely different API.
-
-**Note:** This is distinct from IC-001 (which was `sqlx` in code samples). IC-009 is about the dependency list in the architecture overview.
+**Resolution:** Updated 6 files:
+- `06-tauri-architecture.md` — storage module crate + plugin table
+- `03-file-structure.md` — Cargo.toml dependencies + permissions table (removed SQL plugin permissions since rusqlite doesn't use Tauri plugin system)
+- `reference/alarm-app-features.md` — tech stack table
+- `03-app-issues/01-web-to-native-migration.md` — migration comparison table
+- `09-ai-handoff-reliability-report.md` — task 1.5 crate list
 
 ---
 
 ## IC-010: `delete_alarm` Return Type Contradicts Between Files
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
-
-| File | Return Type |
-|------|-------------|
-| `06-tauri-architecture.md` line 76 | `void` |
-| `01-alarm-crud.md` line 285 | `{ UndoToken: string }` |
-
-**Impact:** AI will implement one or the other. The CRUD spec is more detailed and authoritative, but the architecture overview is typically read first.
+**Status:** ✅ Resolved — architecture overview updated to return `{ UndoToken: string }` matching CRUD spec
 
 ---
 
 ## IC-011: `export_data` IPC Payload Contradicts Between Files
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
-
-| File | Payload |
-|------|---------|
-| `06-tauri-architecture.md` line 105 | `void` (no parameters) |
-| `10-export-import.md` line 46 | `{ Format, Scope, AlarmIds? }` |
-
-**Impact:** AI won't know if `export_data` takes parameters or not. The export spec is more detailed.
+**Status:** ✅ Resolved — architecture overview updated to `{ Format: string, Scope: string, AlarmIds?: string[] }` matching export spec. Also fixed `update_setting` and `import_data` payload keys to PascalCase.
 
 ---
 
 ## Issues Found So Far: 11
+## Open: 4 | Resolved: 7
 ## Open: 8 | Resolved: 3

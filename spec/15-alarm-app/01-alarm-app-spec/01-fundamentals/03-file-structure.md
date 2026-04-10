@@ -251,7 +251,6 @@ Add to `src-tauri/capabilities/default.json`:
 | Category | Permissions | Purpose |
 |----------|-------------|---------|
 | Core | `core:default`, `core:window:*`, `core:app:*`, `core:event:*` | Window management, app lifecycle, IPC events |
-| SQL | `sql:default`, `sql:allow-execute`, `sql:allow-select` | SQLite CRUD via `tauri-plugin-sql` |
 | Notification | `notification:*` | OS-native alarm notifications |
 | Dialog | `dialog:*` | File open/save for import/export, confirmation dialogs |
 | Filesystem | `fs:allow-read-file`, `fs:allow-exists` | Custom sound file validation |
@@ -284,7 +283,8 @@ tauri = { version = "2", features = ["tray-icon", "global-shortcut"] }
 tauri-build = { version = "2", features = [] }
 
 # Tauri plugins
-tauri-plugin-sql = { version = "2", features = ["sqlite"] }
+rusqlite = { version = "0.31", features = ["bundled"] }
+refinery = { version = "0.8", features = ["rusqlite"] }
 tauri-plugin-notification = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"

@@ -16,7 +16,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | # | File | Category | Issue Count | Open | Resolved |
 |---|------|----------|:-----------:|:----:|:--------:|
 | 1 | `01-naming-violations.md` | Naming & Convention Violations | 18 | 4 | 14 |
-| 2 | `02-internal-contradictions.md` | Contradictions Between Files | 11 | 8 | 3 |
+| 2 | `02-internal-contradictions.md` | Contradictions Between Files | 11 | 4 | 7 |
 | 3 | `03-structural-issues.md` | Folder/File Structure Problems | 5 | 5 | 0 |
 | 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 12 | 11 | 1 |
 | 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 2 | 2 |
@@ -34,8 +34,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 40 |
 | 🟢 Low | 7 |
 | **Grand Total** | **77** |
-| **Open** | **40** |
-| **Resolved** | **37** |
+| **Open** | **36** |
+| **Resolved** | **41** |
 
 ---
 
@@ -58,7 +58,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 7** | **Concurrency guide regressions** | **✅ Done (2 resolved)** |
 | **Fix Phase 8** | **Firing + snooze prose snake_case** | **✅ Done (1 resolved + CG-006 partial)** |
 | **Fix Phase 9** | **Groups + sound prose snake_case** | **✅ Done (CG-006 partial)** |
-| Fix Phase 10 | Architecture contradictions (`tauri-plugin-sql`, intervals, return types) | 🔴 Pending |
+| **Fix Phase 10** | **Architecture contradictions (`tauri-plugin-sql`, intervals, return types)** | **✅ Done (4 resolved)** |
 | Fix Phase 11 | `get_alarms` vs `list_alarms` conflict | 🔴 Pending |
 | Fix Phase 12 | Settings keys → PascalCase | 🔴 Pending |
 | Fix Phase 13 | AlarmChallenge schema gaps | 🔴 Pending |

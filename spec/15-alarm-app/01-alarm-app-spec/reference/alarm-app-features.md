@@ -149,7 +149,7 @@ Building the alarm app as a **native cross-platform application** (Tauri 2.x) pr
 | **SQLite** | Persistent structured data storage |
 | **rodio** | Cross-platform audio playback |
 | **tauri-plugin-notification** | OS-native notifications |
-| **tauri-plugin-sql** | SQLite database integration |
+| **rusqlite** + **refinery** | SQLite database + migrations |
 | **tauri-plugin-dialog** | Native file open/save dialogs |
 | **tauri-plugin-global-shortcut** | System-wide keyboard shortcuts |
 | **tauri-plugin-updater** | Auto-update mechanism |
