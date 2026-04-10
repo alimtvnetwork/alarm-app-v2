@@ -128,7 +128,7 @@ interface ImportResult {
 > 
 > [Cancel] [Export]
 
-- "Don't show again" preference stored in `settings` table (`export_warning_dismissed`)
+- "Don't show again" preference stored in `Settings` table (`ExportWarningDismissed`)
 - **P2+ enhancement:** Offer optional password-protected ZIP export using `zip` crate with AES-256 encryption
 
 ---

@@ -24,7 +24,7 @@ Persistent log of every alarm event (fired, snoozed, dismissed, missed) with fil
 
 ### Features
 
-- Persistent log of every alarm event stored in `alarm_events` SQLite table
+- Persistent log of every alarm event stored in `AlarmEvents` SQLite table
 - Each event records: type, fired time, dismissed time, snooze count, challenge type/time
 - **Filterable by:**
   - Date range (start/end date pickers)
@@ -90,7 +90,7 @@ interface HistoryFilter {
 > **Single source of truth:** The canonical `AlarmEvents` schema is defined in `01-fundamentals/01-data-model.md`. Do not duplicate it here. Refer to that file for column names, types, and constraints.
 
 **Table:** `AlarmEvents` (11 columns)  
-**Key columns:** `AlarmEventId`, `AlarmId`, `EventType`, `FiredAt`, `DismissedAt`, `SnoozeCount`, `ChallengeType`, `ChallengeSolveTimeSec`, `SleepQuality`, `Mood`, `Timestamp`
+**Key columns:** `AlarmEventId`, `AlarmId`, `Type`, `FiredAt`, `DismissedAt`, `SnoozeCount`, `ChallengeType`, `ChallengeSolveTimeSec`, `SleepQuality`, `Mood`, `Timestamp`
 
 ---
 
