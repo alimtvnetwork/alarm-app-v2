@@ -155,6 +155,18 @@ interface AlarmChallenge {
 
 ---
 
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Math challenge generates negative result | Re-generate — all answers must be > 0 |
+| User closes overlay window during challenge | Alarm continues firing; overlay re-opens after 3 seconds |
+| Shake challenge on desktop (no accelerometer) | Option hidden at runtime; alarm falls back to `ChallengeType.None` |
+| QR code scanner permission denied | Show toast with permission instructions; fall back to `ChallengeType.None` |
+| Challenge solve time exceeds 5 minutes | Log `SolveTimeSec` as-is; no timeout (alarm keeps firing) |
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Math challenge generates integer-only answers for all difficulty levels

@@ -1,6 +1,6 @@
 # Clock Display
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -90,6 +90,17 @@ function useClock(): ClockState;
 - Returns the `NextFireTime` (ISO 8601) and label of the earliest enabled alarm
 - Returns `null` values when no alarms are enabled
 - Called on mount and after any alarm CRUD operation to update the countdown display
+
+---
+
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| No alarms enabled | Countdown hidden; show "No upcoming alarms" text |
+| System clock jumps (NTP sync, manual change) | Re-query `get_next_alarm_time`; update countdown immediately |
+| Midnight rollover | Date/day-of-week updates without flicker |
+| 12/24-hour setting changed while clock visible | Re-render immediately (no page reload) |
 
 ---
 

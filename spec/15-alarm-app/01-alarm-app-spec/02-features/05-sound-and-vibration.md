@@ -274,6 +274,19 @@ Call `configure_audio_session()` at **Step 6a** of the startup sequence (paralle
 
 ---
 
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Custom sound file deleted from filesystem | Fall back to `classic-beep`; show warning in overlay |
+| Custom sound file > 10 MB | `validate_custom_sound` returns `IsValid: false` with size error |
+| Audio device disconnected at fire time | Retry audio output device discovery; fall back to system default |
+| Sound file is a symlink | Reject — `validate_custom_sound` returns `IsValid: false` |
+| Volume ramp with system volume at 0 | Ramp has no audible effect; alarm fires silently (OS-level mute respected) |
+| Two alarms fire simultaneously with different sounds | Each plays its own sound via separate `rodio::Sink` instances |
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Sound preview button plays selected sound briefly (via Rust audio backend)

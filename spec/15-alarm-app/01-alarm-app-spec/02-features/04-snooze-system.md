@@ -1,6 +1,6 @@
 # Snooze System
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -102,6 +102,18 @@ pub async fn schedule_snooze(engine: Arc<AlarmEngine>, alarm_id: String, duratio
 ```
 
 **Crash recovery:** On startup, query `SnoozeState` table for active snoozes. If `SnoozeUntil` is in the future, spawn a new `sleep_until` task. If `SnoozeUntil` is in the past, fire immediately as a missed alarm.
+
+---
+
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Snooze while app is closed (user force-quits) | On restart, check `SnoozeState` — fire if `SnoozeUntil` is past |
+| Snooze duration exceeds time until next alarm | Current snooze fires first; next alarm fires at its scheduled time independently |
+| User deletes alarm during active snooze | Cancel snooze timer, delete `SnoozeState` row |
+| `MaxSnoozeCount = 0` | Snooze button never rendered on overlay |
+| App crash during snooze write | WAL mode ensures atomic write; partial state impossible |
 
 ---
 

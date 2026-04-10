@@ -1,6 +1,6 @@
 # Theme System
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -69,6 +69,16 @@ Full dark/light theme toggle with system preference auto-detection. The dark mod
 **Behavior:**
 - `get_theme` — Reads `Theme` key from `Settings` SQLite table. Defaults to `ThemeMode.System` if not set.
 - `set_theme` — Writes `Theme` key to `Settings` table and emits `theme-changed` event to frontend.
+
+---
+
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| OS theme changes while app is in background | Detect on `tauri://focus` event; apply if `ThemeMode.System` |
+| `Settings` table missing `Theme` key | Default to `ThemeMode.System` |
+| Theme transition during alarm overlay | No transition animation — overlay always uses current theme instantly |
 
 ---
 

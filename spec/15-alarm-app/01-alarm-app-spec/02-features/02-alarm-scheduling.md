@@ -126,6 +126,19 @@ Optional integration with a holiday calendar API.
 
 ---
 
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| DST spring-forward: alarm set for 2:30 AM (skipped hour) | Fire at 3:00 AM (next valid time) |
+| DST fall-back: alarm set for 1:30 AM (repeated hour) | Fire on first occurrence only |
+| Weekly alarm with zero days selected | Validation error — at least one day required |
+| Interval alarm with interval < 1 minute | Validation error — minimum 1 minute |
+| One-time alarm that already fired | `IsEnabled` set to `false`; `NextFireTime` set to `null` |
+| Cron expression with invalid syntax | Return `AlarmAppError::InvalidCronExpression` |
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Day selection via pill toggles for Mon–Sun

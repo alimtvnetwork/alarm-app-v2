@@ -209,6 +209,19 @@ interface ImportResult {
 
 ---
 
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Import file with 0 valid alarms | Show "No valid alarms found" error toast; abort import |
+| Import file > 5 MB | Reject with size limit error |
+| CSV with missing required columns | Show descriptive error listing missing columns |
+| iCal with unsupported `RRULE` frequency | Skip that alarm; show warning with count of skipped entries |
+| Import with duplicate `AlarmId` (merge mode) | Prompt: skip, overwrite, or rename |
+| Export when no alarms exist | Show "Nothing to export" toast; do not open file dialog |
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Export supports JSON, CSV, and iCal formats
