@@ -15,7 +15,7 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | # | File | Category | Issue Count | Open | Resolved |
 |---|------|----------|:-----------:|:----:|:--------:|
-| 1 | `01-naming-violations.md` | Naming & Convention Violations | 18 | 4 | 14 |
+| 1 | `01-naming-violations.md` | Naming & Convention Violations | 18 | 3 | 15 |
 | 2 | `02-internal-contradictions.md` | Contradictions Between Files | 11 | 3 | 8 |
 | 3 | `03-structural-issues.md` | Folder/File Structure Problems | 5 | 5 | 0 |
 | 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 12 | 11 | 1 |
@@ -34,8 +34,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 40 |
 | 🟢 Low | 7 |
 | **Grand Total** | **77** |
-| **Open** | **35** |
-| **Resolved** | **42** |
+| **Open** | **34** |
+| **Resolved** | **43** |
 
 ---
 
@@ -60,7 +60,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 9** | **Groups + sound prose snake_case** | **✅ Done (CG-006 partial)** |
 | **Fix Phase 10** | **Architecture contradictions (`tauri-plugin-sql`, intervals, return types)** | **✅ Done (4 resolved)** |
 | **Fix Phase 11** | **`get_alarms` → `list_alarms` standardization** | **✅ Done (1 resolved)** |
-| Fix Phase 12 | Settings keys → PascalCase | 🔴 Pending |
+| **Fix Phase 12** | **Settings keys → PascalCase** | **✅ Done (1 resolved)** |
 | Fix Phase 13 | AlarmChallenge schema gaps | 🔴 Pending |
 | Fix Phase 14 | All remaining prose snake_case | 🔴 Pending |
 | Fix Phase 15 | Function length decomposition | 🔴 Pending |
