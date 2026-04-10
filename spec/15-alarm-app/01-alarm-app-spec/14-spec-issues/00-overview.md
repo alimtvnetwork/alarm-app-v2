@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-09
 
 ---
@@ -16,11 +16,11 @@ This folder tracks all specification quality issues found during the deep audit 
 | # | File | Category | Issue Count | Open | Resolved |
 |---|------|----------|:-----------:|:----:|:--------:|
 | 1 | `01-naming-violations.md` | Naming & Convention Violations | 15 | 13 | 2 |
-| 2 | `02-internal-contradictions.md` | Contradictions Between Files | 7 | 7 | 0 |
+| 2 | `02-internal-contradictions.md` | Contradictions Between Files | 7 | 5 | 2 |
 | 3 | `03-structural-issues.md` | Folder/File Structure Problems | 5 | 5 | 0 |
 | 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 11 | 10 | 1 |
 | 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 4 | 0 |
-| 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 10 | 10 | 0 |
+| 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 10 | 5 | 5 |
 | 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 2 | 2 |
 | 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 8 | 7 | 1 |
 
@@ -34,8 +34,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 34 |
 | 🟢 Low | 4 |
 | **Grand Total** | **64** |
-| **Open** | **58** |
-| **Resolved** | **6** |
+| **Open** | **51** |
+| **Resolved** | **13** |
 
 ---
 
@@ -44,12 +44,12 @@ This folder tracks all specification quality issues found during the deep audit 
 | Phase | Description | Status |
 |-------|-------------|--------|
 | Discovery Phase 1 | Initial structural + cross-reference scan | ✅ Done (23 issues) |
-| Discovery Phase 2 | Deep feature file scan | ✅ Done (+10 issues = 33 total) |
-| Discovery Phase 3 | Cross-file logic consistency | ✅ Done (+12 issues = 45 total) |
-| Discovery Phase 4 | UI/UX + frontend state consistency | ✅ Done (+11 issues = 56 total) |
-| Discovery Phase 5 | Coding guideline compliance check | ✅ Done (+8 issues = 64 total) |
+| Discovery Phase 2 | Deep feature file scan | ✅ Done (+10 = 33) |
+| Discovery Phase 3 | Cross-file logic consistency | ✅ Done (+12 = 45) |
+| Discovery Phase 4 | UI/UX + frontend state consistency | ✅ Done (+11 = 56) |
+| Discovery Phase 5 | Coding guideline compliance check | ✅ Done (+8 = 64) |
 | **Fix Phase 1** | **Exemptions & decisions** | **✅ Done (4 resolved)** |
-| Fix Phase 2 | sqlx → rusqlite | 🔴 Pending |
+| **Fix Phase 2** | **sqlx → rusqlite** | **✅ Done (7 resolved)** |
 | Fix Phase 3 | DB naming PascalCase | 🔴 Pending |
 | Fix Phase 4 | TS/Rust serialization keys | 🔴 Pending |
 | Fix Phase 5 | Feature file naming | 🔴 Pending |
@@ -73,7 +73,7 @@ This folder tracks all specification quality issues found during the deep audit 
 
 ## Key Insights
 
-1. The `sqlx` vs `rusqlite` contradiction (IC-001) infects **8+ code samples** across critical paths.
+1. ~~The `sqlx` vs `rusqlite` contradiction (IC-001) infects 8+ code samples.~~ **✅ FIXED — all converted to rusqlite.**
 2. **22 functions exceed the 15-line limit** — linter will reject on first run.
 3. **No React state management pattern** specified — AI will guess.
 4. **Every TS interface uses camelCase** — systemic PascalCase violation.

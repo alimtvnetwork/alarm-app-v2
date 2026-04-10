@@ -117,4 +117,4 @@ Cross-file logic inconsistencies found during Discovery Phase 3. These are issue
 ---
 
 ## Issues Found: 10
-## Open: 10 | Resolved: 0
+## Open: 5 | Resolved: 5
