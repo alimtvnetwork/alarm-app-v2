@@ -44,15 +44,15 @@
 
 ## Category B: Previously Missed Issues
 
-### D7-NEW-001: `01-data-model.md` WAL section uses `alarm_events` (snake_case)
+### D7-NEW-001: ~~`01-data-model.md` WAL section uses `alarm_events` (snake_case)~~ ✅ Resolved (Fix 23)
 **Severity:** 🟡 Medium  
 **File:** `01-fundamentals/01-data-model.md` line 317  
-**Problem:** "writes `alarm_events` and updates `nextFireTime`" — should be `AlarmEvents` and `NextFireTime`.
+**Problem:** Fixed `alarm_events` → `AlarmEvents` and `nextFireTime` → `NextFireTime`.
 
-### D7-NEW-002: `01-data-model.md` settings key description uses `alarm_events`
+### D7-NEW-002: ~~`01-data-model.md` settings key description uses `alarm_events`~~ ✅ Resolved (Fix 23)
 **Severity:** 🟢 Low  
 **File:** `01-fundamentals/01-data-model.md` line 367  
-**Problem:** EventRetentionDays description: "Days to keep alarm_events" — should be `AlarmEvents`.
+**Problem:** Fixed EventRetentionDays description to reference `AlarmEvents`.
 
 ### D7-NEW-003: `03-alarm-firing.md` acceptance criteria uses `alarm_events`
 **Severity:** 🟡 Medium  
@@ -104,10 +104,10 @@
 **File:** `13-ai-cheat-sheet.md` line 96  
 **Problem:** Pattern 2 (DST Resolution) code block starts at line 75 with ` ```rust` but never closes. The ` ``` ` is missing before `### 3.` on line 97. This breaks markdown rendering — all subsequent content appears as code.
 
-### D7-NEW-013: `00-overview.md` validation rules use camelCase
+### D7-NEW-013: ~~`00-overview.md` validation rules use camelCase~~ ✅ Resolved (Fix 23)
 **Severity:** 🟡 Medium  
-**File:** `00-overview.md` → Data Model section uses `repeat.type`, `repeat.daysOfWeek`, `repeat.intervalMinutes`, `repeat.cronExpression`, `groupId`, `soundFile`, `nextFireTime` in the Validation Rules of `01-data-model.md` lines 373–387  
-**Problem:** The validation rules table still uses camelCase field references. AI will implement validators with wrong field names.
+**File:** `01-data-model.md` lines 373–387  
+**Problem:** All validation rule field names converted to PascalCase: `Time`, `Repeat.Type`, `SnoozeDurationMin`, etc.
 
 ---
 
@@ -116,8 +116,8 @@
 | Status | Previous | New | Total |
 |--------|:--------:|:---:|:-----:|
 | Total issues | 77 | 18 | **95** |
-| Open | 0 | 12 | **12** |
-| Resolved | 77 | 6 | **83** |
+| Open | 0 | 9 | **9** |
+| Resolved | 77 | 9 | **86** |
 
 ---
 
