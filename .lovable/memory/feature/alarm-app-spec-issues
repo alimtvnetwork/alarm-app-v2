@@ -1,15 +1,15 @@
 ---
 name: Alarm App Spec Issues Audit
-description: Tracking all spec quality issues found during deep audit — naming violations, contradictions, structural problems, content gaps, AI handoff risks, logic consistency, UI/UX, guideline compliance
+description: Tracking all spec quality issues found during deep audit — naming violations, contradictions, structural problems, content gaps, AI handoff risks, logic consistency, UI/UX consistency, guideline compliance
 type: feature
 ---
 
 ## Audit Status
 
-- **Total issues:** 136
-- **Open:** 0 ✅ ALL RESOLVED
+- **Total issues:** 154
+- **Open:** 18
 - **Resolved:** 136
-- **Discovery phases:** 9 complete
+- **Discovery phases:** 10 complete
 - **Fix phases:** 39 complete
 
 ## Issue Distribution
@@ -27,6 +27,13 @@ type: feature
 | Discovery Phase 7 | 18 | 0 | 18 |
 | Discovery Phase 8 | 11 | 0 | 11 |
 | Discovery Phase 9 | 30 | 0 | 30 |
+| Discovery Phase 10 | 18 | 18 | 0 |
+
+## Discovery Phase 10 Highlights
+
+- **3 Critical:** Stale overview counts, duplicate Cargo.toml deps, missing ValueType column in Settings schema
+- **11 Medium:** Version mismatches in readiness report, remaining naming violations in app-issues, ambiguous db.ts, broken cross-references
+- **4 Low:** Legacy docs, string boolean confusion, superseded doc clarity
 
 ## Canonical Location
 
