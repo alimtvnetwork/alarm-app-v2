@@ -25,9 +25,9 @@ Cross-file logic inconsistencies found during Discovery Phase 3 and Phase 6. The
 
 **Severity:** 🟡 Medium  
 **Location:** `02-features/04-snooze-system.md` (line 43) vs `01-fundamentals/01-data-model.md` (line 261)  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — added explicit TS `SnoozeState` interface with `SnoozeUntil` field name in Fix Phase 20
 
-**Problem:** TS `SnoozeState.nextFireTime` maps to SQL column `snooze_until`. Field name mismatch will cause silent serialization bugs. AI will map the wrong field name.
+**Resolution:** Added `interface SnoozeState { AlarmId, SnoozeUntil, SnoozeCount }` to `01-data-model.md` with warning note: "The field is `SnoozeUntil`, NOT `NextFireTime`." Matches SQL column name exactly.
 
 ---
 
@@ -100,9 +100,9 @@ Cross-file logic inconsistencies found during Discovery Phase 3 and Phase 6. The
 
 **Severity:** 🟡 Medium  
 **Location:** `02-features/04-snooze-system.md` (line 82) vs `01-fundamentals/07-startup-sequence.md` (Step 8)  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — added Step 8b "Snooze Crash Recovery" to startup sequence in Fix Phase 20
 
-**Problem:** `04-snooze-system.md` says "On startup, query `snooze_state` table for active snoozes." But `07-startup-sequence.md` Step 8 only checks missed alarms from the `alarms` table. Active snoozes from previous session are never recovered — snoozed alarms silently disappear after crash/restart.
+**Resolution:** Added `SELECT * FROM SnoozeState` query at startup Step 8b. If `SnoozeUntil > now`, spawn `sleep_until` task. If `SnoozeUntil <= now`, fire as missed alarm. Orphaned rows (deleted alarm) are cleaned up.
 
 ---
 
@@ -117,4 +117,4 @@ Cross-file logic inconsistencies found during Discovery Phase 3 and Phase 6. The
 ---
 
 ## Issues Found: 11
-## Open: 2 | Resolved: 9
+## Open: 0 | Resolved: 11
