@@ -61,7 +61,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 10** | **Architecture contradictions (`tauri-plugin-sql`, intervals, return types)** | **✅ Done (4 resolved)** |
 | **Fix Phase 11** | **`get_alarms` → `list_alarms` standardization** | **✅ Done (1 resolved)** |
 | **Fix Phase 12** | **Settings keys → PascalCase** | **✅ Done (1 resolved)** |
-| Fix Phase 13 | AlarmChallenge schema gaps | 🔴 Pending |
+| **Fix Phase 13** | **AlarmChallenge schema gaps** | **✅ Done (3 resolved: CG-007, CG-012, LC-001)** |
 | Fix Phase 14 | All remaining prose snake_case | 🔴 Pending |
 | Fix Phase 15 | Function length decomposition | 🔴 Pending |
 
