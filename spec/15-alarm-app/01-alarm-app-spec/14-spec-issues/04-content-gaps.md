@@ -57,9 +57,21 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 ## CG-005: No Exemptions List for External Conventions
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved
 
-**Problem:** The PascalCase standard (`11-key-naming-pascalcase.md` §6) has an exemptions table for external APIs. The alarm app spec has potential exemptions (Tauri IPC = snake_case, refinery migrations = snake_case, Rust struct fields = snake_case) but **never declares them as exemptions**. AI won't know which snake_case is intentional vs. violation.
+**Problem:** The PascalCase standard (`11-key-naming-pascalcase.md` §6) has an exemptions table for external APIs. The alarm app spec had potential exemptions but never declared them.
+
+**Resolution:** Exemptions declared:
+
+| Exemption | Convention | Reason |
+|-----------|-----------|--------|
+| Refinery migration filenames | `V{N}__{snake_case}.sql` | Required by `refinery` crate — cannot be changed |
+| Tauri IPC command names | `snake_case` | Tauri framework convention — e.g., `create_alarm` |
+| Tauri IPC event names | `kebab-case` | Tauri framework convention — e.g., `alarm-fired` |
+| Rust struct field names | `snake_case` | Rust language convention — serialized to PascalCase via `#[serde(rename_all = "PascalCase")]` |
+| TS/JS function names | `camelCase` | Language convention — PascalCase applies to serialized keys only |
+
+**Key principle:** PascalCase applies to **serialized string keys** (JSON, DB columns, config, logs). Language-level identifiers and external framework conventions follow their own rules.
 
 ---
 
@@ -132,4 +144,4 @@ These prose references must also be updated when column names change to PascalCa
 ---
 
 ## Issues Found So Far: 11
-## Open: 11 | Resolved: 0
+## Open: 10 | Resolved: 1

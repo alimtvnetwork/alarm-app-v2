@@ -154,13 +154,13 @@ Also in `AlarmGroup`:
 ## GC-008: `safeInvoke` Function Name Uses camelCase
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — **Not a violation**
 
-**Problem:** The TS utility function `safeInvoke` in `04-platform-constraints.md` and `13-ai-cheat-sheet.md` — while function names in TS are conventionally camelCase, the PascalCase mandate applies to serialized keys only, NOT function names. **This may be a false positive** — needs clarification on scope.
+**Problem:** The TS utility function `safeInvoke` in `04-platform-constraints.md` and `13-ai-cheat-sheet.md`.
 
-**Decision needed:** Does PascalCase apply to function names or only serialized keys?
+**Resolution:** PascalCase mandate applies to **serialized string keys** only (JSON keys, DB columns, config keys, log keys). TypeScript/JavaScript function names follow language convention (camelCase). This is not a violation.
 
 ---
 
 ## Issues Found So Far: 8
-## Open: 8 | Resolved: 0
+## Open: 7 | Resolved: 1

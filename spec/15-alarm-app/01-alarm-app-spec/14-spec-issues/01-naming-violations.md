@@ -120,14 +120,14 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 
 **Severity:** 🟡 Medium  
 **Location:** `01-fundamentals/01-data-model.md` (line 426–428)  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — **Exempt** (external convention)
 
 | Current | Note |
 |---------|------|
-| `V1__initial_schema.sql` | `refinery` crate convention — may be an acceptable exemption |
+| `V1__initial_schema.sql` | `refinery` crate convention — **declared exempt** |
 | `V3__add_alarm_label_cache.sql` | Same |
 
-**Decision needed:** Is this an exemption (external tool convention) or violation?
+**Resolution:** Refinery crate requires `V{N}__{description}.sql` format. This is an external tool convention and cannot be changed. Added to exemptions table (CG-005).
 
 ---
 
@@ -167,9 +167,9 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 
 **Severity:** 🟡 Medium  
 **Location:** `02-features/01-alarm-crud.md`, `06-tauri-architecture-and-framework-comparison.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — **Exempt** (external convention)
 
-**Note:** Tauri convention IS snake_case for commands. This may be an acceptable external convention exemption (like WordPress hooks). **Decision needed.**
+**Resolution:** Tauri convention requires snake_case for IPC commands. This is an external framework convention and cannot be changed without fighting the framework. Added to exemptions table (CG-005).
 
 | Current | If PascalCase applied |
 |---------|----------------------|
@@ -271,4 +271,4 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 ---
 
 ## Issues Found So Far: 15
-## Open: 15 | Resolved: 0
+## Open: 13 | Resolved: 2
