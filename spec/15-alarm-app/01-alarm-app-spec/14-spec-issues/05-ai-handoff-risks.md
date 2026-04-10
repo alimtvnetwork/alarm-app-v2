@@ -52,7 +52,7 @@ Issues specifically rated by their likelihood to cause AI execution failure duri
 ---
 
 ## Issues Found So Far: 4
-## Open: 2 | Resolved: 2
+## Open: 1 | Resolved: 3
 
 ---
 

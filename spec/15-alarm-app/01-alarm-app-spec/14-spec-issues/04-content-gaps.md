@@ -142,4 +142,4 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 ---
 
 ## Issues Found So Far: 12
-## Open: 8 | Resolved: 4
+## Open: 7 | Resolved: 5
