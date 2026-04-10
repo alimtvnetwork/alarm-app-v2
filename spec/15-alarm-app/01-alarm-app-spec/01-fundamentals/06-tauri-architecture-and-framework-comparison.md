@@ -74,7 +74,7 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `create_alarm` | FE → BE | `CreateAlarmPayload` | `Alarm` |
 | `update_alarm` | FE → BE | `UpdateAlarmPayload` | `Alarm` |
 | `delete_alarm` | FE → BE | `{ AlarmId: string }` | `{ UndoToken: string }` |
-| `get_alarms` | FE → BE | `void` | `Alarm[]` |
+| `list_alarms` | FE → BE | `void` | `Alarm[]` |
 | `toggle_alarm` | FE → BE | `{ AlarmId: string, IsEnabled: boolean }` | `void` |
 
 #### Group Commands
