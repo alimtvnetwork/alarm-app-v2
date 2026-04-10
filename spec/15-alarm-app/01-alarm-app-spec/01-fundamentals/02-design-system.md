@@ -1,7 +1,7 @@
 # Design System
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-08  
+**Version:** 1.1.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
 
@@ -49,6 +49,7 @@ Defines visual design tokens, color palettes, typography, and component styling 
 | `--muted` | `#3d3530` | Muted backgrounds |
 | `--muted-foreground` | `#c9b99a` | Muted text |
 | `--border` | `#4d4540` | Border color |
+| `--destructive` | `#e74c3c` | Delete/error actions (brighter red for dark bg visibility) |
 
 ---
 

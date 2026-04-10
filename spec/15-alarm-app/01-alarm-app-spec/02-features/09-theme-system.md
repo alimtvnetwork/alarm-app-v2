@@ -1,7 +1,7 @@
 # Theme System
 
-**Version:** 1.1.0  
-**Updated:** 2026-04-08  
+**Version:** 1.2.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have
@@ -46,6 +46,19 @@ Full dark/light theme toggle with system preference auto-detection. The dark mod
 - Positioned in top-right corner of the main layout
 - Cycles: light → dark → system → light
 - Tooltip shows current mode
+
+---
+
+## IPC Commands
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `get_theme` | `void` | `{ Theme: "light" \| "dark" \| "system" }` |
+| `set_theme` | `{ Theme: "light" \| "dark" \| "system" }` | `void` |
+
+**Behavior:**
+- `get_theme` — Reads `Theme` key from `Settings` SQLite table. Defaults to `"system"` if not set.
+- `set_theme` — Writes `Theme` key to `Settings` table and emits `theme-changed` event to frontend.
 
 ---
 

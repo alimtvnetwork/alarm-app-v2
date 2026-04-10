@@ -1,8 +1,8 @@
 # Features
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Status:** Active  
-**Updated:** 2026-04-08  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
 

@@ -1,7 +1,7 @@
 # Personalization
 
-**Version:** 1.1.0  
-**Updated:** 2026-04-08  
+**Version:** 1.2.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** Low  
 **Priority:** P2/P3
@@ -46,7 +46,14 @@ Visual customization, motivational features, and engagement tools. All preferenc
 - After alarm dismissal, display a daily motivational quote
 - Curated library bundled as JSON asset, rotates daily
 - Users can save favorites or add custom quotes — stored in SQLite
-- IPC: `get_daily_quote`, `save_favorite_quote`, `add_custom_quote`
+
+### Quote IPC Commands
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `get_daily_quote` | `void` | `{ Text: string, Author: string }` |
+| `save_favorite_quote` | `{ Text: string, Author: string }` | `void` |
+| `add_custom_quote` | `{ Text: string, Author: string }` | `{ QuoteId: string }` |
 
 ### Wake-Up Streak Tracker (P2)
 

@@ -38,7 +38,7 @@ interface RepeatPattern {
 }
 ```
 
-> **⚠️ Deprecated:** The `recurringDays` field from v1.0.0 is fully replaced by `RepeatPattern`. Do not use `recurringDays` — it does not exist in the data model.
+> **Note:** Scheduling uses `RepeatPattern` exclusively. There is no legacy field.
 
 ---
 
