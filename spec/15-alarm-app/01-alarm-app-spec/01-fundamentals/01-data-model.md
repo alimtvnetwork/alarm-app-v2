@@ -503,6 +503,8 @@ interface AlarmEvent {
   ChallengeSolveTimeSec: number | null;
   SleepQuality: number | null;         // 1-5
   Mood: string | null;
+  AlarmLabelSnapshot: string;    // Preserves label after alarm deletion (DB-ORPHAN-001)
+  AlarmTimeSnapshot: string;     // Preserves time after alarm deletion (DB-ORPHAN-001)
   Timestamp: string;             // ISO 8601 — when this event occurred
 }
 ```
@@ -605,10 +607,17 @@ pub fn purge_old_events(conn: &Connection) {
         .unwrap_or(DEFAULT_EVENT_RETENTION_DAYS);
 
     let cutoff = Utc::now() - chrono::Duration::days(retention_days);
-    conn.execute(
+    match conn.execute(
         "DELETE FROM AlarmEvents WHERE Timestamp < ?1",
         params![cutoff.to_rfc3339()],
-    ).ok();
+    ) {
+        Ok(rows) => {
+            tracing::info!(rows_purged = rows, retention_days = retention_days, cutoff = %cutoff, "Purged old alarm events");
+        }
+        Err(e) => {
+            tracing::warn!(error = %e, "purge_old_events: DELETE failed");
+        }
+    }
 
     tracing::info!(
         retention_days = retention_days,

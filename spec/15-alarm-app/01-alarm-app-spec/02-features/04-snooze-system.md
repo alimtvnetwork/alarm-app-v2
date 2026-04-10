@@ -74,7 +74,7 @@ Stored in the `SnoozeState` SQLite table. Cleared on dismiss.
 
 > **Resolves BE-SNOOZE-001.** Snooze must use exact-time triggering, not 30s polling.
 
-1. User taps "Snooze" → frontend calls `invoke("snooze_alarm", { AlarmId, Duration })`
+1. User taps "Snooze" → frontend calls `invoke("snooze_alarm", { AlarmId, DurationMin })`
 2. Rust backend stops audio, writes snooze state to SQLite
 3. `SnoozeCount` increments, `SnoozeUntil` set to now + duration
 4. **Exact-time snooze trigger:** Rust spawns `tokio::time::sleep_until(snooze_expiry)` per active snooze — does NOT rely on the 30s polling interval

@@ -84,8 +84,11 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `create_alarm` | FE → BE | `CreateAlarmPayload` | `Alarm` |
 | `update_alarm` | FE → BE | `UpdateAlarmPayload` | `Alarm` |
 | `delete_alarm` | FE → BE | `{ AlarmId: string }` | `{ UndoToken: string }` |
+| `undo_delete_alarm` | FE → BE | `{ UndoToken: string }` | `Alarm` |
 | `list_alarms` | FE → BE | `void` | `Alarm[]` |
-| `toggle_alarm` | FE → BE | `{ AlarmId: string, IsEnabled: boolean }` | `void` |
+| `toggle_alarm` | FE → BE | `{ AlarmId: string, IsEnabled: boolean }` | `Alarm` |
+| `duplicate_alarm` | FE → BE | `{ AlarmId: string }` | `Alarm` |
+| `move_alarm_to_group` | FE → BE | `{ AlarmId: string, GroupId: string \| null }` | `void` |
 
 #### Group Commands
 
@@ -106,6 +109,47 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `cancel_snooze` | FE → BE | `{ AlarmId: string }` | `void` |
 | `get_snooze_state` | FE → BE | `void` | `SnoozeState[]` |
 
+#### Sound Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `list_sounds` | FE → BE | `void` | `AlarmSound[]` |
+| `set_custom_sound` | FE → BE | `{ FilePath: string }` | `AlarmSound` |
+
+#### Challenge Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `get_challenge` | FE → BE | `{ ChallengeType: ChallengeType, Difficulty: ChallengeDifficulty \| null }` | `Challenge` |
+| `submit_challenge_answer` | FE → BE | `{ AlarmId: string, ChallengeId: string, Answer: string }` | `{ IsCorrect: boolean }` |
+
+#### Sleep & Wellness Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `log_sleep_quality` | FE → BE | `{ AlarmEventId: string, Quality: number, Mood: string \| null }` | `void` |
+| `play_ambient` | FE → BE | `{ SoundId: string }` | `void` |
+| `stop_ambient` | FE → BE | `void` | `void` |
+
+#### Personalization Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `get_daily_quote` | FE → BE | `void` | `Quote` |
+| `save_favorite_quote` | FE → BE | `{ QuoteId: string }` | `void` |
+| `add_custom_quote` | FE → BE | `{ Text: string, Author: string \| null }` | `Quote` |
+| `set_custom_background` | FE → BE | `{ FilePath: string }` | `string` (stored path) |
+| `clear_custom_background` | FE → BE | `void` | `void` |
+| `get_streak_data` | FE → BE | `void` | `StreakData` |
+| `get_streak_calendar` | FE → BE | `{ Month: number, Year: number }` | `StreakCalendarDay[]` |
+
+#### Keyboard Shortcut Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `register_shortcuts` | FE → BE | `void` | `void` |
+| `unregister_shortcuts` | FE → BE | `void` | `void` |
+
 #### System Commands
 
 | Command | Direction | Payload | Returns |
@@ -116,6 +160,7 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `import_data` | FE → BE | `{ Mode: ImportMode }` | `ImportPreview` |
 | `confirm_import` | FE → BE | `{ PreviewId: string, Mode: ImportMode, DuplicateAction: DuplicateAction }` | `ImportResult` |
 | `get_next_alarm_time` | FE → BE | `void` | `{ NextFireTime: string \| null, AlarmLabel: string \| null }` |
+| `log_from_frontend` | FE → BE | `{ Level: string, Message: string, Context: Record<string, unknown> }` | `void` |
 
 #### Events (Backend → Frontend)
 
