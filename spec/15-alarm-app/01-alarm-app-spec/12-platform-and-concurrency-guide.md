@@ -450,7 +450,7 @@ async fn test_dismiss_cancels_snooze() {
     
     // Should NOT have re-fired
     let events = get_alarm_events(&engine, &alarm.id).await;
-    assert_eq!(events.iter().filter(|e| e.r#type == "fired").count(), 1);
+    assert_eq!(events.iter().filter(|e| e.r#type == AlarmEventType::Fired).count(), 1);
 }
 
 #[tokio::test]
@@ -464,7 +464,7 @@ async fn test_engine_tick_does_not_double_fire() {
     
     // Should only fire once
     let events = get_alarm_events(&engine, &alarm.id).await;
-    assert_eq!(events.iter().filter(|e| e.r#type == "fired").count(), 1);
+    assert_eq!(events.iter().filter(|e| e.r#type == AlarmEventType::Fired).count(), 1);
 }
 ```
 

@@ -55,6 +55,17 @@ Visual customization, motivational features, and engagement tools. All preferenc
 | `save_favorite_quote` | `{ Text: string, Author: string }` | `void` |
 | `add_custom_quote` | `{ Text: string, Author: string }` | `{ QuoteId: string }` |
 
+### Theme & Background IPC Commands
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `update_setting` | `{ Key: "ThemeSkin", Value: string }` | `void` |
+| `update_setting` | `{ Key: "AccentColor", Value: string }` | `void` |
+| `set_custom_background` | `{ FilePath: string }` | `{ SavedPath: string }` |
+| `clear_custom_background` | `void` | `void` |
+
+> **Note:** Theme/skin and accent color use the existing `update_setting` IPC command (see `09-theme-system.md`). Custom background requires dedicated commands because the file must be copied to the app data directory.
+
 ### Wake-Up Streak Tracker (P2)
 
 - Count consecutive days waking on time (dismissed without excessive snoozing)
@@ -62,6 +73,13 @@ Visual customization, motivational features, and engagement tools. All preferenc
 - Calendar view with streak visualization
 - Streak resets if snooze limit exceeded
 - Gamification: badges for milestones (7 days, 30 days, 100 days)
+
+### Streak IPC Commands
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `get_streak_data` | `void` | `{ CurrentStreak: number, LongestStreak: number, CalendarDays: string[] }` |
+| `get_streak_calendar` | `{ Month: number, Year: number }` | `{ Days: { Date: string, IsOnTime: boolean }[] }` |
 
 ### Music Service Integration (P3)
 
