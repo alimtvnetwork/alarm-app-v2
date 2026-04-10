@@ -268,6 +268,7 @@ use objc2::runtime::*;
 use objc2_foundation::*;
 use objc2_app_kit::NSWorkspace;
 
+/// Internal platform struct — not serialized to frontend (no serde needed).
 pub struct MacOsWakeListener;
 
 impl MacOsWakeListener {
@@ -319,6 +320,7 @@ fn register_sleep_observer(center: &NSNotificationCenter) {
 use windows::Win32::System::Power::*;
 use windows::Win32::UI::WindowsAndMessaging::*;
 
+/// Internal platform struct — not serialized to frontend (no serde needed).
 pub struct WindowsWakeListener {
     hwnd: Option<HWND>,
 }
