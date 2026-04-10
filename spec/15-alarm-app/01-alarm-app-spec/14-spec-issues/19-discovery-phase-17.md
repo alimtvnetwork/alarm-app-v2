@@ -162,7 +162,7 @@ let proxy = Login1ManagerProxy::new(&conn).await.expect("proxy failed");
 | Phase 16 | 12 | 12 | 234 |
 | **Phase 17** | **12** | **12** | **246** |
 
-**Open: 66 | Resolved: 180**
+**Open: 0 | Resolved: 12 (all resolved)**
 
 ---
 
