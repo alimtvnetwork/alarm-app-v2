@@ -109,7 +109,7 @@ interface ImportResult {
 |-------|------|
 | File format | Valid JSON / CSV / iCal syntax |
 | Required fields | Alarms have all required fields from data model |
-| Group references | `groupId` values reference valid groups in the file |
+| Group references | `GroupId` values reference valid groups in the file |
 | Time format | Valid `HH:MM` format |
 | Repeat pattern | Valid `RepeatPattern` type and fields |
 

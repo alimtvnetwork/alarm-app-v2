@@ -26,7 +26,7 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 |--------|---------------|----------------|
 | Bedtime notification | Browser Notification API | `tauri-plugin-notification` (OS-native) |
 | Ambient audio | Web Audio API | Rust `rodio` crate (native playback) |
-| Sleep data storage | localStorage | SQLite `settings` + `alarm_events` tables |
+| Sleep data storage | localStorage | SQLite `Settings` + `AlarmEvents` tables |
 | Accelerometer (sleep tracking) | `DeviceMotionEvent` | CoreMotion (iOS) / SensorManager (Android) |
 | Auto-stop timer | `setTimeout` (throttled in background) | Rust `tokio::time` (reliable background timer) |
 
@@ -36,7 +36,7 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 
 ### Bedtime Reminder (P2)
 
-- User sets target bedtime (e.g., 11:00 PM) — stored in SQLite `settings` table
+- User sets target bedtime (e.g., 11:00 PM) — stored in SQLite `Settings` table
 - OS-native notification 15–30 minutes before (configurable)
 - Optional: play ambient sounds automatically at bedtime
 - Rust background thread monitors bedtime schedule (not affected by WebView throttling)
@@ -55,7 +55,7 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
   - Quality: 1–5 stars
   - Mood: 😴 😐 😊 😁
   - Optional notes (free text)
-- Data stored in SQLite `alarm_events` table for analytics
+- Data stored in SQLite `AlarmEvents` table for analytics
 - IPC: `log_sleep_quality { alarmId, quality, mood, notes }`
 
 ### Ambient / White Noise Sleep Sounds (P2)
