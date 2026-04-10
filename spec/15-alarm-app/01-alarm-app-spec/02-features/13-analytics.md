@@ -1,6 +1,6 @@
 # Analytics & Alarm History
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -38,7 +38,7 @@ Persistent log of every alarm event (fired, snoozed, dismissed, missed) with fil
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `get_alarm_history` | `{ Filter: HistoryFilter }` | `AlarmEvent[]` |
+| `list_alarm_events` | `{ Filter: HistoryFilter }` | `AlarmEvent[]` |
 | `export_history_csv` | `{ Filter: HistoryFilter }` | `string` (file path) |
 | `clear_history` | `{ Before?: string }` | `{ Deleted: number }` |
 

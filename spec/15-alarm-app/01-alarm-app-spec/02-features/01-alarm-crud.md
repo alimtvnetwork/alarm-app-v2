@@ -1,6 +1,6 @@
 # Alarm CRUD
 
-**Version:** 1.8.0  
+**Version:** 1.9.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -214,11 +214,13 @@ User deletes alarm A, then alarm B within 5 seconds. Undoing alarm A while B's t
 ### Solution: Undo Stack (Max 5)
 
 ```typescript
+const UNDO_TIMEOUT_MS = 5000;
+
 interface UndoEntry {
   Token: string;         // UUID — matches backend undo_token
   AlarmId: string;
   Label: string;         // For toast display
-  ExpiresAt: number;     // Date.now() + 5000
+  ExpiresAt: number;     // Date.now() + UNDO_TIMEOUT_MS
   TimerId: ReturnType<typeof setTimeout>;
 }
 
@@ -226,6 +228,7 @@ interface UndoEntry {
 const undoStack: UndoEntry[] = [];  // Max 5 entries
 const MAX_UNDO_STACK = 5;
 
+// TS function params are camelCase per language convention; serialized keys are PascalCase
 function onDeleteAlarm(alarmId: string, undoToken: string, label: string) {
   // If stack is full, oldest entry expires immediately
   if (undoStack.length >= MAX_UNDO_STACK) {
@@ -235,13 +238,13 @@ function onDeleteAlarm(alarmId: string, undoToken: string, label: string) {
   }
 
   const timerId = setTimeout(() => {
-    // Remove from stack after 5s (backend has already hard-deleted)
+    // Remove from stack after timeout (backend has already hard-deleted)
     const idx = undoStack.findIndex(e => e.Token === undoToken);
     if (idx !== -1) undoStack.splice(idx, 1);
     // Remove toast for this entry
-  }, 5000);
+  }, UNDO_TIMEOUT_MS);
 
-  undoStack.push({ Token: undoToken, AlarmId: alarmId, Label: label, ExpiresAt: Date.now() + 5000, TimerId: timerId });
+  undoStack.push({ Token: undoToken, AlarmId: alarmId, Label: label, ExpiresAt: Date.now() + UNDO_TIMEOUT_MS, TimerId: timerId });
 
   // Show toast: "Deleted {label} — Undo"
 }

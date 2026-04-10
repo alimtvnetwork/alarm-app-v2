@@ -158,7 +158,7 @@ Checked against: PascalCase key naming, boolean principles, no magic strings, se
 **P20-001 to P20-005** (update 256→290 across overview, readiness report, consistency report)  
 Files: `00-overview.md`, `10-ai-handoff-readiness-report.md`, `99-consistency-report.md`
 
-### Fix Phase P — IPC Naming + Magic String + Magic Number (4 issues)
+### Fix Phase P — IPC Naming + Magic String + Magic Number (4 issues) ✅ RESOLVED
 **P20-006, P20-007, P20-016, P20-017** (collection commands → `list_`, constant for 5000, enum for 'missed')  
 Files: `02-design-system.md`, `13-analytics.md`, `01-alarm-crud.md`, `07-startup-sequence.md`
 
