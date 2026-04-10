@@ -1,6 +1,6 @@
 # File Structure
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -27,10 +27,15 @@ src/                          — Frontend (React + TypeScript)
   types/
     alarm.ts                  — Alarm, AlarmGroup, AlarmSound interfaces
 
+  stores/                     — Zustand global state stores (Resolves UX-STATE-001)
+    useAlarmStore.ts          — Alarm CRUD + groups + loading/error state
+    useOverlayStore.ts        — Active alarm, queue mirror, overlay visibility
+    useSettingsStore.ts       — Theme, timeFormat, language, snoozeDuration
+
   hooks/
-    useAlarms.ts              — CRUD, toggle, group toggle, SQLite sync via Tauri IPC
+    useAlarms.ts              — Thin wrapper over useAlarmStore for component convenience
     useTheme.ts               — Theme state + settings table + class toggle
-    useAlarmFiring.ts         — Listen for Rust alarm-fired events, trigger overlay
+    useAlarmFiring.ts         — Listen for Rust alarm-fired events, sync to useOverlayStore
     useClock.ts               — Current time state, updated every second
 
   components/
@@ -39,13 +44,15 @@ src/                          — Frontend (React + TypeScript)
     AlarmList.tsx             — Grouped alarm list with toggles
     AlarmForm.tsx             — Create/edit alarm dialog
     AlarmGroupForm.tsx        — Group create/rename dialog
-    AlarmOverlay.tsx          — Full-screen firing overlay (dismiss/snooze)
+    AlarmOverlay.tsx          — Full-screen firing overlay (dismiss/snooze) — rendered in overlay window
     ThemeToggle.tsx           — Sun/moon icon button
     ExportImport.tsx          — Export button + import via native file dialog
     AlarmCountdown.tsx        — "Alarm in X hours Y minutes" display
+    Toast.tsx                 — Toast notification component (success/error/info)
 
   pages/
     Index.tsx                 — Main layout combining all components
+    Settings.tsx              — Settings page (theme, timeFormat, snoozeDuration, language)
 
   lib/
     tauri-commands.ts         — Typed wrappers for Tauri invoke() calls
