@@ -123,7 +123,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 19** | **Post-completion regression audit** | **✅ Done (+34 = 290)** |
 | **Discovery Phase 20** | **Fresh audit: IPC, magic strings, Scoring, serde, seedable config** | **✅ Done (+21 = 311)** |
 | **Fix Phase T** | **Stale "290" metrics → "311", version alignment (4 issues)** | **✅ Done (4 resolved)** |
-| **Discovery Phase 21** | **Post-Phase-20 regression scan** | **✅ Done (+4 = 315 found, 315 resolved)** |
+| **Discovery Phase 21** | **Post-Phase-20 regression scan** | **✅ Done (+4 = 315, all resolved)** |
 
 ---
 
