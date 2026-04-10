@@ -34,7 +34,7 @@ The home screen features a live analog clock (SVG) with smooth-animated hands an
 
 - `HH:MM:SS` format using Outfit font at 4rem
 - Current date and day of week below in Figtree
-- 12/24-hour format toggle (persisted to `settings` SQLite table)
+- 12/24-hour format toggle (persisted to `Settings` SQLite table)
 
 ---
 

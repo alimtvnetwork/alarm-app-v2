@@ -64,25 +64,25 @@
 **File:** `02-features/03-alarm-firing.md` line 450  
 **Problem:** Fixed `autoDismissMin` → `AutoDismissMin`. Also fixed `nextFireTime` → `NextFireTime` on lines 440, 541, 548, 554.
 
-### D7-NEW-005: `08-clock-display.md` uses `settings` table (lowercase)
+### D7-NEW-005: ~~`08-clock-display.md` uses `settings` table (lowercase)~~ ✅ Resolved (Fix 25)
 **Severity:** 🟡 Medium  
 **File:** `02-features/08-clock-display.md` line 37  
-**Problem:** "persisted to `settings` SQLite table" — should be `Settings`.
+**Problem:** Fixed `settings` → `Settings`.
 
-### D7-NEW-006: `13-analytics.md` uses `alarm_events` table (lowercase)
+### D7-NEW-006: ~~`13-analytics.md` uses `alarm_events` table (lowercase)~~ ✅ Resolved (Fix 25)
 **Severity:** 🟡 Medium  
-**File:** `02-features/13-analytics.md` line 26  
-**Problem:** "stored in `alarm_events` SQLite table" — should be `AlarmEvents`.
+**File:** `02-features/13-analytics.md` line 27  
+**Problem:** Fixed `alarm_events` → `AlarmEvents`.
 
-### D7-NEW-007: `13-analytics.md` column name `EventType` doesn't exist
+### D7-NEW-007: ~~`13-analytics.md` column name `EventType` doesn't exist~~ ✅ Resolved (Fix 25)
 **Severity:** 🟡 Medium  
 **File:** `02-features/13-analytics.md` line 93  
-**Problem:** Key columns list includes `EventType` but the actual schema column is `Type`. AI will query a nonexistent column.
+**Problem:** Fixed `EventType` → `Type` to match canonical schema.
 
-### D7-NEW-008: `10-export-import.md` settings key uses snake_case
+### D7-NEW-008: ~~`10-export-import.md` settings key uses snake_case~~ ✅ Resolved (Fix 25)
 **Severity:** 🟡 Medium  
 **File:** `02-features/10-export-import.md` line 131  
-**Problem:** Settings key `export_warning_dismissed` should be PascalCase `ExportWarningDismissed` per the naming convention.
+**Problem:** Fixed `settings` → `Settings` and `export_warning_dismissed` → `ExportWarningDismissed`.
 
 ### D7-NEW-009: `05-sound-and-vibration.md` error variant `FileTooLarge` doesn't match enum
 **Severity:** 🟡 Medium  
@@ -116,8 +116,8 @@
 | Status | Previous | New | Total |
 |--------|:--------:|:---:|:-----:|
 | Total issues | 77 | 18 | **95** |
-| Open | 0 | 7 | **7** |
-| Resolved | 77 | 11 | **88** |
+| Open | 0 | 3 | **3** |
+| Resolved | 77 | 15 | **92** |
 
 ---
 
