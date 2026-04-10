@@ -128,9 +128,9 @@ Violations of the project's own coding guidelines found in spec code samples. Th
 **Severity:** 🔴 Critical  
 **Location:** `02-features/13-analytics.md` (lines 91–103)  
 **Cross-ref:** IC-005  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — duplicate schema removed, replaced with cross-reference to canonical `01-data-model.md`
 
-**Problem:** The `CREATE TABLE alarm_events` block in the analytics spec was never updated during Fix Phase 3. All column names remain snake_case (`alarm_id`, `event_type`, `fired_at`, etc.) while the canonical schema in `01-data-model.md` uses PascalCase (`AlarmId`, `EventType`, `FiredAt`). AI reading `13-analytics.md` will get the wrong schema.
+**Resolution:** Removed the full `CREATE TABLE alarm_events` SQL block from `13-analytics.md`. Replaced with a reference to the canonical schema in `01-data-model.md` and a summary of key column names. Also resolves IC-005 (duplicate schema definition).
 
 ---
 
@@ -138,9 +138,7 @@ Violations of the project's own coding guidelines found in spec code samples. Th
 
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/13-ai-cheat-sheet.md` (lines 89–91)  
-**Status:** 🔴 Open
-
-**Problem:** Rust code samples use `row.get("enabled")`, `row.get("repeat_days_of_week")` — still snake_case column references. Fix Phase 4 updated `01-data-model.md` but didn't touch the cheat sheet. AI will copy these as-is.
+**Status:** ✅ Resolved — `row.get("enabled")` → `row.get("IsEnabled")`, `row.get("repeat_days_of_week")` → `row.get("RepeatDaysOfWeek")`
 
 ---
 
@@ -167,4 +165,4 @@ Violations of the project's own coding guidelines found in spec code samples. Th
 ---
 
 ## Issues Found So Far: 12
-## Open: 7 | Resolved: 5
+## Open: 5 | Resolved: 7
