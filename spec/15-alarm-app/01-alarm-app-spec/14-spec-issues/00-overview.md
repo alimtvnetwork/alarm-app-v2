@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.31.0  
+**Version:** 1.32.0  
 **Updated:** 2026-04-10
 
 ---
@@ -52,6 +52,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 36 | `36-discovery-phase-24.md` | Discovery Phase 24 — IPC Command Coverage, File Structure Gaps & Interface Consistency | 13 | 13 | 0 |
 | 37 | `37-discovery-phase-25.md` | Discovery Phase 25 — Cross-Spec Deep Consistency & AI Handoff Audit | 15 | 15 | 0 |
 | 38 | `38-discovery-phase-26.md` | Discovery Phase 26 — Architecture, IPC Registry & Stale Metrics Audit | 12 | 12 | 0 |
+| 39 | `39-discovery-phase-27.md` | Discovery Phase 27 — Post-Fix Regression Scan | 12 | 12 | 0 |
 
 ---
 
@@ -59,11 +60,11 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 88 |
-| 🟡 Medium | 234 |
-| 🟢 Low | 62 |
-| **Grand Total** | **384** |
-| **Open** | **69** |
+| 🔴 Critical | 90 |
+| 🟡 Medium | 241 |
+| 🟢 Low | 65 |
+| **Grand Total** | **396** |
+| **Open** | **81** |
 | **Resolved** | **315** |
 
 ---
@@ -134,6 +135,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 24** | **IPC command coverage, file structure gaps, interface consistency** | **✅ Done (+13 = 357, 42 open)** |
 | **Discovery Phase 25** | **Cross-spec deep consistency & AI handoff audit** | **✅ Done (+15 = 372, 57 open)** |
 | **Discovery Phase 26** | **Architecture, IPC registry & stale metrics audit** | **✅ Done (+12 = 384, 69 open)** |
+| **Discovery Phase 27** | **Post-fix regression scan — stale metrics, unfixed Phase 22–26 issues** | **✅ Done (+12 = 396, 81 open)** |
 
 ---
 
