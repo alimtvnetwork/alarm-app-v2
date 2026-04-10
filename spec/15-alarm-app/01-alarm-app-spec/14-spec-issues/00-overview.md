@@ -63,7 +63,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 12** | **Settings keys → PascalCase** | **✅ Done (1 resolved)** |
 | **Fix Phase 13** | **AlarmChallenge schema gaps** | **✅ Done (3 resolved: CG-007, CG-012, LC-001)** |
 | **Fix Phase 14** | **All remaining prose snake_case** | **✅ Done (CG-006 resolved)** |
-| Fix Phase 15 | Function length decomposition | 🔴 Pending |
+| **Fix Phase 15** | **Function length decomposition** | **✅ Done (GC-001 resolved)** |
 
 ---
 
