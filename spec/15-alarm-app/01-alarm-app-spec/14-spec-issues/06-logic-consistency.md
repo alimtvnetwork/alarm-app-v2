@@ -110,18 +110,11 @@ Cross-file logic inconsistencies found during Discovery Phase 3 and Phase 6. The
 
 **Severity:** 🔴 Critical  
 **Location:** `02-features/03-alarm-firing.md` (line 192)  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — query updated to PascalCase columns, removed invalid `'acknowledged'` event type
 
-**Problem:** Missed alarm detection query:
-```
-next_fire_time < now AND enabled = 1 AND deleted_at IS NULL AND type != 'acknowledged'
-```
-
-Two issues:
-1. All column references use snake_case — should be `NextFireTime`, `IsEnabled`, `DeletedAt`
-2. `'acknowledged'` is not a valid `AlarmEventType` enum value. Valid values per data model: `Fired`, `Snoozed`, `Dismissed`, `Missed`. AI will implement a filter for a non-existent event type.
+**Resolution:** Line 191 rewritten to: `NextFireTime < now AND IsEnabled = 1 AND DeletedAt IS NULL`. Removed `AND type != 'acknowledged'` — not a valid `AlarmEventType` value. Queue rules (lines 485–487) also updated to PascalCase.
 
 ---
 
 ## Issues Found: 11
-## Open: 6 | Resolved: 5
+## Open: 5 | Resolved: 6

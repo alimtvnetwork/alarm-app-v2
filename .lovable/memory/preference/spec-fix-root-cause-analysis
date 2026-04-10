@@ -1,0 +1,36 @@
+---
+name: Spec Fix Root Cause Analysis
+description: Root cause analysis of recurring snake_case and regression issues during spec fixes, with prevention rules
+type: preference
+---
+
+## Root Cause Analysis — Why Snake_case Issues Keep Recurring
+
+### Problem Pattern
+
+During Fix Phases 2–8, every phase that fixed naming violations in one file left identical violations in other files. This caused regressions — the "fixed" spec became internally inconsistent because only the canonical file was updated.
+
+### Root Causes
+
+**RC-1: Scattered Duplication**
+The same data (schema, column names, field names) is duplicated across 10+ files. When the canonical source (`01-data-model.md`) was updated, duplicates in feature specs, cheat sheets, concurrency guides, and test strategies were missed.
+
+**RC-2: Prose References Treated Differently Than Code**
+Fix phases focused on code blocks (SQL, Rust, TypeScript) but ignored prose text that references the same identifiers. Example: "Sort by `next_fire_time ASC`" in prose was skipped even though the SQL column was renamed to `NextFireTime`.
+
+**RC-3: No Cross-File Impact Check**
+Each fix phase targeted specific files without first searching for ALL occurrences of the affected identifier across the entire spec tree. A simple `grep` before each fix would have caught every instance.
+
+**RC-4: Single-Word Table Names Assumed Exempt**
+`alarms` and `settings` were incorrectly assumed to not need PascalCase because they were single-word. The PascalCase rule applies to ALL table names regardless of word count.
+
+**RC-5: Inconsistent Event Type Values**
+Code used lowercase event types (`'fired'`, `'snoozed'`) while the PascalCase mandate should apply to enum string values stored in DB columns. Also, `'acknowledged'` was referenced but doesn't exist in the `AlarmEventType` enum.
+
+### Prevention Rules (Apply to ALL Future Fix Phases)
+
+1. **Before fixing any identifier:** Run `grep -r "old_name"` across the entire `spec/15-alarm-app/` tree. Fix ALL occurrences, not just the file you're focused on.
+2. **Prose counts as code:** Any backtick-quoted identifier in prose (`like this`) must follow the same naming rules as the identifier it references.
+3. **After each fix phase:** Run a verification search to confirm zero remaining instances of the old identifier.
+4. **No "single-word exempt" assumptions:** PascalCase applies to ALL serialized keys, table names, column names, and enum values regardless of word count.
+5. **Duplicate schemas are bugs:** If the same schema appears in two files, remove one and cross-reference. Never maintain two copies.
