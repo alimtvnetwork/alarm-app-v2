@@ -220,7 +220,7 @@
 
 ## Spec Improvements Needed
 
-> ✅ **ALL RESOLVED:** Every gap listed below has been addressed in subsequent spec updates. The capabilities manifest, Cargo.toml deps, DST code, wake listener code, alarm queue, undo flow, error handling, startup sequence, volume algorithm, sound validation, test strategy, and logging strategy are now fully specified. See `11-atomic-task-breakdown.md` and individual feature specs for the current state.
+> ✅ **ALL RESOLVED:** Every gap listed below has been addressed in subsequent spec updates. Additionally, fix phases A–G resolved 37 issues including domain enums (13 TS + 13 Rust), WebhookError definition, IPC error format, test fixtures, and code anti-patterns. See `14-spec-issues/00-overview.md` for details. 39 low/medium issues remain.
 
 ### 🔴 Critical Gaps (will cause failure) — ✅ ALL RESOLVED
 

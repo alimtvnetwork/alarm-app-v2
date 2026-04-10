@@ -1,8 +1,8 @@
 # Consistency Report: Alarm App
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Generated:** 2026-04-10  
-**Health Score:** 100/100 (A+)
+**Health Score:** 85/100 (B+)
 
 ---
 
@@ -16,11 +16,11 @@
 
 | # | Folder | `00-overview.md` | `99-consistency-report.md` | Status |
 |---|--------|-------------------|----------------------------|--------|
-| 1 | `01-alarm-app-spec/` | ✅ (v2.0.0) | ✅ (v1.7.0) | ✅ Compliant (100/100 readiness, 180/180 + 43/43 issues resolved) |
+| 1 | `01-alarm-app-spec/` | ✅ (v2.2.0) | ✅ (v2.1.0) | ⚠️ Conditionally Ready (~85/100 readiness, 256 total / 217 resolved / 39 open) |
 
 ---
 
 ## Summary
 
-- **Errors:** 0
-- **Health Score:** 100/100 (A+)
+- **Errors:** 39 open spec quality issues (0 critical)
+- **Health Score:** 85/100 (B+)

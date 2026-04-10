@@ -27,6 +27,47 @@
 
 ## Version History
 
+### v2.2.0 — 2026-04-10
+
+**Theme:** Fix phases A–G — 37 issues resolved, readiness score upgraded to ~85/100
+
+#### Fix Phases
+
+| Phase | Issues | Focus |
+|-------|:------:|-------|
+| A | 11 | Domain enums: 13 TS + 13 Rust enums replacing all magic string union types |
+| B | 2 | Error enums: WebhookError definition (7 variants), IPC error response format |
+| C | 6 | Acceptance criteria added to 4 feature files, camelCase IPC keys fixed |
+| D | 6 | Test fixtures PascalCase, cheat sheet thiserror 2.x, enum guidance |
+| G | 12 | Code patterns: expect()→match, raw !→named booleans, exemptions documented |
+
+#### Changed
+- `01-data-model.md` → v1.8.0: Domain Enums section, interfaces use enum types, Rust struct uses enum types
+- `04-platform-constraints.md` → v1.4.0: IPC error response format, code pattern exemptions section
+- `07-startup-sequence.md` → v1.2.0: FATAL markers on intentional panics
+- `09-test-strategy.md`: Test fixtures PascalCase with enum imports
+- `13-ai-cheat-sheet.md` → v1.1.0: Domain enums table, error enums, thiserror 2.x, PascalCase safeInvoke
+- `01-alarm-crud.md` → v1.7.0: PascalCase ARIA attrs
+- `03-alarm-firing.md` → v1.8.0: D-Bus graceful degradation, named booleans
+- `05-sound-and-vibration.md` → v1.5.0: Named booleans for path checks
+- `06-dismissal-challenges.md` → v1.4.0: Enum types, acceptance criteria
+- `09-theme-system.md`: ThemeMode enum
+- `10-export-import.md`: PascalCase keys + enum types
+- `11-sleep-wellness.md` → v1.2.0: PascalCase IPC keys, acceptance criteria
+- `12-smart-features.md` → v1.3.0: WebhookError enum, acceptance criteria
+- `13-analytics.md`: HistoryFilter with enum types
+- `14-personalization.md` → v1.3.0: Acceptance criteria
+- `10-ai-handoff-readiness-report.md` → v2.1.0: ~85/100, 39 open, 0 critical
+- `99-consistency-report.md` → v2.1.0: Health 85/100
+- `00-overview.md` → v2.2.0: Status ~85/100, enum references in data model
+
+#### Status
+- **Total issues:** 256 (217 resolved + 39 open)
+- **Open severity:** 0 critical, 22 medium, 17 low
+- **All blocking issues resolved** — spec is ready for AI handoff with minor caveats
+
+---
+
 ### v2.1.0 — 2026-04-10
 
 **Theme:** Deep quality audit — 76 new issues found across 5 discovery phases, readiness score downgraded to ~70/100
