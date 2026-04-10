@@ -1,6 +1,6 @@
 # Alarm Scheduling
 
-**Version:** 2.0.0  
+**Version:** 2.1.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -21,17 +21,17 @@ Alarms use a `RepeatPattern` object (defined in `01-data-model.md`) to control s
 
 | Type | Behavior | `RepeatPattern` Fields Used |
 |------|----------|---------------------------|
-| `once` | Fires once at `Date` + `Time`, then auto-disables (`IsEnabled = 0`) | `Type = "once"` |
-| `daily` | Fires every day at `Time` | `Type = "daily"` |
-| `weekly` | Fires on selected days of week at `Time` | `Type = "weekly"`, `DaysOfWeek = [0,1,5]` (0=Sun) |
-| `interval` | Fires every N minutes from creation time | `Type = "interval"`, `IntervalMinutes = 90` |
-| `cron` | Fires on cron schedule (advanced) | `Type = "cron"`, `CronExpression = "0 30 7 * * 1-5"` |
+| `Once` | Fires once at `Date` + `Time`, then auto-disables (`IsEnabled = 0`) | `Type = RepeatType::Once` |
+| `Daily` | Fires every day at `Time` | `Type = RepeatType::Daily` |
+| `Weekly` | Fires on selected days of week at `Time` | `Type = RepeatType::Weekly`, `DaysOfWeek = [0,1,5]` (0=Sun) |
+| `Interval` | Fires every N minutes from creation time | `Type = RepeatType::Interval`, `IntervalMinutes = 90` |
+| `Cron` | Fires on cron schedule (advanced) | `Type = RepeatType::Cron`, `CronExpression = "0 30 7 * * 1-5"` |
 
 ### RepeatPattern Interface
 
 ```typescript
 interface RepeatPattern {
-  Type: 'once' | 'daily' | 'weekly' | 'interval' | 'cron';
+  Type: RepeatType;            // RepeatType enum: Once | Daily | Weekly | Interval | Cron
   DaysOfWeek: number[];       // 0=Sun, 1=Mon, ..., 6=Sat (weekly only)
   IntervalMinutes: number;    // interval only
   CronExpression: string;     // cron only (parsed by `croner` crate v2.0)
@@ -86,11 +86,11 @@ All scheduling logic is in `03-alarm-firing.md` → `compute_next_fire_time()`. 
 
 | Type | After Firing |
 |------|-------------|
-| `once` | Set `IsEnabled = 0`. `NextFireTime = null` |
-| `daily` | Recompute `NextFireTime` to next day same time (DST-aware) |
-| `weekly` | Recompute `NextFireTime` to next matching day (DST-aware) |
-| `interval` | Recompute `NextFireTime` = `now + IntervalMinutes` |
-| `cron` | Recompute `NextFireTime` from cron expression |
+| `RepeatType::Once` | Set `IsEnabled = 0`. `NextFireTime = null` |
+| `RepeatType::Daily` | Recompute `NextFireTime` to next day same time (DST-aware) |
+| `RepeatType::Weekly` | Recompute `NextFireTime` to next matching day (DST-aware) |
+| `RepeatType::Interval` | Recompute `NextFireTime` = `now + IntervalMinutes` |
+| `RepeatType::Cron` | Recompute `NextFireTime` from cron expression |
 
 ---
 
@@ -98,7 +98,7 @@ All scheduling logic is in `03-alarm-firing.md` → `compute_next_fire_time()`. 
 
 One-tap buttons for common quick alarms: "10 min", "30 min", "1 hour", "2 hours".
 
-- Creates a one-time alarm with `Type = "once"` and `Date` = today
+- Creates a one-time alarm with `Type = RepeatType::Once` and `Date` = today
 - `Time` = current time + selected duration
 - Label auto-generated: "Quick Alarm (30 min)"
 - IPC: `create_alarm` with pre-filled payload
