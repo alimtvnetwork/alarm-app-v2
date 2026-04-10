@@ -56,13 +56,13 @@ Issues with frontend state management patterns, component lifecycle, cross-compo
 ## UX-004: IPC Event Names Use kebab-case
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — **Exempt** (external convention)
 
 **Problem:** Tauri event names use kebab-case (`alarm-fired`) while IPC commands use snake_case (`create_alarm`, `toggle_alarm`). Neither follows PascalCase mandate.
 
-**Decision needed:** Are Tauri events and commands exempt from PascalCase as external convention (like WordPress hooks)?
+**Resolution:** Both Tauri IPC commands (snake_case) and events (kebab-case) are external framework conventions. Declared exempt alongside NV-009. Added to exemptions table (CG-005).
 
 ---
 
 ## Issues Found So Far: 4
-## Open: 4 | Resolved: 0
+## Open: 2 | Resolved: 2
