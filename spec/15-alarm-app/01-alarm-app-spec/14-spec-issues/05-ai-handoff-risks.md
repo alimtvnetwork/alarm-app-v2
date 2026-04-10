@@ -37,7 +37,7 @@ Issues specifically rated by their likelihood to cause AI execution failure duri
 
 **Severity:** 🟡 Medium — AI may follow wrong task order  
 **Root cause:** IC-002  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — root cause IC-002 resolved in Fix Phase 17 (94-task list marked superseded, 62-task authoritative)
 
 ---
 
@@ -52,7 +52,7 @@ Issues specifically rated by their likelihood to cause AI execution failure duri
 ---
 
 ## Issues Found So Far: 4
-## Open: 1 | Resolved: 3
+## Open: 0 | Resolved: 4
 
 ---
 

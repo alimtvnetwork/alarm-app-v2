@@ -252,7 +252,9 @@ tokio::spawn(async move {
 
 ---
 
-### Step 8 — Missed Alarm Check
+### Step 8 — Missed Alarm Check + Snooze Recovery (Resolves LC-010)
+
+#### 8a. Missed Alarm Check
 
 ```sql
 SELECT * FROM Alarms
@@ -266,6 +268,17 @@ WHERE NextFireTime < datetime('now')
   2. Add to alarm queue (see `03-alarm-firing.md` → Simultaneous Alarms)
   3. Recompute `NextFireTime` for repeating alarms
   4. Dispatch OS notification: "Missed Alarm: {label} at {originalTime}"
+
+#### 8b. Snooze Crash Recovery
+
+```sql
+SELECT * FROM SnoozeState;
+```
+
+- For each active snooze:
+  - If `SnoozeUntil > now`: spawn `tokio::time::sleep_until(snooze_expiry)` task to resume the snooze timer
+  - If `SnoozeUntil <= now`: snooze expired during downtime — fire immediately as missed alarm (add to queue, log event)
+  - If alarm no longer exists (deleted during downtime): delete orphaned `SnoozeState` row
 
 ---
 

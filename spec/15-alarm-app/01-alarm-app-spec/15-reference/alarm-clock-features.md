@@ -1,5 +1,8 @@
 # Alarm Clock App — Complete Feature Overview
 
+**Version:** 1.0.0  
+**Updated:** 2026-04-10
+
 A comprehensive reference of 75 features across 10 categories for a native cross-platform alarm clock application.
 
 ## 1. Core Features
