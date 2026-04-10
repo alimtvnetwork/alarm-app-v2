@@ -1,7 +1,7 @@
 # Internal Contradictions
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-09
+**Version:** 1.1.0  
+**Updated:** 2026-04-10
 
 ---
 
@@ -62,8 +62,6 @@ Issues where different spec files contradict each other — the most dangerous c
 
 ---
 
----
-
 ## IC-005: Duplicate `alarm_events` Schema Definition
 
 **Severity:** 🟡 Medium  
@@ -100,5 +98,64 @@ Issues where different spec files contradict each other — the most dangerous c
 
 ---
 
-## Issues Found So Far: 7
-## Open: 5 | Resolved: 2
+## IC-008: Alarm Engine Check Interval Contradiction
+
+**Severity:** 🟡 Medium  
+**Status:** 🔴 Open
+
+**The contradiction:**
+
+| File | Stated Interval |
+|------|----------------|
+| `06-tauri-architecture.md` line 56 | 1-second interval timer |
+| `03-alarm-firing.md` | 30-second check interval |
+| `07-startup-sequence.md` | 30-second check interval |
+| `12-platform-and-concurrency-guide.md` | 30-second check interval |
+
+**Impact:** AI will implement either 1s or 30s depending on which file it reads first. 1s vs 30s has significant CPU and battery implications.
+
+---
+
+## IC-009: `tauri-plugin-sql` vs `rusqlite` — Second Driver Conflict
+
+**Severity:** 🔴 Critical  
+**Status:** 🔴 Open
+
+**Location:** `01-fundamentals/06-tauri-architecture-and-framework-comparison.md` (line 59)
+
+**Problem:** Storage module lists `tauri-plugin-sql` (SQLite) as a dependency. The entire project uses `rusqlite` directly (confirmed by IC-001 resolution). AI will install `tauri-plugin-sql` from `Cargo.toml` dependencies and get a completely different API.
+
+**Note:** This is distinct from IC-001 (which was `sqlx` in code samples). IC-009 is about the dependency list in the architecture overview.
+
+---
+
+## IC-010: `delete_alarm` Return Type Contradicts Between Files
+
+**Severity:** 🟡 Medium  
+**Status:** 🔴 Open
+
+| File | Return Type |
+|------|-------------|
+| `06-tauri-architecture.md` line 76 | `void` |
+| `01-alarm-crud.md` line 285 | `{ UndoToken: string }` |
+
+**Impact:** AI will implement one or the other. The CRUD spec is more detailed and authoritative, but the architecture overview is typically read first.
+
+---
+
+## IC-011: `export_data` IPC Payload Contradicts Between Files
+
+**Severity:** 🟡 Medium  
+**Status:** 🔴 Open
+
+| File | Payload |
+|------|---------|
+| `06-tauri-architecture.md` line 105 | `void` (no parameters) |
+| `10-export-import.md` line 46 | `{ Format, Scope, AlarmIds? }` |
+
+**Impact:** AI won't know if `export_data` takes parameters or not. The export spec is more detailed.
+
+---
+
+## Issues Found So Far: 11
+## Open: 9 | Resolved: 2

@@ -1,7 +1,7 @@
 # Content Gaps
 
-**Version:** 1.1.0  
-**Updated:** 2026-04-09
+**Version:** 1.2.0  
+**Updated:** 2026-04-10
 
 ---
 
@@ -85,10 +85,14 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 - `07-alarm-groups.md` line 47: "save `enabled` → `previous_enabled`"
 - `03-alarm-firing.md` line 27: "`next_fire_time <= now`"
 - `03-alarm-firing.md` line 486: "Sort by `next_fire_time ASC`"
+- `04-snooze-system.md` line 47: "`snooze_state` SQLite table" (table renamed to `SnoozeState`)
+- `04-snooze-system.md` lines 30–31: `snoozeDurationMin`, `maxSnoozeCount` (camelCase prose)
+- `03-alarm-firing.md` lines 485–487: `next_fire_time`, `enabled`, `created_at` in queue rules
+- `05-sound-and-vibration.md` lines 146, 236: `gradualVolume`, `vibrationEnabled` (camelCase prose)
 
 These prose references must also be updated when column names change to PascalCase.
 
-**Files affected:** `01-alarm-crud.md`, `03-alarm-firing.md`, `04-snooze-system.md`, `07-alarm-groups.md`, `10-export-import.md`, `13-analytics.md`
+**Files affected:** `01-alarm-crud.md`, `03-alarm-firing.md`, `04-snooze-system.md`, `05-sound-and-vibration.md`, `07-alarm-groups.md`, `10-export-import.md`, `13-analytics.md`
 
 ---
 
@@ -143,5 +147,15 @@ These prose references must also be updated when column names change to PascalCa
 
 ---
 
-## Issues Found So Far: 11
-## Open: 10 | Resolved: 1
+## CG-012: `alarm_events.metadata` JSON Field Referenced But Does Not Exist
+
+**Severity:** 🟡 Medium  
+**Location:** `02-features/06-dismissal-challenges.md` (line 39)  
+**Status:** 🔴 Open
+
+**Problem:** `06-dismissal-challenges.md` references `alarm_events.metadata` JSON containing `{"solve_time_ms": 4500}`. No `Metadata` column exists in the `AlarmEvents` schema. The data model has `ChallengeSolveTimeSec REAL` instead. AI will try to create a non-existent column or use the wrong one.
+
+---
+
+## Issues Found So Far: 12
+## Open: 11 | Resolved: 1

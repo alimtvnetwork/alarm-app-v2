@@ -1,7 +1,7 @@
 # Naming Violations
 
-**Version:** 1.1.0  
-**Updated:** 2026-04-09
+**Version:** 1.2.0  
+**Updated:** 2026-04-10
 
 ---
 
@@ -54,7 +54,7 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 | `alarm_groups` | `AlarmGroups` |
 | `snooze_state` | `SnoozeState` |
 
-**Note:** `alarms` and `settings` are single-word, so no change needed.
+**Note:** `alarms` and `settings` were originally considered single-word (no change needed). See NV-016 and NV-017 for correction.
 
 ---
 
@@ -270,5 +270,50 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 
 ---
 
-## Issues Found So Far: 15
-## Open: 3 | Resolved: 12
+## NV-016: `alarms` Table Name Still Lowercase (Regression)
+
+**Severity:** 🔴 Critical  
+**Location:** `01-fundamentals/01-data-model.md` (line 224)  
+**Rule Violated:** `10-database-conventions/01-naming-conventions.md` — table names must be PascalCase  
+**Status:** 🔴 Open
+
+**Problem:** `CREATE TABLE alarms (` — should be `CREATE TABLE Alarms (`. Fix Phase 3 renamed multi-word tables (`alarm_events` → `AlarmEvents`, etc.) but missed the main `alarms` table, incorrectly assuming single-word names were exempt.
+
+**Correction:** PascalCase mandate applies to ALL table names regardless of word count. `alarms` → `Alarms`.
+
+---
+
+## NV-017: `settings` Table Name Still Lowercase (Regression)
+
+**Severity:** 🟡 Medium  
+**Location:** `01-fundamentals/01-data-model.md` (line 256)  
+**Rule Violated:** `10-database-conventions/01-naming-conventions.md`  
+**Status:** 🔴 Open
+
+**Problem:** `CREATE TABLE settings (` — should be `CREATE TABLE Settings (`. Same regression as NV-016.
+
+---
+
+## NV-018: Settings Keys in Data Model Use snake_case
+
+**Severity:** 🟡 Medium  
+**Location:** `01-fundamentals/01-data-model.md` (lines 327–334)  
+**Rule Violated:** `11-key-naming-pascalcase.md` §1 — serialized key-value pairs must be PascalCase  
+**Status:** 🔴 Open
+
+**Problem:** Settings table stores key-value pairs. Current keys:
+
+| Current (snake_case) | Required (PascalCase) |
+|----------------------|-----------------------|
+| `theme` | `Theme` |
+| `time_format` | `TimeFormat` |
+| `default_snooze_duration` | `DefaultSnoozeDuration` |
+| `auto_launch` | `AutoLaunch` |
+| `minimize_to_tray` | `MinimizeToTray` |
+| `event_retention_days` | `EventRetentionDays` |
+| `system_timezone` | `SystemTimezone` |
+
+---
+
+## Issues Found So Far: 18
+## Open: 6 | Resolved: 12

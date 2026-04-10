@@ -1,7 +1,7 @@
 # AI Handoff Risks
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-09
+**Version:** 1.1.0  
+**Updated:** 2026-04-10
 
 ---
 
@@ -15,7 +15,11 @@ Issues specifically rated by their likelihood to cause AI execution failure duri
 
 **Severity:** 🔴 Critical — Guaranteed compilation failure  
 **Root cause:** IC-001 (sqlx vs rusqlite contradiction)  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all code samples converted to `rusqlite` synchronous API
+
+**Resolution:** See IC-001. All `sqlx` references replaced with `rusqlite` across 5 files.
+
+**Note:** IC-009 (`tauri-plugin-sql` in architecture overview) is a related but separate issue — the dependency list still references the wrong crate.
 
 ---
 
@@ -26,6 +30,8 @@ Issues specifically rated by their likelihood to cause AI execution failure duri
 **Status:** 🔴 Open
 
 **Problem:** Every single code example in the spec uses snake_case for DB columns and camelCase for TS. The coding guidelines say PascalCase. AI will copy examples verbatim → inconsistent with guidelines.
+
+**Note:** Data model (`01-data-model.md`) was fixed in Fix Phases 3–4, but multiple feature files still contain snake_case and camelCase references (see GC-009, GC-010, GC-011, CG-006).
 
 ---
 
@@ -41,12 +47,14 @@ Issues specifically rated by their likelihood to cause AI execution failure duri
 
 **Severity:** 🔴 Critical — Silent data mismatch between Rust ↔ TS  
 **Root cause:** CG-004  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — `#[serde(rename_all = "PascalCase")]` added to Rust structs in data model
+
+**Resolution:** See NV-005. Serde rename attribute now specified on `AlarmRow` struct.
 
 ---
 
 ## Issues Found So Far: 4
-## Open: 4 | Resolved: 0
+## Open: 2 | Resolved: 2
 
 ---
 
@@ -54,11 +62,14 @@ Issues specifically rated by their likelihood to cause AI execution failure duri
 
 | Category | File | Count |
 |----------|------|:-----:|
-| Naming Violations | `01-naming-violations.md` | 6 |
-| Internal Contradictions | `02-internal-contradictions.md` | 4 |
+| Naming Violations | `01-naming-violations.md` | 18 |
+| Internal Contradictions | `02-internal-contradictions.md` | 11 |
 | Structural Issues | `03-structural-issues.md` | 5 |
-| Content Gaps | `04-content-gaps.md` | 4 |
+| Content Gaps | `04-content-gaps.md` | 12 |
 | AI Handoff Risks | `05-ai-handoff-risks.md` | 4 |
-| **Total Found So Far** | | **23** |
+| Logic Consistency | `06-logic-consistency.md` | 11 |
+| UI/UX Consistency | `07-ui-ux-consistency.md` | 4 |
+| Guideline Compliance | `08-guideline-compliance.md` | 12 |
+| **Total Found So Far** | | **77** |
 
-**Discovery status:** Phase 1 complete. Phases 2–4 pending (deep feature scan, cross-file logic, full coding guideline compliance).
+**Discovery status:** Phase 6 complete. Post-fix regression scan and deep compliance scan done.

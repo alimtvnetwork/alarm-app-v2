@@ -1,7 +1,7 @@
 # Coding Guideline Compliance
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-09
+**Version:** 1.1.0  
+**Updated:** 2026-04-10
 
 ---
 
@@ -53,21 +53,6 @@ Violations of the project's own coding guidelines found in spec code samples. Th
 **Rule Violated:** `02-boolean-principles/01-naming-prefixes.md` — "Every boolean MUST start with `is` or `has`"  
 **Status:** ✅ Resolved — all TS boolean fields now use `Is`/`Has` prefix with PascalCase
 
-**Problem:** TS `Alarm` interface in `01-data-model.md` has 3 boolean fields without prefix:
-
-| Current | Required |
-|---------|----------|
-| `enabled: boolean` | `isEnabled: boolean` |
-| `vibrationEnabled: boolean` | `isVibrationEnabled: boolean` |
-| `gradualVolume: boolean` | `isGradualVolume: boolean` |
-
-Also in `AlarmGroup`:
-| Current | Required |
-|---------|----------|
-| `enabled: boolean` | `isEnabled: boolean` |
-
-**Note:** These also need PascalCase (NV-004), so final form: `IsEnabled`, `IsVibrationEnabled`, `IsGradualVolume`.
-
 ---
 
 ## GC-003: Boolean Fields Missing `Is`/`Has` Prefix in Rust Structs
@@ -75,16 +60,6 @@ Also in `AlarmGroup`:
 **Severity:** 🔴 Critical  
 **Rule Violated:** `02-boolean-principles/01-naming-prefixes.md`  
 **Status:** ✅ Resolved — Rust boolean fields renamed with `is_` prefix, serde serializes to `IsEnabled` etc.
-
-**Problem:** Rust `AlarmRow` struct in `01-data-model.md`:
-
-| Current | Required |
-|---------|----------|
-| `pub enabled: bool` | `pub is_enabled: bool` |
-| `pub previous_enabled: Option<bool>` | `pub is_previous_enabled: Option<bool>` |
-| `pub vibration_enabled: bool` | `pub is_vibration_enabled: bool` |
-
-**Note:** Rust struct fields use snake_case by Rust convention, but with serde `rename_all = "PascalCase"` they serialize to `IsEnabled`, `IsPreviousEnabled`, `IsVibrationEnabled`.
 
 ---
 
@@ -128,14 +103,6 @@ Also in `AlarmGroup`:
 **Rule Violated:** `11-key-naming-pascalcase.md` §1 — request keys must be PascalCase  
 **Status:** ✅ Resolved — all IPC payload keys converted to PascalCase
 
-**Problem:** IPC payloads in `06-tauri-architecture-and-framework-comparison.md` and feature files use camelCase:
-
-| Current | Required |
-|---------|----------|
-| `{ id: string, enabled: boolean }` | `{ Id: string, IsEnabled: boolean }` |
-| `{ alarmId, enabled }` | `{ AlarmId, IsEnabled }` |
-| `{ alarmId: string, label: string }` | `{ AlarmId: string, Label: string }` |
-
 ---
 
 ## GC-007: Rust Struct Field `from_row()` Maps to snake_case Column Names
@@ -145,10 +112,6 @@ Also in `AlarmGroup`:
 **Cross-ref:** NV-001, CG-004  
 **Status:** ✅ Resolved — `from_row()` string literals updated to PascalCase column names
 
-**Problem:** `AlarmRow::from_row()` in `01-data-model.md` uses `row.get("snake_case")` — e.g., `row.get("repeat_type")`, `row.get("group_id")`, `row.get("next_fire_time")`. These map to snake_case SQL columns. When columns are renamed to PascalCase, all `from_row()` string literals must also change.
-
-**Lines affected:** 117–140 in `01-data-model.md`
-
 ---
 
 ## GC-008: `safeInvoke` Function Name Uses camelCase
@@ -156,11 +119,52 @@ Also in `AlarmGroup`:
 **Severity:** 🟡 Medium  
 **Status:** ✅ Resolved — **Not a violation**
 
-**Problem:** The TS utility function `safeInvoke` in `04-platform-constraints.md` and `13-ai-cheat-sheet.md`.
-
 **Resolution:** PascalCase mandate applies to **serialized string keys** only (JSON keys, DB columns, config keys, log keys). TypeScript/JavaScript function names follow language convention (camelCase). This is not a violation.
 
 ---
 
-## Issues Found So Far: 8
-## Open: 3 | Resolved: 5
+## GC-009: `13-analytics.md` Duplicate Schema Still Uses snake_case (Regression)
+
+**Severity:** 🔴 Critical  
+**Location:** `02-features/13-analytics.md` (lines 91–103)  
+**Cross-ref:** IC-005  
+**Status:** 🔴 Open
+
+**Problem:** The `CREATE TABLE alarm_events` block in the analytics spec was never updated during Fix Phase 3. All column names remain snake_case (`alarm_id`, `event_type`, `fired_at`, etc.) while the canonical schema in `01-data-model.md` uses PascalCase (`AlarmId`, `EventType`, `FiredAt`). AI reading `13-analytics.md` will get the wrong schema.
+
+---
+
+## GC-010: `13-ai-cheat-sheet.md` Code Samples Use snake_case (Regression)
+
+**Severity:** 🔴 Critical  
+**Location:** `01-fundamentals/13-ai-cheat-sheet.md` (lines 89–91)  
+**Status:** 🔴 Open
+
+**Problem:** Rust code samples use `row.get("enabled")`, `row.get("repeat_days_of_week")` — still snake_case column references. Fix Phase 4 updated `01-data-model.md` but didn't touch the cheat sheet. AI will copy these as-is.
+
+---
+
+## GC-011: Concurrency Guide Race 1 SQL Uses snake_case (Regression)
+
+**Severity:** 🔴 Critical  
+**Location:** `01-fundamentals/12-platform-and-concurrency-guide.md` (lines 166–167)  
+**Status:** 🔴 Open
+
+**Problem:** Race condition resolution SQL: `WHERE id = ? AND deleted_at IS NOT NULL` — should be `WHERE AlarmId = ? AND DeletedAt IS NOT NULL`. Fix Phases 2–4 missed this file's SQL statements.
+
+---
+
+## GC-012: Concurrency Guide Race 4 Uses `alarm.id` and `self.pool` (Regression)
+
+**Severity:** 🟡 Medium  
+**Location:** `01-fundamentals/12-platform-and-concurrency-guide.md` (lines 227–234)  
+**Status:** 🔴 Open
+
+**Problem:** Two issues:
+1. `alarm.id` — should be `alarm.alarm_id` (Rust struct field) for consistency
+2. `self.pool` — references `SqlitePool` pattern from pre-rusqlite refactor. Should be `conn` or `self.conn`
+
+---
+
+## Issues Found So Far: 12
+## Open: 7 | Resolved: 5

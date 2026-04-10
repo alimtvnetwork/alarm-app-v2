@@ -1,7 +1,7 @@
 # Spec Issues — Overview
 
-**Version:** 1.6.0  
-**Updated:** 2026-04-09
+**Version:** 1.7.0  
+**Updated:** 2026-04-10
 
 ---
 
@@ -15,14 +15,14 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | # | File | Category | Issue Count | Open | Resolved |
 |---|------|----------|:-----------:|:----:|:--------:|
-| 1 | `01-naming-violations.md` | Naming & Convention Violations | 15 | 3 | 12 |
-| 2 | `02-internal-contradictions.md` | Contradictions Between Files | 7 | 5 | 2 |
+| 1 | `01-naming-violations.md` | Naming & Convention Violations | 18 | 6 | 12 |
+| 2 | `02-internal-contradictions.md` | Contradictions Between Files | 11 | 9 | 2 |
 | 3 | `03-structural-issues.md` | Folder/File Structure Problems | 5 | 5 | 0 |
-| 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 11 | 10 | 1 |
-| 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 4 | 0 |
-| 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 10 | 5 | 5 |
+| 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 12 | 11 | 1 |
+| 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 2 | 2 |
+| 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 11 | 6 | 5 |
 | 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 2 | 2 |
-| 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 8 | 3 | 5 |
+| 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 7 | 5 |
 
 ---
 
@@ -30,12 +30,12 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 26 |
-| 🟡 Medium | 34 |
-| 🟢 Low | 4 |
-| **Grand Total** | **64** |
-| **Open** | **37** |
-| **Resolved** | **27** |
+| 🔴 Critical | 30 |
+| 🟡 Medium | 40 |
+| 🟢 Low | 7 |
+| **Grand Total** | **77** |
+| **Open** | **48** |
+| **Resolved** | **29** |
 
 ---
 
@@ -48,14 +48,22 @@ This folder tracks all specification quality issues found during the deep audit 
 | Discovery Phase 3 | Cross-file logic consistency | ✅ Done (+12 = 45) |
 | Discovery Phase 4 | UI/UX + frontend state consistency | ✅ Done (+11 = 56) |
 | Discovery Phase 5 | Coding guideline compliance check | ✅ Done (+8 = 64) |
+| Discovery Phase 6 | Post-fix regression + deep compliance scan | ✅ Done (+13 = 77) |
 | **Fix Phase 1** | **Exemptions & decisions** | **✅ Done (4 resolved)** |
 | **Fix Phase 2** | **sqlx → rusqlite** | **✅ Done (7 resolved)** |
 | **Fix Phase 3** | **DB naming PascalCase** | **✅ Done (5 resolved)** |
 | **Fix Phase 4** | **TS/Rust serialization keys PascalCase** | **✅ Done (9 resolved)** |
-| Fix Phase 5 | Feature file naming | 🔴 Pending |
-| Fix Phase 6 | Logic & schema gaps | 🔴 Pending |
-| Fix Phase 7 | UI/UX & content gaps | 🔴 Pending |
-| Fix Phase 8 | Structural & code quality | 🔴 Pending |
+| Fix Phase 5 | `alarms` → `Alarms`, `settings` → `Settings` tables | 🔴 Pending |
+| Fix Phase 6 | Analytics schema + cheat sheet regressions | 🔴 Pending |
+| Fix Phase 7 | Concurrency guide regressions | 🔴 Pending |
+| Fix Phase 8 | Firing + snooze prose snake_case | 🔴 Pending |
+| Fix Phase 9 | Groups + sound prose snake_case | 🔴 Pending |
+| Fix Phase 10 | Architecture contradictions (`tauri-plugin-sql`, intervals, return types) | 🔴 Pending |
+| Fix Phase 11 | `get_alarms` vs `list_alarms` conflict | 🔴 Pending |
+| Fix Phase 12 | Settings keys → PascalCase | 🔴 Pending |
+| Fix Phase 13 | AlarmChallenge schema gaps | 🔴 Pending |
+| Fix Phase 14 | All remaining prose snake_case | 🔴 Pending |
+| Fix Phase 15 | Function length decomposition | 🔴 Pending |
 
 ---
 
@@ -76,8 +84,8 @@ This folder tracks all specification quality issues found during the deep audit 
 1. ~~The `sqlx` vs `rusqlite` contradiction~~ **✅ FIXED**
 2. ~~Database columns/tables/indexes/PKs snake_case~~ **✅ FIXED — all PascalCase with Is/Has booleans**
 3. **22 functions exceed the 15-line limit** — linter will reject on first run.
-4. **Every TS interface uses camelCase** — systemic PascalCase violation (Phase 4 next).
-5. **Boolean fields missing `Is`/`Has` prefix** in TS + Rust (Phase 4 next).
+4. **Feature files still contain snake_case/camelCase** in prose, code samples, and duplicate schemas (GC-009–012, CG-006).
+5. **`06-tauri-architecture.md` has 4 contradictions** — wrong driver, wrong interval, wrong return types (IC-008–011).
 6. **`02-alarm-scheduling.md` severely outdated** (v1.0.0), contradicts data model.
 
 ---
@@ -94,4 +102,4 @@ This folder tracks all specification quality issues found during the deep audit 
 
 ---
 
-*Spec Issues — updated: 2026-04-09*
+*Spec Issues — updated: 2026-04-10*
