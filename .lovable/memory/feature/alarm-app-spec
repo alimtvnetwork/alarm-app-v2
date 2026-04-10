@@ -9,10 +9,10 @@ type: feature
 - **Spec version:** v2.3.0
 - **Readiness score:** 100/100 (A+)
 - **AI success rate:** 99%+
-- **Total spec issues:** 256 found, 256 resolved (18 discovery phases, 29 fix phases)
+- **Total spec issues:** 256 found, 256 resolved (18 discovery phases, 30 fix phases)
 - **Open issues:** 0
 - **App issues:** 43 found, 43 resolved
-- **Spec files:** 60+ (12 fundamentals + 17 features + 29 issue trackers + 3 execution guides + 10 misc)
+- **Spec files:** 60+ (12 fundamentals + 17 features + 30 issue trackers + 3 execution guides + 10 misc)
 
 ## Architecture
 
@@ -32,7 +32,7 @@ type: feature
 - `01-fundamentals/` — 12 docs + `97-acceptance-criteria.md` rollup (64 criteria)
 - `02-features/` — 17 docs + `97-acceptance-criteria.md` rollup (133 criteria)
 - `03-app-issues/` — 43/43 resolved
-- `14-spec-issues/` — 256/256 resolved across 18 discovery phases + 29 fix phases
+- `14-spec-issues/` — 256/256 resolved across 18 discovery phases + 30 fix phases
 
 ## Canonical Location
 

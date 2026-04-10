@@ -468,10 +468,10 @@ src-tauri/src/engine/
 
 ## Auto-Dismiss
 
-- Optional per-alarm setting: `AutoDismissMin` (0 = disabled, 1–60 minutes)
+- Optional per-alarm setting: `AutoDismissMin` (0 = manual dismiss only, 1–60 minutes)
 - If an alarm fires and is not dismissed/snoozed within N minutes, it auto-dismisses
 - Audio stops, overlay closes, event logged as `type = 'dismissed'` with note `auto`
-- Default: 0 (disabled) — user must manually dismiss
+- Default: 0 (manual dismiss only) — user must manually dismiss
 
 ---
 
@@ -615,7 +615,7 @@ struct FiredAlarm {
     sound_id: String,
     fire_time: DateTime<Utc>,     // Original scheduled time
     fired_at: DateTime<Utc>,      // Actual fire time
-    auto_dismiss_min: u32,        // 0 = disabled
+    auto_dismiss_min: u32,        // 0 = manual dismiss only
     is_missed: bool,              // true if fire_time < app_launch_time
 }
 ```

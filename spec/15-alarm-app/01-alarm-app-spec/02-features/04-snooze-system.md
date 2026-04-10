@@ -28,7 +28,7 @@ Per-alarm settings (stored on `Alarm` record):
 | Setting | Field | Default | Range |
 |---------|-------|---------|-------|
 | Snooze duration | `SnoozeDurationMin` | 5 minutes | 1–30 minutes |
-| Max snooze count | `MaxSnoozeCount` | 3 | 0–10 (0 = snooze disabled) |
+| Max snooze count | `MaxSnoozeCount` | 3 | 0–10 (0 = dismiss only, no snooze) |
 
 When `MaxSnoozeCount = 0`, the Snooze button is never shown — the user must dismiss.
 

@@ -429,7 +429,7 @@ impl AlarmRow {
 ```
 
 **Key patterns:**
-- SQLite `INTEGER` booleans → Rust `bool` via `row.get::<_, i32>() != 0`
+- SQLite `INTEGER` booleans → Rust `bool` via `row.get::<_, i32>() != 0` (**exempt** from no-negation rule — see `04-platform-constraints.md` § Code Pattern Exemptions)
 - SQLite `TEXT` enums → Rust enum via `row.get::<_, String>()?.parse()`
 - JSON TEXT columns → `serde_json::from_str()` with `unwrap_or_default()` (never panic)
 - `Option<EnumType>` for nullable enum columns — use `.and_then(|s| s.parse().ok())`

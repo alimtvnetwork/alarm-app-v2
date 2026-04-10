@@ -1,6 +1,6 @@
 ---
 name: Alarm App Spec Issues Audit
-description: All 256 spec quality issues resolved — 18 discovery phases, 29 fix phases, 100/100 readiness, audit complete
+description: All 256 spec quality issues resolved — 18 discovery phases, 30 fix phases, 100/100 readiness, audit complete
 type: feature
 ---
 
@@ -10,7 +10,7 @@ type: feature
 - **Open:** 0
 - **Resolved:** 256
 - **Discovery phases:** 18
-- **Fix phases:** 29 (Phases 1–20, A–I)
+- **Fix phases:** 30 (Phases 1–20, A–J)
 - **Readiness Score:** 100/100 (A+)
 
 ## Fix Phase Summary
@@ -27,6 +27,7 @@ type: feature
 | Phase G — Code sample patterns | 12 |
 | Phase H — Stale metrics | 15 |
 | Phase I — Acceptance criteria rollups | 2 |
+| Phase J — Final 7 (ARIA, 0=disabled, IPC, magic strings, exemption) | 7 |
 
 ## Canonical Location
 

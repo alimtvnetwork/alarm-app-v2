@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.18.0  
+**Version:** 1.19.0  
 **Updated:** 2026-04-10
 
 ---
@@ -43,7 +43,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 26 | `26-fix-phase-h-stale-metrics.md` | Fix Phase H — Stale Metrics Update | 15 resolved | 0 | 15 |
 | 27 | `27-fix-phase-e-settings-ui-states.md` | Fix Phase E — Settings Seeding & UI States | 4 resolved | 0 | 4 |
 | 28 | `28-fix-phase-f-remaining.md` | Fix Phase F — PascalCase, Atomic Tasks, Semantic Inverses & Cross-References | 13 resolved | 0 | 13 |
-| 29 | `29-fix-phase-i-acceptance-rollups.md` | Fix Phase I — Acceptance Criteria Rollups | 2 resolved | 0 | 2 |
+| 30 | `30-fix-phase-j-final-7.md` | Fix Phase J — Final 7 Issues (ARIA, 0=disabled, IPC, magic strings, exemption) | 7 resolved | 0 | 7 |
 
 ---
 
@@ -107,6 +107,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase E** | **Settings seeding strategy + UI states specification** | **✅ Done (4 resolved, 20 open)** |
 | **Fix Phase F** | **PascalCase, atomic tasks, semantic inverses, cross-references** | **✅ Done (13 resolved, 7 open)** |
 | **Fix Phase I** | **Acceptance criteria rollups for features/ and fundamentals/** | **✅ Done (2 resolved, 0 open)** |
+| **Fix Phase J** | **Final 7: ARIA, 0=disabled framing, personalization IPC, magic strings, exemption** | **✅ Done (7 resolved, 0 open)** |
 
 ---
 
