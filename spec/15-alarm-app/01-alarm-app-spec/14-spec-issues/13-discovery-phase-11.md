@@ -18,20 +18,20 @@
 
 ## Category A: Content Gaps / Missing Spec
 
-### D11-001: `16-accessibility-and-nfr.md` line 60 — Memory budget contradicts `04-platform-constraints.md`
+### D11-001: ~~`16-accessibility-and-nfr.md` line 60 — Memory budget contradicts `04-platform-constraints.md`~~ ✅ FIXED (Fix 47)
 **Severity:** 🔴 Critical  
 **Problem:** NFR spec says "Idle memory usage: < 150 MB" (line 60). But `04-platform-constraints.md` defines memory budget as 200 MB. AI will see conflicting targets.  
-**Fix:** Align to 200 MB in NFR spec (the platform-constraints value was the deliberate revision per PERF-MEMORY-001).
+**Fix:** Aligned to < 200 MB in NFR spec (the platform-constraints value was the deliberate revision per PERF-MEMORY-001).
 
-### D11-002: `16-accessibility-and-nfr.md` line 59 — Startup budget contradicts `07-startup-sequence.md`
+### D11-002: ~~`16-accessibility-and-nfr.md` line 59 — Startup budget contradicts `07-startup-sequence.md`~~ ✅ FIXED (Fix 47)
 **Severity:** 🔴 Critical  
 **Problem:** NFR spec says "Startup to window visible: < 2 seconds" (line 59). But `07-startup-sequence.md` defines startup budget as <750ms. AI will target 2s instead of the tighter 750ms goal.  
-**Fix:** Align to <750ms (the startup-sequence value was the deliberate target per PERF-STARTUP-001).
+**Fix:** Aligned to < 750ms (the startup-sequence value was the deliberate target per PERF-STARTUP-001).
 
-### D11-003: `16-accessibility-and-nfr.md` lines 91+97 — i18n locale path contradicts `03-file-structure.md`
+### D11-003: ~~`16-accessibility-and-nfr.md` lines 91+97 — i18n locale path contradicts `03-file-structure.md`~~ ✅ FIXED (Fix 48)
 **Severity:** 🟡 Medium  
 **Problem:** NFR spec line 91 says locale files at `src/locales/{locale}.json` and line 97 shows `src/locales/`. But `03-file-structure.md` defines the path as `src/i18n/locales/`. AI will create files in the wrong directory.  
-**Fix:** Update NFR spec to use `src/i18n/locales/`.
+**Fix:** Updated NFR spec to use `src/i18n/locales/`.
 
 ### D11-004: `06-dismissal-challenges.md` — No IPC command definitions
 **Severity:** 🟡 Medium  
@@ -47,15 +47,15 @@
 
 ## Category B: Cross-File Contradictions
 
-### D11-006: `13-analytics.md` line 93 — AlarmEvents column count says 11, actual schema has 13
+### D11-006: ~~`13-analytics.md` line 93 — AlarmEvents column count says 11, actual schema has 13~~ ✅ FIXED (Fix 49)
 **Severity:** 🔴 Critical  
 **Problem:** Analytics spec says "Key columns: AlarmEventId, AlarmId, Type, FiredAt, DismissedAt, SnoozeCount, ChallengeType, ChallengeSolveTimeSec, SleepQuality, Mood, Timestamp" (11 columns). But `01-data-model.md` AlarmEvents table has 13 columns (adds `AlarmLabelSnapshot` and `AlarmTimeSnapshot` from DB-ORPHAN-001).  
-**Fix:** Update analytics column list to include `AlarmLabelSnapshot` and `AlarmTimeSnapshot`, update count to 13.
+**Fix:** Updated analytics column list to include `AlarmLabelSnapshot` and `AlarmTimeSnapshot`, updated count to 13.
 
-### D11-007: `00-overview.md` (root) line 88 — Data model overview says "Storage: SQLite database" with only 5 tables
+### D11-007: ~~`00-overview.md` (root) line 88 — Data model overview says "Storage: SQLite database" with only 5 tables~~ ✅ FIXED (Fix 49)
 **Severity:** 🟡 Medium  
 **Problem:** The root overview's Data Model section lists tables as: `Alarms`, `AlarmGroups`, `Settings`, `SnoozeState`, `AlarmEvents`. This matches but the Settings description says "Key-value config" — doesn't mention `ValueType` column which was added in Fix 43. Minor but AI reading overview first gets incomplete picture.  
-**Fix:** Add `(with ValueType)` to Settings description in overview.
+**Fix:** Added `with ValueType` to Settings description in overview.
 
 ### D11-008: `02-features/00-overview.md` line 6 — Updated date still says 2026-04-08
 **Severity:** 🟢 Low  
@@ -107,8 +107,8 @@
 | Status | Previous | New | Total |
 |--------|:--------:|:---:|:-----:|
 | Total issues | 154 | 14 | **168** |
-| Open | 0 | 14 | **14** |
-| Resolved | 154 | 0 | **154** |
+| Open | 0 | 9 | **9** |
+| Resolved | 154 | 5 | **159** |
 
 ---
 
@@ -116,9 +116,9 @@
 
 | Phase | Issues | Files | Description |
 |-------|--------|-------|-------------|
-| **Fix 47** | D11-001, D11-002 | `16-accessibility-and-nfr.md` | Align memory and startup budgets to authoritative values |
-| **Fix 48** | D11-003 | `16-accessibility-and-nfr.md` | Fix i18n locale path to match file-structure |
-| **Fix 49** | D11-006, D11-007 | `13-analytics.md`, `00-overview.md` | Fix AlarmEvents column count, Settings description |
+| ~~**Fix 47**~~ | ~~D11-001, D11-002~~ | ~~`16-accessibility-and-nfr.md`~~ | ~~Align memory and startup budgets to authoritative values~~ ✅ |
+| ~~**Fix 48**~~ | ~~D11-003~~ | ~~`16-accessibility-and-nfr.md`~~ | ~~Fix i18n locale path to match file-structure~~ ✅ |
+| ~~**Fix 49**~~ | ~~D11-006, D11-007~~ | ~~`13-analytics.md`, `00-overview.md`~~ | ~~Fix AlarmEvents column count, Settings description~~ ✅ |
 | **Fix 50** | D11-004, D11-005, D11-010 | `06-dismissal-challenges.md`, `08-clock-display.md`, `09-theme-system.md` | Add missing IPC command definitions |
 | **Fix 51** | D11-008, D11-009 | `02-features/00-overview.md`, `01-fundamentals/00-overview.md` | Update stale dates and descriptions |
 | **Fix 52** | D11-012, D11-013, D11-014 | `02-design-system.md`, `06-dismissal-challenges.md`, `02-alarm-scheduling.md` | Dark mode destructive token, challenge interface note, deprecation cleanup |
