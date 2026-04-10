@@ -200,7 +200,7 @@ All fix phases complete. No remaining work items.
 | Spec Overview | `./00-overview.md` |
 | Changelog | `./98-changelog.md` |
 | Issues Overview | `./03-app-issues/00-overview.md` |
-| Spec Issues Audit | `./14-spec-issues/00-overview.md` (256 issues found, 256 resolved across 18 discovery + 29 fix phases) |
+| Spec Issues Audit | `./14-spec-issues/00-overview.md` (256 issues found, 256 resolved across 18 discovery + 30 fix phases) |
 | Atomic Task Breakdown | `./11-atomic-task-breakdown.md` |
 | Platform & Concurrency Guide | `./12-platform-and-concurrency-guide.md` |
 | AI Cheat Sheet | `./13-ai-cheat-sheet.md` |
