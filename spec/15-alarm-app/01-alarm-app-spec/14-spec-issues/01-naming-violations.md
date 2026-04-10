@@ -271,4 +271,4 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 ---
 
 ## Issues Found So Far: 15
-## Open: 15 | Resolved: 0
+## Open: 13 | Resolved: 2

@@ -144,4 +144,4 @@ These prose references must also be updated when column names change to PascalCa
 ---
 
 ## Issues Found So Far: 11
-## Open: 11 | Resolved: 0
+## Open: 10 | Resolved: 1
