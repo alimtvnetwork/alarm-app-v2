@@ -618,6 +618,20 @@ pub fn purge_old_events(conn: &Connection) {
 
 > **Resolves P14-016 (settings seeding) and P14-017 (config version tracking).**
 
+#### Relationship to Seedable Config Architecture
+
+The alarm app uses a **simplified seeding approach** compared to the full [Seedable Config Architecture](../../05-seedable-config-architecture/00-overview.md). The differences and rationale:
+
+| Seedable Config Concept | Alarm App Approach | Rationale |
+|------------------------|-------------------|-----------|
+| `config.seed.json` file | SQL INSERT in V1 migration | Single DB file — no need for separate JSON seed |
+| Version-tracked merge-on-upgrade | New migration per setting (`INSERT OR IGNORE`) | `refinery` already tracks versions; simpler for <20 settings |
+| Category-based organization | Flat key-value table | Alarm app has only 9 settings — categories add overhead |
+| Runtime merge logic | Migration-time seeding | Migrations are atomic and auditable |
+| `config.schema.json` validation | `ValueType` column + Rust enum | Type safety via enum, not JSON schema |
+
+**When to adopt full seedable config:** If settings grow beyond ~30 keys, add categories, or require user-facing settings import/export.
+
 #### Seeding Mechanism
 
 All default settings are seeded via **SQL INSERT statements in the V1 migration** (`V1__initial_schema.sql`). This approach was chosen over runtime Rust seeding because:

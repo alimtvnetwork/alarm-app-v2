@@ -168,6 +168,8 @@ The frontend uses **Zustand** for global state management. Zustand is chosen ove
 
 ```typescript
 // stores/useAlarmStore.ts
+// NOTE: TS function/method params use camelCase per language convention.
+// Serialized object keys (JSON, IPC payloads) use PascalCase per coding guidelines.
 interface AlarmStore {
   alarms: Alarm[];
   groups: AlarmGroup[];
