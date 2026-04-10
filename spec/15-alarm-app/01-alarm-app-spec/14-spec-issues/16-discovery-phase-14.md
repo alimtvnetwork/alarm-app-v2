@@ -143,20 +143,18 @@
 ### P14-016: Settings Table Has No Seed/Default Value Specification
 
 **Severity:** 🟡 Medium  
+**Status:** ✅ Resolved — Fix Phase E  
 **Rule Violated:** Seedable config principles — defaults should be explicitly seeded  
 **Location:** `01-data-model.md` → Settings Keys table  
-**Observation:** The `Settings` table is a key-value store with defaults described in prose (e.g., "default: system", "default: 5"). The seedable config architecture requires an explicit seed file or migration-based seeding that populates defaults. The spec doesn't define:
-  - Which settings are seeded at first launch
-  - The exact seeding mechanism (migration SQL inserts? Rust startup code?)
-  - Version-based config migration (what happens when v2 adds a new setting key?)
-**AI Risk:** AI will forget to seed initial defaults, resulting in NULL lookups on first launch.
+**Resolution:** Added "Settings Seeding Strategy" section to `01-data-model.md`: documents migration-based seeding via V1 SQL inserts, first-launch behavior, `INSERT OR IGNORE` pattern for adding new settings in future migrations, and explicit rationale for why the full seedable config architecture is not used. Settings Keys table now includes Default column. V1 migration seed values updated with `ValueType` column.
 
 ### P14-017: No Config Version Tracking
 
 **Severity:** 🟢 Low  
+**Status:** ✅ Resolved — Fix Phase E  
 **Rule Violated:** Seedable config architecture — config version flow  
 **Location:** `01-data-model.md`  
-**Observation:** The seedable config spec mandates a `Version` field in the config seed, with version-change detection to trigger re-seeding. The alarm app's `Settings` table has no version tracking — it's just key-value pairs with no versioning strategy.
+**Resolution:** Documented that `refinery_schema_history` provides equivalent version tracking — migration version = config version. Added explicit "Why Not Seedable Config Architecture?" section explaining the design decision.
 
 ---
 
@@ -252,20 +250,14 @@
 ### P14-028: No Frontend State Management Spec
 
 **Severity:** 🟡 Medium  
-**Location:** All feature files reference hooks (`useAlarms`, `useClock`, etc.) but no spec defines:
-  - State management approach (React Context? Zustand? Redux?)
-  - Data flow from IPC → state → UI
-  - Cache invalidation strategy
-  - Optimistic updates vs server-confirmed
+**Status:** ✅ Resolved — Fix Phase 18 (UX-001) + Fix Phase E  
+**Resolution:** Zustand store architecture fully defined in `06-tauri-architecture-and-framework-comparison.md` (Fix Phase 18). Data flow (IPC → store → UI), cache invalidation, and optimistic update decisions documented in `02-design-system.md` UI States section (Fix Phase E).
 
 ### P14-029: No Loading / Empty / Error UI States Spec
 
 **Severity:** 🟡 Medium  
-**Location:** Feature files mention "empty state" once (CRUD line 202) but there's no systematic spec for:
-  - Loading spinners during IPC calls
-  - Empty states for each view
-  - Error states for each view
-  - Skeleton screens
+**Status:** ✅ Resolved — Fix Phase E  
+**Resolution:** Added comprehensive "UI States Specification" section to `02-design-system.md`: four-state model (loading/populated/empty/error), per-view state table, skeleton screen pattern with code example, error handling flow via `safeInvoke`, and explicit "no optimistic updates" decision with rationale.
 
 ---
 
@@ -321,7 +313,7 @@ The spec is structurally excellent — well-organized, cross-referenced, and int
 ---
 
 ## Issues Found So Far: 29
-## Open: 29 | Resolved: 0
+## Open: 8 | Resolved: 21
 
 ---
 

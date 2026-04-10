@@ -1,6 +1,6 @@
 # Design System
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -104,6 +104,105 @@ Defines visual design tokens, color palettes, typography, and component styling 
 
 ---
 
+## UI States Specification
+
+> **Resolves P14-029.** Every view must handle four states: loading, populated, empty, and error. AI agents MUST implement all four states for each view — do not render blank screens or unhandled promise rejections.
+
+### State Definitions
+
+| State | Visual | Behavior |
+|-------|--------|----------|
+| **Loading** | Skeleton screen matching the view's layout. No spinners. | Shown during initial IPC fetch. Duration typically <100ms (local SQLite). |
+| **Populated** | Normal content rendering | Default state after successful data fetch |
+| **Empty** | Centered illustration + message + CTA button | Shown when data fetch succeeds but returns zero items |
+| **Error** | Inline error banner with retry button | Shown when IPC call fails. Toast also fires via `safeInvoke`. |
+
+### Per-View States
+
+| View | Empty Message | Empty CTA | Error Recovery |
+|------|--------------|-----------|----------------|
+| **Alarm List** | "No alarms yet" + alarm icon | "Create your first alarm" → opens create form | Retry `list_alarms` |
+| **Groups List** | "No groups created" + folder icon | "Create a group" → opens group form | Retry `list_groups` |
+| **History / Analytics** | "No alarm history" + chart icon | None (passive view) | Retry `get_alarm_events` |
+| **Settings** | N/A (always has default values) | N/A | Retry `get_all_settings` |
+| **Alarm Overlay** | N/A (only shown when alarm fires) | N/A | If dismiss/snooze IPC fails → show retry in overlay |
+
+### Skeleton Screens
+
+Use Tailwind `animate-pulse` on `bg-muted` rectangles matching the layout of each view:
+
+```tsx
+// Example: Alarm list skeleton
+function AlarmListSkeleton() {
+  return (
+    <div className="space-y-3 p-4">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="flex items-center gap-3">
+          <div className="h-12 w-12 rounded-full bg-muted animate-pulse" />
+          <div className="flex-1 space-y-2">
+            <div className="h-4 w-24 bg-muted animate-pulse rounded" />
+            <div className="h-3 w-16 bg-muted animate-pulse rounded" />
+          </div>
+          <div className="h-6 w-10 bg-muted animate-pulse rounded-full" />
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### Error Handling Pattern
+
+All IPC calls go through `safeInvoke` (see AI cheat sheet). On failure:
+1. `safeInvoke` shows an error toast via `sonner`
+2. The calling store sets `error` state with the error message
+3. The view renders an inline error banner with a "Retry" button
+4. Retry calls the same store action again
+
+```typescript
+// In useAlarmStore
+fetchAlarms: async () => {
+  set({ isLoading: true, error: null });
+  const result = await safeInvoke<Alarm[]>('list_alarms');
+  if (result) {
+    set({ alarms: result, isLoading: false });
+  } else {
+    set({ isLoading: false, error: 'Failed to load alarms' });
+  }
+},
+```
+
+### Data Flow: IPC → Store → UI State
+
+```
+User opens app
+  → useAlarmStore.fetchAlarms()
+    → set({ isLoading: true })      → UI renders <AlarmListSkeleton />
+    → invoke('list_alarms')
+      ├─ success, 0 items            → UI renders <EmptyState />
+      ├─ success, N items            → UI renders <AlarmList />
+      └─ error                       → UI renders <ErrorBanner retry={fetchAlarms} />
+```
+
+### Optimistic Updates
+
+The alarm app does NOT use optimistic updates. All mutations follow **server-confirmed** flow:
+1. Call IPC command
+2. Wait for Rust response
+3. Update store with confirmed data
+4. Re-render UI
+
+**Why:** SQLite is local — IPC round-trips are <10ms. Optimistic updates add complexity (rollback logic, conflict handling) with negligible UX benefit for local databases.
+
+### Cache Invalidation
+
+No explicit cache invalidation is needed because:
+- Stores fetch fresh data from SQLite on each action
+- IPC events from Rust (`alarm-fired`, `settings-changed`) trigger store refreshes
+- There is no remote server or stale-while-revalidate concern
+
+---
+
 ## Cross-References
 
 | Reference | Location |
@@ -111,3 +210,5 @@ Defines visual design tokens, color palettes, typography, and component styling 
 | Global Design System | `../../../06-design-system/00-overview.md` |
 | Theme Feature | `../02-features/09-theme-system.md` |
 | Platform Verification Matrix | `./11-platform-verification-matrix.md` |
+| Frontend State Management | `./06-tauri-architecture-and-framework-comparison.md` → Zustand Stores |
+| Coding Guidelines | `../../../02-coding-guidelines/03-coding-guidelines-spec/` |
