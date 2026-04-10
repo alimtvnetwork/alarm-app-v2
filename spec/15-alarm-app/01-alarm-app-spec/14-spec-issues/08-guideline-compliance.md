@@ -134,4 +134,4 @@ Violations of the project's own coding guidelines found in spec code samples. Th
 ---
 
 ## Issues Found So Far: 12
-## Open: 2 | Resolved: 10
+## Open: 0 | Resolved: 12
