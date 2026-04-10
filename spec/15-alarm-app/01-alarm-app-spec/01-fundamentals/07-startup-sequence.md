@@ -1,6 +1,6 @@
 # Startup Sequence
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -267,7 +267,7 @@ WHERE NextFireTime < datetime('now')
 ```
 
 - For each missed alarm:
-  1. Insert `AlarmEvents` row with `Type = 'missed'`
+  1. Insert `AlarmEvents` row with `Type = AlarmEventType::Missed`
   2. Add to alarm queue (see `03-alarm-firing.md` → Simultaneous Alarms)
   3. Recompute `NextFireTime` for repeating alarms
   4. Dispatch OS notification: "Missed Alarm: {label} at {originalTime}"

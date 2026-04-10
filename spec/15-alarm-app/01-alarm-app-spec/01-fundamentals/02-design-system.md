@@ -1,6 +1,6 @@
 # Design System
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -123,7 +123,7 @@ Defines visual design tokens, color palettes, typography, and component styling 
 |------|--------------|-----------|----------------|
 | **Alarm List** | "No alarms yet" + alarm icon | "Create your first alarm" → opens create form | Retry `list_alarms` |
 | **Groups List** | "No groups created" + folder icon | "Create a group" → opens group form | Retry `list_groups` |
-| **History / Analytics** | "No alarm history" + chart icon | None (passive view) | Retry `get_alarm_events` |
+| **History / Analytics** | "No alarm history" + chart icon | None (passive view) | Retry `list_alarm_events` |
 | **Settings** | N/A (always has default values) | N/A | Retry `get_all_settings` |
 | **Alarm Overlay** | N/A (only shown when alarm fires) | N/A | If dismiss/snooze IPC fails → show retry in overlay |
 
