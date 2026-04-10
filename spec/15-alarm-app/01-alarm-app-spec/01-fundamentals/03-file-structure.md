@@ -1,6 +1,6 @@
 # File Structure
 
-**Version:** 1.6.0  
+**Version:** 1.7.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -30,7 +30,7 @@ src/                          — Frontend (React + TypeScript)
   stores/                     — Zustand global state stores (Resolves UX-STATE-001)
     useAlarmStore.ts          — Alarm CRUD + groups + loading/error state
     useOverlayStore.ts        — Active alarm, queue mirror, overlay visibility
-    useSettingsStore.ts       — Theme, timeFormat, language, snoozeDuration
+    useSettingsStore.ts       — Theme, TimeFormat, Language, DefaultSnoozeDuration
 
   hooks/
     useAlarms.ts              — Thin wrapper over useAlarmStore for component convenience
