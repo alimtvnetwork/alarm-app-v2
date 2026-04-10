@@ -36,11 +36,9 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 
 **Severity:** 🟡 Medium  
 **Location:** `01-fundamentals/04-platform-constraints.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — added 6 missing variants to `AlarmAppError` enum in Fix Phase 19
 
-**Missing variants referenced elsewhere:**
-- `SymlinkRejected` — referenced in security issues
-- `ConcurrentModification` — referenced in concurrency guide
+**Resolution:** Added `InvalidSoundFormat`, `SymlinkRejected`, `SoundFileTooLarge`, `ConcurrentModification`, `Validation`, `ExportImport` variants. Enum now has 12 variants total matching all usage across spec files.
 
 ---
 
@@ -98,27 +96,27 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 **Severity:** 🟡 Medium  
 **Location:** `02-features/02-alarm-scheduling.md`  
 **Cross-ref:** UX-008 in `07-ui-ux-consistency.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — `02-alarm-scheduling.md` fully rewritten to v2.0.0 in Fix Phase 19
 
-**Problem:** `02-alarm-scheduling.md` line 27 uses `recurringDays` — replaced by `RepeatPattern` in data model. "One-time alarms (empty `recurringDays`) auto-disable" contradicts `repeat.type = "once"` pattern in `01-data-model.md`. AI will be confused about which pattern to implement.
+**Resolution:** All references to deprecated `recurringDays` removed. Now documents all 5 `RepeatPattern` types (once/daily/weekly/interval/cron), UI controls, NextFireTime computation table, post-fire behavior, Quick Alarm, and Holiday scheduling. Cross-references `01-data-model.md` and `03-alarm-firing.md`.
 
 ---
 
 ## CG-009: Settings Page Component Not Specified
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — `Settings.tsx` page and `SettingsPanel.tsx` component added to file structure in Fix Phase 18/19
 
-**Problem:** Multiple features reference "Settings page" (theme, i18n, retention days, shortcut reference, bedtime) but no `Settings.tsx` or settings page component exists in `03-file-structure.md`. No routing or page navigation defined — unclear if Settings is a dialog, page, or drawer.
+**Resolution:** Settings page added to file structure with route `/settings`. `SettingsPanel.tsx` component specifies sections: Theme, Time Format, Snooze Duration, Language, Keyboard Shortcuts reference. `react-router-dom ^6.x` added to package table. `useSettingsStore` Zustand store defined in architecture doc.
 
 ---
 
 ## CG-010: No Error Toast Component in File Structure
 
 **Severity:** 🟢 Low  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — `Toast.tsx` component and `sonner ^1.5` library specified in Fix Phase 19
 
-**Problem:** `04-platform-constraints.md` references `toast.error()` extensively; `01-alarm-crud.md` references `UndoToast` component. No toast library specified (Sonner? react-hot-toast? Custom?) and file structure doesn't list a toast component.
+**Resolution:** `Toast.tsx` added to file structure. `sonner ^1.5` added to frontend package table in `06-tauri-architecture.md`. Used by `safeInvoke` wrapper and undo system.
 
 ---
 
@@ -127,9 +125,9 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 **Severity:** 🟡 Medium  
 **Location:** `02-features/02-alarm-scheduling.md`  
 **Cross-ref:** UX-011 in `07-ui-ux-consistency.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — `02-alarm-scheduling.md` rewritten to v2.0.0 in Fix Phase 19
 
-**Problem:** Version 1.0.0 vs all other feature files at 1.1.0–1.6.0. Still references `recurringDays` (deprecated). Doesn't mention `interval` or `cron` repeat types (added in data model). Quick Alarm / Holiday features mentioned but no IPC commands, Rust logic, or data model integration. AI will find contradictory scheduling information.
+**Resolution:** Complete rewrite with all 5 `RepeatPattern` types, UI controls, computation table, post-fire behavior. Deprecated `recurringDays` explicitly noted. Version bumped from 1.0.0 → 2.0.0.
 
 ---
 
@@ -142,4 +140,4 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 ---
 
 ## Issues Found So Far: 12
-## Open: 5 | Resolved: 7
+## Open: 0 | Resolved: 12

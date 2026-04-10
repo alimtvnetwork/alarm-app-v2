@@ -146,6 +146,24 @@ pub enum AlarmAppError {
 
     #[error("Notification permission denied")]
     NotificationDenied,
+
+    #[error("Invalid sound format: {0}")]
+    InvalidSoundFormat(String),
+
+    #[error("Symlink rejected: custom sounds must not be symlinks")]
+    SymlinkRejected,
+
+    #[error("Sound file too large: {size_bytes} bytes (max {max_bytes})")]
+    SoundFileTooLarge { size_bytes: u64, max_bytes: u64 },
+
+    #[error("Concurrent modification: row was changed by another operation")]
+    ConcurrentModification,
+
+    #[error("Invalid alarm data: {0}")]
+    Validation(String),
+
+    #[error("Export/import failed: {0}")]
+    ExportImport(String),
 }
 ```
 
