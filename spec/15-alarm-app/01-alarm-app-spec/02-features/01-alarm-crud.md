@@ -97,7 +97,7 @@ pub fn cleanup_stale_soft_deletes(conn: &Connection) {
 - Drop target highlights the target group
 - On drop: updates `groupId` in SQLite
 - IPC command: `invoke("move_alarm_to_group", { alarmId, groupId })`
-- Null `groupId` = "Ungrouped" section
+- Null `GroupId` = "Ungrouped" section
 
 ### Keyboard & Screen Reader Accessibility (WCAG 2.1 AA)
 
@@ -282,11 +282,11 @@ async function onUndo(token: string) {
 |---------|---------|---------|
 | `create_alarm` | `CreateAlarmPayload` | `Alarm` |
 | `update_alarm` | `UpdateAlarmPayload` | `Alarm` |
-| `delete_alarm` | `{ alarmId: string }` | `{ undoToken: string }` |
-| `undo_delete_alarm` | `{ undoToken: string }` | `Alarm` |
-| `toggle_alarm` | `{ alarmId: string, enabled: boolean }` | `Alarm` |
-| `duplicate_alarm` | `{ alarmId: string }` | `Alarm` |
-| `move_alarm_to_group` | `{ alarmId: string, groupId: string \| null }` | `void` |
+| `delete_alarm` | `{ AlarmId: string }` | `{ UndoToken: string }` |
+| `undo_delete_alarm` | `{ UndoToken: string }` | `Alarm` |
+| `toggle_alarm` | `{ AlarmId: string, IsEnabled: boolean }` | `Alarm` |
+| `duplicate_alarm` | `{ AlarmId: string }` | `Alarm` |
+| `move_alarm_to_group` | `{ AlarmId: string, GroupId: string \| null }` | `void` |
 | `list_alarms` | `void` | `Alarm[]` |
 
 ---
