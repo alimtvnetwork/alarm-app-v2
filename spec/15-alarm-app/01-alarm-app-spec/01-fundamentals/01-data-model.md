@@ -97,6 +97,10 @@ pub struct AlarmRow {
     pub is_gradual_volume: bool,
     pub gradual_volume_duration_sec: i32,
     pub auto_dismiss_min: i32,
+    pub challenge_type: Option<String>,       // null = no challenge
+    pub challenge_difficulty: Option<String>,  // easy|medium|hard (math only)
+    pub challenge_shake_count: Option<i32>,    // shake only
+    pub challenge_step_count: Option<i32>,     // steps only
     pub next_fire_time: Option<String>,   // ISO 8601
     pub deleted_at: Option<String>,       // ISO 8601
     pub created_at: String,
