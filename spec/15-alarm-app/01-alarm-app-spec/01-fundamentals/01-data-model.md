@@ -591,12 +591,12 @@ pub fn purge_old_events(conn: &Connection) {
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `Theme` | `"light" \| "dark" \| "system"` | Theme preference |
+| `Theme` | `ThemeMode` | Theme preference (use `ThemeMode` enum) |
 | `TimeFormat` | `"12h" \| "24h"` | Clock display format |
 | `DefaultSnoozeDuration` | `number` | Default snooze minutes for new alarms |
 | `DefaultSound` | `string` | Default sound for new alarms |
-| `AutoLaunch` | `boolean` | Start on system boot (ValueType: `"boolean"`, stored as `"true"`/`"false"`) |
-| `MinimizeToTray` | `boolean` | Keep running when window closed (ValueType: `"boolean"`, stored as `"true"`/`"false"`) |
+| `AutoLaunch` | `boolean` | Start on system boot (ValueType: `SettingsValueType.Boolean`, stored as `"true"`/`"false"`) |
+| `MinimizeToTray` | `boolean` | Keep running when window closed (ValueType: `SettingsValueType.Boolean`, stored as `"true"`/`"false"`) |
 | `Language` | `string` | i18n locale code (default: "en") |
 | `EventRetentionDays` | `number` | Days to keep `AlarmEvents` (default: 90) |
 
@@ -609,7 +609,7 @@ pub fn purge_old_events(conn: &Connection) {
 | `Time` | Must match `HH:MM` format, 00:00–23:59 |
 | `Date` | Must match `YYYY-MM-DD` or be null |
 | `Label` | String, 0–50 characters, trimmed |
-| `Repeat.Type` | One of: `once`, `daily`, `weekly`, `interval`, `cron` |
+| `Repeat.Type` | Must be a valid `RepeatType` enum variant |
 | `Repeat.DaysOfWeek` | Array of 0–6, no duplicates, sorted ascending (weekly only) |
 | `Repeat.IntervalMinutes` | Positive integer (interval only) |
 | `Repeat.CronExpression` | Valid cron syntax (cron only) |
@@ -624,7 +624,7 @@ pub fn purge_old_events(conn: &Connection) {
 
 ## One-Time Alarm Behavior
 
-When `repeat.type` is `"once"` and `date` is null, the alarm fires once at the next occurrence of `time` and auto-disables (`IsEnabled: false`). When `date` is set, it fires on that specific date at `time`.
+When `Repeat.Type` is `RepeatType.Once` and `Date` is null, the alarm fires once at the next occurrence of `Time` and auto-disables (`IsEnabled: false`). When `Date` is set, it fires on that specific date at `Time`.
 
 ---
 
