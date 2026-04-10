@@ -447,7 +447,7 @@ src-tauri/src/engine/
 
 ## Auto-Dismiss
 
-- Optional per-alarm setting: `autoDismissMin` (0 = disabled, 1–60 minutes)
+- Optional per-alarm setting: `AutoDismissMin` (0 = disabled, 1–60 minutes)
 - If an alarm fires and is not dismissed/snoozed within N minutes, it auto-dismisses
 - Audio stops, overlay closes, event logged as `type = 'dismissed'` with note `auto`
 - Default: 0 (disabled) — user must manually dismiss
@@ -548,7 +548,7 @@ Rust AlarmEngine                    Frontend OverlayStore
 - [ ] `nextFireTime` recomputed after every fire event
 - [ ] Missed alarms detected and surfaced on app launch
 - [ ] Missed alarms detected and surfaced on system wake (all 3 platforms)
-- [ ] Missed alarms logged with `type = 'missed'` in `alarm_events`
+- [ ] Missed alarms logged with `Type = 'missed'` in `AlarmEvents`
 - [ ] Auto-dismiss stops alarm after configured minutes if unacknowledged
 - [ ] Only one alarm overlay can be active at a time (queue if multiple fire simultaneously)
 - [ ] Queued alarms fire in FIFO order (earliest `nextFireTime` first)
