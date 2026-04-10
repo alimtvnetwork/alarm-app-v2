@@ -54,15 +54,15 @@
 **File:** `01-fundamentals/01-data-model.md` line 367  
 **Problem:** Fixed EventRetentionDays description to reference `AlarmEvents`.
 
-### D7-NEW-003: `03-alarm-firing.md` acceptance criteria uses `alarm_events`
+### D7-NEW-003: ~~`03-alarm-firing.md` acceptance criteria uses `alarm_events`~~ ✅ Resolved (Fix 24)
 **Severity:** 🟡 Medium  
 **File:** `02-features/03-alarm-firing.md` line 551  
-**Problem:** "logged with `type = 'missed'` in `alarm_events`" — should be `AlarmEvents`.
+**Problem:** Fixed `alarm_events` → `AlarmEvents` and `type` → `Type`.
 
-### D7-NEW-004: `03-alarm-firing.md` auto-dismiss uses camelCase `autoDismissMin`
+### D7-NEW-004: ~~`03-alarm-firing.md` auto-dismiss uses camelCase `autoDismissMin`~~ ✅ Resolved (Fix 24)
 **Severity:** 🟡 Medium  
 **File:** `02-features/03-alarm-firing.md` line 450  
-**Problem:** "Optional per-alarm setting: `autoDismissMin`" — should be `AutoDismissMin`.
+**Problem:** Fixed `autoDismissMin` → `AutoDismissMin`. Also fixed `nextFireTime` → `NextFireTime` on lines 440, 541, 548, 554.
 
 ### D7-NEW-005: `08-clock-display.md` uses `settings` table (lowercase)
 **Severity:** 🟡 Medium  
@@ -116,8 +116,8 @@
 | Status | Previous | New | Total |
 |--------|:--------:|:---:|:-----:|
 | Total issues | 77 | 18 | **95** |
-| Open | 0 | 9 | **9** |
-| Resolved | 77 | 9 | **86** |
+| Open | 0 | 7 | **7** |
+| Resolved | 77 | 11 | **88** |
 
 ---
 
