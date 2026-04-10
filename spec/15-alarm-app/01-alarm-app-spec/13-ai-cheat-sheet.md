@@ -86,8 +86,8 @@ fn resolve_local_to_utc(date: NaiveDate, time: NaiveTime, tz: &Tz) -> Option<Dat
 ### 3. SQLite Booleans — Integer Conversion
 
 ```rust
-enabled: row.get::<_, i32>("enabled")? != 0,          // INTEGER → bool
-repeat_days_of_week: row.get("repeat_days_of_week")?,  // JSON TEXT → String
+is_enabled: row.get::<_, i32>("IsEnabled")? != 0,                // INTEGER → bool
+repeat_days_of_week: row.get("RepeatDaysOfWeek")?,               // JSON TEXT → String
 // Then: serde_json::from_str(&self.repeat_days_of_week).unwrap_or_default()
 ```
 

@@ -16,13 +16,13 @@ This folder tracks all specification quality issues found during the deep audit 
 | # | File | Category | Issue Count | Open | Resolved |
 |---|------|----------|:-----------:|:----:|:--------:|
 | 1 | `01-naming-violations.md` | Naming & Convention Violations | 18 | 4 | 14 |
-| 2 | `02-internal-contradictions.md` | Contradictions Between Files | 11 | 9 | 2 |
+| 2 | `02-internal-contradictions.md` | Contradictions Between Files | 11 | 8 | 3 |
 | 3 | `03-structural-issues.md` | Folder/File Structure Problems | 5 | 5 | 0 |
 | 4 | `04-content-gaps.md` | Missing Content & Incomplete Specs | 12 | 11 | 1 |
 | 5 | `05-ai-handoff-risks.md` | Issues That Will Cause AI Failure | 4 | 2 | 2 |
 | 6 | `06-logic-consistency.md` | Cross-File Logic Consistency | 11 | 6 | 5 |
 | 7 | `07-ui-ux-consistency.md` | UI/UX + Frontend State Consistency | 4 | 2 | 2 |
-| 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 7 | 5 |
+| 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 5 | 7 |
 
 ---
 
@@ -34,8 +34,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 40 |
 | 🟢 Low | 7 |
 | **Grand Total** | **77** |
-| **Open** | **46** |
-| **Resolved** | **31** |
+| **Open** | **43** |
+| **Resolved** | **34** |
 
 ---
 
@@ -54,7 +54,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase 3** | **DB naming PascalCase** | **✅ Done (5 resolved)** |
 | **Fix Phase 4** | **TS/Rust serialization keys PascalCase** | **✅ Done (9 resolved)** |
 | **Fix Phase 5** | **`alarms` → `Alarms`, `settings` → `Settings` tables** | **✅ Done (2 resolved)** |
-| Fix Phase 6 | Analytics schema + cheat sheet regressions | 🔴 Pending |
+| **Fix Phase 6** | **Analytics schema + cheat sheet regressions** | **✅ Done (3 resolved)** |
 | Fix Phase 7 | Concurrency guide regressions | 🔴 Pending |
 | Fix Phase 8 | Firing + snooze prose snake_case | 🔴 Pending |
 | Fix Phase 9 | Groups + sound prose snake_case | 🔴 Pending |

@@ -65,13 +65,9 @@ Issues where different spec files contradict each other — the most dangerous c
 ## IC-005: Duplicate `alarm_events` Schema Definition
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — duplicate schema removed from `13-analytics.md`, replaced with cross-reference
 
-**Locations:**
-- `01-fundamentals/01-data-model.md` line 265 — canonical definition
-- `02-features/13-analytics.md` line 91 — duplicate definition
-
-**Risk:** If one is updated and the other isn't, AI will get conflicting schemas. Single source of truth needed.
+**Resolution:** See GC-009. The analytics spec now references the canonical schema in `01-data-model.md` instead of duplicating it.
 
 ---
 
@@ -158,4 +154,4 @@ Issues where different spec files contradict each other — the most dangerous c
 ---
 
 ## Issues Found So Far: 11
-## Open: 9 | Resolved: 2
+## Open: 8 | Resolved: 3
