@@ -142,7 +142,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 27** | **Post-fix regression scan — stale metrics, unfixed Phase 22–26 issues** | **✅ Done (+12 = 396, 81 open)** |
 | **Fix Phase U** | **Comprehensive fix of 81 issues: missing deps, IPC alignment, magic strings, negative booleans, stale metrics, interfaces** | **✅ Done (81 resolved, 0 open)** |
 | **Discovery Phase 28** | **Post-Fix-U regression scan — stale metadata, double separators, memory drift** | **✅ Done (+9 = 405, 9 open)** |
-| **Discovery Phase 29** | **IPC Registry Completeness Audit — 8 missing commands, 2 orphans, settings ambiguity** | **✅ Done (+5 = 410, 5 open)** |
+| **Discovery Phase 29** | **IPC Registry Completeness Audit — 8 missing commands, 2 orphans, settings ambiguity** | **✅ Done (+5 = 410, 5 resolved)** |
+| **Discovery Phase 30** | **Payload & Interface Definitions Audit — StreakData, Quote, Settings, StreakCalendarDay undefined; payload mismatches** | **✅ Done (+7 = 417, 7 resolved)** |
 
 ---
 
