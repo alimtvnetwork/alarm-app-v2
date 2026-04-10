@@ -44,7 +44,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 27 | `27-fix-phase-e-settings-ui-states.md` | Fix Phase E — Settings Seeding & UI States | 4 resolved | 0 | 4 |
 | 28 | `28-fix-phase-f-remaining.md` | Fix Phase F — PascalCase, Atomic Tasks, Semantic Inverses & Cross-References | 13 resolved | 0 | 13 |
 | 30 | `30-fix-phase-j-final-7.md` | Fix Phase J — Final 7 Issues (ARIA, 0=disabled, IPC, magic strings, exemption) | 7 resolved | 0 | 7 |
-| 31 | `31-discovery-phase-19.md` | Discovery Phase 19 — Post-Completion Regression Audit | 21 | 21 | 0 |
+| 31 | `31-discovery-phase-19.md` | Discovery Phase 19 — Post-Completion Regression Audit | 34 | 34 | 0 |
 
 ---
 
@@ -52,11 +52,11 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 61 |
-| 🟡 Medium | 134 |
-| 🟢 Low | 40 |
-| **Grand Total** | **277** |
-| **Open** | **21** |
+| 🔴 Critical | 69 |
+| 🟡 Medium | 138 |
+| 🟢 Low | 41 |
+| **Grand Total** | **290** |
+| **Open** | **34** |
 | **Resolved** | **256** |
 
 ---
