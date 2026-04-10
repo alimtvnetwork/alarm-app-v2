@@ -106,6 +106,9 @@ repeat_days_of_week: row.get("RepeatDaysOfWeek")?,               // JSON TEXT â†
 ### 4. Frontend IPC â€” Always Timeout
 
 ```typescript
+// Example: safeInvoke with PascalCase args
+const alarm = await safeInvoke<Alarm>('create_alarm', { Time: '07:30', Label: 'Morning' });
+
 async function safeInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T | null> {
     try {
         return await Promise.race([
