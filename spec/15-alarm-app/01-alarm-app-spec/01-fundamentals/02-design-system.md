@@ -1,6 +1,6 @@
 # Design System
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -12,6 +12,17 @@
 `design`, `colors`, `typography`, `spacing`, `theme`, `tailwind`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (consolidated in 97-acceptance-criteria.md) |
+
 
 ## Purpose
 

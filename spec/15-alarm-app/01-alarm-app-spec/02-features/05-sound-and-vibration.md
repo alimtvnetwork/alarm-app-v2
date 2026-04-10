@@ -1,6 +1,6 @@
 # Sound & Vibration
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -14,6 +14,17 @@
 `sound`, `audio`, `vibration`, `volume`, `fade-in`, `tone`, `native`, `custom-sound`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ✅ |
+
 
 ## Description
 

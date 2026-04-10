@@ -1,6 +1,6 @@
 # Tauri Architecture & Cross-Platform Framework Comparison
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -12,6 +12,17 @@
 `tauri`, `rust`, `architecture`, `ipc`, `plugins`, `build`, `framework`, `comparison`, `native`, `cross-platform`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (consolidated in 97-acceptance-criteria.md) |
+
 
 ## Purpose
 

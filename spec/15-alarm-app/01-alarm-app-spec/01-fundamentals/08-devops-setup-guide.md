@@ -1,6 +1,6 @@
 # DevOps Setup Guide
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -13,6 +13,17 @@
 `devops`, `signing`, `notarization`, `ci-cd`, `auto-update`, `github-actions`, `tauri-action`, `code-signing`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (consolidated in 97-acceptance-criteria.md) |
+
 
 ## Purpose
 

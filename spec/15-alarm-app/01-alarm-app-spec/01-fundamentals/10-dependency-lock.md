@@ -1,6 +1,6 @@
 # Dependency Lock
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -12,6 +12,17 @@
 `dependencies`, `versions`, `crates`, `npm`, `pinning`, `compatibility`, `breaking-changes`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (consolidated in 97-acceptance-criteria.md) |
+
 
 ## Purpose
 

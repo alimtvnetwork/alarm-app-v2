@@ -1,6 +1,6 @@
 # Analytics & Alarm History
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -13,6 +13,17 @@
 `analytics`, `history`, `log`, `snooze`, `trends`, `reports`, `statistics`, `filter`, `csv-export`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ✅ |
+
 
 ## Description
 

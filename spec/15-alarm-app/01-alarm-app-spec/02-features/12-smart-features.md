@@ -1,6 +1,6 @@
 # Smart Features
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** Medium  
 **Ambiguity:** Medium  
@@ -14,6 +14,17 @@
 `weather`, `location`, `webhook`, `voice`, `timezone`, `native`, `ssrf`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ✅ |
+
 
 ## Description
 

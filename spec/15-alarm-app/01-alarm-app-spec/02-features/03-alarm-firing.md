@@ -1,6 +1,6 @@
 # Alarm Firing
 
-**Version:** 1.11.0  
+**Version:** 1.12.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -14,6 +14,17 @@
 `firing`, `trigger`, `overlay`, `dismiss`, `audio`, `notification`, `native`, `missed-alarm`, `auto-dismiss`, `next-fire-time`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ✅ |
+
 
 ## Description
 

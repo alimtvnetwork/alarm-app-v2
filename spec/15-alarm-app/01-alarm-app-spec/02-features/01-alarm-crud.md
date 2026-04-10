@@ -1,6 +1,6 @@
 # Alarm CRUD
 
-**Version:** 1.9.0  
+**Version:** 1.10.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -14,6 +14,17 @@
 `alarm`, `create`, `read`, `update`, `delete`, `toggle`, `duplicate`, `soft-delete`, `undo`, `drag-drop`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ✅ |
+
 
 ## Description
 

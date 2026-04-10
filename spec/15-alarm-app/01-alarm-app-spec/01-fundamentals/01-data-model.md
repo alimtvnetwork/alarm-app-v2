@@ -1,6 +1,6 @@
 # Data Model
 
-**Version:** 1.11.0  
+**Version:** 1.12.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -13,6 +13,17 @@
 `data-model`, `types`, `interfaces`, `storage`, `validation`, `sqlite`, `repeat-pattern`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (consolidated in 97-acceptance-criteria.md) |
+
 
 ## Purpose
 
