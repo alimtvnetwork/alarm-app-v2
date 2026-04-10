@@ -14,7 +14,7 @@
 |---|------|--------|
 | 1 | `00-overview.md` | ✅ Present (v2.7.0) |
 | 2 | `09-ai-handoff-reliability-report.md` | ✅ Present (v1.0.0 — supplementary, 94-task breakdown superseded) |
-| 3 | `10-ai-handoff-readiness-report.md` | ✅ Present (v2.7.0 — 100/100 readiness, 396/396 resolved) |
+| 3 | `10-ai-handoff-readiness-report.md` | ✅ Present (v2.7.0 — 100/100 readiness, 405/405 resolved) |
 | 4 | `11-atomic-task-breakdown.md` | ✅ Present (v1.1.0 — 62 authoritative tasks, 12 phases) |
 | 5 | `12-platform-and-concurrency-guide.md` | ✅ Present (v1.0.0 — PascalCase table names, corrected field refs) |
 | 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.1.0 — domain enums, thiserror 2.x, PascalCase examples) |
@@ -35,7 +35,7 @@
 | 1 | `01-fundamentals/` | ✅ (v1.4.0) | ✅ (v2.0.0) | ✅ (v1.0.0 — 64 criteria) | ✅ Complete |
 | 2 | `02-features/` | ✅ | ✅ (v1.9.0) | ✅ (v1.0.0 — 133 criteria) | ✅ Complete |
 | 3 | `03-app-issues/` | ✅ | ✅ (v1.4.0) | — | ✅ Compliant (10 docs, 43/43 resolved) |
-| 4 | `14-spec-issues/` | ✅ (v1.32.0) | — | — | ✅ 396/396 resolved |
+| 4 | `14-spec-issues/` | ✅ (v1.32.0) | — | — | ✅ 405/405 resolved |
 
 ---
 
