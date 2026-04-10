@@ -300,7 +300,7 @@ The spec is structurally excellent — well-organized, cross-referenced, and int
 ---
 
 ## Issues Found So Far: 29
-## Open: 2 | Resolved: 27
+## Open: 0 | Resolved: 29 (all resolved)
 
 ---
 
