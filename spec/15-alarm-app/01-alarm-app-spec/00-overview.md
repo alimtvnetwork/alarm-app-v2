@@ -1,8 +1,8 @@
 # Alarm App Spec
 
-**Version:** 1.6.0  
-**Status:** ✅ Complete — Ready for AI Handoff (Near-100% Coverage)  
-**Updated:** 2026-04-09  
+**Version:** 1.7.0  
+**Status:** ✅ Complete — Ready for AI Handoff (98/100 Readiness Score)  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
 
@@ -115,13 +115,13 @@ Tables:
 | 02 | [Features](./02-features/00-overview.md) | All feature specifications (17 docs) |
 | 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking — 43/43 issues resolved |
 | 09 | [AI Handoff Reliability Report](./09-ai-handoff-reliability-report.md) | Supplementary failure analysis (62-task breakdown is authoritative), top 15 risk points |
-| 10 | [AI Handoff Readiness Report](./10-ai-handoff-readiness-report.md) | 96/100 readiness score, implementation order |
+| 10 | [AI Handoff Readiness Report](./10-ai-handoff-readiness-report.md) | 98/100 readiness score, 180/180 issues resolved |
 | 11 | [Atomic Task Breakdown](./11-atomic-task-breakdown.md) | **Authoritative** 62 dependency-ordered tasks, effort estimates, risk levels |
 | 12 | [Platform & Concurrency Guide](./12-platform-and-concurrency-guide.md) | Platform gotchas, race condition safeguards, async safety, error recovery |
 | 13 | [AI Cheat Sheet](./13-ai-cheat-sheet.md) | Single-page quick reference for AI coding agents |
-| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 154 issues found, 154 resolved ✅ |
+| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 180 issues found across 13 phases, 180 resolved ✅ |
 | 15 | [Reference](./15-reference/00-overview.md) | Feature inventories and planning references |
-| 98 | [Changelog](./98-changelog.md) | Version history v1.0.0–v1.7.0 |
+| 98 | [Changelog](./98-changelog.md) | Version history v1.0.0–v1.9.0 |
 
 ---
 
@@ -129,8 +129,8 @@ Tables:
 
 | File | Description |
 |------|-------------|
-| [alarm-app-features.md](./15-reference/alarm-app-features.md) | Original feature overview (170 features, categorized) |
-| [alarm-clock-features.md](./15-reference/alarm-clock-features.md) | Extended feature reference (67 features, 10 categories) |
+| [alarm-app-features.md](./15-reference/alarm-app-features.md) | Feature overview (69 features, categorized) |
+| [alarm-clock-features.md](./15-reference/alarm-clock-features.md) | Extended feature reference (75 features, 10 categories) |
 
 ---
 
