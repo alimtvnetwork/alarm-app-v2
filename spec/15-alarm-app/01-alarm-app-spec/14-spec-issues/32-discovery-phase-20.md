@@ -166,11 +166,11 @@ Files: `02-design-system.md`, `13-analytics.md`, `01-alarm-crud.md`, `07-startup
 **P20-010 to P20-015** (add Scoring tables to all 27 spec files + metadata to utility files)  
 Files: All files in `01-fundamentals/` and `02-features/`
 
-### Fix Phase R — Clarifying Comments + Serde Annotations (4 issues)
+### Fix Phase R — Clarifying Comments + Serde Annotations (4 issues) ✅ RESOLVED
 **P20-008, P20-009, P20-018, P20-019** (add boundary comments, mark internal structs)  
 Files: `01-alarm-crud.md`, `06-tauri-architecture*.md`, `03-alarm-firing.md`
 
-### Fix Phase S — Seedable Config Cross-Reference (1 issue)
+### Fix Phase S — Seedable Config Cross-Reference (1 issue) ✅ RESOLVED
 **P20-021** (document which seedable config concepts apply)  
 Files: `01-data-model.md`
 
