@@ -101,7 +101,7 @@ Monitor sleep phases (light, deep, REM) using native motion sensors (mobile only
 Provide a daily sleep quality rating based on duration, movement, and consistency. Data stored in SQLite.
 
 ### 4.4 Sleep Statistics & History
-Track and visualize sleep patterns over days, weeks, and months with charts and graphs. All data in SQLite `alarm_events` table.
+Track and visualize sleep patterns over days, weeks, and months with charts and graphs. All data in SQLite `AlarmEvents` table.
 
 ### 4.5 Sleep Sounds / White Noise
 Play soothing sounds while falling asleep, with an auto-off timer. Native audio via Rust `rodio` (reliable background playback).
@@ -157,7 +157,7 @@ Dim the display with dark colors for use as a bedside clock without disturbing s
 Keep the clock visible at all times with minimal brightness. Uses native power management API to prevent sleep.
 
 ### 6.5 Customizable Clock Themes
-Choose different clock faces, fonts, colors, and background styles. Preferences stored in SQLite `settings` table.
+Choose different clock faces, fonts, colors, and background styles. Preferences stored in SQLite `Settings` table.
 
 ### 6.6 World Clock / Multiple Time Zones
 Display the time in multiple cities or time zones simultaneously.
@@ -189,13 +189,13 @@ Run several independent countdown timers simultaneously.
 ## 8. Personalization & UX
 
 ### 8.1 Themes & Skins
-Choose from light, dark, or custom color themes for the entire app. Preferences in SQLite `settings`.
+Choose from light, dark, or custom color themes for the entire app. Preferences in SQLite `Settings`.
 
 ### 8.2 System Tray / Menu Bar Widget
 Native system tray icon showing the next alarm time on hover, imminent badge (<5 min), with quick controls (toggle, snooze, dismiss, new alarm, disable all).
 
 ### 8.3 Alarm Groups / Folders
-Organize alarms into color-coded categories (e.g., "Work", "Gym", "Medication"). Drag-and-drop alarms between groups. Stored in SQLite `alarm_groups` table.
+Organize alarms into color-coded categories (e.g., "Work", "Gym", "Medication"). Drag-and-drop alarms between groups. Stored in SQLite `AlarmGroups` table.
 
 ### 8.4 Alarm Profiles
 Save and switch between sets of alarms (e.g., "Weekday Schedule", "Vacation Mode").

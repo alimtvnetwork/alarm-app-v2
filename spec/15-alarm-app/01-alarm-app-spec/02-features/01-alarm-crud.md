@@ -27,12 +27,12 @@ Users can create new alarms by setting a time (hour and minute), optional date, 
 
 - Set time, label, date (optional), repeat pattern, sound, snooze duration, max snooze count, gradual volume, auto-dismiss
 - Assign to a group (optional)
-- Rust backend computes `nextFireTime` on save
+- Rust backend computes `NextFireTime` on save
 
 ### Edit
 
 - Modify any field of an existing alarm
-- Rust backend recomputes `nextFireTime` on save
+- Rust backend recomputes `NextFireTime` on save
 
 ### Duplicate
 
@@ -198,7 +198,7 @@ const sensors = useSensors(
 - [ ] User can drag-and-drop alarms between groups
 - [ ] Alarm list shows all alarms sorted by time within each group
 - [ ] All changes persist to SQLite immediately via Tauri IPC commands
-- [ ] `nextFireTime` is recomputed on create, edit, toggle, and duplicate
+- [ ] `NextFireTime` is recomputed on create, edit, toggle, and duplicate
 - [ ] Empty state shown when no alarms exist
 
 ---

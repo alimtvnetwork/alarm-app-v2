@@ -62,8 +62,8 @@
 | # | Task | Effort | Spec Reference | Risk | Depends On |
 |---|------|--------|----------------|:----:|:----------:|
 | 17 | Implement `resolve_local_to_utc()` — DST-aware local→UTC conversion with spring-forward/fall-back handling | 2h | `03-alarm-firing.md` → DST Resolution Function (copy Rust code exactly) | 🔴 | 9 |
-| 18 | Implement `compute_next_fire_time()` for `Once` and `Daily` repeat types | 1h | `03-alarm-firing.md` → nextFireTime Computation | 🟡 | 17 |
-| 19 | Implement `compute_next_fire_time()` for `Weekly` type — next matching weekday with week-wrapping | 1.5h | `03-alarm-firing.md` → nextFireTime Computation, Weekly branch | 🟡 | 17 |
+| 18 | Implement `compute_next_fire_time()` for `Once` and `Daily` repeat types | 1h | `03-alarm-firing.md` → `NextFireTime` Computation | 🟡 | 17 |
+| 19 | Implement `compute_next_fire_time()` for `Weekly` type — next matching weekday with week-wrapping | 1.5h | `03-alarm-firing.md` → `NextFireTime` Computation, Weekly branch | 🟡 | 17 |
 | 20 | Implement `compute_next_fire_time()` for `Interval` type | 15m | `03-alarm-firing.md` → Interval branch | 🟢 | 17 |
 | 21 | Implement `compute_next_fire_time()` for `Cron` type using `croner` crate | 1h | `03-alarm-firing.md` → Cron branch, `01-data-model.md` → croner | 🟡 | 17 |
 | 22 | Implement `alarm_engine.rs` — background thread with 30s interval, query for due alarms, emit `alarm-fired` event | 2h | `03-alarm-firing.md` → Firing Logic, `04-platform-constraints.md` → Critical Path Protection | 🟡 | 18-21, 15 |
@@ -163,7 +163,7 @@
 | 51 | Implement system tray — icon, next alarm tooltip, quick toggle, minimize to tray | 1.5h | `06-tauri-architecture.md` → System Tray | 🟡 | 38 |
 | 52 | Implement OS notifications — fire alongside overlay, permission request, fallback | 1h | `06-tauri-architecture.md` → Notifications | 🟡 | 22 |
 | 53 | Implement i18n — `react-i18next` setup, `en.json` locale, `eslint-plugin-i18next` config | 1h | `03-file-structure.md` → i18n Enforcement | 🟡 | 2 |
-| 54 | Implement timezone change detection — `on_timezone_change()`, recalculate all `nextFireTime` | 1h | `03-alarm-firing.md` → Timezone Change Detection | 🔴 | 22 |
+| 54 | Implement timezone change detection — `on_timezone_change()`, recalculate all `NextFireTime` | 1h | `03-alarm-firing.md` → Timezone Change Detection | 🔴 | 22 |
 
 ---
 

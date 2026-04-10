@@ -193,11 +193,11 @@ if rows == 0 {
 
 ```
 Alarm fires → user snoozes (5 min) → snooze task sleeping
-User dismisses alarm at t+2min → clears snooze_state
+User dismisses alarm at t+2min → clears SnoozeState
 Snooze task wakes at t+5min → must NOT re-fire
 ```
 
-**Safeguard:** Already in spec — snooze timer checks `snooze_state` table before re-firing:
+**Safeguard:** Already in spec — snooze timer checks `SnoozeState` table before re-firing:
 ```rust
 tokio::time::sleep_until(expiry).await;
 // VERIFY snooze wasn't cancelled

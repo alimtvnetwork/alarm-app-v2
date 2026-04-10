@@ -136,7 +136,7 @@
 | **Likelihood** | 55% → 0% |
 | **Status** | ✅ Resolved |
 
-**Description:** Alarm engine writes `alarm_events` + updates `nextFireTime` while user may be saving an edit. Single-writer SQLite will queue one, potentially causing UI lag.
+**Description:** Alarm engine writes `AlarmEvents` + updates `NextFireTime` while user may be saving an edit. Single-writer SQLite will queue one, potentially causing UI lag.
 
 **Root Cause:** No write-ahead logging or async write strategy specified.
 
@@ -158,7 +158,7 @@
 **Root Cause:** Missing queue specification.
 
 **Suggested Fix:** Add to `03-alarm-firing.md`:
-- Queue order: FIFO (earliest `nextFireTime` first)
+- Queue order: FIFO (earliest `NextFireTime` first)
 - Show first alarm's overlay; queue the rest
 - Dismiss/snooze advances to next alarm in queue
 - Auto-dismiss timeout applies per-alarm independently
@@ -186,7 +186,7 @@
 1. Open SQLite DB connection (app data dir per OS)
 2. Run `refinery` migrations
 3. Enable WAL mode (`PRAGMA journal_mode=WAL`)
-4. Load settings from `settings` table
+4. Load settings from `Settings` table
 5. Initialize system tray with "loading..." state
 6. Start alarm engine background thread
 7. Run missed alarm check (`WHERE next_fire_time < now AND enabled = 1`)

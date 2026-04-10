@@ -31,7 +31,7 @@ Defines the test layers, tools, coverage targets, and CI integration for the Ala
 
 | Module | Test Cases |
 |--------|-----------|
-| `scheduler.rs` | `nextFireTime` for all 5 repeat types (once, daily, weekly, interval, cron) |
+| `scheduler.rs` | `NextFireTime` for all 5 repeat types (once, daily, weekly, interval, cron) |
 | `scheduler.rs` | DST spring-forward (skipped time → next valid minute) |
 | `scheduler.rs` | DST fall-back (ambiguous time → first occurrence) |
 | `scheduler.rs` | Timezone change recalculation |
@@ -183,7 +183,7 @@ describe('useAlarms', () => {
 | `AlarmForm` | Default values populated correctly |
 | `AlarmList` | Renders grouped alarms, empty state |
 | `AlarmOverlay` | Shows label, time, dismiss/snooze buttons |
-| `AlarmOverlay` | Hides snooze when `maxSnoozeCount` reached |
+| `AlarmOverlay` | Hides snooze when `MaxSnoozeCount` reached |
 | `UndoToast` | Shows/hides on delete/undo, timer countdown |
 | Time formatting | 12h/24h conversion, "Alarm in X hours Y min" |
 

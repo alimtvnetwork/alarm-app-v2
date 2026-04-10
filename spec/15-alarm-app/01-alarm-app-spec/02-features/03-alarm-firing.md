@@ -46,9 +46,9 @@ When the current time matches an enabled alarm's `NextFireTime`, the alarm fires
 
 ### Core Principle
 
-Alarms are defined in **local time** (`HH:MM`). The `nextFireTime` is stored as **UTC**. The Rust backend converts between them using the IANA timezone from the `Settings` table.
+Alarms are defined in **local time** (`HH:MM`). The `NextFireTime` is stored as **UTC**. The Rust backend converts between them using the IANA timezone from the `Settings` table.
 
-### nextFireTime Computation (Rust Pseudocode)
+### NextFireTime Computation (Rust Pseudocode)
 
 ```rust
 /// Entry point — delegates to type-specific handlers (each ≤15 lines)
@@ -202,7 +202,7 @@ fn on_timezone_change(conn: &Connection, new_tz: &Tz) {
 | Fall-back: 1:30 AM occurs twice | `time=01:30`, DST falls back 2:00→1:00 | Fire at first 1:30 AM only |
 | Normal day | `time=07:00`, no DST | Fire at 07:00 local = correct UTC |
 | No DST timezone (e.g., MYT) | `time=07:00`, no DST ever | Fire at 07:00 local = correct UTC |
-| Timezone change: KUL→LON | `time=07:00`, tz changes | `nextFireTime` recalculated for London |
+| Timezone change: KUL→LON | `time=07:00`, tz changes | `NextFireTime` recalculated for London |
 | Daily alarm across DST boundary | `time=02:30`, repeating daily | Skipped day fires at 3:00, next day fires at 2:30 normally |
 
 ---
@@ -213,11 +213,11 @@ This is the most important reliability feature. Desktop computers sleep, shut do
 
 ### Strategy
 
-1. **Persist `nextFireTime`** for every enabled alarm in SQLite
+1. **Persist `NextFireTime`** for every enabled alarm in SQLite
 2. **On app launch:** query all alarms where `NextFireTime < now AND IsEnabled = 1 AND DeletedAt IS NULL` → fire missed alarm notifications
 3. **On system wake:** same check via OS power event listener (see Platform Wake-Event Listeners below)
-4. **On every 30s tick:** check if any alarm's `nextFireTime <= now`
-5. **After firing:** update `nextFireTime` based on repeat pattern, or disable if one-time
+4. **On every 30s tick:** check if any alarm's `NextFireTime <= now`
+5. **After firing:** update `NextFireTime` based on repeat pattern, or disable if one-time
 
 ### Platform Wake-Event Listeners
 
@@ -436,7 +436,7 @@ src-tauri/src/engine/
 
 - Missed alarms show with a distinct "Missed Alarm" badge in the overlay
 - Display: alarm label + original scheduled time + "Missed at HH:MM"
-- Log as `type = 'missed'` in `alarm_events` table
+- Log as `Type = 'missed'` in `AlarmEvents` table
 - Recalculate `NextFireTime` for repeating alarms
 
 ### Guarantee
@@ -575,7 +575,7 @@ The 30-second check interval may match multiple alarms. Without queue rules, AI 
 3. **Immediate logging:** ALL matched alarms insert `AlarmEvents` row with `EventType = 'Fired'` immediately — do not wait for overlay display
 4. **Overlay sequencing:** Show only the first alarm's overlay. Queue the rest in memory
 5. **Progression:** When user dismisses or snoozes the current overlay → show next alarm from queue
-6. **Auto-dismiss:** Each queued alarm's `autoDismissMin` timer starts when its overlay is shown (not when it enters the queue)
+6. **Auto-dismiss:** Each queued alarm's `AutoDismissMin` timer starts when its overlay is shown (not when it enters the queue)
 7. **Audio:** Audio plays for the currently displayed alarm only. When progressing to next, restart audio with next alarm's sound
 
 ### Queue Data Structure

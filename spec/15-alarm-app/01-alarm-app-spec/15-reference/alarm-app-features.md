@@ -22,7 +22,7 @@ A comprehensive guide to all possible features for a modern cross-platform nativ
 | **12/24-Hour Format** | Toggle between 12-hour (AM/PM) and 24-hour time display | Low |
 | **Alarm Preview** | "Time until alarm" indicator showing how long until the next alarm fires | Low |
 | **Vibration** | Trigger device vibration alongside or instead of sound (mobile: native haptics; desktop: N/A) | Low |
-| **Soft-Delete with Undo** | Delete sets `deletedAt` timestamp; 5-second undo toast before permanent removal | Low |
+| **Soft-Delete with Undo** | Delete sets `DeletedAt` timestamp; 5-second undo toast before permanent removal | Low |
 | **Duplicate Alarm** | One-click clone of any alarm with new UUID and "(Copy)" label suffix | Low |
 | **Auto-Dismiss** | Optional auto-stop after N minutes (1–60) if alarm is unacknowledged | Low |
 
@@ -53,8 +53,8 @@ Desktop computers sleep and shut down — alarms must never be silently lost.
 
 | Aspect | Implementation |
 |--------|---------------|
-| **nextFireTime persistence** | Every enabled alarm stores precomputed `nextFireTime` in SQLite |
-| **App launch check** | Query `WHERE next_fire_time < now AND enabled = 1` → fire missed alarm notifications |
+| **`NextFireTime` persistence** | Every enabled alarm stores precomputed `NextFireTime` in SQLite |
+| **App launch check** | Query `WHERE NextFireTime < now AND IsEnabled = 1` → fire missed alarm notifications |
 | **System wake detection** | macOS: `NSWorkspace.didWakeNotification`, Windows: `WM_POWERBROADCAST`, Linux: `systemd-logind` |
 | **30-second tick** | Background Rust thread checks every 30 seconds |
 | **Guarantee** | If computer was off 6 AM–9 AM with 7 AM alarm → user sees "Missed: 7:00 AM" at 9 AM |

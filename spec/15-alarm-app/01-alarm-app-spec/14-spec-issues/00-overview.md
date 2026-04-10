@@ -25,7 +25,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 8 | `08-guideline-compliance.md` | Coding Guideline Compliance | 12 | 0 | 12 |
 | 9 | `09-discovery-phase-7.md` | Discovery Phase 7 — Regression Scan | 18 | 0 | 18 |
 | 10 | `10-discovery-phase-8.md` | Discovery Phase 8 — Remaining Files | 11 | 0 | 11 |
-| 11 | `11-discovery-phase-9.md` | Discovery Phase 9 — Full Grep Scan | 30 | 30 | 0 |
+| 11 | `11-discovery-phase-9.md` | Discovery Phase 9 — Full Grep Scan | 30 | 0 | 30 |
 
 ---
 
@@ -37,8 +37,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 54 |
 | 🟢 Low | 8 |
 | **Grand Total** | **136** |
-| **Open** | **30** |
-| **Resolved** | **106** |
+| **Open** | **0** |
+| **Resolved** | **136** |
 
 ---
 

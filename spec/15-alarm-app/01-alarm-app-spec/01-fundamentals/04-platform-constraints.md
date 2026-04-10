@@ -278,7 +278,7 @@ loop {
 
 1. **Lazy-load React routes:** `React.lazy()` for Settings, History, Analytics pages. Only AlarmList loads on startup
 2. **Dispose audio sink:** Release `rodio::Sink` after alarm dismissal, not at app start
-3. **Limit alarm_events in memory:** Paginate history view (50 per page), don't load all into React state
+3. **Limit `AlarmEvents` in memory:** Paginate history view (50 per page), don't load all into React state
 4. **WebView when minimized to tray:** Call `webview.hide()` (keeps process but reduces active memory) — do NOT destroy WebView (re-creation is expensive)
 
 ---
