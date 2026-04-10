@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.17.0  
+**Version:** 1.18.0  
 **Updated:** 2026-04-10
 
 ---
@@ -30,7 +30,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 13 | `13-discovery-phase-11.md` | Discovery Phase 11 — Feature Specs Deep Audit | 14 | 0 | 14 |
 | 14 | `14-discovery-phase-12.md` | Discovery Phase 12 — Root-Level Docs Audit | 9 | 0 | 9 |
 | 15 | `15-discovery-phase-13.md` | Discovery Phase 13 — App Issues & Reference Audit | 3 | 0 | 3 |
-| 16 | `16-discovery-phase-14.md` | Discovery Phase 14 — Foundational Alignment Audit | 29 | 2 | 27 |
+| 16 | `16-discovery-phase-14.md` | Discovery Phase 14 — Foundational Alignment Audit | 29 | 0 | 29 |
 | 17 | `17-discovery-phase-15.md` | Discovery Phase 15 — Deep Boolean, Negation & Code Sample Audit | 13 | 0 | 13 |
 | 18 | `18-discovery-phase-16.md` | Discovery Phase 16 — Test Fixtures, Cheat Sheet & Cross-Reference Audit | 12 | 0 | 12 |
 | 19 | `19-discovery-phase-17.md` | Discovery Phase 17 — Execution Guides, Handoff Reports & Concurrency Audit | 12 | 0 | 12 |
@@ -43,6 +43,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 26 | `26-fix-phase-h-stale-metrics.md` | Fix Phase H — Stale Metrics Update | 15 resolved | 0 | 15 |
 | 27 | `27-fix-phase-e-settings-ui-states.md` | Fix Phase E — Settings Seeding & UI States | 4 resolved | 0 | 4 |
 | 28 | `28-fix-phase-f-remaining.md` | Fix Phase F — PascalCase, Atomic Tasks, Semantic Inverses & Cross-References | 13 resolved | 0 | 13 |
+| 29 | `29-fix-phase-i-acceptance-rollups.md` | Fix Phase I — Acceptance Criteria Rollups | 2 resolved | 0 | 2 |
 
 ---
 
@@ -54,8 +55,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 125 |
 | 🟢 Low | 39 |
 | **Grand Total** | **256** |
-| **Open** | **7** |
-| **Resolved** | **249** |
+| **Open** | **0** |
+| **Resolved** | **256** |
 
 ---
 
@@ -105,6 +106,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase H** | **Stale metrics: overview, readiness, consistency, changelog** | **✅ Done (15 resolved, 24 open)** |
 | **Fix Phase E** | **Settings seeding strategy + UI states specification** | **✅ Done (4 resolved, 20 open)** |
 | **Fix Phase F** | **PascalCase, atomic tasks, semantic inverses, cross-references** | **✅ Done (13 resolved, 7 open)** |
+| **Fix Phase I** | **Acceptance criteria rollups for features/ and fundamentals/** | **✅ Done (2 resolved, 0 open)** |
 
 ---
 
