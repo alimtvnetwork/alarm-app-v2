@@ -156,9 +156,9 @@ PRAGMA synchronous=NORMAL;
 ### Step 5 — Load Settings
 
 ```rust
-let settings = Settings::load_all(&pool).await?;
+let settings = Settings::load_all(&conn).await?;
 // Apply defaults for any missing keys
-settings.ensure_defaults(&pool).await?;
+settings.ensure_defaults(&conn).await?;
 ```
 
 - Must complete before tray init (needs `TimeFormat` for display)

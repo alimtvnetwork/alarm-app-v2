@@ -84,7 +84,7 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `create_group` | FE → BE | `{ Name: string }` | `AlarmGroup` |
 | `update_group` | FE → BE | `{ AlarmGroupId: string, Name: string }` | `AlarmGroup` |
 | `delete_group` | FE → BE | `{ AlarmGroupId: string }` | `void` |
-| `get_groups` | FE → BE | `void` | `AlarmGroup[]` |
+| `list_groups` | FE → BE | `void` | `AlarmGroup[]` |
 | `toggle_group` | FE → BE | `{ AlarmGroupId: string, IsEnabled: boolean }` | `void` |
 
 #### Alarm Firing Commands
@@ -143,10 +143,10 @@ The frontend uses **Zustand** for global state management. Zustand is chosen ove
 │  │ useAlarm │ │ useOverlay│ │  useSettings   │  │
 │  │  Store   │ │  Store    │ │    Store       │  │
 │  ├──────────┤ ├──────────┤ ├────────────────┤  │
-│  │ alarms[] │ │ active   │ │ theme          │  │
-│  │ groups[] │ │ queue[]  │ │ timeFormat     │  │
-│  │ loading  │ │ isShown  │ │ snoozeDuration │  │
-│  │ error    │ │ queueLen │ │ language       │  │
+│  │ alarms[] │ │ active   │ │ Theme          │  │
+│  │ groups[] │ │ queue[]  │ │ TimeFormat     │  │
+│  │ loading  │ │ isShown  │ │ SnoozeDuration │  │
+│  │ error    │ │ queueLen │ │ Language       │  │
 │  └──────────┘ └──────────┘ └────────────────┘  │
 │                     ↕ IPC                        │
 │              Tauri invoke() / listen()            │

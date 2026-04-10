@@ -612,7 +612,7 @@ struct AlarmQueue {
 struct FiredAlarm {
     alarm_id: String,
     label: String,
-    sound_id: String,
+    sound_file: String,
     fire_time: DateTime<Utc>,     // Original scheduled time
     fired_at: DateTime<Utc>,      // Actual fire time
     auto_dismiss_min: u32,        // 0 = manual dismiss only

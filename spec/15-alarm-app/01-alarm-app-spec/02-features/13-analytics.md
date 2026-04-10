@@ -38,9 +38,9 @@ Persistent log of every alarm event (fired, snoozed, dismissed, missed) with fil
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `get_alarm_history` | `{ filter: HistoryFilter }` | `AlarmEvent[]` |
-| `export_history_csv` | `{ filter: HistoryFilter }` | `string` (file path) |
-| `clear_history` | `{ before?: string }` | `{ deleted: number }` |
+| `get_alarm_history` | `{ Filter: HistoryFilter }` | `AlarmEvent[]` |
+| `export_history_csv` | `{ Filter: HistoryFilter }` | `string` (file path) |
+| `clear_history` | `{ Before?: string }` | `{ Deleted: number }` |
 
 ### HistoryFilter
 

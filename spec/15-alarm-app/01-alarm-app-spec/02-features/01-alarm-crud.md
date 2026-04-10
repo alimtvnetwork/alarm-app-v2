@@ -230,24 +230,24 @@ function onDeleteAlarm(alarmId: string, undoToken: string, label: string) {
   // If stack is full, oldest entry expires immediately
   if (undoStack.length >= MAX_UNDO_STACK) {
     const oldest = undoStack.shift()!;
-    clearTimeout(oldest.timerId);
+    clearTimeout(oldest.TimerId);
     // oldest is permanently deleted (timer already fired on backend)
   }
 
   const timerId = setTimeout(() => {
     // Remove from stack after 5s (backend has already hard-deleted)
-    const idx = undoStack.findIndex(e => e.token === undoToken);
+    const idx = undoStack.findIndex(e => e.Token === undoToken);
     if (idx !== -1) undoStack.splice(idx, 1);
     // Remove toast for this entry
   }, 5000);
 
-  undoStack.push({ token: undoToken, alarmId, label, expiresAt: Date.now() + 5000, timerId });
+  undoStack.push({ Token: undoToken, AlarmId: alarmId, Label: label, ExpiresAt: Date.now() + 5000, TimerId: timerId });
 
   // Show toast: "Deleted {label} — Undo"
 }
 
 async function onUndo(token: string) {
-  const idx = undoStack.findIndex(e => e.token === token);
+  const idx = undoStack.findIndex(e => e.Token === token);
   if (idx === -1) return; // Already expired
 
   const entry = undoStack.splice(idx, 1)[0];

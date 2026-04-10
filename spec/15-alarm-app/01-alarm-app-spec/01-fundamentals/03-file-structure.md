@@ -30,7 +30,7 @@ src/                          — Frontend (React + TypeScript)
   stores/                     — Zustand global state stores (Resolves UX-STATE-001)
     useAlarmStore.ts          — Alarm CRUD + groups + loading/error state
     useOverlayStore.ts        — Active alarm, queue mirror, overlay visibility
-    useSettingsStore.ts       — Theme, timeFormat, language, snoozeDuration
+    useSettingsStore.ts       — Theme, TimeFormat, Language, DefaultSnoozeDuration
 
   hooks/
     useAlarms.ts              — Thin wrapper over useAlarmStore for component convenience
