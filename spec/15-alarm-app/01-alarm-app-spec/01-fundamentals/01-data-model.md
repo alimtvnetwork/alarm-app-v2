@@ -67,6 +67,18 @@ interface RepeatPattern {
 }
 ```
 
+### SnoozeState
+
+```typescript
+interface SnoozeState {
+  AlarmId: string;             // References Alarm.AlarmId
+  SnoozeUntil: string;         // ISO 8601 — when snooze expires (matches SQL column name)
+  SnoozeCount: number;         // Number of times snoozed this session (1-based)
+}
+```
+
+> **⚠️ Field name:** The field is `SnoozeUntil`, NOT `NextFireTime`. The `NextFireTime` field exists on `Alarm` (next scheduled alarm time) — do not confuse the two.
+
 ### Rust Data Mapping (Resolves DB-SERIAL-001)
 
 > Without explicit Rust struct examples, AI will get `serde_json` deserialization wrong for JSON columns stored as TEXT.
