@@ -56,18 +56,9 @@ Violations of the project's own coding guidelines found in spec code samples. Th
 
 **Severity:** 🟡 Medium  
 **Rule Violated:** Linter CODE RED — no magic numbers  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — named constants added across all files in Fix Phase 16
 
-**Problem:** Multiple hardcoded numbers in code samples without named constants:
-
-| File | Magic Number | Should Be |
-|------|:------------:|-----------|
-| `01-data-model.md` | `90` | `DEFAULT_EVENT_RETENTION_DAYS` |
-| `01-data-model.md` | `5` | `DEFAULT_SNOOZE_DURATION_MIN` |
-| `01-data-model.md` | `30` | `DEFAULT_GRADUAL_VOLUME_SEC` |
-| `04-platform-constraints.md` | `30` | `ALARM_CHECK_INTERVAL_SECS` |
-| `03-alarm-firing.md` | `3, 0, 0` | `DST_FALLBACK_HOUR` (also wrong — LC-006) |
-| `05-sound-and-vibration.md` | `10 * 1024 * 1024` | `MAX_SOUND_FILE_SIZE_BYTES` |
+**Resolution:** `DEFAULT_EVENT_RETENTION_DAYS = 90` added to data model, `ALARM_CHECK_INTERVAL_SECS = 30` added to alarm-firing, concurrency guide, platform-constraints, startup sequence, cheat sheet, and NFR spec. `MAX_SOUND_FILE_SIZE` already existed. DST `3,0,0` replaced by walk-forward algorithm (no magic number needed). SQL `DEFAULT` values in schema are acceptable as they are declarative, not logic.
 
 ---
 
@@ -75,14 +66,9 @@ Violations of the project's own coding guidelines found in spec code samples. Th
 
 **Severity:** 🟡 Medium  
 **Rule Violated:** Error handling guidelines — avoid `.unwrap()` in production code  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — all production `.unwrap()` calls removed in Fix Phase 16
 
-**Problem:** 5 `.unwrap()` calls in non-test Rust code samples:
-- `01-data-model.md`: `from_row()` uses `unwrap_or` (acceptable)
-- `03-alarm-firing.md` line 135: `NaiveTime::from_hms_opt(3,0,0).unwrap()` — production DST code
-- `13-ai-cheat-sheet.md` line 79: same `.unwrap()` in DST example
-
-**Note:** `.unwrap()` in test code (`09-test-strategy.md`) is acceptable Rust convention.
+**Resolution:** The `NaiveTime::from_hms_opt(3,0,0).unwrap()` calls were eliminated entirely by replacing the hardcoded DST approach with a walk-forward algorithm. Remaining `.unwrap()` calls are exclusively in test code (`09-test-strategy.md`, `12-platform-and-concurrency-guide.md` test section) which is acceptable Rust convention.
 
 ---
 

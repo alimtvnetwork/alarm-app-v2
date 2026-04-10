@@ -26,9 +26,9 @@ Missing content, incomplete specifications, and undefined patterns that will cau
 
 **Severity:** 🔴 Critical  
 **Location:** `02-features/03-alarm-firing.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — replaced hardcoded 3:00 AM with timezone-agnostic walk-forward algorithm in Fix Phase 16
 
-**Problem:** DST fallback is hardcoded to 3:00 AM — only correct for US. EU spring-forward is 1:00→2:00 AM, some regions have 0:00→1:00 AM. Malaysia (UTC+8) has no DST at all.
+**Resolution:** All DST code now walks forward minute-by-minute from the skipped time. Test table includes US, EU, and no-DST timezone scenarios.
 
 ---
 
