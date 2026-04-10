@@ -50,7 +50,7 @@
 | 12 | Implement `AlarmAppError` enum with `thiserror` — all 12 error variants | 30m | `04-platform-constraints.md` → Rust Error Type | 🟢 | 4 |
 | 13 | Create TypeScript interfaces: `Alarm`, `RepeatPattern`, `AlarmGroup`, `AlarmSound`, `AlarmEvent`, `SnoozeState` | 30m | `01-data-model.md` → Interfaces | 🟢 | 2 |
 | 14 | Create `lib/tauri-commands.ts` — typed `invoke()` wrappers with `safeInvoke()` timeout + error toast | 1h | `04-platform-constraints.md` → Frontend Error Handling, `06-tauri-architecture.md` → IPC | 🟡 | 13 |
-| 15 | Implement alarm CRUD operations in Rust: `insert_alarm()`, `update_alarm()`, `get_alarms()`, `soft_delete_alarm()`, `undo_delete()` | 2h | `01-alarm-crud.md` → Soft-delete timer Rust code | 🟡 | 9, 12 |
+| 15 | Implement alarm CRUD operations in Rust: `insert_alarm()`, `update_alarm()`, `list_alarms()`, `soft_delete_alarm()`, `undo_delete()` | 2h | `01-alarm-crud.md` → Soft-delete timer Rust code | 🟡 | 9, 12 |
 | 16 | Implement event logging: `insert_alarm_event()`, `purge_old_events()` (90-day retention) | 30m | `01-data-model.md` → Event Retention Policy | 🟢 | 8 |
 
 **Phase 2 checkpoint:** `cargo test` — in-memory SQLite, all CRUD ops pass, migration runs, settings read/write works.

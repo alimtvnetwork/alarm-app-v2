@@ -74,14 +74,9 @@ Issues where different spec files contradict each other — the most dangerous c
 ## IC-006: IPC Command Names Inconsistent Between Files
 
 **Severity:** 🟡 Medium  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — standardized to `list_alarms` in all files
 
-| File | Commands listed |
-|------|----------------|
-| `06-tauri-architecture.md` | `get_alarms` |
-| `01-alarm-crud.md` | `list_alarms` |
-
-**Same operation, different name.** AI will implement both or pick wrong one.
+**Resolution:** Renamed `get_alarms` → `list_alarms` in `06-tauri-architecture.md` and `11-atomic-task-breakdown.md` to match the canonical name in `01-alarm-crud.md`.
 
 ---
 
