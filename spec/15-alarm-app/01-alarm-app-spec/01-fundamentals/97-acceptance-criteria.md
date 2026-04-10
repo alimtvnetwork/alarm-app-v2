@@ -5,7 +5,11 @@
 **Purpose:** Testable success criteria for all fundamental/infrastructure specs  
 **Resolves:** P14-002
 
-> **Usage:** AI agents should verify these criteria after implementing each fundamental. Unlike feature acceptance criteria (binary pass/fail), some of these are architecture verification checks.
+---
+
+## Keywords
+
+`acceptance-criteria`, `fundamentals`, `infrastructure`, `verification`, `testable`
 
 ---
 
