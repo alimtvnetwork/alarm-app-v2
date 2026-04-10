@@ -1,7 +1,7 @@
 # Dismissal Challenges
 
-**Version:** 1.2.0  
-**Updated:** 2026-04-09  
+**Version:** 1.3.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P1 (Math) / P2 (Others)  
@@ -89,6 +89,21 @@ interface AlarmChallenge {
 }
 ```
 
+> **Note:** This interface is a convenience wrapper for the frontend. The data is stored as flat columns on the `Alarms` table (`ChallengeType`, `ChallengeDifficulty`, `ChallengeShakeCount`, `ChallengeStepCount`). See `01-fundamentals/01-data-model.md`.
+
+---
+
+## IPC Commands
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `get_challenge` | `{ AlarmId: string }` | `AlarmChallenge \| null` |
+| `submit_challenge_answer` | `{ AlarmId: string, Answer: string }` | `{ Correct: boolean, SolveTimeSec: number }` |
+
+**Behavior:**
+- `get_challenge` — Returns the challenge configuration for the firing alarm. Returns `null` if no challenge is configured.
+- `submit_challenge_answer` — Validates the user's answer. If correct, logs `SolveTimeSec` to `AlarmEvents.ChallengeSolveTimeSec` and allows dismissal. If incorrect, returns `Correct: false` and the alarm continues firing.
+
 ---
 
 ## Cross-References
@@ -97,4 +112,5 @@ interface AlarmChallenge {
 |-----------|----------|
 | Alarm Firing | `./03-alarm-firing.md` |
 | Alarm CRUD | `./01-alarm-crud.md` |
+| Data Model | `../01-fundamentals/01-data-model.md` |
 | Platform Constraints | `../01-fundamentals/04-platform-constraints.md` |

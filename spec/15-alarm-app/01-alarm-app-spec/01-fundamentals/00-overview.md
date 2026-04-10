@@ -40,7 +40,7 @@ Core architectural decisions, data model definitions, design system tokens, file
 | 02 | `02-design-system.md` | Color palette, typography, spacing, component styling |
 | 03 | `03-file-structure.md` | Source file organization, Tauri capabilities manifest, Cargo.toml dependencies, i18n enforcement |
 | 04 | `04-platform-constraints.md` | Cross-platform native constraints, mitigations, error handling strategy, WebView CSS, memory budget |
-| 05 | `05-platform-strategy.md` | Legacy platform strategy (superseded by `../../../10-research/01-platform-research/`) |
+| 05 | `05-platform-strategy.md` | ⚠️ SUPERSEDED — Legacy platform strategy (superseded by `../../../10-research/01-platform-research/`) |
 | 06 | `06-tauri-architecture-and-framework-comparison.md` | Tauri 2.x architecture — Rust backend, IPC commands, plugin system, build pipeline, framework comparison |
 | 07 | `07-startup-sequence.md` | App initialization order — DB, migrations, tray, engine, missed alarm check |
 | 08 | `08-devops-setup-guide.md` | Code signing (macOS/Windows), CI/CD pipeline, auto-update key management |

@@ -1,7 +1,7 @@
 # Clock Display
 
-**Version:** 1.1.0  
-**Updated:** 2026-04-08  
+**Version:** 1.2.0  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have
@@ -47,6 +47,42 @@ The home screen features a live analog clock (SVG) with smooth-animated hands an
 
 ---
 
+## Hooks
+
+### `useClock`
+
+Custom React hook providing real-time clock state:
+
+```typescript
+interface ClockState {
+  Hours: number;      // 0–23
+  Minutes: number;    // 0–59
+  Seconds: number;    // 0–59
+  Is24Hour: boolean;  // from Settings
+}
+
+function useClock(): ClockState;
+```
+
+- Updates every second via `setInterval`
+- Reads `Is24Hour` preference from Settings on mount
+- Used by both `AnalogClock` and `DigitalClock` components
+
+---
+
+## IPC Commands
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `get_next_alarm_time` | `void` | `{ NextFireTime: string \| null, AlarmLabel: string \| null }` |
+
+**Behavior:**
+- Returns the `NextFireTime` (ISO 8601) and label of the earliest enabled alarm
+- Returns `null` values when no alarms are enabled
+- Called on mount and after any alarm CRUD operation to update the countdown display
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Analog clock renders with smooth second hand animation
@@ -63,3 +99,4 @@ The home screen features a live analog clock (SVG) with smooth-animated hands an
 |-----------|----------|
 | Design System | `../01-fundamentals/02-design-system.md` |
 | Theme System | `./09-theme-system.md` |
+| Alarm Scheduling | `./02-alarm-scheduling.md` |
