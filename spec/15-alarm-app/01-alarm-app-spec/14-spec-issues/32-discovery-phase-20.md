@@ -162,7 +162,7 @@ Files: `00-overview.md`, `10-ai-handoff-readiness-report.md`, `99-consistency-re
 **P20-006, P20-007, P20-016, P20-017** (collection commands → `list_`, constant for 5000, enum for 'missed')  
 Files: `02-design-system.md`, `13-analytics.md`, `01-alarm-crud.md`, `07-startup-sequence.md`
 
-### Fix Phase Q — Scoring Tables + Utility File Metadata (31 issues)
+### Fix Phase Q — Scoring Tables + Utility File Metadata (6 issues) ✅ RESOLVED
 **P20-010 to P20-015** (add Scoring tables to all 27 spec files + metadata to utility files)  
 Files: All files in `01-fundamentals/` and `02-features/`
 
