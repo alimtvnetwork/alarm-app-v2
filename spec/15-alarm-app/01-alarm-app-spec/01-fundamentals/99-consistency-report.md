@@ -1,8 +1,14 @@
 # Consistency Report: Fundamentals
 
-**Version:** 1.9.0  
+**Version:** 2.0.0  
 **Generated:** 2026-04-10  
 **Health Score:** 100/100 (A+)
+
+---
+
+## Keywords
+
+`consistency`, `fundamentals`, `health-check`, `file-inventory`, `cross-reference`
 
 ---
 
@@ -64,3 +70,12 @@
 
 - **Errors:** 0
 - **Health Score:** 100/100 (A+)
+
+---
+
+## Cross-References
+
+| Reference | Location |
+|-----------|----------|
+| Parent overview | `./00-overview.md` |
+| Acceptance criteria | `./97-acceptance-criteria.md` |

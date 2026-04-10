@@ -1,6 +1,6 @@
 # Platform Verification Matrix
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -12,6 +12,17 @@
 `platform`, `verification`, `testing`, `matrix`, `runtime`, `fallback`, `compatibility`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (consolidated in 97-acceptance-criteria.md) |
+
 
 ## Purpose
 

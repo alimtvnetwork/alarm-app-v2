@@ -1,6 +1,6 @@
 # Alarm Groups
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -14,6 +14,17 @@
 `groups`, `organize`, `batch`, `toggle`, `categories`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ✅ |
+
 
 ## Description
 

@@ -1,6 +1,6 @@
 # Snooze System
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -14,6 +14,17 @@
 `snooze`, `delay`, `re-trigger`, `limit`, `duration`, `per-alarm`, `max-snooze`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ✅ |
+
 
 ## Description
 

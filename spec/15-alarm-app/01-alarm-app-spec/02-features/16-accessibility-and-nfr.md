@@ -1,6 +1,6 @@
 # Accessibility & Non-Functional Requirements
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -13,6 +13,17 @@
 `accessibility`, `a11y`, `wcag`, `performance`, `memory`, `startup`, `i18n`, `internationalization`, `keyboard`, `screen-reader`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ✅ |
+
 
 ## Description
 

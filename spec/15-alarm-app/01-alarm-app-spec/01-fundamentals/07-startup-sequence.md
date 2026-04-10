@@ -1,6 +1,6 @@
 # Startup Sequence
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -14,6 +14,17 @@
 `startup`, `initialization`, `boot`, `sequence`, `migration`, `tray`, `engine`, `missed-alarm`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (consolidated in 97-acceptance-criteria.md) |
+
 
 ## Purpose
 

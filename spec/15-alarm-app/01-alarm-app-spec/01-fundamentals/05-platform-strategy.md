@@ -2,7 +2,7 @@
  
 > ⚠️ **SUPERSEDED** — This document is a legacy reference. The authoritative Tauri architecture is in `06-tauri-architecture-and-framework-comparison.md`. This file is retained for framework evaluation context only.
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-08  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -15,6 +15,17 @@
 `platform`, `cross-platform`, `framework`, `native`, `desktop`, `mobile`, `macOS`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (consolidated in 97-acceptance-criteria.md) |
+
 
 ## Purpose
 

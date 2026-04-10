@@ -1,6 +1,6 @@
 # Alarm Scheduling
 
-**Version:** 2.1.0  
+**Version:** 2.2.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -14,6 +14,17 @@
 `scheduling`, `recurring`, `repeat`, `one-time`, `daily`, `weekly`, `interval`, `cron`, `repeat-pattern`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ✅ |
+
 
 ## Description
 

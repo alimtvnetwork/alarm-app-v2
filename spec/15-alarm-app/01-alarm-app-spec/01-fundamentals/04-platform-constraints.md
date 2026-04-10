@@ -1,6 +1,6 @@
 # Platform Constraints
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -13,6 +13,17 @@
 `platform`, `constraints`, `native`, `audio`, `notifications`, `storage`, `cross-platform`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (consolidated in 97-acceptance-criteria.md) |
+
 
 ## Purpose
 

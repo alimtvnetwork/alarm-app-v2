@@ -1,6 +1,6 @@
 # Test Strategy
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -14,6 +14,17 @@
 `testing`, `unit-test`, `integration-test`, `e2e`, `coverage`, `ci`, `vitest`, `tauri-driver`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (consolidated in 97-acceptance-criteria.md) |
+
 
 ## Purpose
 

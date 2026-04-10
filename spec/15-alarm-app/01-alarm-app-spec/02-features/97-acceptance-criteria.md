@@ -5,6 +5,12 @@
 **Purpose:** Single document collecting all testable acceptance criteria from the 16 feature specs  
 **Resolves:** P14-001
 
+---
+
+## Keywords
+
+`acceptance-criteria`, `features`, `testable`, `verification`, `rollup`
+
 > **Usage:** AI agents implementing features should verify every checkbox below. Each criterion links to its source spec for implementation details.
 
 ---
@@ -217,3 +223,12 @@
 ---
 
 *Feature acceptance criteria rollup — created: 2026-04-10*
+
+---
+
+## Cross-References
+
+| Reference | Location |
+|-----------|----------|
+| Parent overview | `./00-overview.md` |
+| Fundamentals acceptance criteria | `../01-fundamentals/97-acceptance-criteria.md` |

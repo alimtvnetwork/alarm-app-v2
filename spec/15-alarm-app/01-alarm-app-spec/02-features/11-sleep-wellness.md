@@ -1,6 +1,6 @@
 # Sleep & Wellness
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** Low  
@@ -13,6 +13,17 @@
 `sleep`, `bedtime`, `wellness`, `calculator`, `mood`, `ambient`, `native`, `audio`
 
 ---
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ✅ |
+
 
 ## Description
 
