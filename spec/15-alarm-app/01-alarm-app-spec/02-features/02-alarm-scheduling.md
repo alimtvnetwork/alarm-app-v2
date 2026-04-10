@@ -1,6 +1,6 @@
 # Alarm Scheduling
 
-**Version:** 2.2.0  
+**Version:** 2.3.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
