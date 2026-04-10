@@ -1,5 +1,8 @@
 # Alarm App — Complete Feature Overview
 
+**Version:** 1.0.0  
+**Updated:** 2026-04-10
+
 A comprehensive guide to all possible features for a modern cross-platform native alarm application (Tauri 2.x — macOS, Windows, Linux, iOS, Android).
 
 ---
