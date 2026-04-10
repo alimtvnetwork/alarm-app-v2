@@ -163,9 +163,9 @@ User clicks "Undo A" at t=3s → must cancel A's timer, NOT B's
 
 **Safeguard:** Each delete generates a unique `undo_token` (UUID). The hard-delete query is:
 ```sql
-DELETE FROM alarms WHERE id = ? AND deleted_at IS NOT NULL
+DELETE FROM Alarms WHERE AlarmId = ? AND DeletedAt IS NOT NULL
 ```
-This is idempotent — if undo already cleared `deleted_at`, the DELETE affects 0 rows.
+This is idempotent — if undo already cleared `DeletedAt`, the DELETE affects 0 rows.
 
 #### Race 2: Alarm Fire During Edit
 

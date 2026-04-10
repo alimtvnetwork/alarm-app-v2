@@ -275,11 +275,9 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Severity:** 🔴 Critical  
 **Location:** `01-fundamentals/01-data-model.md` (line 224)  
 **Rule Violated:** `10-database-conventions/01-naming-conventions.md` — table names must be PascalCase  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — renamed to `Alarms` across all files
 
-**Problem:** `CREATE TABLE alarms (` — should be `CREATE TABLE Alarms (`. Fix Phase 3 renamed multi-word tables (`alarm_events` → `AlarmEvents`, etc.) but missed the main `alarms` table, incorrectly assuming single-word names were exempt.
-
-**Correction:** PascalCase mandate applies to ALL table names regardless of word count. `alarms` → `Alarms`.
+**Resolution:** `CREATE TABLE alarms` → `CREATE TABLE Alarms` in data model, all SQL queries, indexes, and foreign key references updated across 9 files.
 
 ---
 
@@ -288,9 +286,9 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 **Severity:** 🟡 Medium  
 **Location:** `01-fundamentals/01-data-model.md` (line 256)  
 **Rule Violated:** `10-database-conventions/01-naming-conventions.md`  
-**Status:** 🔴 Open
+**Status:** ✅ Resolved — renamed to `Settings` across all files
 
-**Problem:** `CREATE TABLE settings (` — should be `CREATE TABLE Settings (`. Same regression as NV-016.
+**Resolution:** `CREATE TABLE settings` → `CREATE TABLE Settings` in data model, all SQL queries, and prose references updated.
 
 ---
 
@@ -316,4 +314,4 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 ---
 
 ## Issues Found So Far: 18
-## Open: 6 | Resolved: 12
+## Open: 4 | Resolved: 14

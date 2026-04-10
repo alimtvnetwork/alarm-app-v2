@@ -24,7 +24,7 @@ When the current time matches an enabled alarm's `NextFireTime`, the alarm fires
 ## Firing Logic
 
 1. Rust backend runs a dedicated background thread with a **30-second check interval**
-2. Query: `SELECT * FROM alarms WHERE NextFireTime <= now AND IsEnabled = 1 AND DeletedAt IS NULL`
+2. Query: `SELECT * FROM Alarms WHERE NextFireTime <= now AND IsEnabled = 1 AND DeletedAt IS NULL`
 3. For each matched alarm:
    a. Rust triggers native audio playback (via `rodio` or platform audio API)
    b. Rust emits an `alarm-fired` event to the frontend via Tauri IPC
@@ -46,7 +46,7 @@ When the current time matches an enabled alarm's `NextFireTime`, the alarm fires
 
 ### Core Principle
 
-Alarms are defined in **local time** (`HH:MM`). The `nextFireTime` is stored as **UTC**. The Rust backend converts between them using the IANA timezone from the `settings` table.
+Alarms are defined in **local time** (`HH:MM`). The `nextFireTime` is stored as **UTC**. The Rust backend converts between them using the IANA timezone from the `Settings` table.
 
 ### nextFireTime Computation (Rust Pseudocode)
 

@@ -54,7 +54,7 @@ Defines the exact initialization order for the Alarm App on launch. Incorrect or
                       │
                       ▼
               ┌────────────────┐
-         5.   │ Load settings  │  Read all rows from settings table
+         5.   │ Load settings  │  Read all rows from Settings table
               │ into memory    │  Parse into typed Settings struct
               └───────┬────────┘  Apply defaults for missing keys
                       │
@@ -253,7 +253,7 @@ tokio::spawn(async move {
 ### Step 8 — Missed Alarm Check
 
 ```sql
-SELECT * FROM alarms
+SELECT * FROM Alarms
 WHERE NextFireTime < datetime('now')
   AND IsEnabled = 1
   AND DeletedAt IS NULL;

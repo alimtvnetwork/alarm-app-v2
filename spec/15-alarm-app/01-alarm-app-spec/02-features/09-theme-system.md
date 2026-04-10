@@ -33,7 +33,7 @@ Full dark/light theme toggle with system preference auto-detection. The dark mod
 ## Implementation
 
 - `useTheme` hook manages state
-- Theme stored in `settings` SQLite table under key `theme`
+- Theme stored in `Settings` SQLite table under key `Theme`
 - Applies `.dark` class to root element
 - CSS variables in `index.css` swap between palettes
 - System mode listens to OS appearance change events (e.g., `prefers-color-scheme` in WebView, or Tauri window theme event)

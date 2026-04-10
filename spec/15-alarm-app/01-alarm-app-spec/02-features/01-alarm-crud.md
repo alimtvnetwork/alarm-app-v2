@@ -46,7 +46,7 @@ Users can create new alarms by setting a time (hour and minute), optional date, 
 - Sets `DeletedAt` timestamp instead of hard-deleting immediately
 - Shows a 5-second undo toast in the UI
 - If undone: clears `DeletedAt` back to null
-- **Timer mechanism:** `tokio::spawn` with `tokio::time::sleep(Duration::from_secs(5))`, then `DELETE FROM alarms WHERE AlarmId = ? AND DeletedAt IS NOT NULL`
+- **Timer mechanism:** `tokio::spawn` with `tokio::time::sleep(Duration::from_secs(5))`, then `DELETE FROM Alarms WHERE AlarmId = ? AND DeletedAt IS NOT NULL`
 - **Crash recovery:** On app startup, purge all rows where `DeletedAt < now - 5 seconds` (cleanup pass)
 - IPC command: `invoke("delete_alarm", { alarmId })` → returns `{ undoToken }`
 - Undo IPC: `invoke("undo_delete_alarm", { undoToken })`
@@ -60,7 +60,7 @@ pub fn schedule_permanent_delete(conn: Arc<Mutex<Connection>>, alarm_id: String,
         // Only delete if still soft-deleted (not undone)
         let db = conn.lock().expect("DB lock poisoned");
         match db.execute(
-            "DELETE FROM alarms WHERE AlarmId = ?1 AND DeletedAt IS NOT NULL",
+            "DELETE FROM Alarms WHERE AlarmId = ?1 AND DeletedAt IS NOT NULL",
             params![&alarm_id],
         ) {
             Ok(rows) if rows > 0 => {
@@ -75,7 +75,7 @@ pub fn schedule_permanent_delete(conn: Arc<Mutex<Connection>>, alarm_id: String,
 pub fn cleanup_stale_soft_deletes(conn: &Connection) {
     let cutoff = Utc::now() - chrono::Duration::seconds(5);
     conn.execute(
-        "DELETE FROM alarms WHERE DeletedAt IS NOT NULL AND DeletedAt < ?1",
+        "DELETE FROM Alarms WHERE DeletedAt IS NOT NULL AND DeletedAt < ?1",
         params![cutoff.to_rfc3339()],
     ).ok();
 }

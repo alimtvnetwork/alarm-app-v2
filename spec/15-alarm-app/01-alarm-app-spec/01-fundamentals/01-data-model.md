@@ -221,7 +221,7 @@ interface AlarmEvent {
 ### Tables
 
 ```sql
-CREATE TABLE alarms (
+CREATE TABLE Alarms (
   AlarmId TEXT PRIMARY KEY,
   Time TEXT NOT NULL,
   Date TEXT,                                        -- YYYY-MM-DD or NULL
@@ -253,13 +253,13 @@ CREATE TABLE AlarmGroups (
   IsEnabled INTEGER NOT NULL DEFAULT 1
 );
 
-CREATE TABLE settings (
+CREATE TABLE Settings (
   Key TEXT PRIMARY KEY,
   Value TEXT NOT NULL
 );
 
 CREATE TABLE SnoozeState (
-  AlarmId TEXT PRIMARY KEY REFERENCES alarms(AlarmId) ON DELETE CASCADE,
+  AlarmId TEXT PRIMARY KEY REFERENCES Alarms(AlarmId) ON DELETE CASCADE,
   SnoozeUntil TEXT NOT NULL,  -- ISO 8601 timestamp
   SnoozeCount INTEGER NOT NULL DEFAULT 1
 );
@@ -503,13 +503,13 @@ The `V1__initial_schema.sql` file must contain ALL tables from the SQLite Schema
 
 ```sql
 -- Indexes for alarm engine performance
-CREATE INDEX IdxAlarmsNextFire ON alarms(NextFireTime) WHERE IsEnabled = 1 AND DeletedAt IS NULL;
-CREATE INDEX IdxAlarmsGroup ON alarms(GroupId);
+CREATE INDEX IdxAlarmsNextFire ON Alarms(NextFireTime) WHERE IsEnabled = 1 AND DeletedAt IS NULL;
+CREATE INDEX IdxAlarmsGroup ON Alarms(GroupId);
 CREATE INDEX IdxEventsAlarm ON AlarmEvents(AlarmId);
 CREATE INDEX IdxEventsTimestamp ON AlarmEvents(Timestamp);
 
 -- Default settings
-INSERT INTO settings (Key, Value) VALUES
+INSERT INTO Settings (Key, Value) VALUES
   ('theme', 'system'),
   ('time_format', '12h'),
   ('default_snooze_duration', '5'),

@@ -120,7 +120,7 @@ import en from './locales/en.json';
 
 i18n.use(initReactI18next).init({
   resources: { en: { translation: en } },
-  lng: 'en',  // Read from settings table on startup
+  lng: 'en',  // Read from Settings table on startup
   fallbackLng: 'en',
   interpolation: { escapeValue: false },
 });

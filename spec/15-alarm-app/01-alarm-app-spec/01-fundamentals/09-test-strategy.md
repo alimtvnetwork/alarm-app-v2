@@ -105,7 +105,7 @@ async fn test_create_alarm_persists_to_db() {
     assert!(alarm.next_fire_time.is_some());
 
     // Verify persisted
-    let row = conn.query_row("SELECT * FROM alarms WHERE id = ?", [&alarm.id], AlarmRow::from_row).unwrap();
+    let row = conn.query_row("SELECT * FROM Alarms WHERE AlarmId = ?", [&alarm.alarm_id], AlarmRow::from_row).unwrap();
     assert_eq!(row.label, "Morning");
 }
 
@@ -118,12 +118,12 @@ async fn test_soft_delete_and_undo() {
     assert!(!result.undo_token.is_empty());
 
     // Verify soft-deleted
-    let row = conn.query_row("SELECT deleted_at FROM alarms WHERE id = ?", [&alarm.id], |r| r.get::<_, Option<String>>(0)).unwrap();
+    let row = conn.query_row("SELECT DeletedAt FROM Alarms WHERE AlarmId = ?", [&alarm.alarm_id], |r| r.get::<_, Option<String>>(0)).unwrap();
     assert!(row.is_some());
 
     // Undo
     undo_delete_handler(&conn, &result.undo_token).await.unwrap();
-    let row = conn.query_row("SELECT deleted_at FROM alarms WHERE id = ?", [&alarm.id], |r| r.get::<_, Option<String>>(0)).unwrap();
+    let row = conn.query_row("SELECT DeletedAt FROM Alarms WHERE AlarmId = ?", [&alarm.alarm_id], |r| r.get::<_, Option<String>>(0)).unwrap();
     assert!(row.is_none());
 }
 ```
