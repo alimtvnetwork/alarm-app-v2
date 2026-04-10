@@ -243,6 +243,41 @@ fn log_webhook_result(url: &Url, response: Result<reqwest::Response, reqwest::Er
 
 ---
 
+## IPC Commands
+
+> Smart features that require backend interaction. Webhook CRUD, weather, location, and voice all need Tauri IPC commands.
+
+| Command | Payload | Returns |
+|---------|---------|---------|
+| `create_webhook` | `{ AlarmId: string, Url: string, Payload?: Record<string, unknown> }` | `WebhookConfig` |
+| `delete_webhook` | `{ WebhookId: string }` | `void` |
+| `test_webhook` | `{ WebhookId: string }` | `{ Success: boolean, StatusCode: number \| null, Error: string \| null }` |
+| `get_weather_briefing` | `{ Latitude: number, Longitude: number }` | `WeatherBriefing` |
+
+> **Note:** Location-based alarms and voice commands use platform-native APIs invoked directly from Rust — no frontend IPC commands needed. Multi-timezone support is handled by `create_alarm`/`update_alarm` with a `Timezone` field.
+
+### Payload Interfaces
+
+```typescript
+interface WebhookConfig {
+  WebhookId: string;
+  AlarmId: string;
+  Url: string;
+  Payload: Record<string, unknown> | null;
+  CreatedAt: string;  // ISO 8601
+}
+
+interface WeatherBriefing {
+  Temperature: number;     // Celsius
+  RainChance: number;      // 0–100 percentage
+  WindSpeed: number;       // km/h
+  Description: string;     // e.g., "Partly cloudy"
+  FetchedAt: string;       // ISO 8601
+}
+```
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Webhook URL validated with 5 SSRF checks (HTTPS, blocked hosts, private IP, standard port, valid URL)

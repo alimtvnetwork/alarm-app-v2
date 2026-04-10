@@ -698,7 +698,7 @@ When `pending.len() > 0`, show a badge on the `AlarmOverlay`:
 
 ## IPC Commands
 
-> Firing-related IPC commands. See also `06-tauri-architecture-and-framework-comparison.md` for the complete registry.
+> Firing-related IPC commands. Snooze commands are also listed in `04-snooze-system.md`. See `06-tauri-architecture-and-framework-comparison.md` for the complete registry.
 
 | Command | Payload | Returns |
 |---------|---------|---------|

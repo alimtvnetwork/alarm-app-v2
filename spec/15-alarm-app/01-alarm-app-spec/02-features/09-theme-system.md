@@ -67,8 +67,10 @@ Full dark/light theme toggle with system preference auto-detection. The dark mod
 | `set_theme` | `{ Theme: ThemeMode }` | `void` |
 
 **Behavior:**
-- `get_theme` — Reads `Theme` key from `Settings` SQLite table. Defaults to `ThemeMode.System` if not set.
-- `set_theme` — Writes `Theme` key to `Settings` table and emits `theme-changed` event to frontend.
+- `get_theme` — Convenience wrapper that reads the `Theme` key from `Settings` SQLite table. Equivalent to calling `get_settings` and extracting the `Theme` field. Defaults to `ThemeMode.System` if not set.
+- `set_theme` — Convenience wrapper that writes the `Theme` key to `Settings` table (equivalent to `update_setting({ Key: "Theme", Value: "..." })`) and emits `theme-changed` event to frontend.
+
+> **Note:** `get_settings` (see `06-tauri-architecture-and-framework-comparison.md`) returns the full `Settings` object including `Theme`. These dedicated `get_theme`/`set_theme` commands exist for convenience and to emit the `theme-changed` event automatically.
 
 ---
 
