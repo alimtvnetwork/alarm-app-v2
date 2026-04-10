@@ -1,6 +1,6 @@
 # Tauri Architecture & Cross-Platform Framework Comparison
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
