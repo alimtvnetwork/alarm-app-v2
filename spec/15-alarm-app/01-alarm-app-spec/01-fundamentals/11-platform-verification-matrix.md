@@ -12,7 +12,6 @@
 `platform`, `verification`, `testing`, `matrix`, `runtime`, `fallback`, `compatibility`
 
 ---
----
 
 ## Scoring
 

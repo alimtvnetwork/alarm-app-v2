@@ -13,7 +13,6 @@
 `devops`, `signing`, `notarization`, `ci-cd`, `auto-update`, `github-actions`, `tauri-action`, `code-signing`
 
 ---
----
 
 ## Scoring
 

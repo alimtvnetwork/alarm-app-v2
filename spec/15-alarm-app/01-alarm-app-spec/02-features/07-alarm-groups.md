@@ -14,7 +14,6 @@
 `groups`, `organize`, `batch`, `toggle`, `categories`
 
 ---
----
 
 ## Scoring
 

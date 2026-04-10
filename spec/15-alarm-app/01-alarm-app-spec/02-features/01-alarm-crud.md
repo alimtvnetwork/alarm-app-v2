@@ -14,7 +14,6 @@
 `alarm`, `create`, `read`, `update`, `delete`, `toggle`, `duplicate`, `soft-delete`, `undo`, `drag-drop`
 
 ---
----
 
 ## Scoring
 

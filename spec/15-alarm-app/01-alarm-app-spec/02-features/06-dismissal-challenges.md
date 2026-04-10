@@ -14,7 +14,6 @@
 `challenge`, `dismiss`, `math`, `shake`, `typing`, `anti-oversleep`, `native`, `difficulty`, `calibration`
 
 ---
----
 
 ## Scoring
 

@@ -14,7 +14,6 @@
 `scheduling`, `recurring`, `repeat`, `one-time`, `daily`, `weekly`, `interval`, `cron`, `repeat-pattern`
 
 ---
----
 
 ## Scoring
 

@@ -13,7 +13,6 @@
 `accessibility`, `a11y`, `wcag`, `performance`, `memory`, `startup`, `i18n`, `internationalization`, `keyboard`, `screen-reader`
 
 ---
----
 
 ## Scoring
 

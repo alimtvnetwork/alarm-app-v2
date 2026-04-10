@@ -16,7 +16,7 @@
 
 | # | Folder | `00-overview.md` | `99-consistency-report.md` | Status |
 |---|--------|-------------------|----------------------------|--------|
-| 1 | `01-alarm-app-spec/` | ✅ (v2.2.0) | ✅ (v2.4.0) | ✅ Ready (100/100 readiness, 256/256 resolved) |
+| 1 | `01-alarm-app-spec/` | ✅ (v2.7.0) | ✅ (v2.7.0) | ✅ Ready (100/100 readiness, 405/405 resolved) |
 
 ---
 

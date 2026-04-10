@@ -13,7 +13,6 @@
 `keyboard`, `shortcuts`, `hotkeys`, `accessibility`, `keybindings`
 
 ---
----
 
 ## Scoring
 

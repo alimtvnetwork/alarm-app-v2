@@ -14,7 +14,6 @@
 `snooze`, `delay`, `re-trigger`, `limit`, `duration`, `per-alarm`, `max-snooze`
 
 ---
----
 
 ## Scoring
 

@@ -14,7 +14,6 @@
 `weather`, `location`, `webhook`, `voice`, `timezone`, `native`, `ssrf`
 
 ---
----
 
 ## Scoring
 

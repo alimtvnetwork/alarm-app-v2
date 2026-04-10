@@ -14,7 +14,6 @@
 `sound`, `audio`, `vibration`, `volume`, `fade-in`, `tone`, `native`, `custom-sound`
 
 ---
----
 
 ## Scoring
 
