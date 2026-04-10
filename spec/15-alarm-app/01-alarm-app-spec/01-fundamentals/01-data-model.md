@@ -1,6 +1,6 @@
 # Data Model
 
-**Version:** 1.8.0  
+**Version:** 1.9.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -589,16 +589,72 @@ pub fn purge_old_events(conn: &Connection) {
 
 ### Settings Keys
 
-| Key | Type | Description |
-|-----|------|-------------|
-| `Theme` | `ThemeMode` | Theme preference (use `ThemeMode` enum) |
-| `TimeFormat` | `"12h" \| "24h"` | Clock display format |
-| `DefaultSnoozeDuration` | `number` | Default snooze minutes for new alarms |
-| `DefaultSound` | `string` | Default sound for new alarms |
-| `AutoLaunch` | `boolean` | Start on system boot (ValueType: `SettingsValueType.Boolean`, stored as `"true"`/`"false"`) |
-| `MinimizeToTray` | `boolean` | Keep running when window closed (ValueType: `SettingsValueType.Boolean`, stored as `"true"`/`"false"`) |
-| `Language` | `string` | i18n locale code (default: "en") |
-| `EventRetentionDays` | `number` | Days to keep `AlarmEvents` (default: 90) |
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `Theme` | `ThemeMode` | `"System"` | Theme preference (use `ThemeMode` enum) |
+| `TimeFormat` | `string` | `"12h"` | Clock display format (`"12h"` or `"24h"`) |
+| `DefaultSnoozeDuration` | `number` | `"5"` | Default snooze minutes for new alarms |
+| `DefaultSound` | `string` | `"classic-beep"` | Default sound for new alarms |
+| `AutoLaunch` | `boolean` | `"false"` | Start on system boot |
+| `MinimizeToTray` | `boolean` | `"true"` | Keep running when window closed |
+| `Language` | `string` | `"en"` | i18n locale code |
+| `EventRetentionDays` | `number` | `"90"` | Days to keep `AlarmEvents` |
+| `SystemTimezone` | `string` | `""` | IANA timezone string (auto-detected at startup) |
+
+---
+
+### Settings Seeding Strategy
+
+> **Resolves P14-016 (settings seeding) and P14-017 (config version tracking).**
+
+#### Seeding Mechanism
+
+All default settings are seeded via **SQL INSERT statements in the V1 migration** (`V1__initial_schema.sql`). This approach was chosen over runtime Rust seeding because:
+
+1. **Atomicity** — migrations run inside a transaction; either all defaults exist or none do
+2. **Idempotency** — `refinery` tracks which migrations have run; V1 executes exactly once
+3. **Auditability** — the seed values are visible in version-controlled SQL files
+
+#### First Launch Behavior
+
+On first launch, the startup sequence runs:
+1. Step 2: Open SQLite connection → creates `alarm-app.db` if absent
+2. Step 3: Run migrations → V1 creates all tables AND inserts all default settings
+3. Step 4: Enable WAL mode
+4. Step 5: Load settings into `ConfigManager` (all defaults now present)
+
+**Result:** No `NULL` lookups are possible — every key in the Settings Keys table has a row after V1.
+
+#### Adding New Settings (Version-Based Migration)
+
+When a new app version introduces a new setting key:
+
+1. Create a new migration: `V{N}__add_{setting_name}_setting.sql`
+2. Use `INSERT OR IGNORE` to avoid duplicating if the key somehow exists:
+
+```sql
+-- V4__add_notification_sound_setting.sql
+INSERT OR IGNORE INTO Settings (Key, Value, ValueType)
+  VALUES ('NotificationSound', 'default', 'String');
+```
+
+3. The migration runs on next app launch — existing users get the new setting with its default value
+4. Users who have NOT modified the setting get the default; users cannot have modified a setting that didn't exist yet
+
+#### Why Not Seedable Config Architecture?
+
+The [Seedable Config Architecture](../../05-seedable-config-architecture/00-overview.md) defines a `config.seed.json` + version-gated re-seeding pattern with `IsUserModified` tracking. This pattern is designed for **server-side CLI tools** where:
+- Multiple config sources may conflict (file, DB, environment)
+- Config versions evolve independently of app versions
+- User-modified values must survive re-seeding
+
+The alarm app uses a **simpler model** because:
+- Settings only come from one source (SQLite)
+- App version = config version (migrations are tied to releases)
+- `INSERT OR IGNORE` achieves the same "don't overwrite existing" behavior without `IsUserModified` tracking
+- The `refinery_schema_history` table provides equivalent version tracking
+
+This is a deliberate design decision, not an oversight.
 
 ---
 
