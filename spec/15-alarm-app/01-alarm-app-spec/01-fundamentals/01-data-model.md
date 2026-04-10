@@ -1,6 +1,6 @@
 # Data Model
 
-**Version:** 1.14.0  
+**Version:** 1.15.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -471,6 +471,58 @@ interface AlarmGroup {
 }
 ```
 
+#### AlarmGroup (Rust)
+
+> **Resolves RS-002.** Without this struct, AI will invent field names or skip serde attributes.
+
+```rust
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct AlarmGroupRow {
+    pub alarm_group_id: String,
+    pub name: String,
+    pub color: String,
+    pub position: i32,
+    pub is_enabled: bool,
+}
+
+impl AlarmGroupRow {
+    pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
+        Ok(Self {
+            alarm_group_id: row.get("AlarmGroupId")?,
+            name: row.get("Name")?,
+            color: row.get("Color")?,
+            position: row.get("Position")?,
+            is_enabled: row.get::<_, i32>("IsEnabled")? != 0,
+        })
+    }
+}
+```
+
+### SnoozeState (Rust)
+
+> **Resolves RS-001.** SnoozeState is returned by `snooze_alarm` and `get_snooze_state` IPC commands.
+
+```rust
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct SnoozeStateRow {
+    pub alarm_id: String,
+    pub snooze_until: String,    // ISO 8601
+    pub snooze_count: i32,
+}
+
+impl SnoozeStateRow {
+    pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
+        Ok(Self {
+            alarm_id: row.get("AlarmId")?,
+            snooze_until: row.get("SnoozeUntil")?,
+            snooze_count: row.get("SnoozeCount")?,
+        })
+    }
+}
+```
+
 ### AlarmSound
 
 > **Note:** `AlarmSound` is a **read-only in-memory list** derived from bundled audio assets in `src/assets/sounds/`. There is no corresponding SQLite table. The sound list is hardcoded in Rust and returned via the `list_sounds` IPC command. Custom user sounds reference file paths directly via `Alarm.SoundFile`.
@@ -481,6 +533,21 @@ interface AlarmSound {
   Name: string;          // Display name (e.g., "Classic Beep")
   FileName: string;      // Audio file reference (bundled asset path)
   Category: SoundCategory;
+}
+```
+
+#### AlarmSound (Rust)
+
+> **Resolves RS-003.** In-memory struct — no `from_row` needed (constructed from hardcoded data).
+
+```rust
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct AlarmSound {
+    pub alarm_sound_id: String,
+    pub name: String,
+    pub file_name: String,
+    pub category: SoundCategory,
 }
 ```
 
@@ -510,6 +577,52 @@ interface AlarmEvent {
 }
 ```
 
+#### AlarmEvent (Rust)
+
+> **Resolves RS-004.** Required for `list_alarm_events` and history export IPC commands.
+
+```rust
+#[derive(Debug, Clone, Serialize, Deserialize)]
+/// NOTE: Struct definitions and field-per-line `from_row` mappers are EXEMPT from the
+/// 15-line function limit — they contain no logic, only field declarations.
+#[serde(rename_all = "PascalCase")]
+pub struct AlarmEventRow {
+    pub alarm_event_id: String,
+    pub alarm_id: String,
+    pub r#type: AlarmEventType,
+    pub fired_at: String,
+    pub dismissed_at: Option<String>,
+    pub snooze_count: i32,
+    pub challenge_type: Option<ChallengeType>,
+    pub challenge_solve_time_sec: Option<f64>,
+    pub sleep_quality: Option<i32>,
+    pub mood: Option<String>,
+    pub alarm_label_snapshot: String,
+    pub alarm_time_snapshot: String,
+    pub timestamp: String,
+}
+
+impl AlarmEventRow {
+    pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
+        Ok(Self {
+            alarm_event_id: row.get("AlarmEventId")?,
+            alarm_id: row.get("AlarmId")?,
+            r#type: row.get::<_, String>("Type")?.parse().unwrap_or(AlarmEventType::Fired),
+            fired_at: row.get("FiredAt")?,
+            dismissed_at: row.get("DismissedAt")?,
+            snooze_count: row.get("SnoozeCount")?,
+            challenge_type: row.get::<_, Option<String>>("ChallengeType")?.and_then(|s| s.parse().ok()),
+            challenge_solve_time_sec: row.get("ChallengeSolveTimeSec")?,
+            sleep_quality: row.get("SleepQuality")?,
+            mood: row.get("Mood")?,
+            alarm_label_snapshot: row.get("AlarmLabelSnapshot")?,
+            alarm_time_snapshot: row.get("AlarmTimeSnapshot")?,
+            timestamp: row.get("Timestamp")?,
+        })
+    }
+}
+```
+
 ### Settings
 
 > **Resolves PL-004.** The `Settings` table is key-value, but the frontend needs a typed interface.
@@ -532,6 +645,28 @@ interface Settings {
 
 > **Note:** Stored as individual key-value rows in SQLite `Settings` table. `get_settings` reads all rows and maps them into this typed interface. `update_setting` writes a single key.
 
+#### Settings (Rust)
+
+> **Resolves RS-008.** Typed struct assembled from key-value rows. Not a direct DB row mapping — built by iterating `Settings` table rows and parsing each value by its `ValueType`.
+
+```rust
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct SettingsResponse {
+    pub theme: ThemeMode,
+    pub theme_skin: String,
+    pub accent_color: String,
+    pub is_24_hour: bool,
+    pub default_snooze_duration_min: i32,
+    pub default_max_snooze_count: i32,
+    pub auto_dismiss_min: i32,
+    pub event_retention_days: i32,
+    pub is_gradual_volume_enabled: bool,
+    pub gradual_volume_duration_sec: i32,
+    pub system_timezone: String,
+}
+```
+
 ### Quote
 
 > **Resolves PL-003.** Used by `get_daily_quote`, `save_favorite_quote`, `add_custom_quote`.
@@ -543,6 +678,22 @@ interface Quote {
   Author: string;
   IsFavorite: boolean;
   IsCustom: boolean;
+}
+```
+
+#### Quote (Rust)
+
+> **Resolves RS-005.** Returned by `get_daily_quote` and `add_custom_quote` IPC commands.
+
+```rust
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct Quote {
+    pub quote_id: String,
+    pub text: String,
+    pub author: String,
+    pub is_favorite: bool,
+    pub is_custom: bool,
 }
 ```
 
@@ -558,6 +709,20 @@ interface StreakData {
 }
 ```
 
+#### StreakData (Rust)
+
+> **Resolves RS-006.** Computed struct — not a direct DB row. Built by querying `AlarmEvents`.
+
+```rust
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct StreakData {
+    pub current_streak: u32,
+    pub longest_streak: u32,
+    pub calendar_days: Vec<String>,
+}
+```
+
 ### StreakCalendarDay
 
 > **Resolves PL-002.** Element type for `get_streak_calendar` return array.
@@ -566,6 +731,19 @@ interface StreakData {
 interface StreakCalendarDay {
   Date: string;       // YYYY-MM-DD
   IsOnTime: boolean;  // true = dismissed without exceeding snooze limit
+}
+```
+
+#### StreakCalendarDay (Rust)
+
+> **Resolves RS-007.** Element of the `Vec` returned by `get_streak_calendar`.
+
+```rust
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct StreakCalendarDay {
+    pub date: String,
+    pub is_on_time: bool,
 }
 ```
 

@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.35.0  
+**Version:** 1.36.0  
 **Updated:** 2026-04-10
 
 ---
@@ -57,6 +57,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 41 | `41-discovery-phase-28.md` | Discovery Phase 28 — Post-Fix-U Regression Scan | 9 | 0 | 9 |
 | 47 | `47-discovery-phase-29.md` | Discovery Phase 29 — IPC Registry Completeness Audit | 5 | 0 | 5 |
 | 48 | `48-discovery-phase-30.md` | Discovery Phase 30 — Payload & Interface Definitions Audit | 7 | 0 | 7 |
+| 49 | `49-discovery-phase-31.md` | Discovery Phase 31 — Rust Struct Definitions & Serde Attribute Audit | 8 | 0 | 8 |
 
 ---
 
@@ -64,12 +65,12 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 94 |
-| 🟡 Medium | 254 |
-| 🟢 Low | 69 |
-| **Grand Total** | **417** |
+| 🔴 Critical | 97 |
+| 🟡 Medium | 258 |
+| 🟢 Low | 70 |
+| **Grand Total** | **425** |
 | **Open** | **0** |
-| **Resolved** | **417** |
+| **Resolved** | **425** |
 
 ---
 
@@ -144,6 +145,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 28** | **Post-Fix-U regression scan — stale metadata, double separators, memory drift** | **✅ Done (+9 = 405, 9 open)** |
 | **Discovery Phase 29** | **IPC Registry Completeness Audit — 8 missing commands, 2 orphans, settings ambiguity** | **✅ Done (+5 = 410, 5 resolved)** |
 | **Discovery Phase 30** | **Payload & Interface Definitions Audit — StreakData, Quote, Settings, StreakCalendarDay undefined; payload mismatches** | **✅ Done (+7 = 417, 7 resolved)** |
+| **Discovery Phase 31** | **Rust Struct Definitions & Serde Attribute Audit — 8 missing Rust structs for IPC-facing types** | **✅ Done (+8 = 425, 8 resolved)** |
 
 ---
 
