@@ -1,6 +1,6 @@
 # Design System
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -90,9 +90,24 @@ Defines visual design tokens, color palettes, typography, and component styling 
 
 ---
 
+## Tray Icon Assets
+
+> Platform-specific icon requirements for system tray / menu bar. See `11-platform-verification-matrix.md` for full per-platform details.
+
+| Platform | Format | Sizes | Color Mode |
+|----------|--------|-------|------------|
+| macOS | `.png` (template) | 22×22 @1x, 44×44 @2x | Monochrome (black + alpha) — macOS auto-inverts for dark |
+| Windows | `.ico` (multi-res) | 16×16, 32×32, 48×48 in single `.ico` | Full color |
+| Linux | `.png` | 22×22 @1x, 44×44 @2x | Full color |
+
+**Rules:** Must be recognizable at 16×16. macOS template icons must be pure monochrome. Test in both light and dark system themes.
+
+---
+
 ## Cross-References
 
 | Reference | Location |
 |-----------|----------|
 | Global Design System | `../../../06-design-system/00-overview.md` |
 | Theme Feature | `../02-features/09-theme-system.md` |
+| Platform Verification Matrix | `./11-platform-verification-matrix.md` |
