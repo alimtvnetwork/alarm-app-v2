@@ -85,7 +85,7 @@ The Alarm App specification is **ready for AI handoff**. All 43 identified issue
 | Doc | Version | Coverage | AI-Ready? |
 |-----|---------|----------|:---------:|
 | `01-data-model.md` | 1.7.0 | Full schema, Rust AlarmRow, RepeatType, JSON deserializers, WAL, migrations, retention | ✅ |
-| `02-design-system.md` | 1.0.0 | Color palette, typography, spacing, component styling | ✅ |
+| `02-design-system.md` | 1.1.0 | Color palette, typography, spacing, component styling, dark mode destructive token | ✅ |
 | `03-file-structure.md` | 1.5.0 | Full src/ + src-tauri/ tree, Cargo.toml deps, i18n setup, eslint config | ✅ |
 | `04-platform-constraints.md` | 1.3.0 | Error handling (12 errors), WebView CSS compat, memory budget (200MB) | ✅ |
 | `05-platform-strategy.md` | 1.0.0 | Legacy — superseded by Tauri architecture doc | ⚠️ |
@@ -103,17 +103,17 @@ The Alarm App specification is **ready for AI handoff**. All 43 identified issue
 | `03-alarm-firing.md` | 1.7.0 | P0 | Rust compute_next_fire_time, DST, WakeListener (3 platforms), AlarmQueue | ✅ |
 | `04-snooze-system.md` | 1.3.0 | P0 | Rust tokio::sleep_until | ✅ |
 | `05-sound-and-vibration.md` | 1.4.0 | P0/P1 | Rust validate_custom_sound, gradual_volume, macOS audio session | ✅ |
-| `06-dismissal-challenges.md` | 1.2.0 | P1/P2 | Operand rules, solve time logging | ✅ |
+| `06-dismissal-challenges.md` | 1.3.0 | P1/P2 | Operand rules, solve time logging, IPC commands | ✅ |
 | `07-alarm-groups.md` | 1.2.0 | P1 | previous_enabled flow | ✅ |
-| `08-clock-display.md` | 1.1.0 | P0 | — | ✅ |
-| `09-theme-system.md` | 1.1.0 | P0 | — | ✅ |
+| `08-clock-display.md` | 1.2.0 | P0 | useClock hook, get_next_alarm_time IPC | ✅ |
+| `09-theme-system.md` | 1.2.0 | P0 | get_theme/set_theme IPC commands | ✅ |
 | `10-export-import.md` | 1.3.0 | P1 | IPC commands, validation rules, privacy warning | ✅ |
 | `11-sleep-wellness.md` | 1.1.0 | P2 | — | ✅ |
 | `12-smart-features.md` | 1.2.0 | P3 | Rust validate_webhook_url, is_private_ip, fire_webhook | ✅ |
-| `13-analytics.md` | 1.2.0 | P3 | — | ✅ |
-| `14-personalization.md` | 1.1.0 | P2 | — | ✅ |
+| `13-analytics.md` | 1.3.0 | P3 | — | ✅ |
+| `14-personalization.md` | 1.2.0 | P2 | IPC command table for quotes | ✅ |
 | `15-keyboard-shortcuts.md` | 1.0.0 | P1 | — | ✅ |
-| `16-accessibility-and-nfr.md` | 1.0.0 | P1 | — | ✅ |
+| `16-accessibility-and-nfr.md` | 1.1.0 | P1 | Performance budgets aligned, i18n path fixed | ✅ |
 
 ---
 
@@ -183,7 +183,7 @@ The Alarm App specification is **ready for AI handoff**. All 43 identified issue
 | **4. Audio & UX** | Sound playback + gradual volume + audio sessions + overlay + snooze | 3–4 days |
 | **5. Polish** | Theme + clock + keyboard shortcuts + challenges + export/import | 3–4 days |
 | **6. Quality** | Tests (4 layers) + CI/CD + signing + accessibility audit | 3–4 days |
-| **Total** | | **18–24 days** |
+| **Total** | | **20–26 days** |
 
 ---
 
@@ -194,7 +194,7 @@ The Alarm App specification is **ready for AI handoff**. All 43 identified issue
 | Spec Overview | `./00-overview.md` |
 | Changelog | `./98-changelog.md` |
 | Issues Overview | `./03-app-issues/00-overview.md` |
-| Spec Issues Audit | `./14-spec-issues/00-overview.md` (154 issues found, 136 resolved) |
+| Spec Issues Audit | `./14-spec-issues/00-overview.md` (177 issues found, 177 resolved) |
 | Atomic Task Breakdown | `./11-atomic-task-breakdown.md` |
 | Platform & Concurrency Guide | `./12-platform-and-concurrency-guide.md` |
 | AI Cheat Sheet | `./13-ai-cheat-sheet.md` |

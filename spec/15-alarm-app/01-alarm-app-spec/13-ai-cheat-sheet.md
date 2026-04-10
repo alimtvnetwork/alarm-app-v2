@@ -158,7 +158,7 @@ TOTAL: <750ms
 
 ## Database Tables (5)
 
-`Alarms` (22 columns) | `AlarmGroups` (4) | `Settings` (3, key-value with ValueType) | `SnoozeState` (3) | `AlarmEvents` (11)
+`Alarms` (22 columns) | `AlarmGroups` (4) | `Settings` (3, key-value with ValueType) | `SnoozeState` (3) | `AlarmEvents` (13)
 
 **Key PRAGMAs:** `journal_mode=WAL`, `busy_timeout=5000`, `foreign_keys=ON`, `synchronous=NORMAL`
 
