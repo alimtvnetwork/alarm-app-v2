@@ -66,13 +66,13 @@ Missing `DurationMin` means ambient sounds won't auto-stop.
 
 | ID | Severity | Description | Status |
 |----|----------|-------------|--------|
-| PL-001 | 🔴 Critical | `StreakData` interface undefined | Open |
-| PL-002 | 🔴 Critical | `StreakCalendarDay` interface undefined | Open |
-| PL-003 | 🔴 Critical | `Quote` interface undefined | Open |
-| PL-004 | 🟡 Medium | `Settings` interface undefined | Open |
-| PL-005 | 🟡 Medium | `save_favorite_quote` payload contradicts | Open |
-| PL-006 | 🟡 Medium | `play_ambient` missing `DurationMin` in registry | Open |
-| PL-007 | 🟢 Low | `add_custom_quote` return type mismatch | Open |
+| PL-001 | 🔴 Critical | `StreakData` interface undefined | ✅ Resolved |
+| PL-002 | 🔴 Critical | `StreakCalendarDay` interface undefined | ✅ Resolved |
+| PL-003 | 🔴 Critical | `Quote` interface undefined | ✅ Resolved |
+| PL-004 | 🟡 Medium | `Settings` interface undefined | ✅ Resolved |
+| PL-005 | 🟡 Medium | `save_favorite_quote` payload contradicts | ✅ Resolved |
+| PL-006 | 🟡 Medium | `play_ambient` missing `DurationMin` in registry | ✅ Resolved |
+| PL-007 | 🟢 Low | `add_custom_quote` return type mismatch | ✅ Resolved |
 
 **New issues this phase:** 7 open (3 critical, 3 medium, 1 low)
 
