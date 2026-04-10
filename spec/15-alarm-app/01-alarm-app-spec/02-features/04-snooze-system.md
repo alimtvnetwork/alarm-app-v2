@@ -38,9 +38,9 @@ When `maxSnoozeCount = 0`, the Snooze button is never shown — the user must di
 
 ```typescript
 interface SnoozeState {
-  alarmId: string;
-  snoozeCount: number;
-  nextFireTime: string; // ISO 8601
+  AlarmId: string;
+  SnoozeCount: number;
+  NextFireTime: string; // ISO 8601
 }
 ```
 

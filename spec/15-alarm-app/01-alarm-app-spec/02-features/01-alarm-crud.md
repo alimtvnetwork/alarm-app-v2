@@ -215,11 +215,11 @@ User deletes alarm A, then alarm B within 5 seconds. Undoing alarm A while B's t
 
 ```typescript
 interface UndoEntry {
-  token: string;         // UUID — matches backend undo_token
-  alarmId: string;
-  label: string;         // For toast display
-  expiresAt: number;     // Date.now() + 5000
-  timerId: ReturnType<typeof setTimeout>;
+  Token: string;         // UUID — matches backend undo_token
+  AlarmId: string;
+  Label: string;         // For toast display
+  ExpiresAt: number;     // Date.now() + 5000
+  TimerId: ReturnType<typeof setTimeout>;
 }
 
 // Frontend state

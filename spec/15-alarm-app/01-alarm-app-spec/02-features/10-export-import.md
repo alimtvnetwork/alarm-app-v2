@@ -94,10 +94,10 @@ Users can export alarms and groups in multiple formats (JSON, CSV, iCal) and imp
 
 ```typescript
 interface ImportResult {
-  imported: number;
-  skipped: number;
-  overwritten: number;
-  errors: string[];
+  Imported: number;
+  Skipped: number;
+  Overwritten: number;
+  Errors: string[];
 }
 ```
 
