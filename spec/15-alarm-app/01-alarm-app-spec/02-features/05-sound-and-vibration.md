@@ -42,8 +42,8 @@ Each alarm has its own sound selection — either from the built-in library (8-1
 
 - User can select any local `.mp3`, `.wav`, `.ogg`, or `.flac` file as an alarm sound
 - File selection via `tauri-plugin-dialog` open dialog (filter: audio files)
-- IPC command: `invoke("set_custom_sound", { alarmId, filePath })`
-- The file path is stored in `soundFile` field on the alarm
+- IPC command: `invoke("set_custom_sound", { AlarmId, FilePath })`
+- The file path is stored in the `SoundFile` field on the alarm
 - Built-in sounds use a key (e.g., `"classic-beep"`); custom sounds store the absolute file path
 - Preview plays the selected file via Rust audio backend before confirming
 

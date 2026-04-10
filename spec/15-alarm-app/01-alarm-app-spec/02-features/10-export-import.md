@@ -56,8 +56,8 @@ Users can export alarms and groups in multiple formats (JSON, CSV, iCal) and imp
   - JSON: `alarm-backup-YYYY-MM-DD.json`
   - CSV: `alarm-export-YYYY-MM-DD.csv`
   - iCal: `alarms-YYYY-MM-DD.ics`
-- JSON file contains: `{ alarms: Alarm[], groups: AlarmGroup[], exportedAt: string, version: string }`
-- CSV columns: `id, time, date, label, enabled, repeat_type, repeat_days, group_name, sound_file, snooze_duration, max_snooze_count`
+- JSON file contains: `{ Alarms: Alarm[], Groups: AlarmGroup[], ExportedAt: string, Version: string }`
+- CSV columns: `AlarmId, Time, Date, Label, IsEnabled, RepeatType, RepeatDaysOfWeek, GroupName, SoundFile, SnoozeDurationMin, MaxSnoozeCount`
 - iCal: each alarm becomes a `VEVENT` with `RRULE` for repeat patterns
 
 ---

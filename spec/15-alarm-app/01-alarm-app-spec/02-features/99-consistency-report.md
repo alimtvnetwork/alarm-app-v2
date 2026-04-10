@@ -17,7 +17,7 @@
 | 5 | `04-snooze-system.md` | 1.3.0 | ✅ Updated (exact-time tokio::sleep_until) |
 | 6 | `05-sound-and-vibration.md` | 1.4.0 | ✅ Updated (validation, fallback, audio sessions, gradual volume) |
 | 7 | `06-dismissal-challenges.md` | 1.2.0 | ✅ Updated (calibrated difficulty tiers, solve time logging) |
-| 8 | `07-alarm-groups.md` | 1.2.0 | ✅ Updated (previous_enabled group toggle) |
+| 8 | `07-alarm-groups.md` | 1.2.0 | ✅ Updated (IsPreviousEnabled group toggle) |
 | 9 | `08-clock-display.md` | 1.1.0 | ✅ Present |
 | 10 | `09-theme-system.md` | 1.1.0 | ✅ Present |
 | 11 | `10-export-import.md` | 1.3.0 | ✅ Updated (privacy warning dialog, SEC-EXPORT-001) |
