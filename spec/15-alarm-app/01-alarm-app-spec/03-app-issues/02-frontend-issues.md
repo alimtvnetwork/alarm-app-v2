@@ -28,7 +28,7 @@
 
 **Root Cause:** Missing `previousEnabled` field or separate tracking mechanism.
 
-**Resolution:** Added `previous_enabled` column to `alarms` table in `01-fundamentals/01-data-model.md` v1.5.0. Defined complete disable/enable group flow with edge cases in `02-features/07-alarm-groups.md` v1.2.0.
+**Resolution:** Added `IsPreviousEnabled` column to `Alarms` table in `01-fundamentals/01-data-model.md` v1.5.0. Defined complete disable/enable group flow with edge cases in `02-features/07-alarm-groups.md` v1.2.0.
 
 ---
 

@@ -56,7 +56,7 @@
 | **Likelihood** | 50% → 0% |
 | **Status** | ✅ Resolved |
 
-**Description:** `ON DELETE SET NULL` means `alarm_id` becomes null. Events lose alarm context (which alarm?) permanently.
+**Description:** `ON DELETE SET NULL` means `AlarmId` becomes null. Events lose alarm context (which alarm?) permanently.
 
 **Root Cause:** Intentional design but poor for analytics.
 
