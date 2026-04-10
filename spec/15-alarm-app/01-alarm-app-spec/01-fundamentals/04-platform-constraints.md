@@ -372,6 +372,24 @@ loop {
 ---
 
 ## Cross-References
+---
+
+## Code Pattern Exemptions
+
+> These patterns are exempt from the no-negation and no-`expect()` rules.
+
+| Pattern | Context | Reason |
+|---------|---------|--------|
+| `expect()` in startup Steps 1–3 | App data dir, DB open | Startup-critical — app cannot function without these. Marked `FATAL:` |
+| `.expect("mutex poisoned")` | `Mutex::lock()` | Thread panicked while holding lock — unrecoverable. Idiomatic Rust. |
+| `assert!(!expr)` | Rust test assertions | Idiomatic test pattern. Exempt from boolean P3. |
+| `.not.toBeVisible()` | Playwright/Jest matchers | Framework API negation. Exempt from boolean P3. |
+| `row.get() != 0` | SQLite INTEGER → bool | Database boolean conversion idiom. Exempt from no-negation. |
+| `!args.start` (D-Bus) | `PrepareForSleep` signal | External protocol value — extract to `let is_waking = !args.start;` |
+
+---
+
+## Cross-References
 
 | Reference | Location |
 |-----------|----------|

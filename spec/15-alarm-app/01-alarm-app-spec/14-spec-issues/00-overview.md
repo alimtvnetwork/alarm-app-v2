@@ -31,14 +31,15 @@ This folder tracks all specification quality issues found during the deep audit 
 | 14 | `14-discovery-phase-12.md` | Discovery Phase 12 — Root-Level Docs Audit | 9 | 0 | 9 |
 | 15 | `15-discovery-phase-13.md` | Discovery Phase 13 — App Issues & Reference Audit | 3 | 0 | 3 |
 | 16 | `16-discovery-phase-14.md` | Discovery Phase 14 — Foundational Alignment Audit | 29 | 12 | 17 |
-| 17 | `17-discovery-phase-15.md` | Discovery Phase 15 — Deep Boolean, Negation & Code Sample Audit | 13 | 11 | 2 |
-| 18 | `18-discovery-phase-16.md` | Discovery Phase 16 — Test Fixtures, Cheat Sheet & Cross-Reference Audit | 12 | 6 | 6 |
-| 19 | `19-discovery-phase-17.md` | Discovery Phase 17 — Execution Guides, Handoff Reports & Concurrency Audit | 12 | 12 | 0 |
+| 17 | `17-discovery-phase-15.md` | Discovery Phase 15 — Deep Boolean, Negation & Code Sample Audit | 13 | 0 | 13 |
+| 18 | `18-discovery-phase-16.md` | Discovery Phase 16 — Test Fixtures, Cheat Sheet & Cross-Reference Audit | 12 | 3 | 9 |
+| 19 | `19-discovery-phase-17.md` | Discovery Phase 17 — Execution Guides, Handoff Reports & Concurrency Audit | 12 | 9 | 3 |
 | 20 | `20-discovery-phase-18.md` | Discovery Phase 18 — Changelog, Consistency Reports, Overview & Staleness Audit | 10 | 10 | 0 |
 | 21 | `21-fix-phase-a-domain-enums.md` | Fix Phase A — Domain Enum Definitions | 11 resolved | 0 | 11 |
 | 22 | `22-fix-phase-b-error-enums.md` | Fix Phase B — Error Enum Definitions & IPC Error Format | 2 resolved | 0 | 2 |
 | 23 | `23-fix-phase-d-test-fixtures.md` | Fix Phase D — Test Fixtures & Cheat Sheet | 6 resolved | 0 | 6 |
 | 24 | `24-fix-phase-c-acceptance-criteria.md` | Fix Phase C — Acceptance Criteria & IPC Key Fixes | 6 resolved | 0 | 6 |
+| 25 | `25-fix-phase-g-code-patterns.md` | Fix Phase G — Code Sample Patterns & Exemptions | 12 resolved | 0 | 12 |
 
 ---
 
@@ -50,8 +51,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 🟡 Medium | 125 |
 | 🟢 Low | 39 |
 | **Grand Total** | **256** |
-| **Open** | **51** |
-| **Resolved** | **205** |
+| **Open** | **39** |
+| **Resolved** | **217** |
 
 ---
 
@@ -97,6 +98,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Fix Phase B** | **Error enum definitions — WebhookError + IPC error response format** | **✅ Done (2 resolved, 63 open)** |
 | **Fix Phase D** | **Test fixtures PascalCase + cheat sheet fixes** | **✅ Done (6 resolved, 57 open)** |
 | **Fix Phase C** | **Acceptance criteria + IPC key fixes for 4 feature files** | **✅ Done (6 resolved, 51 open)** |
+| **Fix Phase G** | **Code sample patterns: expect(), raw negation, exemptions** | **✅ Done (12 resolved, 39 open)** |
 
 ---
 
