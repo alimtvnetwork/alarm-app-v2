@@ -48,11 +48,12 @@ src/                          — Frontend (React + TypeScript)
     ThemeToggle.tsx           — Sun/moon icon button
     ExportImport.tsx          — Export button + import via native file dialog
     AlarmCountdown.tsx        — "Alarm in X hours Y minutes" display
-    Toast.tsx                 — Toast notification component (success/error/info)
+    Toast.tsx                 — Toast notifications via `sonner` (success/error/info/undo)
+    SettingsPanel.tsx          — Settings sections: Theme, Time Format, Snooze, Language, Keyboard Shortcuts ref
 
   pages/
-    Index.tsx                 — Main layout combining all components
-    Settings.tsx              — Settings page (theme, timeFormat, snoozeDuration, language)
+    Index.tsx                 — Main layout: clock + alarm list + countdown
+    Settings.tsx              — Settings page wrapping SettingsPanel (route: /settings)
 
   lib/
     tauri-commands.ts         — Typed wrappers for Tauri invoke() calls

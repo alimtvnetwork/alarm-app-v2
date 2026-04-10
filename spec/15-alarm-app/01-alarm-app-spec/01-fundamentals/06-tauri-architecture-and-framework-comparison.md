@@ -227,6 +227,8 @@ function useAlarmEvents() {
 | Package | Version | Purpose |
 |---------|---------|---------|
 | `zustand` | ^4.5 | Minimal global state (2KB gzipped, no providers) |
+| `sonner` | ^1.5 | Toast notifications (success/error/info) — used by `safeInvoke` and undo system |
+| `react-router-dom` | ^6.x | Client-side routing (Index + Settings pages) |
 
 ---
 
