@@ -60,6 +60,8 @@ Stored in the `SnoozeState` SQLite table. Cleared on dismiss.
 
 ### IPC Commands
 
+> These commands are also listed in `03-alarm-firing.md` — both specs share the same snooze IPC surface.
+
 | Command | Payload | Returns |
 |---------|---------|---------|
 | `snooze_alarm` | `{ AlarmId: string, DurationMin: number }` | `SnoozeState` |

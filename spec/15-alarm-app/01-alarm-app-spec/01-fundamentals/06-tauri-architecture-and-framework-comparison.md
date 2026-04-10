@@ -150,6 +150,43 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `register_shortcuts` | FE → BE | `void` | `void` |
 | `unregister_shortcuts` | FE → BE | `void` | `void` |
 
+#### Theme Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `get_theme` | FE → BE | `void` | `{ Theme: ThemeMode }` |
+| `set_theme` | FE → BE | `{ Theme: ThemeMode }` | `void` |
+
+#### Sound Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `validate_custom_sound` | FE → BE | `{ FilePath: string }` | `{ IsValid: boolean, Error: string \| null }` |
+
+#### Sleep & Wellness Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `get_bedtime_reminder` | FE → BE | `void` | `{ Bedtime: string \| null, ReminderMinBefore: number }` |
+| `set_bedtime_reminder` | FE → BE | `{ Bedtime: string, ReminderMinBefore: number }` | `void` |
+
+#### Analytics & History Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `list_alarm_events` | FE → BE | `{ Filter: HistoryFilter }` | `AlarmEvent[]` |
+| `export_history_csv` | FE → BE | `{ Filter: HistoryFilter }` | `string` (file path) |
+| `clear_history` | FE → BE | `{ Before?: string }` | `{ Deleted: number }` |
+
+#### Smart Feature Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `create_webhook` | FE → BE | `{ AlarmId: string, Url: string, Payload?: Record<string, unknown> }` | `WebhookConfig` |
+| `delete_webhook` | FE → BE | `{ WebhookId: string }` | `void` |
+| `test_webhook` | FE → BE | `{ WebhookId: string }` | `{ Success: boolean, StatusCode: number \| null, Error: string \| null }` |
+| `get_weather_briefing` | FE → BE | `{ Latitude: number, Longitude: number }` | `WeatherBriefing` |
+
 #### System Commands
 
 | Command | Direction | Payload | Returns |
@@ -161,6 +198,8 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `confirm_import` | FE → BE | `{ PreviewId: string, Mode: ImportMode, DuplicateAction: DuplicateAction }` | `ImportResult` |
 | `get_next_alarm_time` | FE → BE | `void` | `{ NextFireTime: string \| null, AlarmLabel: string \| null }` |
 | `log_from_frontend` | FE → BE | `{ Level: string, Message: string, Context: Record<string, unknown> }` | `void` |
+
+> **Note:** `get_settings` returns the full `Settings` object (all keys). `get_theme`/`set_theme` are convenience wrappers that read/write the `Theme` key specifically. `update_setting` is the generic command for writing any individual setting key.
 
 #### Events (Backend → Frontend)
 
