@@ -1,8 +1,8 @@
 # Fundamentals
 
-**Version:** 1.3.0  
+**Version:** 1.4.0  
 **Status:** Active  
-**Updated:** 2026-04-09  
+**Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None
 
@@ -45,6 +45,7 @@ Core architectural decisions, data model definitions, design system tokens, file
 | 07 | `07-startup-sequence.md` | App initialization order — DB, migrations, tray, engine, missed alarm check |
 | 08 | `08-devops-setup-guide.md` | Code signing (macOS/Windows), CI/CD pipeline, auto-update key management |
 | 09 | `09-test-strategy.md` | Test layers (Rust unit/integration, frontend, E2E), coverage targets, CI integration |
+| 10 | `10-dependency-lock.md` | Exact version pins for all Rust crates and npm packages, API surface, breaking change notes |
 
 ---
 
