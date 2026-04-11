@@ -95,6 +95,39 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 | `get_bedtime_reminder` | `void` | `{ Bedtime: string \| null, ReminderMinBefore: number }` |
 | `set_bedtime_reminder` | `{ Bedtime: string, ReminderMinBefore: number }` | `void` |
 
+### Rust Structs
+
+```rust
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct LogSleepQualityPayload {
+    pub alarm_event_id: String,
+    pub quality: u8,          // 1–5
+    pub mood: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct PlayAmbientPayload {
+    pub sound_id: String,     // e.g., "ambient-rain"
+    pub duration_min: u32,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct SetBedtimeReminderPayload {
+    pub bedtime: String,            // HH:MM
+    pub reminder_min_before: u32,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct BedtimeReminderResponse {
+    pub bedtime: Option<String>,
+    pub reminder_min_before: u32,
+}
+```
+
 ### Ambient Sound IDs
 
 | ID | Name |
@@ -106,6 +139,8 @@ Sleep and wellness features including bedtime reminders, sleep cycle calculator,
 | `ambient-brown-noise` | Brown Noise |
 | `ambient-fan` | Fan |
 | `ambient-fireplace` | Fireplace |
+
+> **Note:** Ambient sound IDs are kebab-case string constants (not a domain enum) because they map directly to audio asset filenames. Validated at the Rust layer against a hardcoded allowlist.
 
 ---
 

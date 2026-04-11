@@ -120,8 +120,8 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
-| `get_challenge` | FE → BE | `{ ChallengeType: ChallengeType, Difficulty: ChallengeDifficulty \| null }` | `Challenge` |
-| `submit_challenge_answer` | FE → BE | `{ AlarmId: string, ChallengeId: string, Answer: string }` | `{ IsCorrect: boolean }` |
+| `get_challenge` | FE → BE | `{ AlarmId: string }` | `AlarmChallenge \| null` |
+| `submit_challenge_answer` | FE → BE | `{ AlarmId: string, Answer: string }` | `{ Correct: boolean, SolveTimeSec: number }` |
 
 #### Sleep & Wellness Commands
 
