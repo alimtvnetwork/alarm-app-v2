@@ -577,19 +577,22 @@ Desktop computers sleep, shut down, and resume. If a user set an alarm for 7:00 
 
 ### Rust Implementation
 
+> **Note:** Uses `objc2` (pinned at `=0.5.2` — see `10-dependency-lock.md`). Do NOT use the deprecated `cocoa` or `objc` crates.
+
 ```rust
-use cocoa::appkit::NSWorkspace;
-use cocoa::base::nil;
-use cocoa::foundation::NSString;
-use objc::{msg_send, sel, sel_impl};
+use objc2::runtime::NSObject;
+use objc2_foundation::{NSNotificationCenter, NSNotificationName};
+use objc2_app_kit::NSWorkspace;
 
 fn register_wake_sleep_handlers(app_handle: AppHandle) {
-    unsafe {
-        let workspace: id = msg_send![class!(NSWorkspace), sharedWorkspace];
-        let center: id = msg_send![workspace, notificationCenter];
-        // Register for didWakeNotification
-        // Calls check_missed_alarms(app_handle, db) on wake
-    }
+    // Register for NSWorkspace.didWakeNotification
+    // Using objc2 0.5.x API — see 10-dependency-lock.md for pin rationale
+    //
+    // On wake callback:
+    //   check_missed_alarms(app_handle, db)
+    //
+    // Implementation uses NSNotificationCenter observer pattern
+    // Pin objc2 at =0.5.2 — v0.6.x restructures module hierarchy
 }
 
 async fn check_missed_alarms(app: &AppHandle, db: &Connection) {
@@ -677,15 +680,18 @@ src-tauri/src/
 
 ### Cargo.toml Dependencies (Service-Related)
 
+> **All versions must use exact pins (`=x.y.z`).** See `10-dependency-lock.md` for the complete list with API surface documentation and breaking change notes.
+
 ```toml
 [dependencies]
-tauri = { version = "2", features = ["tray-icon"] }
-tauri-plugin-notification = "2"
-tauri-plugin-autostart = "2"
-rusqlite = { version = "0.32", features = ["bundled"] }
-tokio = { version = "1", features = ["full"] }
-chrono = "0.4"
-reqwest = { version = "0.12", features = ["json"] }
+tauri = { version = "=2.5.1", features = ["tray-icon"] }
+tauri-plugin-notification = "=2.5.1"
+tauri-plugin-autostart = "=2.5.1"
+rusqlite = { version = "=0.32.1", features = ["bundled"] }
+tokio = { version = "=1.51.1", features = ["full"] }
+chrono = { version = "=0.4.44", features = ["serde"] }
+reqwest = { version = "=0.12.12", features = ["json", "rustls-tls"], default-features = false }
+objc2 = "=0.5.2"                # macOS wake/sleep NSWorkspace notifications
 ```
 
 ---
