@@ -7,6 +7,17 @@
 
 ---
 
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (this IS the rollup) |
+
+---
+
 ## Keywords
 
 `acceptance-criteria`, `fundamentals`, `infrastructure`, `verification`, `testable`
@@ -15,7 +26,8 @@
 
 ## 01 — Data Model (`01-data-model.md`)
 
-- [ ] All 5 SQLite tables created by V1 migration: `Alarms`, `AlarmGroups`, `Settings`, `SnoozeState`, `AlarmEvents`
+- [ ] All 5 core SQLite tables created by V1 migration: `Alarms`, `AlarmGroups`, `Settings`, `SnoozeState`, `AlarmEvents`
+- [ ] 2 additional tables created for P2/P3 features: `Quotes`, `Webhooks` (7 total)
 - [ ] All table/column/index names use PascalCase
 - [ ] 4 indexes created: `IdxAlarms_NextFireTime`, `IdxAlarms_GroupId`, `IdxAlarmEvents_AlarmId`, `IdxAlarmEvents_Timestamp`
 - [ ] All 9 default settings seeded by V1 migration (Theme, TimeFormat, DefaultSnoozeDuration, DefaultSound, AutoLaunch, MinimizeToTray, Language, EventRetentionDays, SystemTimezone)

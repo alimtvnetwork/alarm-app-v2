@@ -195,23 +195,25 @@ The frontend (React/TypeScript) does **not** write to log files. Instead:
 
 | Action | Mechanism |
 |--------|-----------|
-| Critical errors | IPC call to `log_frontend_error` Rust command |
+| Critical errors | IPC call to `log_from_frontend` Rust command |
 | Debug info | `console.debug()` — visible in DevTools only |
 | User-facing errors | Rendered in UI via error modal (see error architecture spec) |
 
 ### IPC Command
 
+> **Canonical name:** `log_from_frontend` — registered in the [IPC Command Registry](./06-tauri-architecture-and-framework-comparison.md) under System Commands.
+
 ```rust
 #[tauri::command]
-fn log_frontend_error(message: String, context: Option<String>) {
-    tracing::error!(source = "frontend", context = context.as_deref().unwrap_or("unknown"), "{}", message);
+fn log_from_frontend(payload: LogFromFrontendPayload) {
+    tracing::error!(source = "frontend", context = payload.context.as_deref().unwrap_or("unknown"), "{}", payload.message);
 }
 ```
 
 ```typescript
 // Frontend: src/lib/logging.ts
 export async function logError(message: string, context?: string): Promise<void> {
-  await invoke('log_frontend_error', { message, context });
+  await invoke('log_from_frontend', { Message: message, Context: context });
 }
 ```
 
