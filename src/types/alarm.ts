@@ -178,6 +178,10 @@ export interface Settings {
   DefaultSound: string;
   ExportWarningDismissed: boolean;
   SystemTimezone: string;
+  BedtimeEnabled: boolean;
+  BedtimeTime: string;              // "HH:MM" 24h
+  BedtimeReminderMinBefore: number; // minutes before bedtime
+  SleepGoalHours: number;           // target sleep hours
 }
 
 export interface Quote {
