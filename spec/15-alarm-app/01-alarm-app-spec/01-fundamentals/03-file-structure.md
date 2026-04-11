@@ -74,7 +74,7 @@ src/                          — Frontend (React + TypeScript)
     AnalyticsChart.tsx        — Charts/graphs for alarm analytics
     HistoryFilter.tsx         — Filter controls for history view (date range, event type)
 
-  pages/
+  pages/                      — Route-level page components (Resolves AI-008)
     Index.tsx                 — Main layout: clock + alarm list + countdown (route: /)
     Settings.tsx              — Settings page wrapping SettingsPanel (route: /settings)
     Analytics.tsx             — Alarm history + analytics charts (route: /analytics)
@@ -85,7 +85,7 @@ src/                          — Frontend (React + TypeScript)
     tauri-commands.ts         — Typed wrappers for Tauri invoke() calls
     db.ts                     — IPC query wrappers (all DB access via Tauri invoke)
 
-  i18n/                       — Internationalization (Resolves FE-I18N-001)
+  i18n/                       — Internationalization (Resolves FE-I18N-001, AI-007)
     index.ts                  — i18next initialization + language detection
     locales/
       en.json                 — English strings (default)
