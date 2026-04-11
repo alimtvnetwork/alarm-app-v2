@@ -868,4 +868,4 @@ This persists across app updates and is not deleted when the app is removed (use
 
 ---
 
-*OS Service Layer Specification v2.1.0 — updated: 2026-04-11*
+*OS Service Layer Specification v2.2.0 — updated: 2026-04-11*
