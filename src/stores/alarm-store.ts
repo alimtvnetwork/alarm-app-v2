@@ -68,7 +68,14 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
   groups: [],
 
   loadAlarms: () => {
-    set({ alarms: ipc.listAlarms() });
+    const alarms = ipc.listAlarms().map((a) => {
+      if (!a.NextFireTime && a.IsEnabled) {
+        a.NextFireTime = computeNextFireTime(a);
+        ipc.updateAlarm(a);
+      }
+      return a;
+    });
+    set({ alarms });
   },
 
   addAlarm: (partial) => {
