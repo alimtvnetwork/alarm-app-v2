@@ -53,6 +53,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
   const [maxSnooze, setMaxSnooze] = useState(3);
   const [soundFile, setSoundFile] = useState("classic-beep");
   const [isGradualVolume, setIsGradualVolume] = useState(false);
+  const [gradualDuration, setGradualDuration] = useState(30);
   const [challengeType, setChallengeType] = useState<ChallengeType | "none">("none");
   const [challengeDifficulty, setChallengeDifficulty] = useState<ChallengeDifficulty>(
     ChallengeDifficulty.Easy
@@ -68,6 +69,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
       setMaxSnooze(alarm.MaxSnoozeCount);
       setSoundFile(alarm.SoundFile);
       setIsGradualVolume(alarm.IsGradualVolume);
+      setGradualDuration(alarm.GradualVolumeDurationSec);
       setChallengeType(alarm.ChallengeType ?? "none");
       setChallengeDifficulty(alarm.ChallengeDifficulty ?? ChallengeDifficulty.Easy);
     } else {
@@ -79,6 +81,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
       setMaxSnooze(3);
       setSoundFile("classic-beep");
       setIsGradualVolume(false);
+      setGradualDuration(30);
       setChallengeType("none");
       setChallengeDifficulty(ChallengeDifficulty.Easy);
     }
@@ -108,6 +111,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
         MaxSnoozeCount: maxSnooze,
         SoundFile: soundFile,
         IsGradualVolume: isGradualVolume,
+        GradualVolumeDurationSec: isGradualVolume ? gradualDuration : 30,
         ChallengeType: challengeType === "none" ? null : challengeType,
         ChallengeDifficulty:
           challengeType === ChallengeType.Math ? challengeDifficulty : null,
@@ -122,6 +126,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
         MaxSnoozeCount: maxSnooze,
         SoundFile: soundFile,
         IsGradualVolume: isGradualVolume,
+        GradualVolumeDurationSec: isGradualVolume ? gradualDuration : 30,
         ChallengeType: challengeType === "none" ? null : challengeType,
         ChallengeDifficulty:
           challengeType === ChallengeType.Math ? challengeDifficulty : null,
@@ -211,9 +216,28 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
             </Select>
           </div>
 
-          <div className="flex items-center justify-between">
-            <Label className="font-body text-sm">{t("alarmForm.gradualVolume")}</Label>
-            <Switch checked={isGradualVolume} onCheckedChange={setIsGradualVolume} />
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="font-body text-sm">{t("alarmForm.gradualVolume")}</Label>
+              <Switch checked={isGradualVolume} onCheckedChange={setIsGradualVolume} />
+            </div>
+            {isGradualVolume && (
+              <Select
+                value={String(gradualDuration)}
+                onValueChange={(v) => setGradualDuration(Number(v))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[15, 30, 60].map((n) => (
+                    <SelectItem key={n} value={String(n)}>
+                      {n}s {t("alarmForm.rampDuration")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
