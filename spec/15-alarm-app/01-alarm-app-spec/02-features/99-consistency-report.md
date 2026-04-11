@@ -1,7 +1,19 @@
 # Consistency Report: Features
 
-**Version:** 2.0.0  
-**Generated:** 2026-04-10  
+**Version:** 2.1.0  
+**Generated:** 2026-04-11  
+**Resolves:** S-002
+
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (health report — no AC needed) |
 
 ---
 
