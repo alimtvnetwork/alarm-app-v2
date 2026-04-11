@@ -1,6 +1,6 @@
 # Consistency Report: Alarm App Spec
 
-**Version:** 2.9.1  
+**Version:** 2.9.2  
 **Generated:** 2026-04-11
 **Health Score:** 100/100 (A+)
 
@@ -12,13 +12,13 @@
 
 | # | File | Status |
 |---|------|--------|
-| 1 | `00-overview.md` | ✅ Present (v2.9.0) |
+| 1 | `00-overview.md` | ✅ Present (v2.9.2) |
 | 2 | `09-ai-handoff-reliability-report.md` | ✅ Present (v1.0.0 — supplementary, 94-task breakdown superseded) |
-| 3 | `10-ai-handoff-readiness-report.md` | ✅ Present (v2.9.0 — 100/100 readiness, 484/484 resolved) |
+| 3 | `10-ai-handoff-readiness-report.md` | ✅ Present (v2.9.3 — 100/100 readiness, 524/524 resolved) |
 | 4 | `11-atomic-task-breakdown.md` | ✅ Present (v1.1.0 — 62 authoritative tasks, 12 phases) |
 | 5 | `12-platform-and-concurrency-guide.md` | ✅ Present (v1.0.0 — PascalCase table names, corrected field refs) |
-| 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.1.0 — domain enums, thiserror 2.x, PascalCase examples) |
-| 7 | `98-changelog.md` | ✅ Present (v2.8.3 — v1.0.0 → v2.8.3) |
+| 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.2.0 — domain enums, thiserror 2.x, PascalCase examples) |
+| 7 | `98-changelog.md` | ✅ Present (v2.9.1 — v1.0.0 → v2.9.1) |
 
 ### Reference Documents
 
@@ -33,9 +33,9 @@
 | # | Folder | `00-overview.md` | `99-consistency-report.md` | `97-acceptance-criteria.md` | Status |
 |---|--------|-------------------|----------------------------|------------------------------|--------|
 | 1 | `01-fundamentals/` | ✅ (v1.5.0) | ✅ (v2.1.0) | ✅ (v1.2.0 — 72 criteria) | ✅ Complete (13 docs) |
-| 2 | `02-features/` | ✅ (v1.3.0) | ✅ (v2.1.0) | ✅ (v1.1.0 — 133 criteria) | ✅ Complete (17 feature specs) |
+| 2 | `02-features/` | ✅ (v1.3.0) | ✅ (v2.1.0) | ✅ (v1.2.0 — 157 criteria) | ✅ Complete (17 feature specs) |
 | 3 | `03-app-issues/` | ✅ | ✅ (v1.4.0) | — | ✅ Compliant (10 docs, 43/43 resolved) |
-| 4 | `14-spec-issues/` | ✅ (v1.42.0) | — | — | ✅ 524/524 resolved (484 original + 22 Phase 6 + 18 Phase 7) |
+| 4 | `14-spec-issues/` | ✅ (v1.42.0) | — | — | ✅ 524/524 resolved (484 original + 22 Phase 6 + 18 Phase 7 + 21 Phase 9) |
 
 ---
 
@@ -94,15 +94,15 @@
 | Magic string types replaced with enum references | ✅ 13 domain enums |
 | Test fixtures use PascalCase keys | ✅ |
 | All error enums defined (AlarmAppError + WebhookError) | ✅ |
-| Acceptance criteria rollups created | ✅ 205 criteria (133 feature + 72 fundamental) |
+| Acceptance criteria rollups created | ✅ 229 criteria (157 feature + 72 fundamental) |
 | IPC commands defined in all feature files | ✅ |
 | Boolean semantic inverses documented | ✅ |
-| Settings seeding spec with 17 defaults | ✅ |
+| Settings seeding spec with 16 defaults | ✅ |
 | UI states spec (loading/empty/error/populated) | ✅ |
 | UI layout descriptions for all major screens | ✅ |
 | Coding guidelines cross-refs in feature + fundamental files | ✅ |
 | All spec files have Scoring tables | ✅ (29/29) |
-| Gap analysis: 25/25 session tasks + 22 Phase 6 + 18 Phase 7 resolved | ✅ |
+| Gap analysis: 25/25 session tasks + 22 Phase 6 + 18 Phase 7 + 20 Phase 8 + 21 Phase 9 resolved | ✅ |
 | Edge Cases tables in P0/P1 specs | ✅ (10/17) |
 | Edge Cases tables in P2/P3 specs | ✅ (3/3 added in Phase 7) |
 | Named constants (no magic values) | ✅ |
@@ -113,6 +113,10 @@
 | Notification templates defined | ✅ |
 | Logging/telemetry spec with rotation + retention | ✅ |
 | Estimated AI failure risk | ✅ ~3% (down from ~25%) |
+| Settings seed count verified (16 keys) | ✅ |
+| WebhookError variant count verified (7 variants) | ✅ |
+| SettingsStore methods use camelCase | ✅ |
+| Multi-timezone Timezone field clarified as P3 future | ✅ |
 
 ---
 

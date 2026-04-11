@@ -1,6 +1,6 @@
 # AI Cheat Sheet — Alarm App
 
-**Version:** 1.2.0 | **Updated:** 2026-04-10 | **One-page reference for AI coding agents**
+**Version:** 1.3.0 | **Updated:** 2026-04-11 | **One-page reference for AI coding agents**
 
 ---
 
@@ -166,7 +166,7 @@ if event.r#type == "fired" { ... }
 // AlarmAppError — 13 variants (see 04-platform-constraints.md)
 // Key variants: Database, Audio, IpcTimeout, FileNotFound, Validation, ExportImport, RestrictedPath, SymlinkRejected
 // WebhookError — 7 variants (see 12-smart-features.md)
-// Key variants: InvalidUrl, InsecureScheme, BlockedHost, PrivateIp, RequestFailed
+// Variants: InvalidUrl, InsecureScheme, BlockedHost, MissingHost, PrivateIp, NonStandardPort, RequestFailed
 // IPC errors return { Message: string, Code: string } — see IpcErrorResponse
 ```
 
@@ -255,4 +255,4 @@ TOTAL: <750ms
 
 ---
 
-*AI Cheat Sheet — Alarm App v1.2.0 — updated: 2026-04-10*
+*AI Cheat Sheet — Alarm App v1.3.0 — updated: 2026-04-11*
