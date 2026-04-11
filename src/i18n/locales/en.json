@@ -170,5 +170,8 @@
     "dayStreak": "day streak",
     "less": "Less",
     "more": "More"
+  },
+  "analytics": {
+    "exportCsv": "Export CSV"
   }
 }

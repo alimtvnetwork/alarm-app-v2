@@ -170,5 +170,8 @@
     "dayStreak": "hari berturut-turut",
     "less": "Kurang",
     "more": "Lebih"
+  },
+  "analytics": {
+    "exportCsv": "Eksport CSV"
   }
 }
