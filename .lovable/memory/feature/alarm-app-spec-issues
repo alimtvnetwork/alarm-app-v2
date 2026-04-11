@@ -1,15 +1,15 @@
 ---
 name: Alarm App Spec Issues Audit
-description: 432 total spec issues — ALL 432 RESOLVED, 0 OPEN. 32 discovery phases, 42 fix phases.
+description: 443 total spec issues — ALL 443 RESOLVED, 0 OPEN. 33 discovery phases, 42 fix phases.
 type: feature
 ---
 
 ## Audit Status — ✅ ALL RESOLVED
 
-- **Total issues:** 432
+- **Total issues:** 443
 - **Open:** 0
-- **Resolved:** 432
-- **Discovery phases:** 32
+- **Resolved:** 443
+- **Discovery phases:** 33
 - **Fix phases:** 42 (Phases 1–20, A–V)
 
 ## Root Cause Analysis
@@ -41,6 +41,10 @@ Every fix cycle resolved issues but failed to update the 4 metric files.
 ### RC-7: "Fixed" Without Verification
 Issues reported as resolved without running grep to confirm.
 **Prevention:** After claiming a fix, run `grep -rn "old_pattern"` to confirm zero remaining occurrences.
+
+### RC-8: IPC Registry Drift
+IPC registry in architecture doc drifted from authoritative feature specs.
+**Prevention:** Feature spec is canonical for IPC signatures; registry must match exactly.
 
 ## Canonical Location
 
