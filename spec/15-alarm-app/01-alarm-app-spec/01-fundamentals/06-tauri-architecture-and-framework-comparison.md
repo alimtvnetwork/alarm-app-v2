@@ -94,11 +94,11 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
-| `create_group` | FE → BE | `{ Name: string }` | `AlarmGroup` |
-| `update_group` | FE → BE | `{ AlarmGroupId: string, Name: string }` | `AlarmGroup` |
-| `delete_group` | FE → BE | `{ AlarmGroupId: string }` | `void` |
+| `create_group` | FE → BE | `CreateGroupPayload` | `AlarmGroup` |
+| `update_group` | FE → BE | `UpdateGroupPayload` | `AlarmGroup` |
+| `delete_group` | FE → BE | `DeleteGroupPayload` | `void` |
 | `list_groups` | FE → BE | `void` | `AlarmGroup[]` |
-| `toggle_group` | FE → BE | `{ AlarmGroupId: string, IsEnabled: boolean }` | `void` |
+| `toggle_group` | FE → BE | `ToggleGroupPayload` | `void` |
 
 #### Alarm Firing Commands
 
@@ -192,14 +192,33 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
 | `get_settings` | FE → BE | `void` | `Settings` |
-| `update_setting` | FE → BE | `{ Key: string, Value: string }` | `void` |
-| `export_data` | FE → BE | `{ Format: ExportFormat, Scope: ExportScope, AlarmIds?: string[] }` | `string` (file path) |
-| `import_data` | FE → BE | `{ Mode: ImportMode }` | `ImportPreview` |
-| `confirm_import` | FE → BE | `{ PreviewId: string, Mode: ImportMode, DuplicateAction: DuplicateAction }` | `ImportResult` |
-| `get_next_alarm_time` | FE → BE | `void` | `{ NextFireTime: string \| null, AlarmLabel: string \| null }` |
-| `log_from_frontend` | FE → BE | `{ Level: string, Message: string, Context: Record<string, unknown> }` | `void` |
+| `update_setting` | FE → BE | `UpdateSettingPayload` | `void` |
+| `export_data` | FE → BE | `ExportDataPayload` | `string` (file path) |
+| `import_data` | FE → BE | `ImportDataPayload` | `ImportPreview` |
+| `confirm_import` | FE → BE | `ConfirmImportPayload` | `ImportResult` |
+| `get_next_alarm_time` | FE → BE | `void` | `NextAlarmResponse` |
+| `log_from_frontend` | FE → BE | `LogFromFrontendPayload` | `void` |
 
 > **Note:** `get_settings` returns the full `Settings` object (all keys). `get_theme`/`set_theme` are convenience wrappers that read/write the `Theme` key specifically. `update_setting` is the generic command for writing any individual setting key.
+
+### System Rust Structs
+
+```rust
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct NextAlarmResponse {
+    pub next_fire_time: Option<String>,
+    pub alarm_label: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct LogFromFrontendPayload {
+    pub level: String,
+    pub message: String,
+    pub context: serde_json::Value,
+}
+```
 
 #### Events (Backend → Frontend)
 
