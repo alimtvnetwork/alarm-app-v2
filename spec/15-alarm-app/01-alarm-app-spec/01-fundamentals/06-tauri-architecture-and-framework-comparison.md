@@ -138,7 +138,7 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `get_daily_quote` | FE → BE | `void` | `Quote` |
 | `save_favorite_quote` | FE → BE | `{ QuoteId: string }` | `void` |
 | `add_custom_quote` | FE → BE | `{ Text: string, Author: string \| null }` | `Quote` |
-| `set_custom_background` | FE → BE | `{ FilePath: string }` | `string` (stored path) |
+| `set_custom_background` | FE → BE | `{ FilePath: string }` | `{ SavedPath: string }` |
 | `clear_custom_background` | FE → BE | `void` | `void` |
 | `get_streak_data` | FE → BE | `void` | `StreakData` |
 | `get_streak_calendar` | FE → BE | `{ Month: number, Year: number }` | `StreakCalendarDay[]` |

@@ -52,7 +52,7 @@ Each alarm has its own sound selection — either from the built-in library (8-1
 
 - User can select any local `.mp3`, `.wav`, `.ogg`, or `.flac` file as an alarm sound
 - File selection via `tauri-plugin-dialog` open dialog (filter: audio files)
-- IPC command: `invoke("set_custom_sound", { AlarmId, FilePath })`
+- IPC command: `invoke("set_custom_sound", { FilePath })`
 - The file path is stored in the `SoundFile` field on the alarm
 - Built-in sounds use a key (e.g., `"classic-beep"`); custom sounds store the absolute file path
 - Preview plays the selected file via Rust audio backend before confirming
@@ -271,6 +271,29 @@ Call `configure_audio_session()` at **Step 6a** of the startup sequence (paralle
 | `list_sounds` | `void` | `AlarmSound[]` |
 | `set_custom_sound` | `{ FilePath: string }` | `AlarmSound` |
 | `validate_custom_sound` | `{ FilePath: string }` | `{ IsValid: boolean, Error: string \| null }` |
+
+### Rust Structs
+
+```rust
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct SetCustomSoundPayload {
+    pub file_path: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct ValidateCustomSoundPayload {
+    pub file_path: String,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct SoundValidationResult {
+    pub is_valid: bool,
+    pub error: Option<String>,
+}
+```
 
 ---
 

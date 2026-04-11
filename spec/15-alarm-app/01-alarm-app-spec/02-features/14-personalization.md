@@ -76,6 +76,49 @@ Visual customization, motivational features, and engagement tools. All preferenc
 
 > **Note:** Theme/skin and accent color use the existing `update_setting` IPC command (see `09-theme-system.md`). Custom background requires dedicated commands because the file must be copied to the app data directory.
 
+### Rust Structs
+
+```rust
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct SaveFavoriteQuotePayload {
+    pub quote_id: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct AddCustomQuotePayload {
+    pub text: String,
+    pub author: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct UpdateSettingPayload {
+    pub key: String,
+    pub value: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct SetCustomBackgroundPayload {
+    pub file_path: String,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct CustomBackgroundResponse {
+    pub saved_path: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct GetStreakCalendarPayload {
+    pub month: u32,  // 1–12
+    pub year: u32,
+}
+```
+
 ### Wake-Up Streak Tracker (P2)
 
 - Count consecutive days waking on time (dismissed without excessive snoozing)

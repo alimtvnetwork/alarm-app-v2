@@ -35,7 +35,7 @@
 | 1 | `01-fundamentals/` | ✅ (v1.4.0) | ✅ (v2.0.0) | ✅ (v1.0.0 — 64 criteria) | ✅ Complete |
 | 2 | `02-features/` | ✅ | ✅ (v2.0.0) | ✅ (v1.0.0 — 133 criteria) | ✅ Complete |
 | 3 | `03-app-issues/` | ✅ | ✅ (v1.4.0) | — | ✅ Compliant (10 docs, 43/43 resolved) |
-| 4 | `14-spec-issues/` | ✅ (v1.38.0) | — | — | ✅ 443/443 resolved |
+| 4 | `14-spec-issues/` | ✅ (v1.39.0) | — | — | ✅ 458/458 resolved |
 
 ---
 
@@ -63,7 +63,7 @@
 | All overview inventories match actual files | ✅ |
 | Technology decisions consistent across specs | ✅ |
 | All 43 app issues resolved with spec cross-refs | ✅ |
-| Spec issues: 443 total, 443 resolved, 0 open | ✅ |
+| Spec issues: 458 total, 458 resolved, 0 open | ✅ |
 | All dependencies pinned with `=x.y.z` | ✅ |
 | Platform verification matrix complete | ✅ |
 | PascalCase table names in all SQL examples | ✅ |
