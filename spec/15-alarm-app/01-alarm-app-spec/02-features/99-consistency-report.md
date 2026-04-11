@@ -1,6 +1,6 @@
 # Consistency Report: Features
 
-**Version:** 2.1.0  
+**Version:** 2.2.0  
 **Generated:** 2026-04-11  
 **Resolves:** S-002
 
