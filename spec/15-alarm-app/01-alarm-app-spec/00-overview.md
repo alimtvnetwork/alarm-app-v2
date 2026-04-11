@@ -1,7 +1,7 @@
 # Alarm App Spec
 
 **Version:** 2.8.3  
-**Status:** ✅ Ready — All 458 Spec Quality Issues Resolved + 25 Gap Analysis Tasks Complete (100/100 Readiness Score)  
+**Status:** ✅ Ready — All 472 Spec Quality Issues Resolved + 25 Gap Analysis Tasks Complete (100/100 Readiness Score)  
 **Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -115,11 +115,11 @@ Tables:
 | 02 | [Features](./02-features/00-overview.md) | All feature specifications (17 docs) |
 | 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking — 43/43 issues resolved |
 | 09 | [AI Handoff Reliability Report](./09-ai-handoff-reliability-report.md) | Supplementary failure analysis (62-task breakdown is authoritative), top 15 risk points |
-| 10 | [AI Handoff Readiness Report](./10-ai-handoff-readiness-report.md) | 100/100 readiness score, 458/458 issues resolved |
+| 10 | [AI Handoff Readiness Report](./10-ai-handoff-readiness-report.md) | 100/100 readiness score, 472/472 issues resolved |
 | 11 | [Atomic Task Breakdown](./11-atomic-task-breakdown.md) | **Authoritative** 62 dependency-ordered tasks, effort estimates, risk levels |
 | 12 | [Platform & Concurrency Guide](./12-platform-and-concurrency-guide.md) | Platform gotchas, race condition safeguards, async safety, error recovery |
 | 13 | [AI Cheat Sheet](./13-ai-cheat-sheet.md) | Single-page quick reference for AI coding agents |
-| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 458/458 issues resolved across 34 discovery + 42 fix phases ✅ |
+| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 472/472 issues resolved across 35 discovery + 42 fix phases ✅ |
 | 15 | [Reference](./15-reference/00-overview.md) | Feature inventories and planning references |
 | 98 | [Changelog](./98-changelog.md) | Version history v1.0.0–v2.8.3 |
 

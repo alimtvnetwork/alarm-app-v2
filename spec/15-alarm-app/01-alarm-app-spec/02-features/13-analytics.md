@@ -50,7 +50,7 @@ Persistent log of every alarm event (fired, snoozed, dismissed, missed) with fil
 |---------|---------|---------|
 | `list_alarm_events` | `{ Filter: HistoryFilter }` | `AlarmEvent[]` |
 | `export_history_csv` | `{ Filter: HistoryFilter }` | `string` (file path) |
-| `clear_history` | `{ Before?: string }` | `{ Deleted: number }` |
+| `clear_history` | `ClearHistoryPayload` | `ClearHistoryResult` |
 
 ### HistoryFilter
 
@@ -64,11 +64,19 @@ interface HistoryFilter {
   SortBy: SortField | null;
   SortOrder: SortOrder | null;
 }
+
+interface ClearHistoryPayload {
+  Before?: string;  // ISO 8601 — clear events before this date
+}
+
+interface ClearHistoryResult {
+  Deleted: number;
+}
 ```
 
-> **Resolves PY-005.** Rust struct counterpart for IPC deserialization.
+> **Resolves PY-005, P35-005, P35-008.** Rust struct counterparts for IPC serialization.
 
-#### Rust Struct
+#### Rust Structs
 
 ```rust
 #[derive(Debug, Deserialize)]
@@ -81,6 +89,18 @@ pub struct HistoryFilter {
     pub event_type: Option<AlarmEventType>,
     pub sort_by: Option<SortField>,
     pub sort_order: Option<SortOrder>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct ClearHistoryPayload {
+    pub before: Option<String>,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct ClearHistoryResult {
+    pub deleted: usize,
 }
 ```
 
