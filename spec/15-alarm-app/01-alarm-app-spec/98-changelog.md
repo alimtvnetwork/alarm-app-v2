@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 2.9.1  
+**Version:** 2.9.2  
 **Updated:** 2026-04-11
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -26,6 +26,53 @@
 ---
 
 ## Version History
+
+### v2.9.2 — 2026-04-11
+
+**Theme:** 🔬 Gap Analysis Phases 8 & 9 — 41 issues resolved, acceptance criteria synced, metrics corrected
+
+#### Summary
+
+Two gap analysis passes (Phase 8: 20 issues, Phase 9: 21 issues) identified and resolved stale metrics, acceptance criteria drift, enum count mismatches, casing inconsistencies, and cross-reference gaps. All counts now verified accurate. Estimated AI success rate restored to 95–97%.
+
+#### Phase 8 Gap Analysis (20 issues resolved)
+
+- **Stale metric synchronization**: Updated issue counts from 484→524 and acceptance criteria from 197→205 across `00-overview.md`, `10-ai-handoff-readiness-report.md`, and all consistency reports
+- **Table count correction**: Standardized database table count to 7 (5 core + Quotes + Webhooks) across root overview, `13-ai-cheat-sheet.md`, and `97-acceptance-criteria.md`
+- **IPC name alignment**: Renamed `log_frontend_error` → `log_from_frontend` in `12-logging-and-telemetry.md` to match authoritative IPC registry
+- **Cross-reference additions**: Added logging spec to `07-startup-sequence.md` cross-references; added Scoring table to fundamentals `97-acceptance-criteria.md`
+
+#### Phase 9 Gap Analysis (21 issues resolved)
+
+- **Acceptance criteria sync** (GA9-015/016): Rebuilt feature rollup from 133→157 criteria — added 7 CRUD a11y criteria, 3 keyboard search/select criteria, 14 UI layout criteria. Updated total from 205→229 (157 feature + 72 fundamental)
+- **Settings seed count** (GA9-002/011/019): Corrected "9 default settings" → "16 default settings" in acceptance criteria, data model prose, and all consistency reports. All 16 keys now listed explicitly
+- **WebhookError variants** (GA9-003): Corrected "4 variants" → "7 variants" (InvalidUrl, InsecureScheme, BlockedHost, MissingHost, PrivateIp, NonStandardPort, RequestFailed) in acceptance criteria
+- **IPC command name** (GA9-001): Fixed last remaining `log_frontend_error` → `log_from_frontend` in fundamentals acceptance criteria
+- **SettingsStore casing** (GA9-006): Fixed `FetchSettings`/`UpdateSetting` → `fetchSettings`/`updateSetting` in `06-tauri-architecture.md` Zustand store shape
+- **IPC error struct** (GA9-014): Removed phantom `Details?` field from acceptance criteria (actual struct has only `Code` + `Message`)
+- **Timezone clarification** (GA9-017): Clarified multi-timezone `Timezone` field as P3 future in `12-smart-features.md` — all alarms currently use global `SystemTimezone`
+- **Cheat sheet update** (GA9-010): Listed all 7 WebhookError variants (was showing only 5 "key" variants)
+- **Consistency report updates** (GA9-007/008/009/013): Updated version refs (v2.9.0→v2.9.2), issue counts (484→524), changelog range, Phase 8+9 gap analysis entries
+
+#### Files Changed
+
+| File | Change |
+|------|--------|
+| `00-overview.md` | v2.9.2 — status updated for Phase 6–9, acceptance criteria count in readiness report link |
+| `01-fundamentals/01-data-model.md` | Settings count prose: "only 9" → "16" |
+| `01-fundamentals/06-tauri-architecture.md` | SettingsStore methods: PascalCase → camelCase |
+| `01-fundamentals/97-acceptance-criteria.md` | Settings 9→16 (all keys listed), WebhookError 4→7, IPC name fixed, Details? removed |
+| `02-features/12-smart-features.md` | Timezone field clarified as P3 future |
+| `02-features/97-acceptance-criteria.md` | v1.2.0 — rebuilt with 157 criteria (was 133), all 17 feature specs synced |
+| `02-features/99-consistency-report.md` | Criteria count 133→157 |
+| `10-ai-handoff-readiness-report.md` | v2.9.3 — criteria 205→229, gap phases 3→4, Phase 9 entry added |
+| `13-ai-cheat-sheet.md` | v1.3.0 — all 7 WebhookError variants listed |
+| `99-consistency-report.md` | v2.9.2 — version refs updated, criteria 205→229, settings 17→16, Phase 8+9 entries |
+| `01-fundamentals/99-consistency-report.md` | Settings 17→16 defaults |
+| `14-spec-issues/58-gap-analysis-phase-8.md` | Phase 8 gap analysis (20 issues) |
+| `14-spec-issues/59-gap-analysis-phase-9.md` | v1.2.0 — all 21 issues marked resolved |
+
+---
 
 ### v2.9.1 — 2026-04-11
 
