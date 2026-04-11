@@ -1,10 +1,10 @@
 # File Structure
 
-**Version:** 1.10.0  
-**Updated:** 2026-04-10  
+**Version:** 1.11.0  
+**Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**Resolves:** DEVOPS-PERM-001, DEVOPS-CARGO-001, FE-I18N-001
+**Resolves:** DEVOPS-PERM-001, DEVOPS-CARGO-001, FE-I18N-001, AI-007, AI-008
 
 ---
 
@@ -487,6 +487,105 @@ invoke("export_alarms")       →    commands/export_import.rs → file dialog
 
 ---
 
+## Frontend Routing Structure (AI-008)
+
+> **Resolves AI-008.** The app is a **single-page application** (SPA) using `react-router-dom` with `BrowserRouter`. All routes render inside a shared `<AppShell>` layout with no nested routing.
+
+### Route Table
+
+| Route | Page Component | Purpose | Nav Entry |
+|-------|---------------|---------|-----------|
+| `/` | `Index.tsx` | Clock display + alarm list + "next alarm" countdown | Home (default) |
+| `/settings` | `Settings.tsx` | All app settings (see `17-ui-layouts.md`) | Gear icon in header |
+| `/analytics` | `Analytics.tsx` | Alarm event history + charts | Bottom nav / menu |
+| `/sleep` | `Sleep.tsx` | Bedtime reminder, sleep calculator, ambient sounds, mood logger | Bottom nav / menu |
+| `/personalization` | `Personalization.tsx` | Streaks, quotes, accent color, backgrounds | Bottom nav / menu |
+
+### Router Configuration
+
+```tsx
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/sleep" element={<Sleep />} />
+        <Route path="/personalization" element={<Personalization />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+```
+
+### Navigation Pattern
+
+- **Primary navigation:** Bottom bar with 3–4 icons (Home, Sleep, Analytics, Personalization)
+- **Settings:** Accessed via gear icon in the header bar of `Index.tsx` — navigates to `/settings`
+- **Back button:** Settings and sub-pages show a `←` back button that calls `navigate(-1)`
+- **No auth routes:** The app has no authentication — all routes are public
+
+---
+
+## i18n Key Naming Convention (AI-007)
+
+> **Resolves AI-007.** Defines the `react-i18next` key naming pattern so AI agents produce consistent translation files.
+
+### Key Pattern
+
+```
+{page}.{section}.{element}
+```
+
+All keys use **dot-separated lowercase** segments. Maximum 3 levels deep.
+
+### Key Examples
+
+| Key | English Value | Context |
+|-----|---------------|---------|
+| `alarm.list.empty` | `"No alarms yet"` | Empty state message |
+| `alarm.list.createFirst` | `"Create your first alarm"` | Empty state CTA |
+| `alarm.form.title.create` | `"Create Alarm"` | Dialog title |
+| `alarm.form.title.edit` | `"Edit Alarm"` | Dialog title |
+| `alarm.form.label.placeholder` | `"Alarm label (optional)"` | Input placeholder |
+| `alarm.form.repeat.once` | `"Once"` | Repeat type option |
+| `alarm.form.repeat.daily` | `"Daily"` | Repeat type option |
+| `alarm.form.repeat.weekly` | `"Weekly"` | Repeat type option |
+| `alarm.form.advanced` | `"Advanced Settings"` | Collapsible section title |
+| `alarm.card.delete.undo` | `"Undo"` | Undo toast button |
+| `alarm.card.delete.message` | `"Deleted {{label}}"` | Undo toast message (interpolation) |
+| `settings.section.appearance` | `"Appearance"` | Section heading |
+| `settings.section.clock` | `"Clock"` | Section heading |
+| `settings.theme.light` | `"Light"` | Theme option |
+| `settings.theme.dark` | `"Dark"` | Theme option |
+| `settings.theme.system` | `"System"` | Theme option |
+| `settings.timeFormat.12h` | `"12h"` | Time format option |
+| `settings.timeFormat.24h` | `"24h"` | Time format option |
+| `notification.alarm.title` | `"⏰ {{label}}"` | Notification title |
+| `notification.alarm.body` | `"{{time}} — Tap to dismiss or snooze"` | Notification body |
+| `notification.missed.title` | `"Missed Alarm"` | Missed alarm notification |
+| `notification.missed.body` | `"You missed {{label}} at {{time}}"` | Missed alarm body |
+| `common.save` | `"Save"` | Shared button |
+| `common.cancel` | `"Cancel"` | Shared button |
+| `common.retry` | `"Retry"` | Error banner button |
+| `common.error.generic` | `"Something went wrong"` | Fallback error |
+
+### Rules
+
+| Rule | Detail |
+|------|--------|
+| **Nesting** | Max 3 levels: `{page}.{section}.{element}` |
+| **Case** | `camelCase` for multi-word segments (e.g., `createFirst`, `timeFormat`) |
+| **Interpolation** | Use `{{variable}}` syntax (react-i18next default) |
+| **Plurals** | Use `_one` / `_other` suffixes: `alarm.count_one` = "{{count}} alarm", `alarm.count_other` = "{{count}} alarms" |
+| **Shared keys** | Prefix with `common.` — used across multiple pages |
+| **Page-specific** | Prefix with page name: `alarm.`, `settings.`, `analytics.`, `sleep.`, `personalization.` |
+
+---
+
 ## Cross-References
 
 | Reference | Location |
@@ -496,5 +595,6 @@ invoke("export_alarms")       →    commands/export_import.rs → file dialog
 | Startup Sequence | `./07-startup-sequence.md` |
 | Test Strategy | `./09-test-strategy.md` |
 | Features | `../02-features/00-overview.md` |
+| UI Layouts | `../02-features/17-ui-layouts.md` |
 | App Issues | `../03-app-issues/08-devops-issues.md` → DEVOPS-PERM-001, DEVOPS-CARGO-001 |
 | Frontend Issues | `../03-app-issues/02-frontend-issues.md` → FE-I18N-001 |
