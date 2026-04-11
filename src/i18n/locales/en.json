@@ -50,7 +50,8 @@
     "hard": "Hard",
     "cancel": "Cancel",
     "create": "Create",
-    "save": "Save"
+    "save": "Save",
+    "rampDuration": "ramp"
   },
   "analytics": {
     "title": "Analytics",

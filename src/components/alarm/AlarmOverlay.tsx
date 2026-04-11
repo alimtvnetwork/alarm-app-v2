@@ -2,9 +2,9 @@
  * AlarmOverlay — Full-screen overlay when an alarm fires.
  */
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Bell, Moon, X } from "lucide-react";
+import { Bell, Moon, X, Volume, Volume1, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useOverlayStore } from "@/stores/overlay-store";
 import { ChallengeType, ChallengeDifficulty } from "@/types/alarm";
@@ -21,6 +21,7 @@ const AlarmOverlay = () => {
 
   const [showChallenge, setShowChallenge] = useState(false);
   const [autoDismissRemaining, setAutoDismissRemaining] = useState<number | null>(null);
+  const [volumePercent, setVolumePercent] = useState(0);
 
   useEffect(() => {
     if (!isVisible || !alarm || alarm.AutoDismissMin <= 0) {
@@ -45,7 +46,19 @@ const AlarmOverlay = () => {
 
   useEffect(() => {
     if (isVisible) setShowChallenge(false);
-  }, [isVisible]);
+    if (!isVisible) { setVolumePercent(0); return; }
+    if (!alarm?.IsGradualVolume) { setVolumePercent(100); return; }
+
+    const dur = alarm.GradualVolumeDurationSec || 30;
+    const start = Date.now();
+    const tick = () => {
+      const elapsed = (Date.now() - start) / 1000;
+      const pct = Math.min(100, Math.round((elapsed / dur) * 100));
+      setVolumePercent(pct);
+      if (pct < 100) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [isVisible, alarm]);
 
   const canSnooze = (() => {
     if (!alarm) return false;
@@ -94,6 +107,16 @@ const AlarmOverlay = () => {
           <Bell className="h-12 w-12 text-primary" />
         </div>
       </div>
+
+      {alarm.IsGradualVolume && (
+        <div className="mb-4 flex items-center gap-2 text-xs font-body opacity-60">
+          {volumePercent < 33 ? <Volume className="h-4 w-4" /> : volumePercent < 66 ? <Volume1 className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          <div className="w-24 h-1.5 rounded-full bg-muted-foreground/20 overflow-hidden">
+            <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${volumePercent}%` }} />
+          </div>
+          <span>{volumePercent}%</span>
+        </div>
+      )}
 
       <h1 className="text-7xl font-heading font-bold">{alarm.Time}</h1>
 
