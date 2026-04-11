@@ -1,9 +1,20 @@
 # Feature Acceptance Criteria — Consolidated Rollup
 
-**Version:** 1.0.0  
-**Updated:** 2026-04-10  
-**Purpose:** Single document collecting all testable acceptance criteria from the 16 feature specs  
-**Resolves:** P14-001
+**Version:** 1.1.0  
+**Updated:** 2026-04-11  
+**Purpose:** Single document collecting all testable acceptance criteria from the 17 feature specs  
+**Resolves:** P14-001, S-001
+
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (this IS the rollup) |
 
 ---
 

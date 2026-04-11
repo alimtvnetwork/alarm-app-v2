@@ -24,6 +24,66 @@
 | Cross-References present | ✅ |
 | Acceptance Criteria present | ✅ |
 
+---
+
+## Notification Content Templates (AI-006)
+
+> **Resolves AI-006.** Defines exact notification title, body, and action templates so AI agents don't guess content strings.
+
+### Alarm Fired Notification
+
+| Field | Template | Example |
+|-------|----------|---------|
+| **Title** | `"⏰ {Label}"` or `"⏰ Alarm"` if label is empty | `"⏰ Wake Up"` |
+| **Body** | `"{Time} — Tap to dismiss or snooze"` | `"06:30 AM — Tap to dismiss or snooze"` |
+| **Actions** | `[{ id: "dismiss", title: "Dismiss" }, { id: "snooze", title: "Snooze" }]` | — |
+| **Sound** | Uses the alarm's `SoundFile` — notification sound is the alarm tone itself | — |
+| **Icon** | App icon (default Tauri app icon) | — |
+| **Urgency** | `critical` (macOS) / `high` (Windows/Linux) — ensures notification is visible | — |
+
+### Missed Alarm Notification
+
+| Field | Template | Example |
+|-------|----------|---------|
+| **Title** | `"Missed Alarm"` | — |
+| **Body** | `"You missed {Label} at {Time}"` or `"You missed an alarm at {Time}"` if no label | `"You missed Wake Up at 06:30 AM"` |
+| **Actions** | `[{ id: "open", title: "Open App" }]` | — |
+| **Urgency** | `default` | — |
+
+### Snooze Expiry Notification
+
+| Field | Template | Example |
+|-------|----------|---------|
+| **Title** | `"⏰ {Label} (Snoozed)"` or `"⏰ Alarm (Snoozed)"` | `"⏰ Wake Up (Snoozed)"` |
+| **Body** | `"Snooze ended — {SnoozeCount}/{MaxSnoozeCount} snoozes used"` | `"Snooze ended — 2/3 snoozes used"` |
+| **Actions** | Same as fired: `[{ id: "dismiss", title: "Dismiss" }, { id: "snooze", title: "Snooze" }]` | — |
+
+### Time Formatting in Notifications
+
+- Use `Is24Hour` setting to determine format: `"06:30 AM"` (12h) or `"06:30"` (24h)
+- Time is the alarm's `Time` field, not the current time
+
+### Rust Implementation Pattern
+
+```rust
+use tauri_plugin_notification::NotificationExt;
+
+fn send_alarm_notification(app: &tauri::AppHandle, alarm: &Alarm, is_24_hour: bool) {
+    let label = if alarm.label.is_empty() { "Alarm" } else { &alarm.label };
+    let time_str = format_time(&alarm.time, is_24_hour);
+
+    app.notification()
+        .builder()
+        .title(format!("⏰ {label}"))
+        .body(format!("{time_str} — Tap to dismiss or snooze"))
+        .action_type_id("alarm-actions")
+        .show()
+        .unwrap_or_else(|e| {
+            tracing::warn!(error = %e, "Failed to show notification");
+        });
+}
+```
+
 
 ## Description
 
@@ -39,7 +99,7 @@ When the current time matches an enabled alarm's `NextFireTime`, the alarm fires
    a. Rust triggers native audio playback (via `rodio` or platform audio API)
    b. Rust emits an `alarm-fired` event to the frontend via Tauri IPC
    c. Frontend shows full-screen `AlarmOverlay` with alarm label
-   d. Rust dispatches OS-native notification (via Tauri notification plugin)
+   d. Rust dispatches OS-native notification (see Notification Content Templates below)
    e. Insert `AlarmEvents` row with `Type = AlarmEventType::Fired`
 4. After firing: Rust recomputes `NextFireTime` based on `repeat` pattern
     - `RepeatType::Once` → set `IsEnabled = 0`, `NextFireTime = NULL`
