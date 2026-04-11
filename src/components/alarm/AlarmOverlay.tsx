@@ -66,8 +66,8 @@ const AlarmOverlay = () => {
   }, [alarm, dismiss]);
 
   const handleChallengeSolved = useCallback(
-    (_solveTimeSec: number) => {
-      dismiss();
+    (solveTimeSec: number) => {
+      dismiss(solveTimeSec);
     },
     [dismiss]
   );
