@@ -29,16 +29,20 @@
 
 ### v2.8.3 — 2026-04-11
 
-**Theme:** IPC Completeness — Rust struct definitions for all remaining payloads, registry alignment, export/import/webhook/analytics/system structs
+**Theme:** IPC Completeness — Rust struct definitions for all remaining payloads, full IPC registry alignment to named structs
 
 #### Key Changes
 
-- **Discovery Phases 32–34** resolved 33 issues: missing Rust structs for IPC payloads, registry mismatches, inline object standardization
+- **Discovery Phases 32–36** resolved 59 issues across 5 audit passes
 - **Phase 32 (7 issues):** Added `ExportDataPayload`, `ConfirmImportPayload`, `CreateWebhookPayload`, `GetWeatherPayload`, `LogFromFrontendPayload`, `ClearHistoryPayload`, `TestWebhookResult`, `ClearHistoryResult`, `NextAlarmResponse`, `WebhookPayload` (outgoing) Rust structs
 - **Phase 33 (11 issues):** Fixed IPC registry mismatches — `get_challenge` returns `AlarmChallenge | null`, `set_custom_background` returns `{ SavedPath: string }`, removed phantom fields
 - **Phase 34 (15 issues):** Added Groups CRUD, Personalization, Sound, Challenge Rust structs with `#[serde(rename_all = "PascalCase")]`
-- **IPC Registry:** Updated `create_group`/`update_group` payloads to reference named structs matching feature spec definitions
-- **Total issues:** 458/458 resolved
+- **Phase 35 (14 issues):** Added export/import payload structs (`ExportDataPayload`, `ImportDataPayload`, `ConfirmImportPayload`), webhook structs (`CreateWebhookPayload`, `TestWebhookResult`, `WebhookPayload`), analytics structs (`ClearHistoryPayload`, `ClearHistoryResult`), system structs (`NextAlarmResponse`, `LogFromFrontendPayload`). Updated IPC registry for groups, analytics, smart features, and system commands to reference named structs.
+- **Phase 36 (12 issues):** Final comprehensive sweep — replaced all remaining inline IPC payloads in registry with named struct references (`SetCustomSoundPayload`, `SubmitChallengePayload`/`ChallengeResult`, `LogSleepQualityPayload`, `PlayAmbientPayload`, `SaveFavoriteQuotePayload`, `AddCustomQuotePayload`, `SetCustomBackgroundPayload`/`CustomBackgroundResponse`, `GetStreakCalendarPayload`, `ValidateCustomSoundPayload`/`SoundValidationResult`, `BedtimeReminderResponse`, `SetBedtimeReminderPayload`). Fixed stale metrics in consistency report.
+- **IPC Registry:** Now fully aligned — all commands reference named TypeScript interfaces and Rust structs (no inline objects except trivial `{ AlarmId: string }` single-field payloads)
+- **Architecture doc** bumped to v1.6.0
+- **Readiness report** updated to v2.8.3 with 484/484 stats
+- **Total issues:** 484/484 resolved
 
 ---
 
