@@ -344,6 +344,20 @@ pub struct WebhookConfig {
     pub created_at: String,
 }
 
+impl WebhookConfig {
+    /// Convert from rusqlite::Row — EXEMPT from 15-line limit (field-per-line mapping, no logic)
+    pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
+        Ok(Self {
+            webhook_id: row.get("WebhookId")?,
+            alarm_id: row.get("AlarmId")?,
+            url: row.get("Url")?,
+            payload: row.get::<_, Option<String>>("Payload")?
+                .and_then(|s| serde_json::from_str(&s).ok()),
+            created_at: row.get("CreatedAt")?,
+        })
+    }
+}
+
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct WeatherBriefing {
