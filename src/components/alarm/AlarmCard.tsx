@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import type { Alarm, AlarmGroup } from "@/types/alarm";
 import { RepeatType } from "@/types/alarm";
 import { useAlarmStore } from "@/stores/alarm-store";
+import { useSettingsStore } from "@/stores/settings-store";
 import { useState, useRef } from "react";
 
 function formatRepeat(alarm: Alarm, t: (key: string) => string): string {
@@ -97,7 +98,7 @@ const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
     swipingRef.current = false;
   };
 
-  const is24Hour = false; // TODO: read from settings store
+  const is24Hour = useSettingsStore((s) => s.settings.Is24Hour);
   const displayTime = (() => {
     const [h, m] = alarm.Time.split(":").map(Number);
     if (is24Hour) return alarm.Time;
