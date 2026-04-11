@@ -19,3 +19,4 @@ Validate code against linter-scripts/ rules (21 CODE RED + 5 STYLE). Max 15 line
 - [Linter & Validation Rules](mem://feature/linter-validation-rules) — All 21 CODE RED + 5 STYLE rules, thresholds, skip patterns, linter configs, known gaps
 - [Alarm App Spec Issues Audit](mem://feature/alarm-app-spec-issues) — 405 total issues found across 28 discovery phases + 42 fix phases. ALL RESOLVED.
 - [Spec Guideline Compliance Rules](mem://preference/spec-guideline-compliance-rules) — Complete set of rules from top-8 spec folders: file naming, metadata, PascalCase keys, DB naming, Rust serde, boolean prefixes, magic values, variable naming
+- [OS Service Layer](mem://feature/os-service-layer) — Background daemon spec: auto-start, 800ms polling, tray icon, notifications, wake/sleep, macOS LaunchAgent
