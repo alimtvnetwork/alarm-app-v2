@@ -344,6 +344,7 @@ SELECT * FROM SnoozeState;
 | Platform Constraints | `./04-platform-constraints.md` |
 | Data Model | `./01-data-model.md` |
 | File Structure | `./03-file-structure.md` |
+| Logging & Telemetry | `./12-logging-and-telemetry.md` — authoritative log format, rotation, retention |
 | App Issues | `../03-app-issues/03-backend-issues.md` → BE-STARTUP-001 |
 
 ---
