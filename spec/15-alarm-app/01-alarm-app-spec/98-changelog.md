@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 2.9.1  
+**Version:** 2.9.2  
 **Updated:** 2026-04-11
 **AI Confidence:** High  
 **Ambiguity:** None
