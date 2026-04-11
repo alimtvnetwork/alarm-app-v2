@@ -8,6 +8,7 @@ import { Bell, Moon, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useOverlayStore } from "@/stores/overlay-store";
 import { ChallengeType, ChallengeDifficulty } from "@/types/alarm";
+import { suggestDifficulty } from "@/lib/adaptive-challenge";
 import MathChallenge from "./MathChallenge";
 
 const AlarmOverlay = () => {
@@ -66,8 +67,8 @@ const AlarmOverlay = () => {
   }, [alarm, dismiss]);
 
   const handleChallengeSolved = useCallback(
-    (_solveTimeSec: number) => {
-      dismiss();
+    (solveTimeSec: number) => {
+      dismiss(solveTimeSec);
     },
     [dismiss]
   );
@@ -113,7 +114,7 @@ const AlarmOverlay = () => {
       {showChallenge ? (
         <div className="mt-10">
           <MathChallenge
-            difficulty={alarm.ChallengeDifficulty ?? ChallengeDifficulty.Easy}
+            difficulty={suggestDifficulty(alarm.ChallengeDifficulty ?? ChallengeDifficulty.Easy)}
             onSolved={handleChallengeSolved}
           />
         </div>
