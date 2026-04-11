@@ -1,7 +1,7 @@
 # Alarm CRUD
 
-**Version:** 1.13.0  
-**Updated:** 2026-04-10  
+**Version:** 1.14.0  
+**Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P0 — Must Have  
@@ -395,6 +395,69 @@ interface UpdateAlarmPayload {
   ChallengeStepCount?: number | null;
 }
 ```
+
+> **Resolves PY-001, PY-002.** Without Rust struct definitions, AI will invent field names or skip serde attributes for IPC deserialization.
+
+#### Rust — `CreateAlarmPayload`
+
+```rust
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct CreateAlarmPayload {
+    pub time: String,
+    pub date: Option<String>,
+    pub label: String,
+    pub repeat_type: RepeatType,
+    pub repeat_days_of_week: Vec<u8>,
+    pub repeat_interval_minutes: u32,
+    pub repeat_cron_expression: String,
+    pub group_id: Option<String>,
+    pub snooze_duration_min: u32,
+    pub max_snooze_count: u32,
+    pub sound_file: String,
+    pub is_vibration_enabled: bool,
+    pub is_gradual_volume: bool,
+    pub gradual_volume_duration_sec: u32,
+    pub auto_dismiss_min: u32,
+    pub challenge_type: Option<ChallengeType>,
+    pub challenge_difficulty: Option<ChallengeDifficulty>,
+    pub challenge_shake_count: Option<u32>,
+    pub challenge_step_count: Option<u32>,
+}
+```
+
+#### Rust — `UpdateAlarmPayload`
+
+> PATCH semantics — all fields except `AlarmId` are `Option`. Absent fields are not updated.
+
+```rust
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct UpdateAlarmPayload {
+    pub alarm_id: String,
+    pub time: Option<String>,
+    pub date: Option<Option<String>>,
+    pub label: Option<String>,
+    pub repeat_type: Option<RepeatType>,
+    pub repeat_days_of_week: Option<Vec<u8>>,
+    pub repeat_interval_minutes: Option<u32>,
+    pub repeat_cron_expression: Option<String>,
+    pub group_id: Option<Option<String>>,
+    pub snooze_duration_min: Option<u32>,
+    pub max_snooze_count: Option<u32>,
+    pub sound_file: Option<String>,
+    pub is_vibration_enabled: Option<bool>,
+    pub is_gradual_volume: Option<bool>,
+    pub gradual_volume_duration_sec: Option<u32>,
+    pub auto_dismiss_min: Option<u32>,
+    pub challenge_type: Option<Option<ChallengeType>>,
+    pub challenge_difficulty: Option<Option<ChallengeDifficulty>>,
+    pub challenge_shake_count: Option<Option<u32>>,
+    pub challenge_step_count: Option<Option<u32>>,
+}
+```
+
+> **Note on `Option<Option<T>>`:** For nullable fields like `Date`, `GroupId`, `ChallengeType`, the outer `Option` represents "field was sent" and the inner `Option` represents "value is null". `None` = field not in payload (don't update). `Some(None)` = explicitly set to null. `Some(Some(value))` = set to value.
 
 ---
 

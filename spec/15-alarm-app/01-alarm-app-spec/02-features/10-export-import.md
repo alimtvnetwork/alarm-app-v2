@@ -1,7 +1,7 @@
 # Export / Import
 
-**Version:** 1.6.0  
-**Updated:** 2026-04-10  
+**Version:** 1.7.0  
+**Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** None  
 **Priority:** P1 — Should Have  
@@ -149,6 +149,33 @@ interface ImportResult {
   Skipped: number;
   Overwritten: number;
   Errors: string[];
+}
+```
+
+> **Resolves PY-006, PY-007.** Rust struct counterparts for IPC serialization.
+
+#### Rust Structs
+
+```rust
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct ImportPreview {
+    pub preview_id: String,
+    pub alarm_count: usize,
+    pub group_count: usize,
+    pub duplicate_count: usize,
+    pub alarms: Vec<Alarm>,
+    pub groups: Vec<AlarmGroupRow>,
+    pub errors: Vec<String>,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct ImportResult {
+    pub imported: usize,
+    pub skipped: usize,
+    pub overwritten: usize,
+    pub errors: Vec<String>,
 }
 ```
 

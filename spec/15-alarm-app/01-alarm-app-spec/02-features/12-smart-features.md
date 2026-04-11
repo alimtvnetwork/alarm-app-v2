@@ -1,7 +1,7 @@
 # Smart Features
 
-**Version:** 1.4.0  
-**Updated:** 2026-04-10  
+**Version:** 1.5.0  
+**Updated:** 2026-04-11  
 **AI Confidence:** Medium  
 **Ambiguity:** Medium  
 **Priority:** P3 — Future  
@@ -273,6 +273,32 @@ interface WeatherBriefing {
   WindSpeed: number;       // km/h
   Description: string;     // e.g., "Partly cloudy"
   FetchedAt: string;       // ISO 8601
+}
+```
+
+> **Resolves PY-003, PY-004.** Rust struct counterparts for IPC serialization.
+
+#### Rust Structs
+
+```rust
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct WebhookConfig {
+    pub webhook_id: String,
+    pub alarm_id: String,
+    pub url: String,
+    pub payload: Option<serde_json::Value>,
+    pub created_at: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct WeatherBriefing {
+    pub temperature: f64,
+    pub rain_chance: u8,
+    pub wind_speed: f64,
+    pub description: String,
+    pub fetched_at: String,
 }
 ```
 
