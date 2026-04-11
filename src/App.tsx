@@ -46,9 +46,8 @@ const App = () => (
       <AppInner />
     </TooltipProvider>
   </QueryClientProvider>
-);
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+
+export default App;
       <Toaster />
       <Sonner />
       <AlarmOverlay />
