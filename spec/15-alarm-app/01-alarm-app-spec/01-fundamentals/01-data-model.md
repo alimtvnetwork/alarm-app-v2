@@ -1225,7 +1225,48 @@ const isFixedVolume = (alarm: Alarm): boolean => !alarm.IsGradualVolume;
 |--------------|---------------|------------------|
 | `IsEnabled` | `group.IsEnabled` | `group.isDisabled()` |
 
-**Rule:** The `!` operator is only used INSIDE the semantic inverse implementation. All call sites use the named method.
+### Quote
+
+| Boolean Field | Positive Guard | Semantic Inverse | Use Instead Of |
+|--------------|---------------|------------------|---------------|
+| `IsFavorite` | `quote.IsFavorite` | `quote.isNotFavorite()` | `!quote.IsFavorite` |
+| `IsCustom` | `quote.IsCustom` | `quote.isBuiltIn()` | `!quote.IsCustom` |
+
+### Rust Implementation (Quote)
+
+```rust
+impl Quote {
+    pub fn is_not_favorite(&self) -> bool { !self.is_favorite }
+    pub fn is_built_in(&self) -> bool { !self.is_custom }
+}
+```
+
+### TypeScript Implementation (Quote)
+
+```typescript
+const isNotFavorite = (quote: Quote): boolean => !quote.IsFavorite;
+const isBuiltIn = (quote: Quote): boolean => !quote.IsCustom;
+```
+
+### StreakCalendarDay
+
+| Boolean Field | Positive Guard | Semantic Inverse | Use Instead Of |
+|--------------|---------------|------------------|---------------|
+| `IsOnTime` | `day.IsOnTime` | `day.isLate()` | `!day.IsOnTime` |
+
+### Rust Implementation (StreakCalendarDay)
+
+```rust
+impl StreakCalendarDay {
+    pub fn is_late(&self) -> bool { !self.is_on_time }
+}
+```
+
+### TypeScript Implementation (StreakCalendarDay)
+
+```typescript
+const isLate = (day: StreakCalendarDay): boolean => !day.IsOnTime;
+```
 
 ---
 
