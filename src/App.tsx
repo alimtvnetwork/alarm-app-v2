@@ -46,25 +46,6 @@ const App = () => (
       <AppInner />
     </TooltipProvider>
   </QueryClientProvider>
-
-export default App;
-      <Toaster />
-      <Sonner />
-      <AlarmOverlay />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route path="/" element={<Index />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/sleep" element={<Sleep />} />
-            <Route path="/personalization" element={<Personalization />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
 );
 
 export default App;
