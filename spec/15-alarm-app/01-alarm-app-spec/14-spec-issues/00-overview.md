@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.44.0  
+**Version:** 1.45.0  
 **Updated:** 2026-04-11
 
 ---
@@ -73,6 +73,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 65 | `65-gap-analysis-phase-15.md` | Gap Analysis Phase 15 — Post-Phase 14B verification (bookkeeping) | 2 | 0 | 2 |
 | 66 | `66-gap-analysis-phase-16.md` | Gap Analysis Phase 16 — Fresh comprehensive audit (magic strings, stale counts, i18n) | 4 | 1 | 3 |
 | 67 | `67-gap-analysis-phase-17.md` | Gap Analysis Phase 17 — Post-Phase 16B verification (stale counts, math errors, phase count conflicts) | 7 | 1 | 6 |
+| 68 | `68-gap-analysis-phase-18.md` | Gap Analysis Phase 18 — Post-Phase 17B verification (clean — 0 issues) | 0 | 0 | 0 |
+| 69 | `69-gap-analysis-phase-19.md` | Gap Analysis Phase 19 — Final comprehensive audit (coverage matrix staleness) | 2 | 0 | 2 |
 
 ---
 
@@ -81,11 +83,11 @@ This folder tracks all specification quality issues found during the deep audit 
 | Severity | Count |
 |----------|:-----:|
 | 🔴 Critical | 104 |
-| 🟡 Medium | 324 |
-| 🟢 Low | 149 |
-| **Grand Total** | **577** |
+| 🟡 Medium | 325 |
+| 🟢 Low | 150 |
+| **Grand Total** | **579** |
 | **Open** | **2** |
-| **Resolved** | **575** |
+| **Resolved** | **577** |
 
 ---
 
