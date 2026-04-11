@@ -145,6 +145,133 @@ src-tauri/                    — Backend (Rust)
 
 ---
 
+## Zustand Store State Shapes (Resolves AI-004)
+
+> **Resolves AI-004 (Phase 7).** Without typed state shapes, AI agents must guess all store fields. These are the authoritative TypeScript interfaces for all three Zustand stores.
+
+### `useAlarmStore`
+
+```typescript
+interface AlarmStoreState {
+  // Data
+  alarms: Alarm[];
+  groups: AlarmGroup[];
+
+  // UI state
+  isLoading: boolean;
+  error: string | null;
+  expandedGroups: Set<string>;         // AlarmGroupId set — collapse/expand state (NOT persisted to DB)
+  selectedAlarmIds: Set<string>;       // For bulk operations (⌘+A, bulk delete)
+  searchQuery: string;                 // Current search filter text
+
+  // Derived (computed, not stored)
+  filteredAlarms: (query: string) => Alarm[];
+  alarmsInGroup: (groupId: string | null) => Alarm[];
+  ungroupedAlarms: Alarm[];            // Alarms with GroupId === null
+
+  // Actions
+  fetchAlarms: () => Promise<void>;    // invoke("list_alarms")
+  fetchGroups: () => Promise<void>;    // invoke("list_groups")
+  createAlarm: (alarm: Partial<Alarm>) => Promise<void>;
+  updateAlarm: (alarm: Alarm) => Promise<void>;
+  deleteAlarm: (alarmId: string) => Promise<{ UndoToken: string }>;
+  undoDelete: (undoToken: string) => Promise<void>;
+  duplicateAlarm: (alarmId: string) => Promise<void>;
+  toggleAlarm: (alarmId: string) => Promise<void>;
+  reorderAlarm: (alarmId: string, newGroupId: string | null, newPosition: number) => Promise<void>;
+
+  // Group actions
+  createGroup: (name: string, color: string) => Promise<void>;
+  updateGroup: (group: AlarmGroup) => Promise<void>;
+  deleteGroup: (groupId: string) => Promise<void>;
+  toggleGroup: (groupId: string) => Promise<void>;
+
+  // Selection actions
+  selectAlarm: (alarmId: string) => void;
+  deselectAlarm: (alarmId: string) => void;
+  selectAll: () => void;
+  deselectAll: () => void;
+
+  // UI actions
+  toggleGroupExpand: (groupId: string) => void;
+  setSearchQuery: (query: string) => void;
+}
+```
+
+### `useOverlayStore`
+
+```typescript
+interface OverlayStoreState {
+  // Firing state
+  activeAlarm: Alarm | null;           // Currently firing alarm (null = no alarm firing)
+  snoozeState: SnoozeState | null;     // Active snooze info for the firing alarm
+  isOverlayVisible: boolean;           // Whether the overlay window is shown
+  challengeState: ChallengeState | null;
+
+  // Queue — multiple alarms may fire simultaneously
+  alarmQueue: Alarm[];                 // Alarms waiting to fire after current one is handled
+
+  // Actions
+  showOverlay: (alarm: Alarm) => void;
+  hideOverlay: () => void;
+  dismissAlarm: () => Promise<void>;   // invoke("dismiss_alarm")
+  snoozeAlarm: (durationMin: number) => Promise<void>;  // invoke("snooze_alarm")
+  startChallenge: () => void;
+  submitChallengeAnswer: (answer: string) => Promise<{ Correct: boolean }>;
+  enqueueAlarm: (alarm: Alarm) => void;
+  dequeueNext: () => void;
+}
+
+interface ChallengeState {
+  type: ChallengeType;
+  difficulty: ChallengeDifficulty | null;
+  startedAt: string;                   // ISO 8601 — for solve time calculation
+  isActive: boolean;
+}
+```
+
+### `useSettingsStore`
+
+```typescript
+interface SettingsStoreState {
+  // Data — mirrors the Settings typed interface from 01-data-model.md
+  settings: Settings | null;           // null while loading
+  isLoading: boolean;
+  error: string | null;
+
+  // Actions
+  fetchSettings: () => Promise<void>;  // invoke("get_settings")
+  updateSetting: (key: string, value: string) => Promise<void>;  // invoke("update_setting")
+
+  // Convenience getters (derived from settings)
+  theme: ThemeMode;
+  is24Hour: boolean;
+  language: string;
+}
+```
+
+### Store Initialization
+
+All three stores are initialized at app startup in `App.tsx`:
+
+```typescript
+function App() {
+  const fetchAlarms = useAlarmStore((s) => s.fetchAlarms);
+  const fetchGroups = useAlarmStore((s) => s.fetchGroups);
+  const fetchSettings = useSettingsStore((s) => s.fetchSettings);
+
+  useEffect(() => {
+    fetchAlarms();
+    fetchGroups();
+    fetchSettings();
+  }, []);
+
+  // ...
+}
+```
+
+---
+
 ## i18n Enforcement (Resolves FE-I18N-001)
 
 > Without enforcement, AI will hardcode strings in JSX. i18n must be a structural requirement, not optional.
