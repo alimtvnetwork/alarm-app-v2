@@ -125,7 +125,7 @@ A background service is a process that:
 │                        macOS System                          │
 │                                                              │
 │  ┌─ Login Items ─────────────────────────────────────────┐   │
-│  │  Alarm App.app (registered via tauri-plugin-autostart)│  │
+│  │  alarm-app.app (registered via tauri-plugin-autostart)│  │
 │  │  → Launches automatically on user login               │   │
 │  └───────────────────────────────────────────────────────┘   │
 │                                                              │
@@ -214,7 +214,7 @@ Webview (sandboxed, no Node.js, no filesystem)
 ├─────────────────────────────────────────────────────────┤
 │                                                          │
 │  1. SYSTEM BOOT / USER LOGIN                             │
-│     └─→ macOS Login Items launches Alarm App.app       │
+│     └─→ macOS Login Items launches alarm-app.app       │
 │                                                          │
 │  2. APP INITIALIZATION                                   │
 │     ├─→ Initialize rusqlite connection                   │
@@ -766,8 +766,8 @@ cargo tauri build --target x86_64-apple-darwin    # Intel Mac
 
 | Artifact | Description |
 |----------|-------------|
-| `Alarm App.app` | macOS application bundle (self-contained, ~5-10 MB) |
-| `Alarm App.dmg` | macOS disk image installer (optional, requires code signing) |
+| `alarm-app.app` | macOS application bundle (self-contained, ~5-10 MB) |
+| `alarm-app.dmg` | macOS disk image installer (optional, requires code signing) |
 
 ### Database Location
 
@@ -779,7 +779,7 @@ This persists across app updates and is not deleted when the app is removed (use
 
 ### Installation Flow
 
-1. User downloads `Alarm App.app` (or `.dmg`)
+1. User downloads `alarm-app.app` (or `.dmg`)
 2. Drags to `/Applications/` (or double-clicks `.dmg`)
 3. First launch: right-click → Open to bypass Gatekeeper (unsigned app)
 4. App appears in menu bar as 🔔
@@ -830,7 +830,7 @@ This persists across app updates and is not deleted when the app is removed (use
 
 | Feature | Implementation |
 |---------|---------------|
-| Auto-start | XDG autostart (`~/.config/autostart/Alarm App.desktop`) (via `tauri-plugin-autostart`) |
+| Auto-start | XDG autostart (`~/.config/autostart/alarm-app.desktop`) (via `tauri-plugin-autostart`) |
 | System tray | AppIndicator or StatusNotifierItem (DE-dependent) |
 | Wake/sleep | `systemd-logind` `PrepareForSleep` D-Bus signal |
 | Notifications | libnotify / D-Bus notifications (via Tauri) |
