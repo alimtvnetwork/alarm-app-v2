@@ -10,6 +10,7 @@ import { useOverlayStore } from "@/stores/overlay-store";
 import { ChallengeType, ChallengeDifficulty } from "@/types/alarm";
 import { suggestDifficulty } from "@/lib/adaptive-challenge";
 import MathChallenge from "./MathChallenge";
+import TypingChallenge from "./TypingChallenge";
 
 const AlarmOverlay = () => {
   const isVisible = useOverlayStore((s) => s.isVisible);
@@ -72,7 +73,7 @@ const AlarmOverlay = () => {
     : 0;
 
   const handleDismissClick = useCallback(() => {
-    if (alarm?.ChallengeType === ChallengeType.Math) {
+    if (alarm?.ChallengeType === ChallengeType.Math || alarm?.ChallengeType === ChallengeType.Typing) {
       setShowChallenge(true);
     } else {
       dismiss();
@@ -135,11 +136,15 @@ const AlarmOverlay = () => {
       )}
 
       {showChallenge ? (
-        <div className="mt-10">
-          <MathChallenge
-            difficulty={suggestDifficulty(alarm.ChallengeDifficulty ?? ChallengeDifficulty.Easy)}
-            onSolved={handleChallengeSolved}
-          />
+        <div className="mt-10 w-full flex justify-center">
+          {alarm.ChallengeType === ChallengeType.Typing ? (
+            <TypingChallenge onSolved={handleChallengeSolved} />
+          ) : (
+            <MathChallenge
+              difficulty={suggestDifficulty(alarm.ChallengeDifficulty ?? ChallengeDifficulty.Easy)}
+              onSolved={handleChallengeSolved}
+            />
+          )}
         </div>
       ) : (
         <div className="mt-12 flex gap-4 px-6 w-full max-w-xs">

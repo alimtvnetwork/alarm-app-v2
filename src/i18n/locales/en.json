@@ -173,5 +173,10 @@
   },
   "analytics": {
     "exportCsv": "Export CSV"
+  },
+  "challenge": {
+    "typingTitle": "Type to Dismiss",
+    "typingPlaceholder": "Type the sentence above...",
+    "complete": "complete"
   }
 }
