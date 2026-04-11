@@ -249,16 +249,33 @@ fn log_webhook_result(url: &Url, response: Result<reqwest::Response, reqwest::Er
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `create_webhook` | `{ AlarmId: string, Url: string, Payload?: Record<string, unknown> }` | `WebhookConfig` |
+| `create_webhook` | `CreateWebhookPayload` | `WebhookConfig` |
 | `delete_webhook` | `{ WebhookId: string }` | `void` |
-| `test_webhook` | `{ WebhookId: string }` | `{ Success: boolean, StatusCode: number \| null, Error: string \| null }` |
-| `get_weather_briefing` | `{ Latitude: number, Longitude: number }` | `WeatherBriefing` |
+| `test_webhook` | `{ WebhookId: string }` | `TestWebhookResult` |
+| `get_weather_briefing` | `GetWeatherPayload` | `WeatherBriefing` |
 
 > **Note:** Location-based alarms and voice commands use platform-native APIs invoked directly from Rust — no frontend IPC commands needed. Multi-timezone support is handled by `create_alarm`/`update_alarm` with a `Timezone` field.
 
 ### Payload Interfaces
 
 ```typescript
+interface CreateWebhookPayload {
+  AlarmId: string;
+  Url: string;
+  Payload?: Record<string, unknown>;
+}
+
+interface GetWeatherPayload {
+  Latitude: number;
+  Longitude: number;
+}
+
+interface TestWebhookResult {
+  Success: boolean;
+  StatusCode: number | null;
+  Error: string | null;
+}
+
 interface WebhookConfig {
   WebhookId: string;
   AlarmId: string;
@@ -274,13 +291,46 @@ interface WeatherBriefing {
   Description: string;     // e.g., "Partly cloudy"
   FetchedAt: string;       // ISO 8601
 }
+
+/// Payload sent to user-configured webhook URL on alarm dismiss.
+interface WebhookPayload {
+  AlarmId: string;
+  AlarmLabel: string;
+  FiredAt: string;        // ISO 8601
+  DismissedAt: string;    // ISO 8601
+  SnoozeCount: number;
+  AppVersion: string;
+}
 ```
 
-> **Resolves PY-003, PY-004.** Rust struct counterparts for IPC serialization.
+> **Resolves PY-003, PY-004, P35-003, P35-004, P35-007, P35-010.** Rust struct counterparts for IPC serialization.
 
 #### Rust Structs
 
 ```rust
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct CreateWebhookPayload {
+    pub alarm_id: String,
+    pub url: String,
+    pub payload: Option<serde_json::Value>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct GetWeatherPayload {
+    pub latitude: f64,
+    pub longitude: f64,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct TestWebhookResult {
+    pub success: bool,
+    pub status_code: Option<u16>,
+    pub error: Option<String>,
+}
+
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct WebhookConfig {
@@ -299,6 +349,17 @@ pub struct WeatherBriefing {
     pub wind_speed: f64,
     pub description: String,
     pub fetched_at: String,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct WebhookPayload {
+    pub alarm_id: String,
+    pub alarm_label: String,
+    pub fired_at: String,
+    pub dismissed_at: String,
+    pub snooze_count: u32,
+    pub app_version: String,
 }
 ```
 

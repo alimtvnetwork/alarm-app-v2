@@ -53,9 +53,57 @@ Users can export alarms and groups in multiple formats (JSON, CSV, iCal) and imp
 
 | Command | Payload | Returns |
 |---------|---------|---------|
-| `export_data` | `{ Format: ExportFormat, Scope: ExportScope, AlarmIds?: string[] }` | `string` (saved file path) |
-| `import_data` | `{ Mode: ImportMode }` | `ImportPreview` |
-| `confirm_import` | `{ PreviewId: string, Mode: ImportMode, DuplicateAction: DuplicateAction }` | `ImportResult` |
+| `export_data` | `ExportDataPayload` | `string` (saved file path) |
+| `import_data` | `ImportDataPayload` | `ImportPreview` |
+| `confirm_import` | `ConfirmImportPayload` | `ImportResult` |
+
+### IPC Payload Interfaces
+
+```typescript
+interface ExportDataPayload {
+  Format: ExportFormat;
+  Scope: ExportScope;
+  AlarmIds?: string[];
+}
+
+interface ImportDataPayload {
+  Mode: ImportMode;
+}
+
+interface ConfirmImportPayload {
+  PreviewId: string;
+  Mode: ImportMode;
+  DuplicateAction: DuplicateAction;
+}
+```
+
+> **Resolves P35-001, P35-002, P35-014.** Rust struct counterparts for IPC deserialization.
+
+#### Rust Structs (Request Payloads)
+
+```rust
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct ExportDataPayload {
+    pub format: ExportFormat,
+    pub scope: ExportScope,
+    pub alarm_ids: Option<Vec<String>>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct ImportDataPayload {
+    pub mode: ImportMode,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct ConfirmImportPayload {
+    pub preview_id: String,
+    pub mode: ImportMode,
+    pub duplicate_action: DuplicateAction,
+}
+```
 
 ---
 
