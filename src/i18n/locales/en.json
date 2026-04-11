@@ -115,6 +115,8 @@
     "language": "Language",
     "english": "English",
     "bahasaMelayu": "Bahasa Melayu",
+    "chinese": "中文",
+    "japanese": "日本語",
     "data": "Data",
     "eventRetention": "Event Retention",
     "days": "{{count}} days",
