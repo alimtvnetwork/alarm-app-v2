@@ -1,6 +1,6 @@
 # Consistency Report: Alarm App Spec
 
-**Version:** 2.9.0  
+**Version:** 2.9.1  
 **Generated:** 2026-04-11
 **Health Score:** 100/100 (A+)
 
@@ -32,16 +32,16 @@
 
 | # | Folder | `00-overview.md` | `99-consistency-report.md` | `97-acceptance-criteria.md` | Status |
 |---|--------|-------------------|----------------------------|------------------------------|--------|
-| 1 | `01-fundamentals/` | ✅ (v1.4.0) | ✅ (v2.0.0) | ✅ (v1.0.0 — 64 criteria) | ✅ Complete |
-| 2 | `02-features/` | ✅ | ✅ (v2.0.0) | ✅ (v1.0.0 — 133 criteria) | ✅ Complete |
+| 1 | `01-fundamentals/` | ✅ (v1.5.0) | ✅ (v2.1.0) | ✅ (v1.2.0 — 72 criteria) | ✅ Complete (13 docs) |
+| 2 | `02-features/` | ✅ (v1.3.0) | ✅ (v2.1.0) | ✅ (v1.1.0 — 133 criteria) | ✅ Complete (17 feature specs) |
 | 3 | `03-app-issues/` | ✅ | ✅ (v1.4.0) | — | ✅ Compliant (10 docs, 43/43 resolved) |
-| 4 | `14-spec-issues/` | ✅ (v1.41.0) | — | — | ✅ 484/484 resolved |
+| 4 | `14-spec-issues/` | ✅ (v1.42.0) | — | — | ✅ 524/524 resolved (484 original + 22 Phase 6 + 18 Phase 7) |
 
 ---
 
-## Gap Analysis Remediation (Sessions 1–5)
+## Gap Analysis Remediation
 
-**25 tasks across 5 sessions — all resolved**
+### Sessions 1–5 (25 tasks — all resolved)
 
 | Session | Tasks | Focus |
 |---------|:-----:|-------|
@@ -51,7 +51,31 @@
 | 4 | 17–21 | Magic values → named constants, logging, oversized function refactoring, nesting flattening, AlarmContext struct |
 | 5 | 22–25 | Cross-references in all 17 feature specs, ambiguous directives eliminated, edge case tables in 10 P0/P1 specs, cosmetic fixes |
 
-**Files updated:** 15 feature/fundamental specs across 5 sessions
+### Phase 6 Gap Analysis (22 issues — all resolved)
+
+| Focus | Issues |
+|-------|--------|
+| UI layout descriptions (Settings, alarm form, alarm list) | AI-002/003/004 |
+| Notification templates (fired, missed, snoozed) | AI-006 |
+| i18n key convention (`{page}.{section}.{element}`) | AI-007 |
+| Frontend routing (5 SPA routes) | AI-008 |
+| Scoring tables for 97/99 files | S-001/002 |
+| Index naming (`Idx{Table}_{Column}`) | DB-002 |
+| Error mapping tables | AI-001 |
+| Edge case tables for P2/P3 specs | CG-001/002/003 |
+| `expect()` annotations | CG-004/005 |
+
+### Phase 7 Gap Analysis (18 issues — all resolved)
+
+| Focus | Issues |
+|-------|--------|
+| Settings reconciliation (17 keys aligned) | S-004, CG-006, AI-001 |
+| Missing table schemas (Quotes, Webhooks) | AI-002/003 |
+| Zustand store shapes (3 stores) | AI-004 |
+| Edge cases for smart-features, analytics, keyboard-shortcuts | CG-001/002/003 |
+| Boolean exemptions (IsPreviousEnabled, Is24Hour) | B-001/002 |
+| Structural corrections (feature overview inventory) | S-001/002 |
+| Logging/telemetry spec | BE-003 |
 
 ---
 
@@ -63,24 +87,31 @@
 | All overview inventories match actual files | ✅ |
 | Technology decisions consistent across specs | ✅ |
 | All 43 app issues resolved with spec cross-refs | ✅ |
-| Spec issues: 484 total, 484 resolved, 0 open | ✅ |
+| Spec issues: 524 total, 524 resolved, 0 open | ✅ |
 | All dependencies pinned with `=x.y.z` | ✅ |
 | Platform verification matrix complete | ✅ |
 | PascalCase table names in all SQL examples | ✅ |
 | Magic string types replaced with enum references | ✅ 13 domain enums |
 | Test fixtures use PascalCase keys | ✅ |
 | All error enums defined (AlarmAppError + WebhookError) | ✅ |
-| Acceptance criteria rollups created | ✅ 197 criteria (133 feature + 64 fundamental) |
+| Acceptance criteria rollups created | ✅ 205 criteria (133 feature + 72 fundamental) |
 | IPC commands defined in all feature files | ✅ |
 | Boolean semantic inverses documented | ✅ |
-| Settings seeding spec with 9 defaults | ✅ |
+| Settings seeding spec with 17 defaults | ✅ |
 | UI states spec (loading/empty/error/populated) | ✅ |
+| UI layout descriptions for all major screens | ✅ |
 | Coding guidelines cross-refs in feature + fundamental files | ✅ |
-| All spec files have Scoring tables | ✅ (28/28) |
-| Gap analysis: 25/25 tasks resolved | ✅ |
+| All spec files have Scoring tables | ✅ (29/29) |
+| Gap analysis: 25/25 session tasks + 22 Phase 6 + 18 Phase 7 resolved | ✅ |
 | Edge Cases tables in P0/P1 specs | ✅ (10/17) |
+| Edge Cases tables in P2/P3 specs | ✅ (3/3 added in Phase 7) |
 | Named constants (no magic values) | ✅ |
 | Ambiguous directives eliminated | ✅ (0 remaining) |
+| Zustand store shapes defined (3 stores) | ✅ |
+| Frontend routing table (5 routes) | ✅ |
+| i18n key convention defined | ✅ |
+| Notification templates defined | ✅ |
+| Logging/telemetry spec with rotation + retention | ✅ |
 | Estimated AI failure risk | ✅ ~3% (down from ~25%) |
 
 ---

@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.41.0  
+**Version:** 1.42.0  
 **Updated:** 2026-04-11
 
 ---
@@ -64,6 +64,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 53 | `53-discovery-phase-35.md` | Discovery Phase 35 — Export/Import, Webhook, Analytics & System IPC Struct Audit | 14 | 0 | 14 |
 | 54 | `54-discovery-phase-36.md` | Discovery Phase 36 — Final Sweep: IPC Registry Alignment & Stale References | 12 | 0 | 12 |
 | 55 | `55-issue-summary-index.md` | Summary Index — All 484 issues by category, phase, and root cause | — | — | — |
+| 56 | `56-gap-analysis-phase-6.md` | Gap Analysis Phase 6 — Post-completion fresh audit | 22 | 0 | 22 |
+| 57 | `57-gap-analysis-phase-7.md` | Gap Analysis Phase 7 — Comprehensive fresh audit (Settings, schemas, stores, logging) | 18 | 0 | 18 |
 
 ---
 
@@ -72,11 +74,11 @@ This folder tracks all specification quality issues found during the deep audit 
 | Severity | Count |
 |----------|:-----:|
 | 🔴 Critical | 104 |
-| 🟡 Medium | 289 |
-| 🟢 Low | 91 |
-| **Grand Total** | **484** |
+| 🟡 Medium | 297 |
+| 🟢 Low | 123 |
+| **Grand Total** | **524** |
 | **Open** | **0** |
-| **Resolved** | **484** |
+| **Resolved** | **524** |
 
 ---
 
@@ -157,6 +159,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 34** | **IPC Inline Objects & Remaining Rust Structs — Groups, Personalization, Sound (15 issues)** | **✅ Done (+15 = 458, 15 resolved)** |
 | **Discovery Phase 35** | **Export/Import, Webhook, Analytics & System IPC Struct Audit (14 issues)** | **✅ Done (+14 = 472, 14 resolved)** |
 | **Discovery Phase 36** | **Final Sweep: IPC Registry Alignment & Stale References (12 issues)** | **✅ Done (+12 = 484, 12 resolved)** |
+| **Gap Analysis Phase 6** | **Post-completion fresh audit — UI layouts, notification templates, i18n, routing, scoring (22 issues)** | **✅ Done (+22 = 506, 22 resolved)** |
+| **Gap Analysis Phase 7** | **Comprehensive fresh audit — Settings reconciliation, missing schemas, Zustand stores, logging (18 issues)** | **✅ Done (+18 = 524, 18 resolved)** |
 
 ---
 

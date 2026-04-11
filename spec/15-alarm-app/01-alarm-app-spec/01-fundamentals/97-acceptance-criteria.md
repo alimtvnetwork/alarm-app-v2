@@ -1,6 +1,6 @@
 # Fundamentals Acceptance Criteria — Consolidated Rollup
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-10  
 **Purpose:** Testable success criteria for all fundamental/infrastructure specs  
 **Resolves:** P14-002
@@ -113,6 +113,19 @@
 
 ---
 
+## 12 — Logging and Telemetry (`12-logging-and-telemetry.md`)
+
+- [ ] App writes structured JSON logs to platform-specific log directory
+- [ ] Logs rotate daily with 7-day retention
+- [ ] Old log files are cleaned up on startup
+- [ ] All alarm lifecycle events (create, fire, snooze, dismiss, miss) are logged at INFO
+- [ ] Sensitive data (passwords, personal label text at ERROR+) is never logged
+- [ ] Frontend errors are forwarded to Rust logger via IPC (`log_frontend_error`)
+- [ ] `LogLevel` setting controls minimum severity in release builds
+- [ ] DEBUG-level logs are disabled in release builds by default
+
+---
+
 ## Summary
 
 | Fundamental | Criteria Count |
@@ -128,7 +141,8 @@
 | 09 Test Strategy | 7 |
 | 10 Dependency Lock | 4 |
 | 11 Platform Verification | 3 |
-| **Total** | **64** |
+| 12 Logging & Telemetry | 8 |
+| **Total** | **72** |
 
 ---
 
@@ -142,4 +156,4 @@
 
 ---
 
-*Fundamentals acceptance criteria rollup — created: 2026-04-10*
+*Fundamentals acceptance criteria rollup — updated: 2026-04-11*
