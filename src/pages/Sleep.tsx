@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Moon, Sun, Star } from "lucide-react";
+import BedtimeReminderCard from "@/components/sleep/BedtimeReminderCard";
 
 const MOCK_SLEEP_DATA = [
   { day: "Mon", hours: 7.5, quality: 4 },
@@ -98,6 +99,8 @@ const Sleep = () => {
           </ResponsiveContainer>
         </CardContent>
       </Card>
+
+      <BedtimeReminderCard />
 
       <Card>
         <CardHeader>
