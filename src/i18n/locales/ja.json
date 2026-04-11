@@ -190,5 +190,20 @@
     "back": "戻る",
     "skip": "ツアーをスキップ",
     "getStarted": "始めましょう"
+  },
+  "ambient": {
+    "title": "環境音",
+    "whiteNoise": "ホワイトノイズ",
+    "rain": "雨",
+    "ocean": "海",
+    "forest": "森",
+    "volume": "音量",
+    "play": "再生",
+    "stop": "停止",
+    "noTimer": "タイマーなし",
+    "min15": "15分",
+    "min30": "30分",
+    "min60": "60分",
+    "min90": "90分"
   }
 }

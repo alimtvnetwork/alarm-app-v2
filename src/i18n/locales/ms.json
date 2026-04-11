@@ -196,5 +196,20 @@
     "back": "Kembali",
     "skip": "Langkau jelajah",
     "getStarted": "Mula"
+  },
+  "ambient": {
+    "title": "Bunyi Ambien",
+    "whiteNoise": "Hingar Putih",
+    "rain": "Hujan",
+    "ocean": "Lautan",
+    "forest": "Hutan",
+    "volume": "Kelantangan",
+    "play": "Main",
+    "stop": "Berhenti",
+    "noTimer": "Tiada pemasa",
+    "min15": "15 min",
+    "min30": "30 min",
+    "min60": "60 min",
+    "min90": "90 min"
   }
 }
