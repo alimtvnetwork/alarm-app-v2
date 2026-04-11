@@ -118,7 +118,7 @@ Tables:
 | 02 | [Features](./02-features/00-overview.md) | All feature specifications (17 docs) |
 | 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking — 43/43 issues resolved |
 | 09 | [AI Handoff Reliability Report](./09-ai-handoff-reliability-report.md) | Supplementary failure analysis (62-task breakdown is authoritative), top 15 risk points |
-| 10 | [AI Handoff Readiness Report](./10-ai-handoff-readiness-report.md) | 100/100 readiness score, 524/524 issues resolved, 229 acceptance criteria |
+| 10 | [AI Handoff Readiness Report](./10-ai-handoff-readiness-report.md) | 100/100 readiness score, 564/564 issues resolved, 229 acceptance criteria |
 | 11 | [Atomic Task Breakdown](./11-atomic-task-breakdown.md) | **Authoritative** 62 dependency-ordered tasks, effort estimates, risk levels |
 | 12 | [Platform & Concurrency Guide](./12-platform-and-concurrency-guide.md) | Platform gotchas, race condition safeguards, async safety, error recovery |
 | 13 | [AI Cheat Sheet](./13-ai-cheat-sheet.md) | Single-page quick reference for AI coding agents |

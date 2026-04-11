@@ -66,10 +66,11 @@ This folder tracks all specification quality issues found during the deep audit 
 | 55 | `55-issue-summary-index.md` | Summary Index — All 484 issues by category, phase, and root cause | — | — | — |
 | 56 | `56-gap-analysis-phase-6.md` | Gap Analysis Phase 6 — Post-completion fresh audit | 22 | 0 | 22 |
 | 57 | `57-gap-analysis-phase-7.md` | Gap Analysis Phase 7 — Comprehensive fresh audit (Settings, schemas, stores, logging) | 18 | 0 | 18 |
-| 58 | `58-gap-analysis-phase-11.md` | Gap Analysis Phase 11 — OS service layer initial audit | 10 | 0 | 10 |
-| 59 | `59-gap-analysis-phase-12.md` | Gap Analysis Phase 12 — OS service layer foundational alignment | 16 | 0 | 16 |
-| 60 | `63-gap-analysis-phase-13.md` | Gap Analysis Phase 13 — Post-Phase 12B verification (dependency pins, crate modernization) | 6 | 0 | 6 |
-| 61 | `64-gap-analysis-phase-14.md` | Gap Analysis Phase 14 — Post-Phase 13B verification (field names, version pins, notification templates) | 8 | 0 | 8 |
+| 61 | `61-gap-analysis-phase-11.md` | Gap Analysis Phase 11 — OS service layer initial audit | 10 | 0 | 10 |
+| 62 | `62-gap-analysis-phase-12.md` | Gap Analysis Phase 12 — OS service layer foundational alignment | 16 | 0 | 16 |
+| 63 | `63-gap-analysis-phase-13.md` | Gap Analysis Phase 13 — Post-Phase 12B verification (dependency pins, crate modernization) | 6 | 0 | 6 |
+| 64 | `64-gap-analysis-phase-14.md` | Gap Analysis Phase 14 — Post-Phase 13B verification (field names, version pins, notification templates) | 8 | 0 | 8 |
+| 65 | `65-gap-analysis-phase-15.md` | Gap Analysis Phase 15 — Post-Phase 14B verification (bookkeeping) | 2 | 0 | 2 |
 
 ---
 
