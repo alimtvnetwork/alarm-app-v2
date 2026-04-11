@@ -35,7 +35,7 @@
 | 5 | `04-snooze-system.md` | 1.6.0 | ✅ Updated (Edge Cases table added) |
 | 6 | `05-sound-and-vibration.md` | 1.7.0 | ✅ Updated (Edge Cases table added) |
 | 7 | `06-dismissal-challenges.md` | 1.8.0 | ✅ Updated (Edge Cases table added) |
-| 8 | `07-alarm-groups.md` | 1.6.0 | ✅ Updated (Edge Cases present) |
+| 8 | `07-alarm-groups.md` | 1.7.0 | ✅ Updated (Edge Cases table added) |
 | 9 | `08-clock-display.md` | 1.4.0 | ✅ Updated (Edge Cases table added) |
 | 10 | `09-theme-system.md` | 1.5.0 | ✅ Updated (Edge Cases table added) |
 | 11 | `10-export-import.md` | 1.7.0 | ✅ Updated (Edge Cases table added) |
