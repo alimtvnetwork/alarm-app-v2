@@ -27,6 +27,72 @@
 
 ## Version History
 
+### v3.1.0 — 2026-04-11
+
+**Theme:** 🔬 Gap Analysis Phases 11–19 — OS Service Layer Hardening, Bookkeeping Reconciliation, Final Comprehensive Audit
+
+#### Summary
+
+Nine gap analysis phases (11–19) resolved **57 issues** (0 Critical, 29 Medium, 28 Low) across the OS service layer, handoff report, issue tracker, and coverage matrix. The OS service layer (`13-os-service-layer.md`) was fully aligned with the canonical firing spec, dependency lock, and coding guidelines. All bookkeeping metrics were reconciled across tracker files. A final comprehensive audit (Phase 19) confirmed the spec is implementation-ready with ~1% AI failure risk.
+
+#### Milestone Metrics
+
+| Metric | v3.0.0 | v3.1.0 |
+|--------|--------|--------|
+| Spec issues found | 538 | 579 (+41 from gap analysis, +16 already counted from Phase 16B onward) |
+| Spec issues resolved | 538 | 577 (+39) |
+| Spec issues accepted | 0 | 2 (superseded file date + historical running total) |
+| Gap analysis phases | 10 | 12 (+Phases 11–19) |
+| AI failure risk | ~3% | ~1% |
+| AI success rate | 95–97% | 97–98% |
+
+#### Phase Breakdown
+
+| Phase | Issues | Focus |
+|:-----:|:------:|-------|
+| 11 | 10 | OS service layer initial audit — legacy columns, polling interval, missing metadata |
+| 12 | 16 | OS service layer foundational alignment — data model, IPC registry, edge cases |
+| 13 | 6 | Post-Phase 12B verification — dependency pins, cocoa→objc2, version bumps |
+| 14 | 8 | Post-Phase 13B verification — field names, version pins, notification templates |
+| 15 | 2 | Post-Phase 14B verification — bookkeeping (file numbers, stale count) |
+| 16 | 4 | Fresh comprehensive audit — magic strings, stale counts, i18n key clarification |
+| 17 | 7 | Post-Phase 16B verification — stale counts, math errors, gap analysis phase count conflicts |
+| 18 | 0 | Post-Phase 17B verification — clean (all fixes confirmed) |
+| 19 | 2 | Final comprehensive audit — OS service layer missing from handoff report, 7 stale version numbers |
+
+#### Key Changes
+
+- **OS service layer alignment (Phases 11–14):** Replaced legacy `title`/`message` with `alarm.label` and canonical notification template `"{Time} — Tap to dismiss or snooze"`. Pinned `tauri = "=2.10.3"` and `tauri-plugin-notification = "=2.3.3"`. Replaced `.expect()` with safe error handling (`unwrap_or_else` + `tracing::warn!`). Added Scoring, Keywords, Cross-References sections.
+- **Bookkeeping reconciliation (Phases 15–17):** Fixed file numbering for phases 11–15 in issues overview. Corrected stale "524" → "566" → "577" across handoff report. Fixed Grand Total arithmetic (569→577). Unified gap analysis phase count across all files.
+- **Clock display fix (Phase 16B):** Replaced `"24h"` magic string with `TimeFormat.TwentyFourHour` enum reference. Added clarifying comment to `notification.alarm.title` i18n key.
+- **Coverage matrix update (Phase 19B):** Added `13-os-service-layer.md` (v2.3.0) to handoff report fundamentals coverage matrix. Updated 7 stale version numbers (data-model, platform-constraints, tauri-architecture, dismissal-challenges, alarm-groups, smart-features, accessibility-and-nfr).
+- **Handoff report** bumped to v3.3.0 with all 13 fundamentals listed, correct version numbers, and 579/577 totals.
+
+#### Files Changed
+
+| File | Change |
+|------|--------|
+| `00-overview.md` | v3.1.0 — status updated for Phase 11–19 work |
+| `01-fundamentals/13-os-service-layer.md` | v2.3.0 — notification alignment, dependency pins, error handling, metadata sections |
+| `02-features/08-clock-display.md` | v1.4.0 — `TimeFormat` enum reference replacing magic string |
+| `01-fundamentals/03-file-structure.md` | i18n key clarifying comment for `notification.alarm.title` |
+| `10-ai-handoff-readiness-report.md` | v3.3.0 — 13 fundamentals, 7 version updates, 579/577 totals, 12 gap analysis phases |
+| `14-spec-issues/00-overview.md` | v1.45.0 — Phases 16–19 entries, totals 579/577/2 |
+| `14-spec-issues/61-gap-analysis-phase-11.md` | Phase 11 gap analysis (10 issues) |
+| `14-spec-issues/62-gap-analysis-phase-12.md` | Phase 12 gap analysis (16 issues) |
+| `14-spec-issues/63-gap-analysis-phase-13.md` | Phase 13 gap analysis (6 issues) |
+| `14-spec-issues/64-gap-analysis-phase-14.md` | Phase 14 gap analysis (8 issues) |
+| `14-spec-issues/65-gap-analysis-phase-15.md` | Phase 15 gap analysis (2 issues) |
+| `14-spec-issues/66-gap-analysis-phase-16.md` | Phase 16 gap analysis (4 issues) |
+| `14-spec-issues/67-gap-analysis-phase-17.md` | Phase 17 gap analysis (7 issues) |
+| `14-spec-issues/68-gap-analysis-phase-18.md` | Phase 18 gap analysis (0 issues — clean) |
+| `14-spec-issues/69-gap-analysis-phase-19.md` | Phase 19 gap analysis (2 issues) |
+| `01-fundamentals/99-consistency-report.md` | Updated for OS service layer fixes |
+| `02-features/99-consistency-report.md` | Updated for feature file version bumps |
+| `99-consistency-report.md` | Updated for Phase 11–19 work |
+
+---
+
 ### v3.0.0 — 2026-04-11
 
 **Theme:** 🏁 Release Candidate — Fully Audited Specification
