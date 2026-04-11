@@ -82,6 +82,11 @@
 | **Phase 20B fixes verified** | 9/9 ✅ |
 | **New issues found** | 6 |
 | **Critical** | 0 |
+| **Medium** | 2 (resolved) |
+| **Low** | 4 (2 resolved, 2 accepted) |
+| **AI failure risk** | ~1-2% (unchanged) |
+| **New issues found** | 6 |
+| **Critical** | 0 |
 | **Medium** | 2 (stale totals + missing audit progress entry) |
 | **Low** | 4 (stale historical references) |
 | **AI failure risk** | ~1-2% (unchanged — no critical issues) |
@@ -92,14 +97,14 @@
 
 | ID | Fix | Effort |
 |----|-----|--------|
-| GA21-001 | Update `00-overview.md` totals: 591 total, 586 resolved, 5 accepted | 1 min |
-| GA21-002 | Add Gap Analysis Phase 20 to audit progress table | 1 min |
-| GA21-003 | Accept — historical doc, low impact | — |
-| GA21-004 | Update `00-overview.md` readiness report reference counts | 1 min |
-| GA21-005 | Update `00-overview.md` spec issues reference counts | 1 min |
-| GA21-006 | Accept — historical changelog entry, low impact | — |
+| GA21-001 | Updated spec issues overview totals: 597 total, 592 resolved, 5 accepted | ✅ Resolved |
+| GA21-002 | Added Gap Analysis Phase 20 + 21 to audit progress table | ✅ Resolved |
+| GA21-003 | Accept — historical doc, low impact | Accepted |
+| GA21-004 | Updated root overview readiness report reference counts (597/592) | ✅ Resolved |
+| GA21-005 | Updated root overview spec issues reference counts (597/592/5) | ✅ Resolved |
+| GA21-006 | Accept — historical changelog entry, low impact | Accepted |
 
-**Total estimated fix time:** ~4 minutes
+**All 4 actionable issues resolved. 2 accepted (low-impact historical references).**
 
 ---
 
