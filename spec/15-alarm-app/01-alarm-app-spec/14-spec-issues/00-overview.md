@@ -80,10 +80,10 @@ This folder tracks all specification quality issues found during the deep audit 
 |----------|:-----:|
 | 🔴 Critical | 104 |
 | 🟡 Medium | 319 |
-| 🟢 Low | 141 |
-| **Grand Total** | **564** |
+| 🟢 Low | 143 |
+| **Grand Total** | **566** |
 | **Open** | **0** |
-| **Resolved** | **564** |
+| **Resolved** | **566** |
 
 ---
 
