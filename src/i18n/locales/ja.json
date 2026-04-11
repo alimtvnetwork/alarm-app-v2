@@ -174,5 +174,21 @@
     "typingTitle": "タイピングで解除",
     "typingPlaceholder": "上の文章を入力してください...",
     "complete": "完了"
+  },
+  "onboarding": {
+    "alarms": "スマートアラーム",
+    "alarmsDesc": "カスタムサウンド、スヌーズ制限、計算問題やタイピングなどの解除チャレンジ付きアラームを作成。",
+    "sleep": "睡眠とウェルネス",
+    "sleepDesc": "睡眠の質を記録し、就寝リマインダーを設定し、最適な起床時間の提案を受けましょう。",
+    "analytics": "分析と履歴",
+    "analyticsDesc": "アラームパターン、スヌーズ傾向を確認し、履歴をCSVとしてエクスポートできます。",
+    "personalize": "自分好みに",
+    "personalizeDesc": "テーマ、アクセントカラー、スキンを選択。カレンダーで連続記録を追跡。",
+    "shortcuts": "キーボードショートカット",
+    "shortcutsDesc": "Ctrl+Nで新規アラーム、Ctrl+Eでエクスポート、?で全ショートカットを表示。",
+    "next": "次へ",
+    "back": "戻る",
+    "skip": "ツアーをスキップ",
+    "getStarted": "始めましょう"
   }
 }

@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import AppLayout from "./components/layout/AppLayout";
 import AlarmOverlay from "./components/alarm/AlarmOverlay";
 import KeyboardShortcutsHelp from "./components/layout/KeyboardShortcutsHelp";
+import OnboardingModal from "./components/onboarding/OnboardingModal";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
@@ -24,6 +25,7 @@ const AppInner = () => {
       <Sonner />
       <AlarmOverlay />
       <KeyboardShortcutsHelp />
+      <OnboardingModal />
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
