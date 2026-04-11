@@ -161,8 +161,8 @@
 
 | # | Task | Effort | Spec Reference | Risk | Depends On |
 |---|------|--------|----------------|:----:|:----------:|
-| 51 | Implement system tray — icon, next alarm tooltip, quick toggle, minimize to tray | 1.5h | `06-tauri-architecture-and-framework-comparison.md` → System Tray | 🟡 | 38 |
-| 52 | Implement OS notifications — fire alongside overlay, permission request, fallback | 1h | `06-tauri-architecture-and-framework-comparison.md` → Notifications | 🟡 | 22 |
+| 51 | Implement system tray — icon, next alarm tooltip, quick toggle, minimize to tray | 1.5h | `13-os-service-layer.md` → System Tray, `06-tauri-architecture-and-framework-comparison.md` | 🟡 | 38 |
+| 52 | Implement OS notifications — fire alongside overlay, permission request, fallback | 1h | `13-os-service-layer.md` → Notification Dispatch, `06-tauri-architecture-and-framework-comparison.md` | 🟡 | 22 |
 | 53 | Implement i18n — `react-i18next` setup, `en.json` locale, `eslint-plugin-i18next` config | 1h | `03-file-structure.md` → i18n Enforcement | 🟡 | 2 |
 | 54 | Implement timezone change detection — `on_timezone_change()`, recalculate all `NextFireTime` | 1h | `03-alarm-firing.md` → Timezone Change Detection | 🔴 | 22 |
 
