@@ -241,4 +241,8 @@ export const DEFAULT_SETTINGS: Settings = {
   DefaultSound: "classic-beep",
   ExportWarningDismissed: false,
   SystemTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  BedtimeEnabled: false,
+  BedtimeTime: "22:30",
+  BedtimeReminderMinBefore: 30,
+  SleepGoalHours: 8,
 };
