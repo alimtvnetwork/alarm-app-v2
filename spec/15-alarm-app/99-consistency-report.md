@@ -18,7 +18,7 @@
 | 4 | `11-atomic-task-breakdown.md` | ✅ Present (v1.1.0 — 62 authoritative tasks, 12 phases) |
 | 5 | `12-platform-and-concurrency-guide.md` | ✅ Present (v1.0.0 — PascalCase table names, corrected field refs) |
 | 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.3.0 — domain enums, thiserror 2.x, PascalCase examples) |
-| 7 | `15-implementation-handoff-guide.md` | ✅ Present |
+| 7 | `16-implementation-handoff-guide.md` | ✅ Present |
 | 8 | `98-changelog.md` | ✅ Present (v3.1.0 — v1.0.0 → v3.1.0) |
 
 ### Reference Documents
@@ -64,7 +64,7 @@ As of v3.1.0, the `01-alarm-app-spec/` nesting level has been removed. All conte
 | Acceptance criteria rollups created | ✅ 229 criteria (157 feature + 72 fundamental) |
 | IPC commands defined in all feature files | ✅ |
 | Boolean semantic inverses documented | ✅ |
-| Settings seeding spec with 17 defaults | ✅ |
+| Settings seeding spec with 16 defaults | ✅ |
 | UI states spec (loading/empty/error/populated) | ✅ |
 | UI layout descriptions for all major screens | ✅ |
 | Coding guidelines cross-refs in feature + fundamental files | ✅ |

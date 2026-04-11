@@ -228,11 +228,28 @@ All files follow `{NN}-{kebab-case}.md` convention. No violations found.
 
 ## Phase Plan
 
-| Phase | Scope | Issues |
-|-------|-------|--------|
-| **Phase 20A** (this document) | Audit findings | 12 issues found |
-| **Phase 20B** (next) | Fix all issues | 9 actionable fixes |
-| **Phase 20C** (if needed) | Verify fixes | Quick cross-check |
+| Phase | Scope | Issues | Status |
+|-------|-------|--------|--------|
+| **Phase 20A** | Audit findings | 12 issues found | ✅ Done |
+| **Phase 20B** | Fix all issues | 9 actionable fixes | ✅ Done |
+
+---
+
+## Phase 20B Resolution Log
+
+| ID | Fix Applied | Status |
+|----|------------|--------|
+| GA20-001 | Fixed `../../../` → `../../` in design-system.md line 220 | ✅ Resolved |
+| GA20-002 | Fixed `../../../` → `../../` in design-system.md line 224 | ✅ Resolved |
+| GA20-003 | Fixed `../../../` → `../../` in fundamentals overview line 43 | ✅ Resolved |
+| GA20-004 | Fixed 3 `../../../` → `../../` in gap-analysis-phase-9.md lines 199-201 | ✅ Resolved |
+| GA20-005 | Standardized app name to `Alarm App` / `alarm-app` in `13-os-service-layer.md` | ✅ Resolved |
+| GA20-006 | Fixed `alarms.db` → `alarm-app.db` in `13-os-service-layer.md` | ✅ Resolved |
+| GA20-008 | Added missing code block fence before `ChallengeDifficulty` `FromStr` in `01-data-model.md` | ✅ Resolved |
+| GA20-009 | Renamed `15-implementation-handoff-guide.md` → `16-implementation-handoff-guide.md` | ✅ Resolved |
+| GA20-012 | Updated consistency report to say "16 defaults" (matches V1 migration seed count) | ✅ Resolved |
+
+**GA20-007, GA20-010, GA20-011** — Accepted as low-impact. No fix needed.
 
 ---
 
@@ -241,14 +258,13 @@ All files follow `{NN}-{kebab-case}.md` convention. No violations found.
 | Metric | Value |
 |--------|-------|
 | **Issues found** | 12 |
-| **Critical** | 3 (all broken cross-references from folder flattening) |
-| **Medium** | 6 |
-| **Low** | 3 |
-| **AI failure risk (current)** | ~5% |
+| **Critical** | 3 (all resolved — broken cross-references from folder flattening) |
+| **Medium** | 6 (5 resolved, 1 accepted) |
+| **Low** | 3 (1 resolved, 2 accepted) |
+| **Resolved** | 9 |
+| **Accepted** | 3 |
 | **AI failure risk (after fixes)** | ~1-2% |
-| **Spec readiness** | 97/100 (A) — drops from 100 due to broken references |
-
-The alarm app specification remains **implementation-ready** with a very high quality bar. The 3 critical issues are all mechanical cross-reference fixes from the recent folder flattening. The app name inconsistency (GA20-005/006) is the only substantive content issue that could cause AI confusion.
+| **Spec readiness** | 100/100 (A+) — restored after reference fixes |
 
 ---
 
@@ -267,8 +283,7 @@ The alarm app specification remains **implementation-ready** with a very high qu
 
 ```
 IMPORTANT — AI INSTRUCTION:
-- This is Phase 20A — audit only. No fixes applied.
-- Say "next" to execute Phase 20B (9 fixes).
-- All issues are grounded in observed inconsistency or broken references.
-- Do NOT fix anything until instructed.
+- Phase 20A + 20B complete. All 9 actionable issues resolved.
+- 3 low-impact issues accepted (cosmetic — no AI failure risk).
+- Spec readiness restored to 100/100 (A+).
 ```

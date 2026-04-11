@@ -50,7 +50,7 @@
 
 ## 1. Purpose & Scope
 
-This document specifies **how AlarmDaemon behaves as an operating system background service**. It covers the service lifecycle, auto-start, polling engine, notification dispatch, system tray presence, and wake/sleep recovery.
+This document specifies **how Alarm App behaves as an operating system background service**. It covers the service lifecycle, auto-start, polling engine, notification dispatch, system tray presence, and wake/sleep recovery.
 
 ### What This Document Covers
 
@@ -97,7 +97,7 @@ A desktop application for macOS that behaves like a **Windows Service** — a pr
 
 On Windows, "Services" are long-running background processes visible in Task Manager → Services tab. They start on boot, run without a GUI, and communicate with other applications via APIs. Examples: Windows Update, Print Spooler, SQL Server.
 
-**AlarmDaemon replicates this pattern on macOS** using:
+**Alarm App replicates this pattern on macOS** using:
 
 - **Tauri 2.x** as the application shell (provides tray icon, background execution, native notifications via Rust backend)
 - **macOS Login Items** for auto-start on boot (via `tauri-plugin-autostart`)
@@ -118,14 +118,14 @@ A background service is a process that:
 4. **Responds to events** — when an alarm is due, it fires a notification
 5. **Exposes an interface for management** — a tray icon click opens a small panel for alarm operations
 
-### How AlarmDaemon Implements This
+### How Alarm App Implements This
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │                        macOS System                          │
 │                                                              │
 │  ┌─ Login Items ─────────────────────────────────────────┐   │
-│  │  AlarmDaemon.app (registered via tauri-plugin-autostart)│  │
+│  │  alarm-app.app (registered via tauri-plugin-autostart)│  │
 │  │  → Launches automatically on user login               │   │
 │  └───────────────────────────────────────────────────────┘   │
 │                                                              │
@@ -146,8 +146,8 @@ A background service is a process that:
 │  │  └────────────────────────────────────────────────┘   │   │
 │  │                                                        │   │
 │  │  ┌─ SQLite Database (rusqlite) ───────────────────┐   │   │
-│  │  │  ~/Library/Application Support/AlarmDaemon/    │   │   │
-│  │  │  alarms.db                                     │   │   │
+│  │  │  ~/Library/Application Support/com.alarm-app/    │   │   │
+│  │  │  alarm-app.db                                     │   │   │
 │  │  └────────────────────────────────────────────────┘   │   │
 │  │                                                        │   │
 │  │  ┌─ Wake/Sleep Handler ───────────────────────────┐   │   │
@@ -214,7 +214,7 @@ Webview (sandboxed, no Node.js, no filesystem)
 ├─────────────────────────────────────────────────────────┤
 │                                                          │
 │  1. SYSTEM BOOT / USER LOGIN                             │
-│     └─→ macOS Login Items launches AlarmDaemon.app       │
+│     └─→ macOS Login Items launches alarm-app.app       │
 │                                                          │
 │  2. APP INITIALIZATION                                   │
 │     ├─→ Initialize rusqlite connection                   │
@@ -273,16 +273,16 @@ Webview (sandboxed, no Node.js, no filesystem)
 | Item | Action |
 |------|--------|
 | Next alarm: HH:MM | Info display (disabled item) |
-| Open AlarmDaemon | Show webview panel |
+| Open Alarm App | Show webview panel |
 | Separator | — |
-| Quit AlarmDaemon | Exit the app |
+| Quit Alarm App | Exit the app |
 
 ### WebviewWindow Configuration
 
 ```json
 {
   "label": "main",
-  "title": "AlarmDaemon",
+  "title": "Alarm App",
   "width": 420,
   "height": 600,
   "visible": false,
@@ -334,7 +334,7 @@ fn setup_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
 
 ### Overview
 
-The polling engine is a `tokio` async task running in the Tauri Rust core. It uses `tokio::time::interval` for precise **30-second** ticks. It is the core mechanism that makes AlarmDaemon function as a background daemon.
+The polling engine is a `tokio` async task running in the Tauri Rust core. It uses `tokio::time::interval` for precise **30-second** ticks. It is the core mechanism that makes Alarm App function as a background daemon.
 
 > **Canonical interval:** 30 seconds — aligned with `03-alarm-firing.md`. See that spec for full firing logic, queue management, and multi-alarm handling.
 
@@ -493,7 +493,7 @@ app.handle().plugin(
 
 - First notification triggers macOS permission prompt
 - If denied: app falls back to in-app overlay (webview-based)
-- User can re-enable in **System Settings → Notifications → AlarmDaemon**
+- User can re-enable in **System Settings → Notifications → Alarm App**
 
 ---
 
@@ -508,8 +508,8 @@ app.handle().plugin(
 1. User enables "Auto-start" in settings
 2. Rust core calls `autostart::enable()`
 3. The plugin registers the app as a Login Item via macOS APIs
-4. On next login, macOS automatically launches AlarmDaemon
-5. AlarmDaemon starts with `LSUIElement = true` (no dock icon), only the tray icon appears
+4. On next login, macOS automatically launches Alarm App
+5. Alarm App starts with `LSUIElement = true` (no dock icon), only the tray icon appears
 6. The polling loop begins immediately
 
 ### Rust Implementation
@@ -549,7 +549,7 @@ async fn get_auto_start_status(app: AppHandle) -> Result<bool, String> {
 | Mechanism | `LaunchAgent` plist in `~/Library/LaunchAgents/` |
 | Trigger | User login (not system boot — macOS does not support user-space boot services) |
 | Visibility | `LSUIElement = true` → no dock icon |
-| User control | System Settings → General → Login Items → AlarmDaemon toggle |
+| User control | System Settings → General → Login Items → Alarm App toggle |
 | Removal | Disabling in settings calls `autostart.disable()` which removes the LaunchAgent |
 
 ---
@@ -703,14 +703,14 @@ objc2 = "=0.5.2"                # macOS wake/sleep NSWorkspace notifications
 
 ```json
 {
-  "productName": "AlarmDaemon",
+  "productName": "alarm-app",
   "version": "1.0.0",
   "identifier": "com.alarmdaemon.app",
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "AlarmDaemon",
+        "title": "Alarm App",
         "width": 420,
         "height": 600,
         "visible": false,
@@ -766,20 +766,20 @@ cargo tauri build --target x86_64-apple-darwin    # Intel Mac
 
 | Artifact | Description |
 |----------|-------------|
-| `AlarmDaemon.app` | macOS application bundle (self-contained, ~5-10 MB) |
-| `AlarmDaemon.dmg` | macOS disk image installer (optional, requires code signing) |
+| `alarm-app.app` | macOS application bundle (self-contained, ~5-10 MB) |
+| `alarm-app.dmg` | macOS disk image installer (optional, requires code signing) |
 
 ### Database Location
 
 ```
-~/Library/Application Support/AlarmDaemon/alarms.db
+~/Library/Application Support/com.alarm-app/alarm-app.db
 ```
 
 This persists across app updates and is not deleted when the app is removed (user data preservation).
 
 ### Installation Flow
 
-1. User downloads `AlarmDaemon.app` (or `.dmg`)
+1. User downloads `alarm-app.app` (or `.dmg`)
 2. Drags to `/Applications/` (or double-clicks `.dmg`)
 3. First launch: right-click → Open to bypass Gatekeeper (unsigned app)
 4. App appears in menu bar as 🔔
@@ -830,7 +830,7 @@ This persists across app updates and is not deleted when the app is removed (use
 
 | Feature | Implementation |
 |---------|---------------|
-| Auto-start | XDG autostart (`~/.config/autostart/AlarmDaemon.desktop`) (via `tauri-plugin-autostart`) |
+| Auto-start | XDG autostart (`~/.config/autostart/alarm-app.desktop`) (via `tauri-plugin-autostart`) |
 | System tray | AppIndicator or StatusNotifierItem (DE-dependent) |
 | Wake/sleep | `systemd-logind` `PrepareForSleep` D-Bus signal |
 | Notifications | libnotify / D-Bus notifications (via Tauri) |
@@ -842,8 +842,8 @@ This persists across app updates and is not deleted when the app is removed (use
 
 | Term | Definition |
 |------|------------|
-| **Background Service** | A process that runs continuously without a visible UI, performing scheduled work. AlarmDaemon's Rust core is the service. |
-| **System Tray** | A small icon in the macOS menu bar (top-right). AlarmDaemon uses a bell icon (🔔). Built via `tauri::tray::TrayIconBuilder`. |
+| **Background Service** | A process that runs continuously without a visible UI, performing scheduled work. Alarm App's Rust core is the service. |
+| **System Tray** | A small icon in the macOS menu bar (top-right). Alarm App uses a bell icon (🔔). Built via `tauri::tray::TrayIconBuilder`. |
 | **Login Item** | A macOS feature that launches specified apps automatically when the user logs in. Managed by `tauri-plugin-autostart`. |
 | **LaunchAgent** | A macOS plist file in `~/Library/LaunchAgents/` that registers a per-user background process. Used by `tauri-plugin-autostart`. |
 | **LSUIElement** | An `Info.plist` key that hides the app from the Dock. Set to `true` for tray-only apps. |

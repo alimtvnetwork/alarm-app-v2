@@ -270,6 +270,7 @@ impl std::str::FromStr for AlarmEventType {
 }
 ```
 
+```rust
 impl std::str::FromStr for ChallengeDifficulty {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {

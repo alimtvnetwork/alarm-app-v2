@@ -196,9 +196,9 @@ All 21 Phase 9 issues have been resolved:
 | Reference | Location |
 |-----------|----------|
 | Phase 8 Gap Analysis | `./58-gap-analysis-phase-8.md` |
-| Coding Guidelines | `../../../02-coding-guidelines/consolidated-review-guide-condensed.md` |
-| Split Database | `../../../04-split-db-architecture/00-overview.md` |
-| Seedable Config | `../../../05-seedable-config-architecture/00-overview.md` |
+| Coding Guidelines | `../../02-coding-guidelines/consolidated-review-guide-condensed.md` |
+| Split Database | `../../04-split-db-architecture/00-overview.md` |
+| Seedable Config | `../../05-seedable-config-architecture/00-overview.md` |
 | Data Model (authoritative) | `../01-fundamentals/01-data-model.md` |
 | Feature Acceptance Criteria Rollup | `../02-features/97-acceptance-criteria.md` |
 
