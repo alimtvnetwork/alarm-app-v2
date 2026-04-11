@@ -1,0 +1,131 @@
+{
+  "nav": {
+    "clock": "Clock",
+    "analytics": "Analytics",
+    "sleep": "Sleep",
+    "style": "Style",
+    "settings": "Settings"
+  },
+  "header": {
+    "title": "Alarm",
+    "addAlarm": "Add alarm",
+    "settings": "Settings"
+  },
+  "clock": {
+    "alarms": "Alarms",
+    "noAlarms": "No alarms yet",
+    "tapToCreate": "Tap + to create one"
+  },
+  "alarmForm": {
+    "newAlarm": "New Alarm",
+    "editAlarm": "Edit Alarm",
+    "label": "Label",
+    "labelPlaceholder": "Alarm name",
+    "repeat": "Repeat",
+    "once": "Once",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "sound": "Sound",
+    "gradualVolume": "Gradual Volume",
+    "snoozeMin": "Snooze (min)",
+    "maxSnoozes": "Max Snoozes",
+    "noSnooze": "No snooze",
+    "challenge": "Dismiss Challenge",
+    "none": "None",
+    "mathProblem": "Math Problem",
+    "shakePhone": "Shake Phone",
+    "typing": "Typing",
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard",
+    "cancel": "Cancel",
+    "create": "Create",
+    "save": "Save"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "totalFired": "Total Fired",
+    "snoozed": "Snoozed",
+    "streak": "Streak",
+    "avgChallengeTime": "Avg Challenge Time",
+    "history": "History",
+    "snoozeTrend": "Snooze Trend",
+    "dailyAlarmEvents": "Daily Alarm Events",
+    "snoozeCountTrend": "Snooze Count Trend",
+    "noData": "No data yet",
+    "noSnoozeData": "No snooze data yet"
+  },
+  "sleep": {
+    "title": "Sleep",
+    "avgSleep": "Avg Sleep",
+    "avgQuality": "Avg Quality",
+    "thisWeek": "This Week",
+    "howDidYouSleep": "How did you sleep?",
+    "quality": "Quality",
+    "mood": "Mood",
+    "save": "Save",
+    "exhausted": "Exhausted",
+    "tired": "Tired",
+    "ok": "OK",
+    "good": "Good",
+    "great": "Great"
+  },
+  "personalization": {
+    "title": "Personalization",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "accentColor": "Accent Color",
+    "skin": "Skin",
+    "clock24h": "24-Hour Clock"
+  },
+  "settings": {
+    "title": "Settings",
+    "alarmDefaults": "Alarm Defaults",
+    "snoozeDuration": "Snooze Duration",
+    "maxSnoozes": "Max Snoozes",
+    "autoDismiss": "Auto-Dismiss",
+    "manual": "Manual",
+    "defaultSound": "Default Sound",
+    "gradualVolume": "Gradual Volume",
+    "duration": "Duration",
+    "display": "Display",
+    "clock24h": "24-Hour Clock",
+    "system": "System",
+    "autoLaunch": "Auto-Launch on Startup",
+    "minimizeToTray": "Minimize to Tray",
+    "language": "Language",
+    "data": "Data",
+    "eventRetention": "Event Retention",
+    "exportPrivacy": "Export Privacy Warning",
+    "timezone": "Timezone",
+    "version": "Version"
+  },
+  "overlay": {
+    "autoDismissIn": "Auto-dismiss in {{time}}",
+    "snoozedCount": "Snoozed {{count}}/{{max}} times",
+    "dismiss": "Dismiss",
+    "solveToDissmiss": "Solve to dismiss",
+    "submit": "Submit",
+    "tryAgain": "Try again!"
+  },
+  "alarm": {
+    "everyDay": "Every day",
+    "weekdays": "Weekdays",
+    "weekends": "Weekends",
+    "customSchedule": "Custom schedule",
+    "dragToReorder": "Drag to reorder",
+    "deleteAlarm": "Delete alarm"
+  },
+  "export": {
+    "title": "Export / Import",
+    "exportAlarms": "Export Alarms",
+    "importAlarms": "Import Alarms",
+    "format": "Format",
+    "exportBtn": "Export",
+    "importBtn": "Import",
+    "mergeMode": "Merge",
+    "replaceMode": "Replace"
+  }
+}
