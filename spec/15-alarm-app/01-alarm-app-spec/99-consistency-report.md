@@ -1,7 +1,7 @@
 # Consistency Report: Alarm App Spec
 
-**Version:** 2.8.1  
-**Generated:** 2026-04-10
+**Version:** 2.8.2  
+**Generated:** 2026-04-11
 **Health Score:** 100/100 (A+)
 
 ---
@@ -12,13 +12,13 @@
 
 | # | File | Status |
 |---|------|--------|
-| 1 | `00-overview.md` | ✅ Present (v2.8.1) |
+| 1 | `00-overview.md` | ✅ Present (v2.8.2) |
 | 2 | `09-ai-handoff-reliability-report.md` | ✅ Present (v1.0.0 — supplementary, 94-task breakdown superseded) |
 | 3 | `10-ai-handoff-readiness-report.md` | ✅ Present (v2.7.0 — 100/100 readiness, 405/405 resolved) |
 | 4 | `11-atomic-task-breakdown.md` | ✅ Present (v1.1.0 — 62 authoritative tasks, 12 phases) |
 | 5 | `12-platform-and-concurrency-guide.md` | ✅ Present (v1.0.0 — PascalCase table names, corrected field refs) |
 | 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.1.0 — domain enums, thiserror 2.x, PascalCase examples) |
-| 7 | `98-changelog.md` | ✅ Present (v2.8.1 — v1.0.0 → v2.8.1) |
+| 7 | `98-changelog.md` | ✅ Present (v2.8.2 — v1.0.0 → v2.8.2) |
 
 ### Reference Documents
 
@@ -35,7 +35,7 @@
 | 1 | `01-fundamentals/` | ✅ (v1.4.0) | ✅ (v2.0.0) | ✅ (v1.0.0 — 64 criteria) | ✅ Complete |
 | 2 | `02-features/` | ✅ | ✅ (v2.0.0) | ✅ (v1.0.0 — 133 criteria) | ✅ Complete |
 | 3 | `03-app-issues/` | ✅ | ✅ (v1.4.0) | — | ✅ Compliant (10 docs, 43/43 resolved) |
-| 4 | `14-spec-issues/` | ✅ (v1.35.0) | — | — | ✅ 417/417 resolved |
+| 4 | `14-spec-issues/` | ✅ (v1.36.0) | — | — | ✅ 425/425 resolved |
 
 ---
 
@@ -63,7 +63,7 @@
 | All overview inventories match actual files | ✅ |
 | Technology decisions consistent across specs | ✅ |
 | All 43 app issues resolved with spec cross-refs | ✅ |
-| Spec issues: 417 total, 417 resolved, 0 open | ✅ |
+| Spec issues: 425 total, 425 resolved, 0 open | ✅ |
 | All dependencies pinned with `=x.y.z` | ✅ |
 | Platform verification matrix complete | ✅ |
 | PascalCase table names in all SQL examples | ✅ |
