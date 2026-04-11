@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.43.0  
+**Version:** 1.44.0  
 **Updated:** 2026-04-11
 
 ---
@@ -71,7 +71,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | 63 | `63-gap-analysis-phase-13.md` | Gap Analysis Phase 13 — Post-Phase 12B verification (dependency pins, crate modernization) | 6 | 0 | 6 |
 | 64 | `64-gap-analysis-phase-14.md` | Gap Analysis Phase 14 — Post-Phase 13B verification (field names, version pins, notification templates) | 8 | 0 | 8 |
 | 65 | `65-gap-analysis-phase-15.md` | Gap Analysis Phase 15 — Post-Phase 14B verification (bookkeeping) | 2 | 0 | 2 |
-| 66 | `66-gap-analysis-phase-16.md` | Gap Analysis Phase 16 — Fresh comprehensive audit (magic strings, stale counts, i18n) | 4 | 0 | 3 |
+| 66 | `66-gap-analysis-phase-16.md` | Gap Analysis Phase 16 — Fresh comprehensive audit (magic strings, stale counts, i18n) | 4 | 1 | 3 |
+| 67 | `67-gap-analysis-phase-17.md` | Gap Analysis Phase 17 — Post-Phase 16B verification (stale counts, math errors, phase count conflicts) | 7 | 1 | 6 |
 
 ---
 
@@ -80,11 +81,11 @@ This folder tracks all specification quality issues found during the deep audit 
 | Severity | Count |
 |----------|:-----:|
 | 🔴 Critical | 104 |
-| 🟡 Medium | 320 |
-| 🟢 Low | 145 |
-| **Grand Total** | **569** |
-| **Open** | **1** |
-| **Resolved** | **569** |
+| 🟡 Medium | 324 |
+| 🟢 Low | 149 |
+| **Grand Total** | **577** |
+| **Open** | **2** |
+| **Resolved** | **575** |
 
 ---
 
@@ -172,7 +173,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Gap Analysis Phase 13** | **Post-Phase 12B verification — dependency pins, cocoa→objc2, version bumps (6 issues)** | **✅ Done (+6 = 556, 6 resolved)** |
 | **Gap Analysis Phase 14** | **Post-Phase 13B verification — field names, version pins, notification templates (8 issues)** | **✅ Done (+8 = 564, 8 resolved)** |
 | **Gap Analysis Phase 15** | **Post-Phase 14B verification — bookkeeping (file numbers, stale count) (2 issues)** | **✅ Done (+2 = 566, 2 resolved)** |
-| **Gap Analysis Phase 16** | **Fresh comprehensive audit — magic strings, stale counts, i18n (4 issues, 3 fixed, 1 accepted)** | **✅ Done (+3 = 569, 3 resolved)** |
+| **Gap Analysis Phase 16** | **Fresh comprehensive audit — magic strings, stale counts, i18n (4 issues, 3 fixed, 1 accepted)** | **✅ Done (+4 = 570, 3 resolved, 1 accepted)** |
+| **Gap Analysis Phase 17** | **Post-Phase 16B verification — stale counts, math errors, phase count conflicts (7 issues, 6 fixed, 1 accepted)** | **✅ Done (+7 = 577, 6 resolved, 1 accepted)** |
 
 ---
 
