@@ -1,10 +1,10 @@
 # AI Handoff Readiness Report
 
-**Version:** 2.9.2  
+**Version:** 2.9.3  
 **Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**AI Success Rate:** 95–97% full-stack, 98%+ backend (524 spec quality issues resolved across all phases including Gap Analysis 6, 7 & 8)
+**AI Success Rate:** 95–97% full-stack, 98%+ backend (524 spec quality issues resolved across all phases including Gap Analysis 6, 7, 8 & 9)
 
 ---
 
@@ -16,7 +16,7 @@
 
 ## Executive Summary
 
-The Alarm App specification is **fully ready for AI handoff**. All 524 spec quality issues have been resolved across 36 discovery phases, 42 fix phases (1–20, A–V), and 3 gap analysis phases (6–8). The spec includes 205 consolidated acceptance criteria (133 feature + 72 fundamental), 13 domain enums, complete error handling, all IPC payloads with Rust struct definitions, and all dependencies pinned.
+The Alarm App specification is **fully ready for AI handoff**. All 524 spec quality issues have been resolved across 36 discovery phases, 42 fix phases (1–20, A–V), and 4 gap analysis phases (6–9). The spec includes 229 consolidated acceptance criteria (157 feature + 72 fundamental), 13 domain enums, complete error handling, all IPC payloads with Rust struct definitions, and all dependencies pinned.
 
 | Metric | Value |
 |--------|-------|
@@ -28,7 +28,7 @@ The Alarm App specification is **fully ready for AI handoff**. All 524 spec qual
 | **Open** | 0 |
 | **Discovery Phases** | 36 complete |
 | **Fix Phases** | 42 (Phases 1–20, A–U) |
-| **Gap Analysis Phases** | 3 (Phases 6–8) |
+| **Gap Analysis Phases** | 4 (Phases 6–9) |
 | **Spec Files** | 63+ (13 fundamentals + 17 features + 43 issue trackers + 3 execution guides + 10 misc) |
 | **Code Examples** | 45+ Rust/TypeScript blocks (anti-patterns fixed in phases A–G) |
 | **Atomic Tasks** | 62 tasks across 12 phases with dependency graph |
@@ -37,7 +37,7 @@ The Alarm App specification is **fully ready for AI handoff**. All 524 spec qual
 | **Test Coverage Spec** | 6-layer strategy with CI integration |
 | **Dependencies Pinned** | 30 Rust crates + 14 npm packages with `=x.y.z` exact versions |
 | **Domain Enums** | 13 TypeScript + 13 Rust enums defined (zero magic strings) |
-| **Acceptance Criteria** | 205 total (133 feature + 72 fundamental) in consolidated rollups |
+| **Acceptance Criteria** | 229 total (157 feature + 72 fundamental) in consolidated rollups |
 | **IPC Rust Structs** | All request/response payloads have `#[serde(rename_all = "PascalCase")]` Rust structs |
 
 ---
@@ -61,7 +61,7 @@ The Alarm App specification is **fully ready for AI handoff**. All 524 spec qual
 
 ## Issue Resolution Summary
 
-All 524 spec quality issues have been resolved across 36 discovery phases, 42 fix phases, and 3 gap analysis phases.
+All 524 spec quality issues have been resolved across 36 discovery phases, 42 fix phases, and 4 gap analysis phases.
 
 | Category | Resolved |
 |----------|:--------:|
@@ -211,6 +211,7 @@ All fix phases complete. No remaining work items.
 | Gap 6 | 22 | UI layouts, notification templates, i18n, routing, scoring, index naming, error mapping, edge cases |
 | Gap 7 | 18 | Settings reconciliation, missing schemas, Zustand stores, logging spec, boolean exemptions |
 | Gap 8 | 20 | Stale metrics update, table counts, cross-references, scoring table, IPC name alignment |
+| Gap 9 | 21 | Acceptance criteria sync (133→157), settings seed count (9→16), WebhookError (4→7), SettingsStore casing, Timezone clarification, consistency reports |
 
 ---
 
@@ -226,9 +227,9 @@ All fix phases complete. No remaining work items.
 | Platform & Concurrency Guide | `./12-platform-and-concurrency-guide.md` |
 | AI Cheat Sheet | `./13-ai-cheat-sheet.md` |
 | AI Reliability Report | `./09-ai-handoff-reliability-report.md` |
-| Feature Acceptance Criteria | `./02-features/97-acceptance-criteria.md` (133 criteria) |
+| Feature Acceptance Criteria | `./02-features/97-acceptance-criteria.md` (157 criteria) |
 | Fundamentals Acceptance Criteria | `./01-fundamentals/97-acceptance-criteria.md` (72 criteria) |
 
 ---
 
-*AI Handoff Readiness Report v2.9.2 — updated: 2026-04-11*
+*AI Handoff Readiness Report v2.9.3 — updated: 2026-04-11*
