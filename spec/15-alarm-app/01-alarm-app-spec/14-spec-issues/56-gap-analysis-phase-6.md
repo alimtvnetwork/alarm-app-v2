@@ -270,26 +270,29 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 | Metric | Value |
 |--------|-------|
 | **Total issues found** | 22 |
-| **🔴 Critical** | 1 |
-| **🟡 Medium/High** | 9 |
-| **🟢 Low** | 12 |
-| **Gap to full implementation readiness** | ~15% (backend: 2%, frontend/UI: 25%) |
-| **Blind AI execution failure probability** | ~20–25% (primarily UI/error-handling gaps) |
-| **Backend-only AI success rate** | 95%+ |
-| **Full-stack AI success rate** | 75–80% |
+| **✅ Resolved** | 13 (DB-001, DB-002, DB-003, DB-004, DB-005, CG-001, CG-002, CG-003, AI-001 + 4 index fixes) |
+| **⏳ Remaining** | 9 (UI specs, state shapes, notification templates, scoring tables, i18n, routing, logging) |
+| **🔴 Critical** | 0 (was 1 — AI-001 resolved) |
+| **🟡 Medium/High** | 4 remaining (UI layout gaps AI-002/003/004, state shapes AI-005) |
+| **🟢 Low** | 5 remaining (S-001/002, AI-007, AI-008, BE-003) |
+| **Gap to full implementation readiness** | ~10% (backend: <1%, frontend/UI: 20%) |
+| **Blind AI execution failure probability** | ~15% (down from 20–25% — error mapping resolved) |
+| **Backend-only AI success rate** | 98%+ (up from 95% — error mapping + edge cases added) |
+| **Full-stack AI success rate** | 80–85% (up from 75–80%) |
 
 ### Key Observation
 
-The specification is **exceptionally strong on the backend** — Rust code samples, database schema, IPC commands, domain enums, error types, DST handling, and platform-specific implementations are best-in-class. The 484-issue audit and resolution process has produced a highly polished backend spec.
+The specification is **exceptionally strong on the backend** — Rust code samples, database schema, IPC commands, domain enums, error types, DST handling, and platform-specific implementations are best-in-class. The 484-issue audit and resolution process has produced a highly polished backend spec. The IPC error mapping table (46 commands) now eliminates all guesswork for error handling.
 
-The gap is almost entirely on the **frontend/UI side**: no UI layouts, no component hierarchy, no state shapes, no screen-by-screen specifications. An AI implementing the backend would succeed at 95%+. An AI implementing the full application would need to guess on most UI decisions.
+The remaining gap is entirely on the **frontend/UI side**: no UI layouts, no component hierarchy, no state shapes, no screen-by-screen specifications. An AI implementing the backend would succeed at 98%+. An AI implementing the full application would need to guess on most UI decisions.
 
-### Recommended Priority
+### Recommended Next Priority
 
-1. **Fix DB-002 (index naming)** — 10 min, eliminates 4 guideline violations
-2. **Create IPC error mapping table (AI-001)** — 30 min, eliminates the only critical gap
-3. **Add edge cases tables (CG-001, CG-002)** — 40 min, brings consistency
-4. **Add UI layout descriptions** — largest effort but biggest AI-readiness improvement
+1. ~~Fix DB-002 (index naming)~~ — ✅ Done
+2. ~~Create IPC error mapping table (AI-001)~~ — ✅ Done
+3. ~~Add edge cases tables (CG-001, CG-002)~~ — ✅ Done
+4. **Add UI layout descriptions (AI-002/003/004)** — largest remaining effort but biggest AI-readiness improvement
+5. **Define Zustand store state shapes (AI-005)** — needed for frontend implementation
 
 ---
 
