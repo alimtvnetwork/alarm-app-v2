@@ -334,52 +334,57 @@ fn setup_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
 
 ### Overview
 
-The polling engine is a `tokio` async task running in the Tauri Rust core. It uses `tokio::time::interval` for precise **800ms** ticks. It is the core mechanism that makes AlarmDaemon function as a background daemon.
+The polling engine is a `tokio` async task running in the Tauri Rust core. It uses `tokio::time::interval` for precise **30-second** ticks. It is the core mechanism that makes AlarmDaemon function as a background daemon.
 
-### Why 800ms?
+> **Canonical interval:** 30 seconds — aligned with `03-alarm-firing.md`. See that spec for full firing logic, queue management, and multi-alarm handling.
+
+### Why 30 Seconds?
 
 | Interval | Trade-off |
 |----------|-----------|
 | 100ms | Excessive CPU wake-ups, no perceptible benefit |
-| 500ms | Responsive but higher CPU usage |
-| **800ms** | **Sub-second detection with minimal resource cost** |
-| 1000ms | Acceptable but can miss by up to 1 full second |
-| 30s | Too slow — user perceives delay |
+| 500ms–1s | Sub-second but unnecessary for alarm use case |
+| **30s** | **Balanced detection with minimal resource cost. Sub-minute accuracy is sufficient for alarms.** |
+| 60s | Acceptable but can miss by up to 1 full minute |
 
 ### Algorithm (Pseudocode)
 
 ```
 async fn polling_loop(app_handle: AppHandle, db: Arc<Mutex<Connection>>) {
-    let mut interval = tokio::time::interval(Duration::from_millis(800));
+    let mut interval = tokio::time::interval(Duration::from_secs(30));
     
     loop {
         interval.tick().await;
         
-        1. current_time = SystemTime::now() as Unix seconds
+        1. current_time = Utc::now() as ISO 8601
         
         2. due_alarms = SQL: SELECT * FROM Alarms
-                             WHERE Status = 'Pending'
-                             AND DueTime <= current_time
-                             ORDER BY DueTime ASC
+                             WHERE IsEnabled = 1
+                             AND NextFireTime <= current_time
+                             AND DeletedAt IS NULL
+                             ORDER BY NextFireTime ASC
         
         3. FOR EACH alarm IN due_alarms:
            
-           a. IF alarm.Type = 'IntervalCheck':
+           a. IF alarm.RepeatType = RepeatType::Interval AND is_interval_check:
               → Skip (handled by separate interval check task)
            
            b. Fire native notification via tauri-plugin-notification
-              - Title: alarm.Title
-              - Body: alarm.Note (first 100 chars) or "Alarm is due!"
+              - Title: alarm.Label
+              - Body: "Alarm is due!"
               - Actions: [Snooze] [Dismiss]
            
-           c. Emit "alarm-triggered" event to webview
+           c. Emit "alarm-fired" event to webview
            
-           d. IF alarm.Type = 'Recurring':
-              → Compute next DueTime from RecurrenceRule
-              → Update alarm with new DueTime, Status = 'Pending'
+           d. IF alarm.RepeatType != RepeatType::Once:
+              → Compute next NextFireTime from RepeatType + repeat fields
+                 (see 02-alarm-scheduling.md for full computation rules)
+              → Update alarm with new NextFireTime
+           
+           e. Insert AlarmEvents row with Type = AlarmEventType::Fired
         
         4. Update tray icon badge:
-           - Count overdue pending alarms
+           - Count alarms where NextFireTime < now AND IsEnabled = 1
            - If count > 0 → red dot overlay
            - If count = 0 → normal icon
     }
@@ -392,16 +397,17 @@ async fn polling_loop(app_handle: AppHandle, db: Arc<Mutex<Connection>>) {
 |--------|-------|
 | CPU per tick | < 0.1% (single SQLite query) |
 | Memory overhead | ~1 MB for the tokio task |
-| SQLite query time | < 1ms (indexed on `Status, DueTime`) |
+| SQLite query time | < 1ms (indexed on `NextFireTime`) |
 | Battery impact | Negligible (no network, no disk writes unless alarm fires) |
 
 ### Required Database Index
 
 ```sql
-CREATE INDEX IF NOT EXISTS IdxAlarmsStatusDue ON Alarms(Status, DueTime);
+-- Canonical index from 01-data-model.md
+CREATE INDEX IdxAlarms_NextFireTime ON Alarms(NextFireTime) WHERE IsEnabled = 1 AND DeletedAt IS NULL;
 ```
 
-> **Note:** The full database schema is defined in `01-data-model.md`. The polling engine only requires the above index to perform efficiently.
+> **Note:** The full database schema and index definitions are in `01-data-model.md`. The polling engine uses the partial index above for efficient due-alarm queries.
 
 ---
 
@@ -478,9 +484,9 @@ app.handle().plugin(
 
 | Action | What Happens |
 |--------|-------------|
-| **Snooze** | `DueTime += SnoozeDuration`, `SnoozeCount++`, `Status = 'Pending'` — alarm fires again later |
-| **Dismiss** | `Status = 'Dismissed'` — terminal state |
-| **Ignored** (notification closed) | Alarm remains `Pending` — fires again on next poll cycle |
+| **Snooze** | `NextFireTime = now + SnoozeDurationMin`, `SnoozeCount++` in SnoozeState — alarm fires again later (see `04-snooze-system.md`) |
+| **Dismiss** | Soft-delete or mark as fired — `AlarmEvents` row with `Type = AlarmEventType::Dismissed` |
+| **Ignored** (notification closed) | Alarm remains enabled — fires again on next poll cycle if `NextFireTime` still past |
 
 ### macOS Permission
 
@@ -560,9 +566,9 @@ Desktop computers sleep, shut down, and resume. If a user set an alarm for 7:00 
    - Polling loop pauses naturally (tokio timer freezes during sleep)
 
 2. **On system wake** (`NSWorkspace.didWakeNotification`):
-   - Immediately query all alarms where `DueTime < now AND Status = 'Pending'`
+   - Immediately query all alarms where `NextFireTime < now AND IsEnabled = 1 AND DeletedAt IS NULL`
    - Fire "missed alarm" notifications for each
-   - Log as `Type = 'Missed'` in alarm events
+   - Log as `Type = AlarmEventType::Missed` in AlarmEvents
    - Polling loop resumes automatically
 
 3. **On app launch** (cold start after shutdown):
@@ -593,7 +599,7 @@ async fn check_missed_alarms(app: &AppHandle, db: &Connection) {
         .as_secs() as i64;
     
     let missed = db.prepare(
-        "SELECT * FROM Alarms WHERE Status = 'Pending' AND DueTime < ?1"
+        "SELECT * FROM Alarms WHERE IsEnabled = 1 AND NextFireTime < ?1 AND DeletedAt IS NULL"
     ).unwrap()
     .query_map([now], |row| { /* map to Alarm */ })
     .unwrap();
@@ -623,7 +629,7 @@ async fn check_missed_alarms(app: &AppHandle, db: &Connection) {
 
 ### Overview
 
-A separate service within the Rust core that monitors external URLs at configured intervals. This runs independently from the main 800ms alarm polling loop.
+A separate service within the Rust core that monitors external URLs at configured intervals. This runs independently from the main 30-second alarm polling loop.
 
 ### How It Works
 
