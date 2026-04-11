@@ -173,5 +173,10 @@
   },
   "analytics": {
     "exportCsv": "Eksport CSV"
+  },
+  "challenge": {
+    "typingTitle": "Taip untuk Tutup",
+    "typingPlaceholder": "Taip ayat di atas...",
+    "complete": "selesai"
   }
 }
