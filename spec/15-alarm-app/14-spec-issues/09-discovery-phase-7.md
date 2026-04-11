@@ -1,0 +1,134 @@
+# Discovery Phase 7 — Post-Fix Regression Scan (Phases 16–20)
+
+**Generated:** 2026-04-10  
+**Scope:** All spec files — checking for regressions from Fix Phases 16–20 and any previously missed issues
+
+---
+
+## Summary
+
+**Total new issues found:** 18  
+- **Regressions from Phases 16–20:** 5  
+- **Previously missed issues:** 13  
+
+---
+
+## Category A: Regressions from Fix Phases 16–20
+
+### D7-REG-001: ~~`00-overview.md` spec issues count still says "69 resolved"~~ ✅ Resolved (Fix 21)
+**Severity:** 🟡 Medium  
+**File:** `00-overview.md` line 122  
+**Problem:** Module inventory says "77 issues found, 69 resolved" — should be "95 found, 77 resolved" after Discovery Phase 7.
+
+### D7-REG-002: ~~`04-snooze-system.md` SnoozeState still uses `NextFireTime`~~ ✅ Resolved (Fix 22)
+**Severity:** 🔴 Critical  
+**File:** `02-features/04-snooze-system.md` line 43  
+**Problem:** Fixed `NextFireTime` → `SnoozeUntil` to match the canonical interface in `01-data-model.md`.
+
+### D7-REG-003: ~~`00-overview.md` tech stack says "via Tauri plugin" for SQLite~~ ✅ Resolved (Fix 21)
+**Severity:** 🟡 Medium  
+**File:** `00-overview.md` line 46  
+**Problem:** Tech stack table said "via Tauri plugin" — fixed to "via rusqlite + refinery migrations".
+
+### D7-REG-004: ~~`00-overview.md` Data Model uses camelCase field names~~ ✅ Resolved (Fix 21)
+**Severity:** 🔴 Critical  
+**File:** `00-overview.md` lines 57–72  
+**Problem:** All field names converted to PascalCase: `AlarmId`, `Time`, `Label`, `IsEnabled`, `SnoozeDurationMin`, etc.
+
+### D7-REG-005: ~~`00-overview.md` AlarmGroup uses camelCase field names~~ ✅ Resolved (Fix 21)
+**Severity:** 🟡 Medium  
+**File:** `00-overview.md` lines 81–86  
+**Problem:** AlarmGroup fields converted to PascalCase: `GroupId`, `Name`, `Color`, `IsEnabled`.
+
+---
+
+## Category B: Previously Missed Issues
+
+### D7-NEW-001: ~~`01-data-model.md` WAL section uses `alarm_events` (snake_case)~~ ✅ Resolved (Fix 23)
+**Severity:** 🟡 Medium  
+**File:** `01-fundamentals/01-data-model.md` line 317  
+**Problem:** Fixed `alarm_events` → `AlarmEvents` and `nextFireTime` → `NextFireTime`.
+
+### D7-NEW-002: ~~`01-data-model.md` settings key description uses `alarm_events`~~ ✅ Resolved (Fix 23)
+**Severity:** 🟢 Low  
+**File:** `01-fundamentals/01-data-model.md` line 367  
+**Problem:** Fixed EventRetentionDays description to reference `AlarmEvents`.
+
+### D7-NEW-003: ~~`03-alarm-firing.md` acceptance criteria uses `alarm_events`~~ ✅ Resolved (Fix 24)
+**Severity:** 🟡 Medium  
+**File:** `02-features/03-alarm-firing.md` line 551  
+**Problem:** Fixed `alarm_events` → `AlarmEvents` and `type` → `Type`.
+
+### D7-NEW-004: ~~`03-alarm-firing.md` auto-dismiss uses camelCase `autoDismissMin`~~ ✅ Resolved (Fix 24)
+**Severity:** 🟡 Medium  
+**File:** `02-features/03-alarm-firing.md` line 450  
+**Problem:** Fixed `autoDismissMin` → `AutoDismissMin`. Also fixed `nextFireTime` → `NextFireTime` on lines 440, 541, 548, 554.
+
+### D7-NEW-005: ~~`08-clock-display.md` uses `settings` table (lowercase)~~ ✅ Resolved (Fix 25)
+**Severity:** 🟡 Medium  
+**File:** `02-features/08-clock-display.md` line 37  
+**Problem:** Fixed `settings` → `Settings`.
+
+### D7-NEW-006: ~~`13-analytics.md` uses `alarm_events` table (lowercase)~~ ✅ Resolved (Fix 25)
+**Severity:** 🟡 Medium  
+**File:** `02-features/13-analytics.md` line 27  
+**Problem:** Fixed `alarm_events` → `AlarmEvents`.
+
+### D7-NEW-007: ~~`13-analytics.md` column name `EventType` doesn't exist~~ ✅ Resolved (Fix 25)
+**Severity:** 🟡 Medium  
+**File:** `02-features/13-analytics.md` line 93  
+**Problem:** Fixed `EventType` → `Type` to match canonical schema.
+
+### D7-NEW-008: ~~`10-export-import.md` settings key uses snake_case~~ ✅ Resolved (Fix 25)
+**Severity:** 🟡 Medium  
+**File:** `02-features/10-export-import.md` line 131  
+**Problem:** Fixed `settings` → `Settings` and `export_warning_dismissed` → `ExportWarningDismissed`.
+
+### D7-NEW-009: ~~`05-sound-and-vibration.md` error variant `FileTooLarge` doesn't match enum~~ ✅ Resolved (Fix 26)
+**Severity:** 🟡 Medium  
+**File:** `02-features/05-sound-and-vibration.md` line 113  
+**Problem:** Fixed `AlarmAppError::FileTooLarge { max_mb: 10 }` → `AlarmAppError::SoundFileTooLarge { size_bytes, max_bytes }` to match canonical enum.
+
+### D7-NEW-010: ~~`05-sound-and-vibration.md` error variant `RestrictedPath` not in enum~~ ✅ Resolved (Fix 26)
+**Severity:** 🟡 Medium  
+**File:** `02-features/05-sound-and-vibration.md` lines 96, 100, 104  
+**Problem:** Added `RestrictedPath` variant to canonical `AlarmAppError` enum in `04-platform-constraints.md`.
+
+### D7-NEW-011: ~~`04-snooze-system.md` uses `EventType = 'Snoozed'` (capitalized)~~ ✅ Resolved (Fix 22)
+**Severity:** 🟡 Medium  
+**File:** `02-features/04-snooze-system.md` line 61  
+**Problem:** Fixed to `Type = 'snoozed'` — matching the data model's lowercase event types and correct column name.
+
+### D7-NEW-012: ~~`13-ai-cheat-sheet.md` missing closing code fence~~ ✅ Resolved (Fix 27)
+**Severity:** 🔴 Critical  
+**File:** `13-ai-cheat-sheet.md` line 96  
+**Problem:** Added missing ` ``` ` closing fence after DST Resolution code block.
+
+### D7-NEW-013: ~~`00-overview.md` validation rules use camelCase~~ ✅ Resolved (Fix 23)
+**Severity:** 🟡 Medium  
+**File:** `01-data-model.md` lines 373–387  
+**Problem:** All validation rule field names converted to PascalCase: `Time`, `Repeat.Type`, `SnoozeDurationMin`, etc.
+
+---
+
+## Updated Totals (Including Discovery Phase 7)
+
+| Status | Previous | New | Total |
+|--------|:--------:|:---:|:-----:|
+| Total issues | 77 | 18 | **95** |
+| Open | 0 | 0 | **0** |
+| Resolved | 77 | 18 | **95** |
+
+---
+
+## Proposed Fix Phases
+
+| Phase | Issues | Files | Description |
+|-------|--------|-------|-------------|
+| **Fix 21** | D7-REG-001, D7-REG-003, D7-REG-004, D7-REG-005 | `00-overview.md` | ✅ Fixed camelCase Data Model, SQLite ref, issue count |
+| **Fix 23** | D7-REG-002, D7-NEW-011 | `04-snooze-system.md` | Fix SnoozeState.NextFireTime → SnoozeUntil + event type casing |
+| **Fix 24** | D7-NEW-001, D7-NEW-002, D7-NEW-013 | `01-data-model.md` | Fix remaining snake_case in data model prose + validation rules |
+| **Fix 25** | D7-NEW-003, D7-NEW-004 | `03-alarm-firing.md` | Fix snake_case in firing spec |
+| **Fix 26** | D7-NEW-005, D7-NEW-006, D7-NEW-007, D7-NEW-008 | `08-clock-display.md`, `13-analytics.md`, `10-export-import.md` | Fix table names + column names in secondary specs |
+| **Fix 27** | D7-NEW-009, D7-NEW-010 | `05-sound-and-vibration.md`, `04-platform-constraints.md` | Align error enum variants |
+| **Fix 28** | D7-NEW-012 | `13-ai-cheat-sheet.md` | Fix missing code fence |
