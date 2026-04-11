@@ -5,21 +5,16 @@
 import { useEffect, useState } from "react";
 import { useSettingsStore } from "@/stores/settings-store";
 import { useAlarmStore } from "@/stores/alarm-store";
+import type { Alarm } from "@/types/alarm";
 
-function getNextAlarmCountdown(alarms: { Time: string; IsEnabled: boolean }[]): string | null {
-  const enabled = alarms.filter((a) => a.IsEnabled);
-  if (enabled.length === 0) return null;
-
-  const now = new Date();
+function getNextAlarmCountdown(alarms: Alarm[]): string | null {
+  const now = Date.now();
   let minDiffMs = Infinity;
 
-  for (const alarm of enabled) {
-    const [h, m] = alarm.Time.split(":").map(Number);
-    const target = new Date(now);
-    target.setHours(h, m, 0, 0);
-    if (target <= now) target.setDate(target.getDate() + 1);
-    const diff = target.getTime() - now.getTime();
-    if (diff < minDiffMs) minDiffMs = diff;
+  for (const alarm of alarms) {
+    if (!alarm.IsEnabled || !alarm.NextFireTime) continue;
+    const diff = new Date(alarm.NextFireTime).getTime() - now;
+    if (diff > 0 && diff < minDiffMs) minDiffMs = diff;
   }
 
   if (minDiffMs === Infinity) return null;
