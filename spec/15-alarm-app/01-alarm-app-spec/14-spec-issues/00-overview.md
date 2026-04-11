@@ -62,6 +62,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 51 | `51-discovery-phase-33.md` | Discovery Phase 33 — Undefined Types & IPC Inline Objects Audit | 11 | 0 | 11 |
 | 52 | `52-discovery-phase-34.md` | Discovery Phase 34 — IPC Inline Objects & Remaining Rust Structs Audit | 15 | 0 | 15 |
 | 53 | `53-discovery-phase-35.md` | Discovery Phase 35 — Export/Import, Webhook, Analytics & System IPC Struct Audit | 14 | 0 | 14 |
+| 54 | `54-discovery-phase-36.md` | Discovery Phase 36 — Final Sweep: IPC Registry Alignment & Stale References | 12 | 0 | 12 |
 
 ---
 
@@ -70,11 +71,11 @@ This folder tracks all specification quality issues found during the deep audit 
 | Severity | Count |
 |----------|:-----:|
 | 🔴 Critical | 104 |
-| 🟡 Medium | 282 |
-| 🟢 Low | 86 |
-| **Grand Total** | **472** |
+| 🟡 Medium | 289 |
+| 🟢 Low | 91 |
+| **Grand Total** | **484** |
 | **Open** | **0** |
-| **Resolved** | **472** |
+| **Resolved** | **484** |
 
 ---
 
@@ -154,6 +155,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 33** | **Undefined Types & IPC Inline Objects Audit — IPC registry mismatches, 7 missing Rust structs** | **✅ Done (+11 = 443, 11 resolved)** |
 | **Discovery Phase 34** | **IPC Inline Objects & Remaining Rust Structs — Groups, Personalization, Sound (15 issues)** | **✅ Done (+15 = 458, 15 resolved)** |
 | **Discovery Phase 35** | **Export/Import, Webhook, Analytics & System IPC Struct Audit (14 issues)** | **✅ Done (+14 = 472, 14 resolved)** |
+| **Discovery Phase 36** | **Final Sweep: IPC Registry Alignment & Stale References (12 issues)** | **✅ Done (+12 = 484, 12 resolved)** |
 
 ---
 
