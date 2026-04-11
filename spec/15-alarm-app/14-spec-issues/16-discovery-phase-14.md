@@ -3,7 +3,7 @@
 **Version:** 1.0.0  
 **Updated:** 2026-04-10  
 **Auditor:** AI Spec Auditor  
-**Scope:** App spec folder (`15-alarm-app/01-alarm-app-spec/`) vs foundational specs (coding guidelines, boolean principles, enum patterns, split-db, seedable config, naming conventions)
+**Scope:** App spec folder (`15-alarm-app/`) vs foundational specs (coding guidelines, boolean principles, enum patterns, split-db, seedable config, naming conventions)
 
 ---
 
