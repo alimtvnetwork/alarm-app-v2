@@ -840,11 +840,11 @@ This persists across app updates and is not deleted when the app is removed (use
 | **Login Item** | A macOS feature that launches specified apps automatically when the user logs in. Managed by `tauri-plugin-autostart`. |
 | **LaunchAgent** | A macOS plist file in `~/Library/LaunchAgents/` that registers a per-user background process. Used by `tauri-plugin-autostart`. |
 | **LSUIElement** | An `Info.plist` key that hides the app from the Dock. Set to `true` for tray-only apps. |
-| **Polling Loop** | A `tokio::time::interval` task that periodically checks the database for due alarms (every 800ms). |
+| **Polling Loop** | A `tokio::time::interval` task that periodically checks the database for due alarms (every 30 seconds). |
 | **Rust Core** | The Rust process compiled into the Tauri binary. Has full OS access. Contains the polling engine, SQLite, and notification logic. |
 | **Webview** | The sandboxed browser environment that runs the React UI inside a WebviewWindow (WKWebView on macOS). |
 | **IPC** | Inter-Process Communication. Tauri's `invoke()` (webview → Rust) and `emit()` (Rust → webview) system. |
-| **Missed Alarm** | An alarm whose `DueTime` passed while the computer was asleep or off. Detected on wake/launch and surfaced immediately. |
+| **Missed Alarm** | An alarm whose `NextFireTime` passed while the computer was asleep or off. Detected on wake/launch and surfaced immediately. |
 
 ---
 
@@ -862,4 +862,4 @@ This persists across app updates and is not deleted when the app is removed (use
 
 ---
 
-*OS Service Layer Specification v2.0.0 — created: 2026-04-11*
+*OS Service Layer Specification v2.1.0 — updated: 2026-04-11*
