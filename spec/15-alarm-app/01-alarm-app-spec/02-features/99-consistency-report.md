@@ -29,19 +29,19 @@
 | # | File | Version | Status |
 |---|------|---------|--------|
 | 1 | `00-overview.md` | 1.3.0 | ✅ Present |
-| 2 | `01-alarm-crud.md` | 1.12.0 | ✅ Updated (Edge Cases table added) |
+| 2 | `01-alarm-crud.md` | 1.14.0 | ✅ Updated (Edge Cases table added) |
 | 3 | `02-alarm-scheduling.md` | 2.3.0 | ✅ Updated (Edge Cases table added) |
 | 4 | `03-alarm-firing.md` | 1.12.0 | ✅ Updated (Edge Cases present) |
 | 5 | `04-snooze-system.md` | 1.6.0 | ✅ Updated (Edge Cases table added) |
 | 6 | `05-sound-and-vibration.md` | 1.7.0 | ✅ Updated (Edge Cases table added) |
 | 7 | `06-dismissal-challenges.md` | 1.7.0 | ✅ Updated (Edge Cases table added) |
-| 8 | `07-alarm-groups.md` | 1.5.0 | ✅ Updated (Edge Cases present) |
+| 8 | `07-alarm-groups.md` | 1.6.0 | ✅ Updated (Edge Cases present) |
 | 9 | `08-clock-display.md` | 1.4.0 | ✅ Updated (Edge Cases table added) |
 | 10 | `09-theme-system.md` | 1.5.0 | ✅ Updated (Edge Cases table added) |
-| 11 | `10-export-import.md` | 1.6.0 | ✅ Updated (Edge Cases table added) |
+| 11 | `10-export-import.md` | 1.7.0 | ✅ Updated (Edge Cases table added) |
 | 12 | `11-sleep-wellness.md` | 1.4.0 | ✅ Updated |
-| 13 | `12-smart-features.md` | 1.4.0 | ✅ Updated |
-| 14 | `13-analytics.md` | 1.6.0 | ✅ Updated |
+| 13 | `12-smart-features.md` | 1.5.0 | ✅ Updated |
+| 14 | `13-analytics.md` | 1.7.0 | ✅ Updated |
 | 15 | `14-personalization.md` | 1.4.0 | ✅ Updated |
 | 16 | `15-keyboard-shortcuts.md` | 1.2.0 | ✅ Updated |
 | 17 | `16-accessibility-and-nfr.md` | 1.2.0 | ✅ Updated |

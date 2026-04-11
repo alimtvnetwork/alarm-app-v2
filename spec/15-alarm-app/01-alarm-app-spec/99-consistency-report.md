@@ -17,8 +17,8 @@
 | 3 | `10-ai-handoff-readiness-report.md` | ✅ Present (v2.9.3 — 100/100 readiness, 524/524 resolved) |
 | 4 | `11-atomic-task-breakdown.md` | ✅ Present (v1.1.0 — 62 authoritative tasks, 12 phases) |
 | 5 | `12-platform-and-concurrency-guide.md` | ✅ Present (v1.0.0 — PascalCase table names, corrected field refs) |
-| 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.2.0 — domain enums, thiserror 2.x, PascalCase examples) |
-| 7 | `98-changelog.md` | ✅ Present (v2.9.1 — v1.0.0 → v2.9.1) |
+| 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.3.0 — domain enums, thiserror 2.x, PascalCase examples) |
+| 7 | `98-changelog.md` | ✅ Present (v2.9.2 — v1.0.0 → v2.9.2) |
 
 ### Reference Documents
 
@@ -35,7 +35,7 @@
 | 1 | `01-fundamentals/` | ✅ (v1.5.0) | ✅ (v2.1.0) | ✅ (v1.2.0 — 72 criteria) | ✅ Complete (13 docs) |
 | 2 | `02-features/` | ✅ (v1.3.0) | ✅ (v2.1.0) | ✅ (v1.2.0 — 157 criteria) | ✅ Complete (17 feature specs) |
 | 3 | `03-app-issues/` | ✅ | ✅ (v1.4.0) | — | ✅ Compliant (10 docs, 43/43 resolved) |
-| 4 | `14-spec-issues/` | ✅ (v1.42.0) | — | — | ✅ 524/524 resolved (484 original + 22 Phase 6 + 18 Phase 7 + 21 Phase 9) |
+| 4 | `14-spec-issues/` | ✅ (v1.42.0) | — | — | ✅ 538/538 resolved (484 original + 22 Phase 6 + 18 Phase 7 + 21 Phase 9 + 14 Phase 10) |
 
 ---
 
@@ -87,7 +87,7 @@
 | All overview inventories match actual files | ✅ |
 | Technology decisions consistent across specs | ✅ |
 | All 43 app issues resolved with spec cross-refs | ✅ |
-| Spec issues: 524 total, 524 resolved, 0 open | ✅ |
+| Spec issues: 538 total, 538 resolved, 0 open | ✅ |
 | All dependencies pinned with `=x.y.z` | ✅ |
 | Platform verification matrix complete | ✅ |
 | PascalCase table names in all SQL examples | ✅ |
@@ -102,7 +102,7 @@
 | UI layout descriptions for all major screens | ✅ |
 | Coding guidelines cross-refs in feature + fundamental files | ✅ |
 | All spec files have Scoring tables | ✅ (29/29) |
-| Gap analysis: 25/25 session tasks + 22 Phase 6 + 18 Phase 7 + 20 Phase 8 + 21 Phase 9 resolved | ✅ |
+| Gap analysis: 25/25 session tasks + 22 Phase 6 + 18 Phase 7 + 20 Phase 8 + 21 Phase 9 + 14 Phase 10 resolved | ✅ |
 | Edge Cases tables in P0/P1 specs | ✅ (10/17) |
 | Edge Cases tables in P2/P3 specs | ✅ (3/3 added in Phase 7) |
 | Named constants (no magic values) | ✅ |
@@ -117,6 +117,12 @@
 | WebhookError variant count verified (7 variants) | ✅ |
 | SettingsStore methods use camelCase | ✅ |
 | Multi-timezone Timezone field clarified as P3 future | ✅ |
+| `FromStr` for all 7 DB-stored enums | ✅ |
+| Boolean semantic inverses for Quote + StreakCalendarDay | ✅ |
+| `Record<string, unknown>` eliminated (type-safety) | ✅ |
+| `WebhookConfig::from_row` implementation provided | ✅ |
+| `Quotes.CreatedAt` column added | ✅ |
+| `AlarmGroups` column count corrected to 5 | ✅ |
 
 ---
 

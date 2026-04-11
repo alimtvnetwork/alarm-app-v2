@@ -172,7 +172,7 @@ pub struct SubmitChallengePayload {
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct ChallengeResult {
-    pub correct: bool,
+    pub correct: bool,        // Note: serializes to "Correct" via serde rename_all = PascalCase
     pub solve_time_sec: f64,
 }
 ```

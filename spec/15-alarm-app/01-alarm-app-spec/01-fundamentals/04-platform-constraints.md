@@ -317,7 +317,7 @@ fn error_code(err: &AlarmAppError) -> String {
 const IPC_TIMEOUT_MS = 5000;
 
 // All IPC calls wrapped with timeout + error toast
-async function safeInvoke<T>(command: string, args?: Record<string, unknown>): Promise<T | null> {
+async function safeInvoke<T, P extends Record<string, string | number | boolean | null | string[]> = Record<string, string | number | boolean | null | string[]>>(command: string, args?: P): Promise<T | null> {
   try {
     const result = await Promise.race([
       invoke<T>(command, args),

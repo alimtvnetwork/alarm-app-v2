@@ -259,10 +259,13 @@ fn log_webhook_result(url: &Url, response: Result<reqwest::Response, reqwest::Er
 ### Payload Interfaces
 
 ```typescript
+/** JSON-safe value types for webhook payloads — `unknown` is banned per type-safety guidelines. */
+type JsonSafeValue = string | number | boolean | null;
+
 interface CreateWebhookPayload {
   AlarmId: string;
   Url: string;
-  Payload?: Record<string, unknown>;
+  Payload?: Record<string, JsonSafeValue>;
 }
 
 interface GetWeatherPayload {
@@ -280,7 +283,7 @@ interface WebhookConfig {
   WebhookId: string;
   AlarmId: string;
   Url: string;
-  Payload: Record<string, unknown> | null;
+  Payload: Record<string, JsonSafeValue> | null;
   CreatedAt: string;  // ISO 8601
 }
 
@@ -339,6 +342,20 @@ pub struct WebhookConfig {
     pub url: String,
     pub payload: Option<serde_json::Value>,
     pub created_at: String,
+}
+
+impl WebhookConfig {
+    /// Convert from rusqlite::Row — EXEMPT from 15-line limit (field-per-line mapping, no logic)
+    pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
+        Ok(Self {
+            webhook_id: row.get("WebhookId")?,
+            alarm_id: row.get("AlarmId")?,
+            url: row.get("Url")?,
+            payload: row.get::<_, Option<String>>("Payload")?
+                .and_then(|s| serde_json::from_str(&s).ok()),
+            created_at: row.get("CreatedAt")?,
+        })
+    }
 }
 
 #[derive(Debug, Clone, Serialize)]

@@ -270,6 +270,57 @@ impl std::str::FromStr for AlarmEventType {
 }
 ```
 
+impl std::str::FromStr for ChallengeDifficulty {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Easy" => Ok(Self::Easy),
+            "Medium" => Ok(Self::Medium),
+            "Hard" => Ok(Self::Hard),
+            _ => Err(format!("Unknown ChallengeDifficulty: {s}")),
+        }
+    }
+}
+
+impl std::str::FromStr for SoundCategory {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Classic" => Ok(Self::Classic),
+            "Gentle" => Ok(Self::Gentle),
+            "Nature" => Ok(Self::Nature),
+            "Digital" => Ok(Self::Digital),
+            _ => Err(format!("Unknown SoundCategory: {s}")),
+        }
+    }
+}
+
+impl std::str::FromStr for SettingsValueType {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "String" => Ok(Self::String),
+            "Integer" => Ok(Self::Integer),
+            "Boolean" => Ok(Self::Boolean),
+            "Json" => Ok(Self::Json),
+            _ => Err(format!("Unknown SettingsValueType: {s}")),
+        }
+    }
+}
+
+impl std::str::FromStr for ThemeMode {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Light" => Ok(Self::Light),
+            "Dark" => Ok(Self::Dark),
+            "System" => Ok(Self::System),
+            _ => Err(format!("Unknown ThemeMode: {s}")),
+        }
+    }
+}
+```
+
 ### Enum Conventions
 
 | Rule | Detail |
@@ -280,6 +331,7 @@ impl std::str::FromStr for AlarmEventType {
 | **TypeScript values** | String enums with PascalCase values matching Rust |
 | **Comparison** | Always `alarm.ChallengeType === ChallengeType.Math`, never `=== "math"` |
 | **Null** | Use `Option<ChallengeType>` (Rust) / `ChallengeType | null` (TS) for optional fields |
+| **FromStr** | Required for all enums stored as TEXT in SQLite (`RepeatType`, `ChallengeType`, `AlarmEventType`, `ChallengeDifficulty`, `SoundCategory`, `SettingsValueType`, `ThemeMode`). IPC-only enums (`ExportFormat`, `ExportScope`, `ImportMode`, `DuplicateAction`, `SortField`, `SortOrder`) use serde derive for deserialization — `FromStr` is NOT required for them. |
 
 ---
 
@@ -690,6 +742,7 @@ interface Quote {
   Author: string;
   IsFavorite: boolean;
   IsCustom: boolean;
+  CreatedAt: string;          // ISO 8601 — when this quote was added
 }
 ```
 
@@ -706,6 +759,7 @@ pub struct Quote {
     pub author: String,
     pub is_favorite: bool,
     pub is_custom: bool,
+    pub created_at: String,
 }
 ```
 
@@ -845,7 +899,8 @@ CREATE TABLE Quotes (
   Text TEXT NOT NULL,
   Author TEXT NOT NULL DEFAULT '',
   IsFavorite INTEGER NOT NULL DEFAULT 0,
-  IsCustom INTEGER NOT NULL DEFAULT 0
+  IsCustom INTEGER NOT NULL DEFAULT 0,
+  CreatedAt TEXT NOT NULL
 );
 
 -- Webhooks table for webhook integration feature (P3 — see 12-smart-features.md)
@@ -1225,7 +1280,48 @@ const isFixedVolume = (alarm: Alarm): boolean => !alarm.IsGradualVolume;
 |--------------|---------------|------------------|
 | `IsEnabled` | `group.IsEnabled` | `group.isDisabled()` |
 
-**Rule:** The `!` operator is only used INSIDE the semantic inverse implementation. All call sites use the named method.
+### Quote
+
+| Boolean Field | Positive Guard | Semantic Inverse | Use Instead Of |
+|--------------|---------------|------------------|---------------|
+| `IsFavorite` | `quote.IsFavorite` | `quote.isNotFavorite()` | `!quote.IsFavorite` |
+| `IsCustom` | `quote.IsCustom` | `quote.isBuiltIn()` | `!quote.IsCustom` |
+
+### Rust Implementation (Quote)
+
+```rust
+impl Quote {
+    pub fn is_not_favorite(&self) -> bool { !self.is_favorite }
+    pub fn is_built_in(&self) -> bool { !self.is_custom }
+}
+```
+
+### TypeScript Implementation (Quote)
+
+```typescript
+const isNotFavorite = (quote: Quote): boolean => !quote.IsFavorite;
+const isBuiltIn = (quote: Quote): boolean => !quote.IsCustom;
+```
+
+### StreakCalendarDay
+
+| Boolean Field | Positive Guard | Semantic Inverse | Use Instead Of |
+|--------------|---------------|------------------|---------------|
+| `IsOnTime` | `day.IsOnTime` | `day.isLate()` | `!day.IsOnTime` |
+
+### Rust Implementation (StreakCalendarDay)
+
+```rust
+impl StreakCalendarDay {
+    pub fn is_late(&self) -> bool { !self.is_on_time }
+}
+```
+
+### TypeScript Implementation (StreakCalendarDay)
+
+```typescript
+const isLate = (day: StreakCalendarDay): boolean => !day.IsOnTime;
+```
 
 ---
 
