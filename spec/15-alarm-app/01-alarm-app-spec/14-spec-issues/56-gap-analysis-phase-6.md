@@ -171,9 +171,9 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 | CG-001 | ~~Missing edge cases table~~ | ✅ Resolved | `11-sleep-wellness.md` | 12 edge cases added (DST, ambient overlap, validation, etc.) |
 | CG-002 | ~~Missing edge cases table~~ | ✅ Resolved | `14-personalization.md` | 12 edge cases added (streak calc, quote validation, background, etc.) |
 | CG-003 | ~~No error handling spec for IPC commands~~ | ✅ Resolved | `04-platform-constraints.md` | Complete IPC → AlarmAppError mapping table added (46 commands) |
-| CG-004 | No UI mockup or wireframe descriptions | 🟡 Medium | All features | Feature specs describe behavior but rarely describe exact UI layout (which components, where buttons go, responsive behavior). The design system spec covers tokens but not feature-specific layouts. |
+| CG-004 | ~~No UI mockup or wireframe descriptions~~ | ✅ Resolved | `17-ui-layouts.md` | Complete ASCII wireframes, component trees, and section ordering for alarm list, alarm form, and settings screen |
 | CG-005 | No onboarding/first-run experience spec | 🟡 Medium | Missing file | The feature overview mentions "Onboarding" as a P3 feature but there's no spec file for it |
-| CG-006 | Settings UI not specified | 🟡 Medium | Missing | Settings keys are defined in data model, but no feature spec describes the settings screen layout, interactions, or component tree |
+| CG-006 | ~~Settings UI not specified~~ | ✅ Resolved | `17-ui-layouts.md` | Full settings screen layout with 7 sections, settings-key-to-control mapping, and IPC flow |
 
 ### 3.3 Missing Backend Behavior
 
