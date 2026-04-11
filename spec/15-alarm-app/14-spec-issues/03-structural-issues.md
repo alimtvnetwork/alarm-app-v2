@@ -14,7 +14,7 @@ Folder structure, file naming, and metadata header violations per `spec/01-spec-
 ## SI-001: `reference/` Folder Missing Numeric Prefix
 
 **Severity:** 🟡 Medium  
-**Location:** `spec/15-alarm-app/01-alarm-app-spec/reference/`  
+**Location:** `spec/15-alarm-app/reference/` (now `15-reference/`)  
 **Rule Violated:** `01-spec-authoring-guide/01-folder-structure.md` — all folders need `{NN}-` prefix  
 **Status:** ✅ Resolved — renamed `reference/` → `15-reference/` in Fix Phase 20
 

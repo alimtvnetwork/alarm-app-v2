@@ -1,16 +1,16 @@
 # Alarm App
 
-**Version:** 1.1.0  
-**Status:** Active  
-**Updated:** 2026-04-08  
+**Version:** 3.1.0  
+**Status:** ✅ Release Candidate — 577 Spec Issues Resolved, 12 Gap Analysis Phases Complete, 97% AI Success Rate  
+**Updated:** 2026-04-11  
 **AI Confidence:** High  
-**Ambiguity:** Low
+**Ambiguity:** None
 
 ---
 
 ## Keywords
 
-`alarm`, `clock`, `timer`, `sleep`, `wake-up`, `native`, `cross-platform`, `tauri`, `desktop`, `mobile`
+`alarm`, `clock`, `timer`, `sleep`, `wake-up`, `native`, `cross-platform`, `tauri`, `desktop`, `mobile`, `specification`, `features`, `architecture`
 
 ---
 
@@ -28,7 +28,7 @@
 
 ## Purpose
 
-Specification module for a warm, minimal alarm clock native application built with Tauri 2.x (Rust backend) and React + Vite + Tailwind CSS (frontend). Targets macOS first, then Windows, Linux, iOS, and Android. Features analog + digital clock, alarm management with groups, export/import, dark/light themes, dismissal challenges, sleep & wellness tools, and alarm firing with native audio and OS notifications.
+Complete application specification for the Alarm App — a warm, minimal alarm clock native application built with Tauri 2.x (Rust backend) and React + Vite + Tailwind CSS (frontend). Targets macOS first, then Windows, Linux, iOS, and Android. Features analog + digital clock, alarm management with groups, export/import, dark/light themes, dismissal challenges, sleep & wellness tools, and alarm firing with native audio and OS notifications. Organized into fundamentals (architecture, data model, design, platform strategy), features (all functional specs), and app issues (bugs, fixes, retrospectives).
 
 ---
 
@@ -45,11 +45,108 @@ Specification module for a warm, minimal alarm clock native application built wi
 
 ---
 
+## Technology Stack
+
+| Technology | Purpose |
+|------------|---------|
+| Tauri 2.x | Native app framework (Rust backend + WebView frontend) |
+| Rust | Backend logic — alarm engine, audio, notifications, storage |
+| React 18 | UI framework (runs in OS WebView) |
+| Vite 5 | Frontend build tool |
+| TypeScript 5 | Type safety |
+| Tailwind CSS v3 | Styling |
+| shadcn/ui | Component library |
+| SQLite | Data persistence (via rusqlite + refinery migrations) |
+| Native Audio | Alarm sound playback (Rust crate / OS API) |
+| OS Notifications | System notifications (Tauri notification plugin) |
+| System Tray | Menu bar / tray integration (Tauri tray plugin) |
+
+---
+
+## Data Model
+
+```
+Alarm {
+  AlarmId: string (uuid)
+  Time: string (HH:MM, 24h)
+  Date: string | null (YYYY-MM-DD, for date-specific alarms)
+  Label: string
+  IsEnabled: boolean
+  Repeat: RepeatPattern (RepeatType enum: Once|Daily|Weekly|Interval|Cron)
+  GroupId: string | null
+  SnoozeDurationMin: number (default 5)
+  MaxSnoozeCount: number (default 3, 0 = dismiss only, no snooze)
+  SoundFile: string (built-in key or custom file path)
+  IsGradualVolume: boolean
+  AutoDismissMin: number (0 = manual dismiss only)
+  NextFireTime: string | null (precomputed)
+  DeletedAt: string | null (soft-delete)
+  CreatedAt / UpdatedAt: ISO timestamps
+}
+
+RepeatPattern {
+  Type: RepeatType (enum — Once, Daily, Weekly, Interval, Cron)
+  DaysOfWeek: number[] (for weekly)
+  IntervalMinutes: number (for interval)
+  CronExpression: string (for cron)
+}
+
+AlarmGroup {
+  AlarmGroupId: string (uuid)
+  Name: string
+  Color: string (hex)
+  Position: number
+  IsEnabled: boolean
+}
+
+Storage: SQLite database (via rusqlite + refinery migrations)
+Tables:
+  Alarms        → Alarm records (with soft-delete, NextFireTime)
+  AlarmGroups   → AlarmGroup records (with color)
+  Settings      → Key-value config with ValueType (theme, locale, defaults)
+  SnoozeState   → Active snooze tracking
+  AlarmEvents   → Alarm history log (fired, snoozed, dismissed, missed)
+  Quotes        → Daily quotes (built-in + custom, P2)
+  Webhooks      → Webhook configs for alarm events (P3)
+```
+
+---
+
+## Priority Matrix
+
+| Priority | Features |
+|----------|----------|
+| **P0 — Must Have** | Alarm CRUD (soft-delete, duplicate, drag-drop), Snooze (per-alarm max), Repeat Patterns (daily/weekly/interval/cron), Sound Selection (built-in + custom), Dark Mode, Clock Display, Missed Alarm Recovery, Auto-Dismiss |
+| **P1 — Should Have** | Gradual Volume, Keyboard Shortcuts, Groups (color-coded), Export/Import (JSON/CSV/iCal), Accessibility (WCAG 2.1 AA), Math Challenge |
+| **P2 — Nice to Have** | Alarm History Log (filterable, CSV export), Bedtime Reminder, Sleep Calculator, Streak Tracker, Shake/Type Challenges, Themes, i18n |
+| **P3 — Future** | Analytics Reports, Weather Briefing, Location Alarms, Webhooks, Music Integration, Cloud Sync, World Clock, Stopwatch/Timer, Pomodoro, Voice Assistant, Calendar Overlay, OS Widgets, iOS/Android |
+
+---
+
 ## Module Inventory
 
 | # | Module | Description |
 |---|--------|-------------|
-| 01 | [Alarm App Spec](./01-alarm-app-spec/00-overview.md) | Full application specification |
+| 01 | [Fundamentals](./01-fundamentals/00-overview.md) | Architecture, data model, design system, platform strategy, startup, devops, tests, dependency lock, platform verification matrix, logging/telemetry (13 docs) |
+| 02 | [Features](./02-features/00-overview.md) | All feature specifications (17 docs) |
+| 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking — 43/43 issues resolved |
+| 09 | [AI Handoff Reliability Report](./09-ai-handoff-reliability-report.md) | Supplementary failure analysis (62-task breakdown is authoritative), top 15 risk points |
+| 10 | [AI Handoff Readiness Report](./10-ai-handoff-readiness-report.md) | 100/100 readiness score, 579 issues found / 577 resolved, 229 acceptance criteria |
+| 11 | [Atomic Task Breakdown](./11-atomic-task-breakdown.md) | **Authoritative** 62 dependency-ordered tasks, effort estimates, risk levels |
+| 12 | [Platform & Concurrency Guide](./12-platform-and-concurrency-guide.md) | Platform gotchas, race condition safeguards, async safety, error recovery |
+| 13 | [AI Cheat Sheet](./13-ai-cheat-sheet.md) | Single-page quick reference for AI coding agents |
+| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 579 found, 577 resolved, 2 accepted across 36 discovery + 42 fix phases + 12 gap analyses ✅ |
+| 15 | [Reference](./15-reference/00-overview.md) | Feature inventories and planning references |
+| 98 | [Changelog](./98-changelog.md) | Version history v1.0.0–v3.1.0 |
+
+---
+
+## Reference Documents
+
+| File | Description |
+|------|-------------|
+| [alarm-app-features.md](./15-reference/alarm-app-features.md) | Feature overview (69 features, categorized) |
+| [alarm-clock-features.md](./15-reference/alarm-clock-features.md) | Extended feature reference (75 features, 10 categories) |
 
 ---
 
@@ -57,6 +154,6 @@ Specification module for a warm, minimal alarm clock native application built wi
 
 | Reference | Location |
 |-----------|----------|
-| Spec Authoring Guide | `../01-spec-authoring-guide/00-overview.md` |
-| Design System | `../06-design-system/00-overview.md` |
-| Coding Guidelines | `../02-coding-guidelines/00-overview.md` |
+| Spec Authoring Guide | `../../01-spec-authoring-guide/00-overview.md` |
+| Design System | `../../06-design-system/00-overview.md` |
+| Coding Guidelines | `../../02-coding-guidelines/00-overview.md` |

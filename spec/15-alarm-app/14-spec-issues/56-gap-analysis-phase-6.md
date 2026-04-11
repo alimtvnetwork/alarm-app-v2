@@ -16,7 +16,7 @@
 
 ## Purpose
 
-Comprehensive gap analysis of the Alarm App specification (`01-alarm-app-spec/`) measuring consistency against foundational specs (coding guidelines, boolean rules, enum patterns, split DB, seedable config, naming conventions), content completeness, and AI-readiness.
+Comprehensive gap analysis of the Alarm App specification (`15-alarm-app/`) measuring consistency against foundational specs (coding guidelines, boolean rules, enum patterns, split DB, seedable config, naming conventions), content completeness, and AI-readiness.
 
 ---
 
