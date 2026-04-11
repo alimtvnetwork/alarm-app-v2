@@ -60,6 +60,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 49 | `49-discovery-phase-31.md` | Discovery Phase 31 — Rust Struct Definitions & Serde Attribute Audit | 8 | 0 | 8 |
 | 50 | `50-discovery-phase-32.md` | Discovery Phase 32 — IPC Payload Structs Audit | 7 | 0 | 7 |
 | 51 | `51-discovery-phase-33.md` | Discovery Phase 33 — Undefined Types & IPC Inline Objects Audit | 11 | 0 | 11 |
+| 52 | `52-discovery-phase-34.md` | Discovery Phase 34 — IPC Inline Objects & Remaining Rust Structs Audit | 15 | 0 | 15 |
 
 ---
 
@@ -68,11 +69,11 @@ This folder tracks all specification quality issues found during the deep audit 
 | Severity | Count |
 |----------|:-----:|
 | 🔴 Critical | 104 |
-| 🟡 Medium | 266 |
-| 🟢 Low | 73 |
-| **Grand Total** | **443** |
+| 🟡 Medium | 273 |
+| 🟢 Low | 81 |
+| **Grand Total** | **458** |
 | **Open** | **0** |
-| **Resolved** | **443** |
+| **Resolved** | **458** |
 
 ---
 
@@ -150,6 +151,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 31** | **Rust Struct Definitions & Serde Attribute Audit — 8 missing Rust structs for IPC-facing types** | **✅ Done (+8 = 425, 8 resolved)** |
 | **Discovery Phase 32** | **IPC Payload Structs Audit — 7 missing Rust structs for request/response payloads** | **✅ Done (+7 = 432, 7 resolved)** |
 | **Discovery Phase 33** | **Undefined Types & IPC Inline Objects Audit — IPC registry mismatches, 7 missing Rust structs** | **✅ Done (+11 = 443, 11 resolved)** |
+| **Discovery Phase 34** | **IPC Inline Objects & Remaining Rust Structs — Groups, Personalization, Sound (15 issues)** | **✅ Done (+15 = 458, 15 resolved)** |
 
 ---
 
