@@ -79,7 +79,12 @@
     "tired": "Tired",
     "ok": "OK",
     "good": "Good",
-    "great": "Great"
+    "great": "Great",
+    "bedtimeReminder": "Bedtime Reminder",
+    "bedtime": "Bedtime",
+    "remindBefore": "Remind before",
+    "sleepGoal": "Sleep Goal",
+    "bedtimeHint": "You'll be reminded {{reminder}} min before {{time}}"
   },
   "personalization": {
     "title": "Personalization",
