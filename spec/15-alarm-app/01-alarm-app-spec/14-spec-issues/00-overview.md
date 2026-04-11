@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.37.0  
+**Version:** 1.38.0  
 **Updated:** 2026-04-11
 
 ---
@@ -59,6 +59,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 48 | `48-discovery-phase-30.md` | Discovery Phase 30 — Payload & Interface Definitions Audit | 7 | 0 | 7 |
 | 49 | `49-discovery-phase-31.md` | Discovery Phase 31 — Rust Struct Definitions & Serde Attribute Audit | 8 | 0 | 8 |
 | 50 | `50-discovery-phase-32.md` | Discovery Phase 32 — IPC Payload Structs Audit | 7 | 0 | 7 |
+| 51 | `51-discovery-phase-33.md` | Discovery Phase 33 — Undefined Types & IPC Inline Objects Audit | 11 | 0 | 11 |
 
 ---
 
@@ -66,12 +67,12 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 100 |
-| 🟡 Medium | 261 |
-| 🟢 Low | 71 |
-| **Grand Total** | **432** |
+| 🔴 Critical | 104 |
+| 🟡 Medium | 266 |
+| 🟢 Low | 73 |
+| **Grand Total** | **443** |
 | **Open** | **0** |
-| **Resolved** | **432** |
+| **Resolved** | **443** |
 
 ---
 
@@ -148,6 +149,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 30** | **Payload & Interface Definitions Audit — StreakData, Quote, Settings, StreakCalendarDay undefined; payload mismatches** | **✅ Done (+7 = 417, 7 resolved)** |
 | **Discovery Phase 31** | **Rust Struct Definitions & Serde Attribute Audit — 8 missing Rust structs for IPC-facing types** | **✅ Done (+8 = 425, 8 resolved)** |
 | **Discovery Phase 32** | **IPC Payload Structs Audit — 7 missing Rust structs for request/response payloads** | **✅ Done (+7 = 432, 7 resolved)** |
+| **Discovery Phase 33** | **Undefined Types & IPC Inline Objects Audit — IPC registry mismatches, 7 missing Rust structs** | **✅ Done (+11 = 443, 11 resolved)** |
 
 ---
 
