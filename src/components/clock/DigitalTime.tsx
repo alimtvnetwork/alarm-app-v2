@@ -1,5 +1,5 @@
 /**
- * DigitalTime — Large HH:MM:SS digital time display with date and next alarm countdown.
+ * DigitalTime — Large HH:MM:SS digital time display with date and next alarm countdown pill.
  */
 
 import { useEffect, useState } from "react";
@@ -28,8 +28,9 @@ function getNextAlarmCountdown(alarms: { Time: string; IsEnabled: boolean }[]): 
   const hours = Math.floor(totalMin / 60);
   const mins = totalMin % 60;
 
-  if (hours === 0) return `Alarm in ${mins}m`;
-  return `Alarm in ${hours}h ${mins}m`;
+  if (hours === 0) return `Alarm in ${mins} minute${mins !== 1 ? "s" : ""}`;
+  if (mins === 0) return `Alarm in ${hours} hour${hours !== 1 ? "s" : ""}`;
+  return `Alarm in ${hours} hour${hours !== 1 ? "s" : ""} and ${mins} minute${mins !== 1 ? "s" : ""}`;
 }
 
 const DigitalTime = () => {
@@ -66,20 +67,23 @@ const DigitalTime = () => {
   const countdown = getNextAlarmCountdown(alarms);
 
   return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="flex items-baseline gap-1">
-        <span className="text-5xl font-heading font-light tracking-tight text-foreground">
+    <div className="flex flex-col items-center gap-2">
+      <div className="flex items-baseline">
+        <span className="text-[2.75rem] font-heading font-light tracking-tight text-foreground leading-none">
           {formatTime(now)}
         </span>
         {period && (
-          <span className="text-lg font-heading font-medium text-muted-foreground">
+          <span className="text-base font-heading font-medium text-muted-foreground ml-1">
             {period}
           </span>
         )}
       </div>
       <p className="text-sm text-muted-foreground font-body">{dateStr}</p>
       {countdown && (
-        <p className="mt-1 text-xs font-body text-primary">{countdown}</p>
+        <div className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-4 py-1.5">
+          <span className="text-sm">⏰</span>
+          <span className="text-xs font-body text-muted-foreground">{countdown}</span>
+        </div>
       )}
     </div>
   );
