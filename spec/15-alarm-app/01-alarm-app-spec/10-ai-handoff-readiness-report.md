@@ -1,10 +1,10 @@
 # AI Handoff Readiness Report
 
-**Version:** 3.1.0  
+**Version:** 3.2.0  
 **Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**AI Success Rate:** 95–97% full-stack, 98%+ backend (566 spec quality issues resolved across 15 gap analysis phases — Release Candidate)
+**AI Success Rate:** 95–97% full-stack, 98%+ backend (575 spec quality issues resolved across 10 gap analysis phases — Release Candidate)
 
 ---
 
@@ -16,19 +16,19 @@
 
 ## Executive Summary
 
-The Alarm App specification is **fully ready for AI handoff**. All 566 spec quality issues have been resolved across 36 discovery phases, 42 fix phases (1–20, A–V), and 9 gap analysis phases (6–7, 11–16). The spec includes 229 consolidated acceptance criteria (157 feature + 72 fundamental), 13 domain enums, complete error handling, all IPC payloads with Rust struct definitions, and all dependencies pinned.
+The Alarm App specification is **fully ready for AI handoff**. 575 of 577 spec quality issues have been resolved across 36 discovery phases, 42 fix phases (1–20, A–V), and 10 gap analysis phases (6–7, 11–17). The 2 open issues are accepted (superseded file date, historical running total). The spec includes 229 consolidated acceptance criteria (157 feature + 72 fundamental), 13 domain enums, complete error handling, all IPC payloads with Rust struct definitions, and all dependencies pinned.
 
 | Metric | Value |
 |--------|-------|
 | **Readiness Score** | **100/100 (A+)** |
 | **Execution Guidance Score** | **100/100** |
 | **Estimated AI Success Rate** | **95–97% full-stack, 98%+ backend** |
-| **Total Issues** | 566 |
-| **Resolved** | 566 (100%) |
-| **Open** | 0 |
+| **Total Issues** | 577 |
+| **Resolved** | 575 (99.7%) |
+| **Open (Accepted)** | 2 |
 | **Discovery Phases** | 36 complete |
 | **Fix Phases** | 42 (Phases 1–20, A–U) |
-| **Gap Analysis Phases** | 9 (Phases 6–7, 11–16) |
+| **Gap Analysis Phases** | 10 (Phases 6–7, 11–17) |
 | **Spec Files** | 63+ (13 fundamentals + 17 features + 43 issue trackers + 3 execution guides + 10 misc) |
 | **Code Examples** | 45+ Rust/TypeScript blocks (anti-patterns fixed in phases A–G) |
 | **Atomic Tasks** | 62 tasks across 12 phases with dependency graph |
@@ -61,14 +61,16 @@ The Alarm App specification is **fully ready for AI handoff**. All 566 spec qual
 
 ## Issue Resolution Summary
 
-All 566 spec quality issues have been resolved across 36 discovery phases, 42 fix phases, and 9 gap analysis phases.
+575 of 577 spec quality issues have been resolved across 36 discovery phases, 42 fix phases, and 10 gap analysis phases. The 2 open issues are accepted (non-blocking).
 
-| Category | Resolved |
+| Category | Count |
 |----------|:--------:|
 | 🔴 Critical | 104 |
-| 🟡 Medium | 319 |
-| 🟢 Low | 143 |
-| **Total** | **566** |
+| 🟡 Medium | 324 |
+| 🟢 Low | 149 |
+| **Total** | **577** |
+| **Resolved** | **575** |
+| **Open (Accepted)** | **2** |
 
 ---
 
@@ -141,7 +143,7 @@ All 566 spec quality issues have been resolved across 36 discovery phases, 42 fi
 | ~~Magic string union types in data model~~ | ~~AI will propagate raw strings~~ | ✅ Fixed in Phase A |
 | ~~`AlarmAppError` / `WebhookError` not defined~~ | ~~AI must invent error enums~~ | ✅ Fixed in Phase B |
 | ~~Test fixtures use camelCase keys~~ | ~~AI will copy wrong casing~~ | ✅ Fixed in Phase D |
-| ~~Stale metrics in some reports~~ | ~~AI may read outdated claims~~ | ✅ Fixed in Phases H, I, O, T + Gap Analysis 8, 15, 16 |
+| ~~Stale metrics in some reports~~ | ~~AI may read outdated claims~~ | ✅ Fixed in Phases H, I, O, T + Gap Analysis 8, 15–17 |
 
 ### Non-Blocking
 
@@ -168,7 +170,7 @@ All 566 spec quality issues have been resolved across 36 discovery phases, 42 fi
 | 9 | Test strategy with PascalCase fixtures + exemptions | ✅ |
 | 10 | Startup sequence with timing budget | ✅ |
 | 11 | Logging strategy with levels, rotation, and retention | ✅ |
-| 12 | All spec issues resolved | ✅ 566/566 |
+| 12 | All spec issues resolved | ✅ 575/577 (2 accepted) |
 | 13 | Consistency reports: all folders accurate | ✅ |
 | 14 | File structure matches spec conventions | ✅ |
 | 15 | Technology decisions explicit | ✅ |
@@ -212,7 +214,7 @@ All fix phases complete. No remaining work items.
 | Gap 7 | 18 | Settings reconciliation, missing schemas, Zustand stores, logging spec, boolean exemptions |
 | Gap 8 | 20 | Stale metrics update, table counts, cross-references, scoring table, IPC name alignment |
 | Gap 9 | 21 | Acceptance criteria sync (133→157), settings seed count (9→16), WebhookError (4→7), SettingsStore casing, Timezone clarification, consistency reports |
-| Gap 11–16 | 45 | OS service layer alignment, dependency pins, notification templates, field names, bookkeeping |
+| Gap 11–17 | 52 | OS service layer alignment, dependency pins, notification templates, field names, bookkeeping, stale counts |
 
 ---
 
@@ -223,7 +225,7 @@ All fix phases complete. No remaining work items.
 | Spec Overview | `./00-overview.md` |
 | Changelog | `./98-changelog.md` |
 | Issues Overview | `./03-app-issues/00-overview.md` |
-| Spec Issues Audit | `./14-spec-issues/00-overview.md` (566 issues found, 566 resolved) |
+| Spec Issues Audit | `./14-spec-issues/00-overview.md` (577 issues found, 575 resolved, 2 accepted) |
 | Atomic Task Breakdown | `./11-atomic-task-breakdown.md` |
 | Platform & Concurrency Guide | `./12-platform-and-concurrency-guide.md` |
 | AI Cheat Sheet | `./13-ai-cheat-sheet.md` |
@@ -233,4 +235,4 @@ All fix phases complete. No remaining work items.
 
 ---
 
-*AI Handoff Readiness Report v3.1.0 — updated: 2026-04-11*
+*AI Handoff Readiness Report v3.2.0 — updated: 2026-04-11*
