@@ -691,7 +691,7 @@ All keys use **dot-separated lowercase** segments. Maximum 3 levels deep.
 | `settings.theme.system` | `"System"` | Theme option |
 | `settings.timeFormat.12h` | `"12h"` | Time format option |
 | `settings.timeFormat.24h` | `"24h"` | Time format option |
-| `notification.alarm.title` | `"⏰ {{label}}"` | Notification title |
+| `notification.alarm.title` | `"⏰ {{label}}"` | Notification title (`.title` is the UI concept — the title of the notification; `{{label}}` interpolates the `Label` field from the Alarm data model) |
 | `notification.alarm.body` | `"{{time}} — Tap to dismiss or snooze"` | Notification body |
 | `notification.missed.title` | `"Missed Alarm"` | Missed alarm notification |
 | `notification.missed.body` | `"You missed {{label}} at {{time}}"` | Missed alarm body |
