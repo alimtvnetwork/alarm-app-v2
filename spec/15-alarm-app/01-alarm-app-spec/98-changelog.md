@@ -1,7 +1,7 @@
 # Changelog
 
-**Version:** 2.8.0  
-**Updated:** 2026-04-10  
+**Version:** 2.8.2  
+**Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** None
 
@@ -26,6 +26,37 @@
 ---
 
 ## Version History
+
+### v2.8.2 — 2026-04-11
+
+**Theme:** Rust Struct Completeness — 8 missing Rust structs added with serde attributes and from_row implementations
+
+#### Key Changes
+
+- **8 Rust structs added** to `01-data-model.md`: `SnoozeStateRow`, `AlarmGroupRow`, `AlarmSound`, `AlarmEventRow`, `SettingsResponse`, `Quote`, `StreakData`, `StreakCalendarDay`
+- All structs use `#[serde(rename_all = "PascalCase")]` for frontend compatibility
+- DB-backed structs include `from_row` with enum parsing (`AlarmEventType`, `ChallengeType`) and boolean conversions
+- Data model bumped to v1.15.0
+- Discovery Phase 31 documented (`14-spec-issues/49-discovery-phase-31.md`)
+- **Total issues:** 425/425 resolved
+
+---
+
+### v2.8.1 — 2026-04-10
+
+**Theme:** IPC Registry & Payload Interface Alignment — 8 missing commands registered, 4 interface definitions added
+
+#### Key Changes
+
+- **8 missing IPC commands** added to architecture registry (`06-tauri-architecture...md`): `get_streak_data`, `get_streak_calendar`, `save_favorite_quote`, `get_daily_quote`, `add_custom_quote`, `play_ambient`, `stop_ambient`, `get_ambient_sounds`
+- **4 TypeScript interfaces** defined in `01-data-model.md`: `Settings`, `Quote`, `StreakData`, `StreakCalendarDay`
+- **Payload alignment fixes:** `DurationMin` added to `play_ambient`, `save_favorite_quote` unified to `QuoteId`, `add_custom_quote` returns full `Quote`
+- `14-personalization.md` updated to reference named interfaces instead of inline objects
+- Resolved `get_settings` vs `get_theme` ambiguity (kept `get_settings`)
+- Discovery Phases 29–30 documented
+- **Total issues:** 417/417 resolved
+
+---
 
 ### v2.8.0 — 2026-04-10
 
