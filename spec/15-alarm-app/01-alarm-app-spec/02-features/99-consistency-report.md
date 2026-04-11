@@ -31,7 +31,7 @@
 | 1 | `00-overview.md` | 1.3.0 | ✅ Present |
 | 2 | `01-alarm-crud.md` | 1.14.0 | ✅ Updated (Edge Cases table added) |
 | 3 | `02-alarm-scheduling.md` | 2.3.0 | ✅ Updated (Edge Cases table added) |
-| 4 | `03-alarm-firing.md` | 1.12.0 | ✅ Updated (Edge Cases present) |
+| 4 | `03-alarm-firing.md` | 1.13.0 | ✅ Updated (Edge Cases present, notification templates, wake listeners) |
 | 5 | `04-snooze-system.md` | 1.6.0 | ✅ Updated (Edge Cases table added) |
 | 6 | `05-sound-and-vibration.md` | 1.7.0 | ✅ Updated (Edge Cases table added) |
 | 7 | `06-dismissal-challenges.md` | 1.8.0 | ✅ Updated (Edge Cases table added) |
