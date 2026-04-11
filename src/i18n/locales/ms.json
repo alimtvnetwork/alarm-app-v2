@@ -1,0 +1,131 @@
+{
+  "nav": {
+    "clock": "Jam",
+    "analytics": "Analitik",
+    "sleep": "Tidur",
+    "style": "Gaya",
+    "settings": "Tetapan"
+  },
+  "header": {
+    "title": "Penggera",
+    "addAlarm": "Tambah penggera",
+    "settings": "Tetapan"
+  },
+  "clock": {
+    "alarms": "Penggera",
+    "noAlarms": "Tiada penggera lagi",
+    "tapToCreate": "Ketik + untuk cipta"
+  },
+  "alarmForm": {
+    "newAlarm": "Penggera Baru",
+    "editAlarm": "Edit Penggera",
+    "label": "Label",
+    "labelPlaceholder": "Nama penggera",
+    "repeat": "Ulang",
+    "once": "Sekali",
+    "daily": "Harian",
+    "weekly": "Mingguan",
+    "sound": "Bunyi",
+    "gradualVolume": "Volum Beransur",
+    "snoozeMin": "Tunda (min)",
+    "maxSnoozes": "Maks Tunda",
+    "noSnooze": "Tiada tunda",
+    "challenge": "Cabaran Tutup",
+    "none": "Tiada",
+    "mathProblem": "Soalan Matematik",
+    "shakePhone": "Goncang Telefon",
+    "typing": "Menaip",
+    "easy": "Mudah",
+    "medium": "Sederhana",
+    "hard": "Susah",
+    "cancel": "Batal",
+    "create": "Cipta",
+    "save": "Simpan"
+  },
+  "analytics": {
+    "title": "Analitik",
+    "totalFired": "Jumlah Berbunyi",
+    "snoozed": "Ditunda",
+    "streak": "Streak",
+    "avgChallengeTime": "Purata Masa Cabaran",
+    "history": "Sejarah",
+    "snoozeTrend": "Trend Tunda",
+    "dailyAlarmEvents": "Peristiwa Penggera Harian",
+    "snoozeCountTrend": "Trend Kiraan Tunda",
+    "noData": "Tiada data lagi",
+    "noSnoozeData": "Tiada data tunda lagi"
+  },
+  "sleep": {
+    "title": "Tidur",
+    "avgSleep": "Purata Tidur",
+    "avgQuality": "Purata Kualiti",
+    "thisWeek": "Minggu Ini",
+    "howDidYouSleep": "Bagaimana tidur anda?",
+    "quality": "Kualiti",
+    "mood": "Mood",
+    "save": "Simpan",
+    "exhausted": "Penat",
+    "tired": "Letih",
+    "ok": "OK",
+    "good": "Baik",
+    "great": "Hebat"
+  },
+  "personalization": {
+    "title": "Pemperibadian",
+    "theme": "Tema",
+    "light": "Cerah",
+    "dark": "Gelap",
+    "system": "Sistem",
+    "accentColor": "Warna Aksen",
+    "skin": "Kulit",
+    "clock24h": "Jam 24 Jam"
+  },
+  "settings": {
+    "title": "Tetapan",
+    "alarmDefaults": "Lalai Penggera",
+    "snoozeDuration": "Tempoh Tunda",
+    "maxSnoozes": "Maks Tunda",
+    "autoDismiss": "Auto-Tutup",
+    "manual": "Manual",
+    "defaultSound": "Bunyi Lalai",
+    "gradualVolume": "Volum Beransur",
+    "duration": "Tempoh",
+    "display": "Paparan",
+    "clock24h": "Jam 24 Jam",
+    "system": "Sistem",
+    "autoLaunch": "Auto-Lancar Semasa Mula",
+    "minimizeToTray": "Kecilkan ke Tray",
+    "language": "Bahasa",
+    "data": "Data",
+    "eventRetention": "Penyimpanan Peristiwa",
+    "exportPrivacy": "Amaran Privasi Eksport",
+    "timezone": "Zon Masa",
+    "version": "Versi"
+  },
+  "overlay": {
+    "autoDismissIn": "Auto-tutup dalam {{time}}",
+    "snoozedCount": "Ditunda {{count}}/{{max}} kali",
+    "dismiss": "Tutup",
+    "solveToDissmiss": "Selesaikan untuk tutup",
+    "submit": "Hantar",
+    "tryAgain": "Cuba lagi!"
+  },
+  "alarm": {
+    "everyDay": "Setiap hari",
+    "weekdays": "Hari kerja",
+    "weekends": "Hujung minggu",
+    "customSchedule": "Jadual khas",
+    "dragToReorder": "Seret untuk susun",
+    "deleteAlarm": "Padam penggera"
+  },
+  "export": {
+    "title": "Eksport / Import",
+    "exportAlarms": "Eksport Penggera",
+    "importAlarms": "Import Penggera",
+    "format": "Format",
+    "exportBtn": "Eksport",
+    "importBtn": "Import",
+    "mergeMode": "Gabung",
+    "replaceMode": "Ganti"
+  }
+}
