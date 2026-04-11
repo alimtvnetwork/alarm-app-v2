@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import AppLayout from "./components/layout/AppLayout";
 import AlarmOverlay from "./components/alarm/AlarmOverlay";
+import KeyboardShortcutsHelp from "./components/layout/KeyboardShortcutsHelp";
+import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import Analytics from "./pages/Analytics";
@@ -14,12 +16,14 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+const AppInner = () => {
+  useKeyboardShortcuts();
+  return (
+    <>
       <Toaster />
       <Sonner />
       <AlarmOverlay />
+      <KeyboardShortcutsHelp />
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
@@ -32,6 +36,14 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+    </>
+  );
+};
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <AppInner />
     </TooltipProvider>
   </QueryClientProvider>
 );
