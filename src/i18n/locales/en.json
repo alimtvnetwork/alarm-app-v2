@@ -180,5 +180,21 @@
     "typingTitle": "Type to Dismiss",
     "typingPlaceholder": "Type the sentence above...",
     "complete": "complete"
+  },
+  "onboarding": {
+    "alarms": "Smart Alarms",
+    "alarmsDesc": "Create alarms with custom sounds, snooze limits, and dismiss challenges like math problems or typing.",
+    "sleep": "Sleep & Wellness",
+    "sleepDesc": "Track your sleep quality, set bedtime reminders, and get optimal wake-up time suggestions.",
+    "analytics": "Analytics & History",
+    "analyticsDesc": "View your alarm patterns, snooze trends, and export your history as CSV.",
+    "personalize": "Make It Yours",
+    "personalizeDesc": "Choose your theme, accent color, and skin. Track your dismissal streak on the calendar.",
+    "shortcuts": "Keyboard Shortcuts",
+    "shortcutsDesc": "Press Ctrl+N for new alarm, Ctrl+E to export, and ? to see all shortcuts.",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip tour",
+    "getStarted": "Get Started"
   }
 }
