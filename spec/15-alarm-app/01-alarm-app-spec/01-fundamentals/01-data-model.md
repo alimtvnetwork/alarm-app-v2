@@ -936,7 +936,7 @@ The alarm app uses a **simplified seeding approach** compared to the full [Seeda
 |------------------------|-------------------|-----------|
 | `config.seed.json` file | SQL INSERT in V1 migration | Single DB file — no need for separate JSON seed |
 | Version-tracked merge-on-upgrade | New migration per setting (`INSERT OR IGNORE`) | `refinery` already tracks versions; simpler for <20 settings |
-| Category-based organization | Flat key-value table | Alarm app has only 9 settings — categories add overhead |
+| Category-based organization | Flat key-value table | Alarm app has 16 settings — categories add overhead |
 | Runtime merge logic | Migration-time seeding | Migrations are atomic and auditable |
 | `config.schema.json` validation | `ValueType` column + Rust enum | Type safety via enum, not JSON schema |
 
