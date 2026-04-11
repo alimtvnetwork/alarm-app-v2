@@ -1,10 +1,10 @@
 # AI Handoff Readiness Report
 
-**Version:** 3.2.0  
+**Version:** 3.3.0  
 **Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** None  
-**AI Success Rate:** 95–97% full-stack, 98%+ backend (575 spec quality issues resolved across 10 gap analysis phases — Release Candidate)
+**AI Success Rate:** 95–97% full-stack, 98%+ backend (577 spec quality issues resolved across 12 gap analysis phases — Release Candidate)
 
 ---
 
@@ -16,19 +16,19 @@
 
 ## Executive Summary
 
-The Alarm App specification is **fully ready for AI handoff**. 575 of 577 spec quality issues have been resolved across 36 discovery phases, 42 fix phases (1–20, A–V), and 10 gap analysis phases (6–7, 11–17). The 2 open issues are accepted (superseded file date, historical running total). The spec includes 229 consolidated acceptance criteria (157 feature + 72 fundamental), 13 domain enums, complete error handling, all IPC payloads with Rust struct definitions, and all dependencies pinned.
+The Alarm App specification is **fully ready for AI handoff**. 577 of 579 spec quality issues have been resolved across 36 discovery phases, 42 fix phases (1–20, A–V), and 12 gap analysis phases (6–7, 11–19). The 2 open issues are accepted (superseded file date, historical running total). The spec includes 229 consolidated acceptance criteria (157 feature + 72 fundamental), 13 domain enums, complete error handling, all IPC payloads with Rust struct definitions, and all dependencies pinned.
 
 | Metric | Value |
 |--------|-------|
 | **Readiness Score** | **100/100 (A+)** |
 | **Execution Guidance Score** | **100/100** |
 | **Estimated AI Success Rate** | **95–97% full-stack, 98%+ backend** |
-| **Total Issues** | 577 |
-| **Resolved** | 575 (99.7%) |
+| **Total Issues** | 579 |
+| **Resolved** | 577 (99.7%) |
 | **Open (Accepted)** | 2 |
 | **Discovery Phases** | 36 complete |
 | **Fix Phases** | 42 (Phases 1–20, A–U) |
-| **Gap Analysis Phases** | 10 (Phases 6–7, 11–17) |
+| **Gap Analysis Phases** | 12 (Phases 6–7, 11–19) |
 | **Spec Files** | 63+ (13 fundamentals + 17 features + 43 issue trackers + 3 execution guides + 10 misc) |
 | **Code Examples** | 45+ Rust/TypeScript blocks (anti-patterns fixed in phases A–G) |
 | **Atomic Tasks** | 62 tasks across 12 phases with dependency graph |
@@ -61,15 +61,15 @@ The Alarm App specification is **fully ready for AI handoff**. 575 of 577 spec q
 
 ## Issue Resolution Summary
 
-575 of 577 spec quality issues have been resolved across 36 discovery phases, 42 fix phases, and 10 gap analysis phases. The 2 open issues are accepted (non-blocking).
+577 of 579 spec quality issues have been resolved across 36 discovery phases, 42 fix phases, and 12 gap analysis phases. The 2 open issues are accepted (non-blocking).
 
 | Category | Count |
 |----------|:--------:|
 | 🔴 Critical | 104 |
-| 🟡 Medium | 324 |
-| 🟢 Low | 149 |
-| **Total** | **577** |
-| **Resolved** | **575** |
+| 🟡 Medium | 325 |
+| 🟢 Low | 150 |
+| **Total** | **579** |
+| **Resolved** | **577** |
 | **Open (Accepted)** | **2** |
 
 ---
@@ -80,18 +80,19 @@ The Alarm App specification is **fully ready for AI handoff**. 575 of 577 spec q
 
 | Doc | Version | Coverage | AI-Ready? |
 |-----|---------|----------|:---------:|
-| `01-data-model.md` | 1.15.0 | Full schema (7 tables), Rust AlarmRow, 13 domain enums, JSON deserializers, WAL, migrations, retention, seedable config note | ✅ |
+| `01-data-model.md` | 1.16.0 | Full schema (7 tables), Rust AlarmRow, 13 domain enums, JSON deserializers, WAL, migrations, retention, seedable config note | ✅ |
 | `02-design-system.md` | 1.5.0 | Color palette, typography, spacing, component styling, dark mode destructive token, tray icon assets, UI states | ✅ |
 | `03-file-structure.md` | 1.11.0 | Full src/ + src-tauri/ tree, Cargo.toml deps (all `=` pinned), npm deps (all `=` pinned), i18n setup, Zustand store shapes, routing, i18n key convention | ✅ |
-| `04-platform-constraints.md` | 1.7.0 | Error handling (12 errors), WebView CSS compat, memory budget (200MB), IPC error format, code pattern exemptions | ✅ |
+| `04-platform-constraints.md` | 1.8.0 | Error handling (12 errors), WebView CSS compat, memory budget (200MB), IPC error format, code pattern exemptions | ✅ |
 | `05-platform-strategy.md` | 1.1.0 | Legacy — superseded by Tauri architecture doc | ⚠️ |
-| `06-tauri-architecture-and-framework-comparison.md` | 1.6.0 | Tauri 2.x architecture, IPC registry (40+ commands), plugins (exact versions + API signatures), build pipeline, casing boundary | ✅ |
+| `06-tauri-architecture-and-framework-comparison.md` | 1.7.0 | Tauri 2.x architecture, IPC registry (40+ commands), plugins (exact versions + API signatures), build pipeline, casing boundary | ✅ |
 | `07-startup-sequence.md` | 1.5.0 | 9-step sequence, parallel init, logging strategy, error handling per step, intentional panic docs | ✅ |
 | `08-devops-setup-guide.md` | 1.1.0 | macOS/Windows signing, GitHub Actions CI, auto-update keys | ✅ |
 | `09-test-strategy.md` | 1.2.0 | 6 test layers, coverage targets, CI YAML, PascalCase fixtures, platform E2E, dep compat | ✅ |
 | `10-dependency-lock.md` | 1.1.0 | 30 Rust crates + 14 npm packages pinned with `=x.y.z`, API surface, breaking changes | ✅ |
 | `11-platform-verification-matrix.md` | 1.1.0 | Feature × Platform × Behavior × Test × Fallback for all runtime-dependent features | ✅ |
 | `12-logging-and-telemetry.md` | 1.0.0 | Log levels, structured JSON format, daily rotation, 7-day retention, never-log list, frontend IPC forwarding | ✅ |
+| `13-os-service-layer.md` | 2.3.0 | Background service behavior — auto-start, polling engine, tray icon, notifications, wake/sleep recovery, packaging | ✅ |
 
 ### Features (17 docs)
 
@@ -102,17 +103,17 @@ The Alarm App specification is **fully ready for AI handoff**. 575 of 577 spec q
 | `03-alarm-firing.md` | 1.13.0 | P0 | Rust compute_next_fire_time, DST, WakeListener (internal), AlarmQueue (serde), graceful D-Bus, notification templates | ✅ |
 | `04-snooze-system.md` | 1.6.0 | P0 | Rust tokio::sleep_until, enum references | ✅ |
 | `05-sound-and-vibration.md` | 1.7.0 | P0/P1 | Rust validate_custom_sound, gradual_volume, macOS audio session, named booleans | ✅ |
-| `06-dismissal-challenges.md` | 1.7.0 | P1/P2 | Operand rules, solve time logging, IPC commands, acceptance criteria, enum types | ✅ |
-| `07-alarm-groups.md` | 1.6.0 | P1 | previous_enabled flow | ✅ |
+| `06-dismissal-challenges.md` | 1.8.0 | P1/P2 | Operand rules, solve time logging, IPC commands, acceptance criteria, enum types | ✅ |
+| `07-alarm-groups.md` | 1.7.0 | P1 | previous_enabled flow | ✅ |
 | `08-clock-display.md` | 1.4.0 | P0 | useClock hook, get_next_alarm_time IPC | ✅ |
 | `09-theme-system.md` | 1.5.0 | P0 | get_theme/set_theme IPC commands (ThemeMode enum) | ✅ |
 | `10-export-import.md` | 1.7.0 | P1 | IPC commands (PascalCase + enum types), validation rules, privacy warning | ✅ |
 | `11-sleep-wellness.md` | 1.4.0 | P2 | PascalCase IPC keys, acceptance criteria | ✅ |
-| `12-smart-features.md` | 1.5.0 | P3 | Rust validate_webhook_url, is_private_ip, fire_webhook, WebhookError enum, acceptance criteria | ✅ |
+| `12-smart-features.md` | 1.6.0 | P3 | Rust validate_webhook_url, is_private_ip, fire_webhook, WebhookError enum, acceptance criteria | ✅ |
 | `13-analytics.md` | 1.7.0 | P3 | HistoryFilter with enum types | ✅ |
 | `14-personalization.md` | 1.4.0 | P2 | IPC command table for quotes, streaks, themes, acceptance criteria | ✅ |
 | `15-keyboard-shortcuts.md` | 1.2.0 | P1 | Edge cases table | ✅ |
-| `16-accessibility-and-nfr.md` | 1.2.0 | P1 | Performance budgets aligned, i18n path fixed | ✅ |
+| `16-accessibility-and-nfr.md` | 1.3.0 | P1 | Performance budgets aligned, i18n path fixed | ✅ |
 | `17-ui-layouts.md` | 1.0.0 | P0 | Component trees, responsive behavior, screen descriptions | ✅ |
 
 ---
@@ -170,7 +171,7 @@ The Alarm App specification is **fully ready for AI handoff**. 575 of 577 spec q
 | 9 | Test strategy with PascalCase fixtures + exemptions | ✅ |
 | 10 | Startup sequence with timing budget | ✅ |
 | 11 | Logging strategy with levels, rotation, and retention | ✅ |
-| 12 | All spec issues resolved | ✅ 575/577 (2 accepted) |
+| 12 | All spec issues resolved | ✅ 577/579 (2 accepted) |
 | 13 | Consistency reports: all folders accurate | ✅ |
 | 14 | File structure matches spec conventions | ✅ |
 | 15 | Technology decisions explicit | ✅ |
@@ -214,7 +215,7 @@ All fix phases complete. No remaining work items.
 | Gap 7 | 18 | Settings reconciliation, missing schemas, Zustand stores, logging spec, boolean exemptions |
 | Gap 8 | 20 | Stale metrics update, table counts, cross-references, scoring table, IPC name alignment |
 | Gap 9 | 21 | Acceptance criteria sync (133→157), settings seed count (9→16), WebhookError (4→7), SettingsStore casing, Timezone clarification, consistency reports |
-| Gap 11–17 | 52 | OS service layer alignment, dependency pins, notification templates, field names, bookkeeping, stale counts |
+| Gap 11–19 | 54 | OS service layer alignment, dependency pins, notification templates, field names, bookkeeping, stale counts, coverage matrix |
 
 ---
 
@@ -225,7 +226,7 @@ All fix phases complete. No remaining work items.
 | Spec Overview | `./00-overview.md` |
 | Changelog | `./98-changelog.md` |
 | Issues Overview | `./03-app-issues/00-overview.md` |
-| Spec Issues Audit | `./14-spec-issues/00-overview.md` (577 issues found, 575 resolved, 2 accepted) |
+| Spec Issues Audit | `./14-spec-issues/00-overview.md` (579 issues found, 577 resolved, 2 accepted) |
 | Atomic Task Breakdown | `./11-atomic-task-breakdown.md` |
 | Platform & Concurrency Guide | `./12-platform-and-concurrency-guide.md` |
 | AI Cheat Sheet | `./13-ai-cheat-sheet.md` |
@@ -235,4 +236,4 @@ All fix phases complete. No remaining work items.
 
 ---
 
-*AI Handoff Readiness Report v3.2.0 — updated: 2026-04-11*
+*AI Handoff Readiness Report v3.3.0 — updated: 2026-04-11*
