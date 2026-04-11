@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 2.9.2  
+**Version:** 2.9.3  
 **Updated:** 2026-04-11
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -26,6 +26,26 @@
 ---
 
 ## Version History
+
+### v2.9.3 — 2026-04-11
+
+**Theme:** 🔬 Gap Analysis Phase 10 — 14 issues resolved, type safety + boolean coverage + enum completeness
+
+#### Summary
+
+Phase 10 full audit identified and resolved 14 remaining issues (0 Critical, 5 Medium, 9 Low). Key fixes: eliminated banned `Record<string, unknown>` type, added `FromStr` for 4 DB-stored enums, extended boolean semantic inverses to Quote and StreakCalendarDay, added missing `CreatedAt` column to Quotes table, provided `WebhookConfig::from_row`, and corrected AlarmGroups column count. Total spec issues: 538 resolved, 0 open.
+
+#### Changes
+
+- **Type safety (GA10-004/005/006)**: Replaced all `Record<string, unknown>` with typed `JsonSafeValue` in `safeInvoke` (04-platform-constraints.md, 13-ai-cheat-sheet.md) and `CreateWebhookPayload`/`WebhookConfig` (12-smart-features.md)
+- **FromStr completeness (GA10-010)**: Added `FromStr` implementations for `ChallengeDifficulty`, `SoundCategory`, `SettingsValueType`, `ThemeMode` in 01-data-model.md
+- **IPC enum convention (GA10-011)**: Clarified in Enum Conventions table that IPC-only enums use serde derive — `FromStr` only required for DB-stored enums
+- **Boolean inverses (GA10-007/008)**: Added `Quote.isNotFavorite()`, `Quote.isBuiltIn()`, `StreakCalendarDay.isLate()` with Rust + TypeScript implementations in 01-data-model.md
+- **ChallengeResult note (GA10-009)**: Added serde serialization clarification for `correct` field in 06-dismissal-challenges.md
+- **Quotes table (GA10-012)**: Added `CreatedAt TEXT NOT NULL` column to SQL schema, TypeScript interface, and Rust struct in 01-data-model.md
+- **WebhookConfig from_row (GA10-013)**: Added `WebhookConfig::from_row` implementation with JSON payload deserialization in 12-smart-features.md
+- **AlarmGroups count (GA10-014)**: Corrected column count from 4→5 in 13-ai-cheat-sheet.md, added `Position` field to 00-overview.md data model summary
+- **Version sync (GA10-001/002/003)**: Updated stale version numbers in both consistency reports (5 feature files + cheat sheet + changelog)
 
 ### v2.9.2 — 2026-04-11
 
