@@ -152,5 +152,11 @@
     "importBtn": "Import",
     "mergeMode": "Merge",
     "replaceMode": "Replace"
+  },
+  "shortcut": {
+    "title": "Keyboard Shortcuts",
+    "newAlarm": "New alarm",
+    "snooze": "Snooze (overlay)",
+    "dismiss": "Dismiss (overlay)"
   }
 }

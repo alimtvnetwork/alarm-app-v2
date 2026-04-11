@@ -152,5 +152,11 @@
     "importBtn": "Import",
     "mergeMode": "Gabung",
     "replaceMode": "Ganti"
+  },
+  "shortcut": {
+    "title": "Pintasan Papan Kekunci",
+    "newAlarm": "Penggera baharu",
+    "snooze": "Tunda (overlay)",
+    "dismiss": "Tutup (overlay)"
   }
 }
