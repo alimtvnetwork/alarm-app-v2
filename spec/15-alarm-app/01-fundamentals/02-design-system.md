@@ -217,8 +217,8 @@ No explicit cache invalidation is needed because:
 
 | Reference | Location |
 |-----------|----------|
-| Global Design System | `../../../06-design-system/00-overview.md` |
+| Global Design System | `../../06-design-system/00-overview.md` |
 | Theme Feature | `../02-features/09-theme-system.md` |
 | Platform Verification Matrix | `./11-platform-verification-matrix.md` |
 | Frontend State Management | `./06-tauri-architecture-and-framework-comparison.md` → Zustand Stores |
-| Coding Guidelines | `../../../02-coding-guidelines/03-coding-guidelines-spec/` |
+| Coding Guidelines | `../../02-coding-guidelines/03-coding-guidelines-spec/` |
