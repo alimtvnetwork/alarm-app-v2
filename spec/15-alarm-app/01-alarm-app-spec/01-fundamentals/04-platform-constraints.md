@@ -1,6 +1,6 @@
 # Platform Constraints
 
-**Version:** 1.7.0  
+**Version:** 1.8.0  
 **Updated:** 2026-04-09  
 **AI Confidence:** High  
 **Ambiguity:** None  

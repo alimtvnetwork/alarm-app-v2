@@ -27,13 +27,13 @@
 
 | # | Task | Effort | Spec Reference | Risk | Depends On |
 |---|------|--------|----------------|:----:|:----------:|
-| 1 | Initialize Tauri 2.x project: `pnpm create tauri-app --template react-ts` | 15m | `06-tauri-architecture.md` | 🟢 | — |
+| 1 | Initialize Tauri 2.x project: `pnpm create tauri-app --template react-ts` | 15m | `06-tauri-architecture-and-framework-comparison.md` | 🟢 | — |
 | 2 | Replace generated frontend with React 18 + Vite 5 + TypeScript 5 + Tailwind CSS v3 + shadcn/ui | 30m | `03-file-structure.md` | 🟢 | 1 |
 | 3 | Create file structure matching `03-file-structure.md` — all directories, empty files with module declarations | 30m | `03-file-structure.md` | 🟢 | 2 |
 | 4 | Configure `Cargo.toml` with exact pinned dependencies from spec | 15m | `03-file-structure.md` → Cargo.toml section | 🟡 | 1 |
 | 5 | Create `src-tauri/capabilities/default.json` with all plugin permissions | 15m | `03-file-structure.md` → Capabilities section | 🟡 | 4 |
 | 6 | Create `src-tauri/migrations/V1__initial_schema.sql` with all 5 tables + indexes | 30m | `01-data-model.md` → SQLite Schema | 🟡 | 4 |
-| 7 | Configure app icons for macOS (.icns), Windows (.ico), Linux (.png) | 15m | `06-tauri-architecture.md` → Build Pipeline | 🟢 | 1 |
+| 7 | Configure app icons for macOS (.icns), Windows (.ico), Linux (.png) | 15m | `06-tauri-architecture-and-framework-comparison.md` → Build Pipeline | 🟢 | 1 |
 
 **Phase 1 checkpoint:** `cargo build` compiles. `pnpm dev` shows blank React page. Tauri window opens.
 
@@ -50,7 +50,7 @@
 | 11 | Implement settings key-value CRUD: `get_setting<T>()`, `update_setting()`, `Settings::load_all()`, `ensure_defaults()` | 1h | `01-data-model.md` → Settings Keys + Settings Seeding Strategy | 🟡 | 8 |
 | 12 | Implement `AlarmAppError` + `WebhookError` enums with `thiserror` — all variants per spec | 30m | `04-platform-constraints.md` → Error Enums section | 🟡 | 4 |
 | 13 | Create TypeScript interfaces + enums: `Alarm`, `RepeatPattern`, `AlarmGroup`, `AlarmSound`, `AlarmEvent`, `SnoozeState`, ALL domain enums (`ChallengeType`, `AlarmEventType`, `SortField`, etc.), boolean utility functions (`isDisabled`, `isVibrationOff`, `isFixedVolume`) | 1h | `01-data-model.md` → Interfaces + Domain Enums (TypeScript section) + Boolean Semantic Inverses | 🔴 | 2 |
-| 14 | Create `lib/tauri-commands.ts` — typed `invoke()` wrappers with `safeInvoke()` timeout + error toast | 1h | `04-platform-constraints.md` → Frontend Error Handling + IPC Error Response Format, `06-tauri-architecture.md` → IPC | 🟡 | 13 |
+| 14 | Create `lib/tauri-commands.ts` — typed `invoke()` wrappers with `safeInvoke()` timeout + error toast | 1h | `04-platform-constraints.md` → Frontend Error Handling + IPC Error Response Format, `06-tauri-architecture-and-framework-comparison.md` → IPC | 🟡 | 13 |
 | 15 | Implement alarm CRUD operations in Rust: `insert_alarm()`, `update_alarm()`, `list_alarms()`, `soft_delete_alarm()`, `undo_delete()` | 2h | `01-alarm-crud.md` → Soft-delete timer Rust code | 🟡 | 9, 12 |
 | 16 | Implement event logging: `insert_alarm_event()`, `purge_old_events()` (90-day retention) | 30m | `01-data-model.md` → Event Retention Policy | 🟢 | 8 |
 
@@ -161,8 +161,8 @@
 
 | # | Task | Effort | Spec Reference | Risk | Depends On |
 |---|------|--------|----------------|:----:|:----------:|
-| 51 | Implement system tray — icon, next alarm tooltip, quick toggle, minimize to tray | 1.5h | `06-tauri-architecture.md` → System Tray | 🟡 | 38 |
-| 52 | Implement OS notifications — fire alongside overlay, permission request, fallback | 1h | `06-tauri-architecture.md` → Notifications | 🟡 | 22 |
+| 51 | Implement system tray — icon, next alarm tooltip, quick toggle, minimize to tray | 1.5h | `06-tauri-architecture-and-framework-comparison.md` → System Tray | 🟡 | 38 |
+| 52 | Implement OS notifications — fire alongside overlay, permission request, fallback | 1h | `06-tauri-architecture-and-framework-comparison.md` → Notifications | 🟡 | 22 |
 | 53 | Implement i18n — `react-i18next` setup, `en.json` locale, `eslint-plugin-i18next` config | 1h | `03-file-structure.md` → i18n Enforcement | 🟡 | 2 |
 | 54 | Implement timezone change detection — `on_timezone_change()`, recalculate all `NextFireTime` | 1h | `03-alarm-firing.md` → Timezone Change Detection | 🔴 | 22 |
 

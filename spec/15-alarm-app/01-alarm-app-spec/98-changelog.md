@@ -108,7 +108,7 @@ Two gap analysis passes (Phase 8: 20 issues, Phase 9: 21 issues) identified and 
 - **Settings seed count** (GA9-002/011/019): Corrected "9 default settings" → "16 default settings" in acceptance criteria, data model prose, and all consistency reports. All 16 keys now listed explicitly
 - **WebhookError variants** (GA9-003): Corrected "4 variants" → "7 variants" (InvalidUrl, InsecureScheme, BlockedHost, MissingHost, PrivateIp, NonStandardPort, RequestFailed) in acceptance criteria
 - **IPC command name** (GA9-001): Fixed last remaining `log_frontend_error` → `log_from_frontend` in fundamentals acceptance criteria
-- **SettingsStore casing** (GA9-006): Fixed `FetchSettings`/`UpdateSetting` → `fetchSettings`/`updateSetting` in `06-tauri-architecture.md` Zustand store shape
+- **SettingsStore casing** (GA9-006): Fixed `FetchSettings`/`UpdateSetting` → `fetchSettings`/`updateSetting` in `06-tauri-architecture-and-framework-comparison.md` Zustand store shape
 - **IPC error struct** (GA9-014): Removed phantom `Details?` field from acceptance criteria (actual struct has only `Code` + `Message`)
 - **Timezone clarification** (GA9-017): Clarified multi-timezone `Timezone` field as P3 future in `12-smart-features.md` — all alarms currently use global `SystemTimezone`
 - **Cheat sheet update** (GA9-010): Listed all 7 WebhookError variants (was showing only 5 "key" variants)

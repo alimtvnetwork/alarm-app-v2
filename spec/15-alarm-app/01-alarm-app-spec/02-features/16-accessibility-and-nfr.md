@@ -143,6 +143,21 @@ src/i18n/locales/
 
 ---
 
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Screen reader active during alarm firing overlay | Overlay announces alarm label and action buttons immediately via `aria-live="assertive"` region |
+| High contrast mode enabled (OS-level) | All UI elements remain visible; no color-only indicators — icons/text accompany every status |
+| Keyboard focus trapped in alarm firing overlay | Focus cycles between Snooze and Dismiss buttons only; Escape does NOT dismiss (prevents accidental dismissal) |
+| User navigates alarm list with 100+ items via keyboard | Virtual scrolling maintains focus position; `aria-rowcount` and `aria-rowindex` reflect true list size |
+| Reduced motion enabled (OS `prefers-reduced-motion`) | All animations disabled — no fade, slide, or pulse. Transitions are instant. |
+| Screen reader announces snooze countdown | `aria-live="polite"` region updates every 60 seconds with remaining time, not every second |
+| Font size scaled to 200% (browser zoom) | Layout remains single-column; no horizontal overflow; all tap targets remain ≥ 44×44px |
+| Voice control user tries to dismiss alarm | All interactive elements have visible labels matching `aria-label` for voice targeting |
+
+---
+
 ## Cross-References
 
 | Reference | Location |
