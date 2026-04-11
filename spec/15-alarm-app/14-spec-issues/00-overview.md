@@ -76,6 +76,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 68 | `68-gap-analysis-phase-18.md` | Gap Analysis Phase 18 — Post-Phase 17B verification (clean — 0 issues) | 0 | 0 | 0 |
 | 69 | `69-gap-analysis-phase-19.md` | Gap Analysis Phase 19 — Final comprehensive audit (coverage matrix staleness) | 2 | 0 | 2 |
 | 70 | `70-gap-analysis-phase-20.md` | Gap Analysis Phase 20 — Post-flattening structural + comprehensive audit | 12 | 0 | 12 |
+| 71 | `71-gap-analysis-phase-21.md` | Gap Analysis Phase 21 — Post-Phase 20B verification | 6 | 0 | 6 |
 
 ---
 
