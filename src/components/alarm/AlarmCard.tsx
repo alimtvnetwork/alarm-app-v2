@@ -6,42 +6,42 @@
 import { GripVertical } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useTranslation } from "react-i18next";
 import { Switch } from "@/components/ui/switch";
 import type { Alarm, AlarmGroup } from "@/types/alarm";
 import { RepeatType } from "@/types/alarm";
 import { useAlarmStore } from "@/stores/alarm-store";
 import { useState, useRef } from "react";
 
-const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-function formatRepeat(alarm: Alarm): string {
+function formatRepeat(alarm: Alarm, t: (key: string) => string): string {
   const { Repeat } = alarm;
   switch (Repeat.Type) {
     case RepeatType.Daily:
-      return "Every day";
+      return t("alarm.everyDay");
     case RepeatType.Weekly: {
-      if (Repeat.DaysOfWeek.length === 7) return "Every day";
+      if (Repeat.DaysOfWeek.length === 7) return t("alarm.everyDay");
       if (
         Repeat.DaysOfWeek.length === 5 &&
         [1, 2, 3, 4, 5].every((d) => Repeat.DaysOfWeek.includes(d))
       ) {
-        return "Weekdays";
+        return t("alarm.weekdays");
       }
       if (
         Repeat.DaysOfWeek.length === 2 &&
         Repeat.DaysOfWeek.includes(0) &&
         Repeat.DaysOfWeek.includes(6)
       ) {
-        return "Weekends";
+        return t("alarm.weekends");
       }
+      const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       return Repeat.DaysOfWeek.map((d) => DAY_LABELS[d]).join(", ");
     }
     case RepeatType.Interval:
       return `Every ${Repeat.IntervalMinutes} min`;
     case RepeatType.Cron:
-      return "Custom schedule";
+      return t("alarm.customSchedule");
     default:
-      return alarm.Date ?? "Once";
+      return alarm.Date ?? t("alarmForm.once");
   }
 }
 
@@ -54,6 +54,7 @@ interface AlarmCardProps {
 
 const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
   const toggleAlarm = useAlarmStore((s) => s.toggleAlarm);
+  const { t } = useTranslation();
 
   const {
     attributes,
@@ -126,7 +127,7 @@ const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
         {...attributes}
         {...listeners}
         className="touch-none text-muted-foreground hover:text-foreground"
-        aria-label="Drag to reorder"
+        aria-label={t("alarm.dragToReorder")}
       >
         <GripVertical className="h-5 w-5" />
       </button>
@@ -149,7 +150,7 @@ const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
         </span>
         <span className="text-xs text-muted-foreground font-body">
           {alarm.Label && `${alarm.Label} · `}
-          {formatRepeat(alarm)}
+          {formatRepeat(alarm, t)}
         </span>
       </button>
 

@@ -1,15 +1,18 @@
 import { Clock, BarChart3, Moon, Palette, Settings } from "lucide-react";
 import { NavLink } from "react-router-dom";
-
-const navItems = [
-  { to: "/", icon: Clock, label: "Clock" },
-  { to: "/analytics", icon: BarChart3, label: "Analytics" },
-  { to: "/sleep", icon: Moon, label: "Sleep" },
-  { to: "/personalization", icon: Palette, label: "Style" },
-  { to: "/settings", icon: Settings, label: "Settings" },
-] as const;
+import { useTranslation } from "react-i18next";
 
 const BottomNav = () => {
+  const { t } = useTranslation();
+
+  const navItems = [
+    { to: "/", icon: Clock, label: t("nav.clock") },
+    { to: "/analytics", icon: BarChart3, label: t("nav.analytics") },
+    { to: "/sleep", icon: Moon, label: t("nav.sleep") },
+    { to: "/personalization", icon: Palette, label: t("nav.style") },
+    { to: "/settings", icon: Settings, label: t("nav.settings") },
+  ];
+
   return (
     <nav className="fixed bottom-0 left-1/2 z-40 w-full max-w-[448px] -translate-x-1/2 border-t border-border/50 bg-background">
       <div className="flex items-center justify-around py-2.5 pb-3">
