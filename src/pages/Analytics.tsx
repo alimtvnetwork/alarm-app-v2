@@ -1,9 +1,9 @@
 /**
- * Analytics Page — Alarm history charts, snooze trends, streak calendar.
+ * Analytics Page — Alarm history charts, snooze trends, streak calendar, CSV export.
  * Uses recharts + mock event data from localStorage.
  */
 
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import {
   BarChart,
   Bar,
@@ -17,7 +17,10 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { AlarmEventType } from "@/types/alarm";
+import { Download } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import * as ipc from "@/lib/mock-ipc";
 
 function useDerivedAnalytics() {
@@ -84,12 +87,36 @@ const StatCard = ({ label, value }: { label: string; value: string | number }) =
 );
 
 const Analytics = () => {
+  const { t } = useTranslation();
   const { dailyData, snoozeTrend, totalFired, totalSnoozed, avgSolveTime, streak } =
     useDerivedAnalytics();
 
+  const exportCsv = useCallback(() => {
+    const events = ipc.listAlarmEvents();
+    if (events.length === 0) return;
+    const headers = ["AlarmId", "Type", "FiredAt", "SnoozeCount", "ChallengeSolveTimeSec"];
+    const rows = events.map((e) =>
+      [e.AlarmId, e.Type, e.FiredAt, e.SnoozeCount, e.ChallengeSolveTimeSec ?? ""].join(",")
+    );
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `alarm-history-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, []);
+
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-heading font-bold">Analytics</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-heading font-bold">Analytics</h1>
+        <Button variant="outline" size="sm" onClick={exportCsv} className="gap-1.5">
+          <Download className="h-4 w-4" />
+          {t("analytics.exportCsv")}
+        </Button>
+      </div>
 
       <div className="grid grid-cols-3 gap-2">
         <StatCard label="Total Fired" value={totalFired} />
