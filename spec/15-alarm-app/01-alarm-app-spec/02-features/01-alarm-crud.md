@@ -70,6 +70,7 @@ pub fn schedule_permanent_delete(conn: Arc<Mutex<Connection>>, alarm_id: String,
         tokio::time::sleep(Duration::from_secs(UNDO_TIMEOUT_SECS)).await;
 
         // Only delete if still soft-deleted (not undone)
+        // EXEMPT: expect("mutex poisoned") — see 04-platform-constraints.md § Allowed Patterns
         let db = conn.lock().expect("DB lock poisoned");
         match db.execute(
             "DELETE FROM Alarms WHERE AlarmId = ?1 AND DeletedAt IS NOT NULL",

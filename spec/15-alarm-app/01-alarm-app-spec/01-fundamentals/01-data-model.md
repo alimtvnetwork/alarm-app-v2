@@ -789,6 +789,11 @@ CREATE TABLE AlarmGroups (
   IsEnabled INTEGER NOT NULL DEFAULT 1
 );
 
+-- EXEMPTION (DB-001): Settings uses Key TEXT PRIMARY KEY instead of SettingsId INTEGER PRIMARY KEY.
+-- Rationale: This is a key-value store where the key IS the natural identifier.
+-- Adding a surrogate SettingsId would require an extra UNIQUE constraint on Key
+-- and provide no benefit — lookups are always by Key, never by row ID.
+-- See also: Settings Seeding Strategy section below.
 CREATE TABLE Settings (
   Key TEXT PRIMARY KEY,
   Value TEXT NOT NULL,

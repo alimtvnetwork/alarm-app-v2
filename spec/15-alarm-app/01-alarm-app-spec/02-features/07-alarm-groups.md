@@ -150,6 +150,7 @@ pub fn create_group(
     }
 
     // 2. DB insert
+    // EXEMPT: expect("mutex poisoned") — see 04-platform-constraints.md § Allowed Patterns
     let db = state.db.lock().expect("DB lock");
     let group_id = uuid::Uuid::new_v4().to_string();
     db.execute(
