@@ -1,17 +1,18 @@
 ---
 name: Alarm App Spec
-description: Cross-platform native alarm app (Tauri 2.x) — 17 feature specs, 13 fundamentals, 569 spec issues resolved, P0-P3 priority matrix, 97-98% AI success rate
+description: Cross-platform native alarm app (Tauri 2.x) — 17 feature specs, 13 fundamentals, 577 spec issues (575 resolved, 2 accepted), P0-P3 priority matrix, 97-98% AI success rate
 type: feature
 ---
 
 ## Overview
 
-- **Spec version:** v2.9.0 (pending bump to v2.9.1)
+- **Spec version:** v3.0.0 (pending bump to v3.1.0)
 - **Readiness score:** 100/100 (A+)
 - **AI success rate:** 95–97% full-stack, 98%+ backend
-- **Total spec issues:** 569 found, 569 resolved (Phase 16: 3 fixed, 1 accepted)
-- **Open issues:** 1 (GA16-004 — accepted, superseded file)
+- **Total spec issues:** 577 found, 575 resolved, 2 accepted (GA16-004 superseded file, GA17-005 historical running total)
+- **Open issues:** 0 blocking
 - **Spec files:** 63+ (13 fundamentals + 17 features + 31 issue trackers + 3 execution guides + 10 misc)
+- **Gap analysis phases:** 10 (Phases 6–7, 11–17)
 
 ## Architecture
 
@@ -24,7 +25,7 @@ type: feature
 - **Error enums:** AlarmAppError (13 variants) + WebhookError (7 variants)
 - **State management:** Zustand — useAlarmStore, useOverlayStore, useSettingsStore (all typed)
 - **Settings:** 17 keys in key-value table, mapped to typed SettingsResponse struct
-- **Acceptance criteria:** 205 total (133 feature + 72 fundamental)
+- **Acceptance criteria:** 229 total (157 feature + 72 fundamental)
 
 ## Canonical Location
 
