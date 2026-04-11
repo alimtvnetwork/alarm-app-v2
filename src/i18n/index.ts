@@ -1,5 +1,5 @@
 /**
- * i18n setup — react-i18next with en/ms locale files and browser language detection.
+ * i18n setup — react-i18next with en/ms/zh/ja locale files and browser language detection.
  */
 
 import i18n from "i18next";
@@ -7,6 +7,8 @@ import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import en from "./locales/en.json";
 import ms from "./locales/ms.json";
+import zh from "./locales/zh.json";
+import ja from "./locales/ja.json";
 
 i18n
   .use(LanguageDetector)
@@ -15,6 +17,8 @@ i18n
     resources: {
       en: { translation: en },
       ms: { translation: ms },
+      zh: { translation: zh },
+      ja: { translation: ja },
     },
     fallbackLng: "en",
     interpolation: {
