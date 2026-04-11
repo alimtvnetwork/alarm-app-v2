@@ -95,7 +95,7 @@ const AlarmOverlay = () => {
   if (!isVisible || !alarm) return null;
 
   return (
-    <div role="alertdialog" aria-modal="true" aria-label={`Alarm: ${alarm.Label || alarm.Time}`} className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#2a2420] text-[#f0ebe3]">
+    <div role="alertdialog" aria-modal="true" aria-label={`Alarm: ${alarm.Label || alarm.Time}`} className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background text-foreground">
       {autoDismissRemaining !== null && (
         <p className="absolute top-6 text-xs font-body opacity-60">
           {t("overlay.autoDismissIn", { time: formatCountdown(autoDismissRemaining) })}
