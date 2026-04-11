@@ -146,7 +146,7 @@ A background service is a process that:
 │  │  └────────────────────────────────────────────────┘   │   │
 │  │                                                        │   │
 │  │  ┌─ SQLite Database (rusqlite) ───────────────────┐   │   │
-│  │  │  ~/Library/Application Support/Alarm App/    │   │   │
+│  │  │  ~/Library/Application Support/com.alarm-app/    │   │   │
 │  │  │  alarm-app.db                                     │   │   │
 │  │  └────────────────────────────────────────────────┘   │   │
 │  │                                                        │   │
@@ -703,7 +703,7 @@ objc2 = "=0.5.2"                # macOS wake/sleep NSWorkspace notifications
 
 ```json
 {
-  "productName": "Alarm App",
+  "productName": "alarm-app",
   "version": "1.0.0",
   "identifier": "com.alarmdaemon.app",
   "app": {
@@ -772,7 +772,7 @@ cargo tauri build --target x86_64-apple-darwin    # Intel Mac
 ### Database Location
 
 ```
-~/Library/Application Support/Alarm App/alarm-app.db
+~/Library/Application Support/com.alarm-app/alarm-app.db
 ```
 
 This persists across app updates and is not deleted when the app is removed (user data preservation).
