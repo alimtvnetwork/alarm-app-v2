@@ -239,6 +239,7 @@ TOTAL: <750ms
 | Audio, volume, validation | `02-features/05-sound-and-vibration.md` |
 | Atomic task order | `11-atomic-task-breakdown.md` |
 | Platform gotchas, race conditions | `12-platform-and-concurrency-guide.md` |
+| OS service, tray, polling, notifications | `01-fundamentals/13-os-service-layer.md` |
 
 ---
 

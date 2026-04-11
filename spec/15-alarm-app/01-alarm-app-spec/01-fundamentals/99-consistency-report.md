@@ -29,7 +29,8 @@
 | 11 | `10-dependency-lock.md` | 1.1.0 | ✅ Exact version pins for all Rust crates + npm packages (Scoring added) |
 | 12 | `11-platform-verification-matrix.md` | 1.1.0 | ✅ Feature × Platform × Behavior × Test × Fallback (Scoring added) |
 | 13 | `12-logging-and-telemetry.md` | 1.0.0 | ✅ Log levels, JSON format, daily rotation, 7-day retention, never-log list, frontend IPC forwarding |
-| 14 | `97-acceptance-criteria.md` | 1.2.0 | ✅ Consolidated rollup of 73 testable criteria (Keywords added) |
+| 14 | `13-os-service-layer.md` | 2.1.0 | ✅ Background service — auto-start, polling engine, tray, notifications, wake/sleep |
+| 15 | `97-acceptance-criteria.md` | 1.2.0 | ✅ Consolidated rollup of 73 testable criteria (Keywords added) |
 
 ---
 
@@ -41,8 +42,8 @@
 | `99-consistency-report.md` present | ✅ |
 | `97-acceptance-criteria.md` present | ✅ (73 criteria) |
 | Lowercase kebab-case naming | ✅ |
-| Numeric prefixes sequential (01–12) | ✅ |
-| All 13 files listed in overview | ✅ |
+| Numeric prefixes sequential (01–13) | ✅ |
+| All 14 files listed in overview | ✅ |
 | No stale cross-references | ✅ |
 | Data model v1.12.0 consistent with feature specs | ✅ |
 | Settings schema includes ValueType column | ✅ |

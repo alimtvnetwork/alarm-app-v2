@@ -200,6 +200,20 @@ const group = await safeInvoke<AlarmGroup>("create_group", { Name: "Workday", Co
 
 ---
 
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Delete group with active (firing) alarm | Alarm is preserved as ungrouped; firing continues uninterrupted |
+| Toggle group OFF while one alarm is snoozed | Snoozed alarm is cancelled (SnoozeState cleared), alarm disabled with group |
+| Toggle group ON → all alarms re-enabled | Each alarm's `IsEnabled` restored from `IsPreviousEnabled`; alarms with `IsPreviousEnabled = null` remain unchanged |
+| Create group with 0 alarms | Allowed — empty group persists, alarms can be assigned later |
+| Assign alarm to group during alarm firing | Assignment saved; firing overlay unaffected |
+| Rename group to duplicate name | Reject with validation error — group names must be unique |
+| Delete all groups at once | Each group processed individually; all alarms become ungrouped |
+
+---
+
 ## Cross-References
 
 | Reference | Location |

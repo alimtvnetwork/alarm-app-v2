@@ -77,7 +77,7 @@
 | All feature files have acceptance criteria (inline or rollup) | ✅ |
 | Domain enum types used throughout (no magic strings) | ✅ |
 | Coding guidelines cross-refs in export + analytics | ✅ |
-| Edge Cases tables in P0/P1 feature specs | ✅ (10/17 — all P0/P1 covered) |
+| Edge Cases tables in P0/P1 feature specs | ✅ (12/17 — all P0/P1 covered) |
 
 ---
 

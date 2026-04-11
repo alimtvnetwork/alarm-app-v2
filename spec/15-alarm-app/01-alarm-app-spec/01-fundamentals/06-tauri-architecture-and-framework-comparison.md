@@ -157,6 +157,13 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `get_theme` | FE → BE | `void` | `{ Theme: ThemeMode }` |
 | `set_theme` | FE → BE | `{ Theme: ThemeMode }` | `void` |
 
+#### Auto-Start Commands
+
+| Command | Direction | Payload | Returns |
+|---------|-----------|---------|---------|
+| `set_auto_start` | FE → BE | `{ IsEnabled: boolean }` | `void` |
+| `get_auto_start_status` | FE → BE | `void` | `boolean` |
+
 #### Sound Commands (Validation)
 
 | Command | Direction | Payload | Returns |
