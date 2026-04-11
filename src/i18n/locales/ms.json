@@ -180,5 +180,21 @@
     "typingTitle": "Taip untuk Tutup",
     "typingPlaceholder": "Taip ayat di atas...",
     "complete": "selesai"
+  },
+  "onboarding": {
+    "alarms": "Penggera Pintar",
+    "alarmsDesc": "Cipta penggera dengan bunyi, had tunda, dan cabaran penutupan seperti soalan matematik atau menaip.",
+    "sleep": "Tidur & Kesihatan",
+    "sleepDesc": "Jejak kualiti tidur, tetapkan peringatan waktu tidur, dan dapatkan cadangan waktu bangun optimum.",
+    "analytics": "Analitik & Sejarah",
+    "analyticsDesc": "Lihat corak penggera, trend tunda, dan eksport sejarah sebagai CSV.",
+    "personalize": "Peribadikan",
+    "personalizeDesc": "Pilih tema, warna aksen, dan kulit. Jejak rekod berturutan di kalendar.",
+    "shortcuts": "Pintasan Papan Kekunci",
+    "shortcutsDesc": "Tekan Ctrl+N untuk penggera baharu, Ctrl+E untuk eksport, dan ? untuk semua pintasan.",
+    "next": "Seterusnya",
+    "back": "Kembali",
+    "skip": "Langkau jelajah",
+    "getStarted": "Mula"
   }
 }
