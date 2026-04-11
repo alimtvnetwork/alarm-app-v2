@@ -1,7 +1,7 @@
 # Analytics & Alarm History
 
-**Version:** 1.6.0  
-**Updated:** 2026-04-10  
+**Version:** 1.7.0  
+**Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** Low  
 **Priority:** P2 (History) / P3 (Reports)
@@ -63,6 +63,24 @@ interface HistoryFilter {
   EventType: AlarmEventType | null;
   SortBy: SortField | null;
   SortOrder: SortOrder | null;
+}
+```
+
+> **Resolves PY-005.** Rust struct counterpart for IPC deserialization.
+
+#### Rust Struct
+
+```rust
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct HistoryFilter {
+    pub start_date: Option<String>,
+    pub end_date: Option<String>,
+    pub group_id: Option<String>,
+    pub alarm_id: Option<String>,
+    pub event_type: Option<AlarmEventType>,
+    pub sort_by: Option<SortField>,
+    pub sort_order: Option<SortOrder>,
 }
 ```
 
