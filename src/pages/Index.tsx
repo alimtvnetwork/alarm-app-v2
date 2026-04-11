@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import AnalogClock from "@/components/clock/AnalogClock";
 import DigitalTime from "@/components/clock/DigitalTime";
+import QuoteWidget from "@/components/clock/QuoteWidget";
 import AlarmList from "@/components/alarm/AlarmList";
 import AlarmForm from "@/components/alarm/AlarmForm";
 import MissedAlarmBanner from "@/components/alarm/MissedAlarmBanner";
@@ -52,6 +53,7 @@ const Index = () => {
         <div className="flex flex-col items-center gap-4">
           <AnalogClock />
           <DigitalTime />
+          <QuoteWidget />
         </div>
       </div>
 
