@@ -62,14 +62,14 @@ Issues where the alarm app spec violates its own coding guidelines — primarily
 
 **Severity:** 🟡 Medium  
 **Location:** `01-fundamentals/01-data-model.md` (lines 501–504)  
-**Status:** ✅ Resolved — indexes renamed to PascalCase (`IdxAlarmsNextFire`, etc.)
+**Status:** ✅ Resolved — indexes renamed to `Idx{Table}_{Column}` pattern (`IdxAlarms_NextFireTime`, etc.)
 
 | Current | Required |
 |---------|----------|
-| `idx_alarms_next_fire` | `IdxAlarmsNextFire` |
-| `idx_alarms_group` | `IdxAlarmsGroup` |
-| `idx_events_alarm` | `IdxEventsAlarm` |
-| `idx_events_timestamp` | `IdxEventsTimestamp` |
+| `idx_alarms_next_fire` | `IdxAlarms_NextFireTime` |
+| `idx_alarms_group` | `IdxAlarms_GroupId` |
+| `idx_events_alarm` | `IdxAlarmEvents_AlarmId` |
+| `idx_events_timestamp` | `IdxAlarmEvents_Timestamp` |
 
 ---
 

@@ -17,7 +17,7 @@
 
 - [ ] All 5 SQLite tables created by V1 migration: `Alarms`, `AlarmGroups`, `Settings`, `SnoozeState`, `AlarmEvents`
 - [ ] All table/column/index names use PascalCase
-- [ ] 4 indexes created: `IdxAlarmsNextFire`, `IdxAlarmsGroup`, `IdxEventsAlarm`, `IdxEventsTimestamp`
+- [ ] 4 indexes created: `IdxAlarms_NextFireTime`, `IdxAlarms_GroupId`, `IdxAlarmEvents_AlarmId`, `IdxAlarmEvents_Timestamp`
 - [ ] All 9 default settings seeded by V1 migration (Theme, TimeFormat, DefaultSnoozeDuration, DefaultSound, AutoLaunch, MinimizeToTray, Language, EventRetentionDays, SystemTimezone)
 - [ ] `refinery_schema_history` table auto-created by migration runner
 - [ ] All 13 domain enums implemented in both TypeScript and Rust with PascalCase variants

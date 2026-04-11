@@ -63,12 +63,13 @@ Comprehensive gap analysis of the Alarm App specification (`01-alarm-app-spec/`)
 
 | Current Name | Correct Name | Table |
 |-------------|--------------|-------|
-| `IdxAlarmsNextFire` | `IdxAlarms_NextFireTime` | `Alarms` |
-| `IdxAlarmsGroup` | `IdxAlarms_GroupId` | `Alarms` |
-| `IdxEventsAlarm` | `IdxAlarmEvents_AlarmId` | `AlarmEvents` |
-| `IdxEventsTimestamp` | `IdxAlarmEvents_Timestamp` | `AlarmEvents` |
+| `IdxAlarmsNextFire` | `IdxAlarms_NextFireTime` | `Alarms` | ✅ Fixed |
+| `IdxAlarmsGroup` | `IdxAlarms_GroupId` | `Alarms` | ✅ Fixed |
+| `IdxEventsAlarm` | `IdxAlarmEvents_AlarmId` | `AlarmEvents` | ✅ Fixed |
+| `IdxEventsTimestamp` | `IdxAlarmEvents_Timestamp` | `AlarmEvents` | ✅ Fixed |
 
 **Root cause:** Index naming was not checked during previous 484-issue audit.
+**Status:** ✅ Resolved — all 4 indexes renamed to `Idx{Table}_{Column}` pattern.
 
 ### 2.3 Settings Table Primary Key (DB-001)
 

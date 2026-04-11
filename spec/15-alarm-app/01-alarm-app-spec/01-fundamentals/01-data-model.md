@@ -1114,10 +1114,10 @@ The `V1__initial_schema.sql` file must contain ALL tables from the SQLite Schema
 
 ```sql
 -- Indexes for alarm engine performance
-CREATE INDEX IdxAlarmsNextFire ON Alarms(NextFireTime) WHERE IsEnabled = 1 AND DeletedAt IS NULL;
-CREATE INDEX IdxAlarmsGroup ON Alarms(GroupId);
-CREATE INDEX IdxEventsAlarm ON AlarmEvents(AlarmId);
-CREATE INDEX IdxEventsTimestamp ON AlarmEvents(Timestamp);
+CREATE INDEX IdxAlarms_NextFireTime ON Alarms(NextFireTime) WHERE IsEnabled = 1 AND DeletedAt IS NULL;
+CREATE INDEX IdxAlarms_GroupId ON Alarms(GroupId);
+CREATE INDEX IdxAlarmEvents_AlarmId ON AlarmEvents(AlarmId);
+CREATE INDEX IdxAlarmEvents_Timestamp ON AlarmEvents(Timestamp);
 
 -- Default settings (seeded once via V1 migration — see "Settings Seeding Strategy")
 INSERT INTO Settings (Key, Value, ValueType) VALUES
