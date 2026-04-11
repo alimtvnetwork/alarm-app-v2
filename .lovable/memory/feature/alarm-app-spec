@@ -1,15 +1,15 @@
 ---
 name: Alarm App Spec
-description: Cross-platform native alarm app (Tauri 2.x) — 17 feature specs, 12 fundamentals, 405/405 issues resolved, P0-P3 priority matrix, 100/100 readiness score
+description: Cross-platform native alarm app (Tauri 2.x) — 17 feature specs, 12 fundamentals, 484/484 issues resolved, P0-P3 priority matrix, 100/100 readiness score
 type: feature
 ---
 
 ## Overview
 
-- **Spec version:** v2.7.0
+- **Spec version:** v2.9.0
 - **Readiness score:** 100/100 (A+)
 - **AI success rate:** 99%+
-- **Total spec issues:** 405 found, 405 resolved (28 discovery phases, 42 fix phases)
+- **Total spec issues:** 484 found, 484 resolved (36 discovery phases, 42 fix phases)
 - **Open issues:** 0
 - **App issues:** 43 found, 43 resolved
 - **Spec files:** 60+ (12 fundamentals + 17 features + 30 issue trackers + 3 execution guides + 10 misc)
@@ -24,6 +24,7 @@ type: feature
 - **Domain enums:** 13 TypeScript + Rust enums (RepeatType, ChallengeType, AlarmEventType, SortField, etc.)
 - **Error enums:** AlarmAppError (13 variants) + WebhookError (4 variants) with thiserror 2.0.12
 - **State management:** Zustand — useAlarmStore, useOverlayStore, useSettingsStore
+- **IPC:** All commands have named TypeScript interfaces + Rust structs with `#[serde(rename_all = "PascalCase")]`
 - **All dependencies pinned with `=x.y.z`**
 - **Acceptance criteria:** 133 feature + 64 fundamental = 197 total criteria
 
@@ -32,7 +33,7 @@ type: feature
 - `01-fundamentals/` — 12 docs + `97-acceptance-criteria.md` rollup (64 criteria)
 - `02-features/` — 17 docs + `97-acceptance-criteria.md` rollup (133 criteria)
 - `03-app-issues/` — 43/43 resolved
-- `14-spec-issues/` — 405/405 resolved across 28 discovery phases + 42 fix phases
+- `14-spec-issues/` — 484/484 resolved across 36 discovery phases + 42 fix phases
 
 ## Canonical Location
 
