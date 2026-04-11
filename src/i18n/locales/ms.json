@@ -50,7 +50,8 @@
     "hard": "Susah",
     "cancel": "Batal",
     "create": "Cipta",
-    "save": "Simpan"
+    "save": "Simpan",
+    "rampDuration": "naik"
   },
   "analytics": {
     "title": "Analitik",
