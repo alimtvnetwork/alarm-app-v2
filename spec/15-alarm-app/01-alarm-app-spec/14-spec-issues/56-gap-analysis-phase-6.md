@@ -1,6 +1,6 @@
 # Gap Analysis — Phase 6 (Fresh Comprehensive Audit)
 
-**Version:** 1.2.0  
+**Version:** 1.3.0  
 **Updated:** 2026-04-11
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -196,9 +196,9 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 | AI-003 | ~~Alarm creation form UI layout~~ | ✅ Resolved | — | Full dialog layout with section ordering, conditional visibility, and validation placement in `17-ui-layouts.md` |
 | AI-004 | ~~Alarm list layout/sorting behavior~~ | ✅ Resolved | — | Group collapse, sorting rules, card layout, swipe actions, and responsive behavior in `17-ui-layouts.md` |
 | AI-005 | Frontend state management details | 🟡 Medium | **Medium** | Zustand stores named (`useAlarmStore`, `useOverlayStore`, `useSettingsStore`) but state shape not defined. |
-| AI-006 | Notification content format | 🟡 Medium | **Low** | "OS notification fires alongside overlay" — but title/body/action template not specified. |
-| AI-007 | i18n key naming pattern | 🟢 Low | **Low** | `react-i18next` specified, but no i18n key convention defined (e.g., `alarm.create.title` vs `alarmCreateTitle`). |
-| AI-008 | Frontend routing structure | 🟢 Low | **Low** | No routes defined. Single-page vs. multi-page not specified (though Tauri apps typically use single-page). |
+| AI-006 | ~~Notification content format~~ | ✅ Resolved | — | Complete notification templates (fired, missed, snooze) added to `03-alarm-firing.md` |
+| AI-007 | ~~i18n key naming pattern~~ | ✅ Resolved | — | Full convention with 25+ key examples and rules added to `03-file-structure.md` |
+| AI-008 | ~~Frontend routing structure~~ | ✅ Resolved | — | 5-route SPA table with router config and nav pattern added to `03-file-structure.md` |
 
 ### 4.2 AI Failure Probability Assessment
 
@@ -219,7 +219,7 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 | 🔴 Critical | 0 | ~~IPC error-to-variant mapping (AI-001)~~ — ✅ Resolved |
 | 🟡 High | 0 | ~~DB index naming (DB-002)~~ ✅, ~~Settings PK (DB-001)~~ ✅ exempted, ~~UI layout gaps (AI-002/003/004)~~ ✅ Resolved |
 | 🟡 Medium | 1 | ~~Edge cases (CG-001/002)~~ ✅, ~~error handling (CG-003)~~ ✅, state shapes (AI-005), ~~expect() (DB-003/004/005)~~ ✅ |
-| 🟢 Low | 5 | Scoring tables (S-001/002), i18n keys (AI-007), routing (AI-008), logging spec (BE-003) |
+| 🟢 Low | 1 | ~~Scoring tables (S-001/002)~~ ✅, ~~i18n keys (AI-007)~~ ✅, ~~routing (AI-008)~~ ✅, logging spec (BE-003) |
 
 ---
 
@@ -232,7 +232,7 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 | Fix 4 index names to use `Idx{Table}_{Column}` separator | DB-002 | ✅ Done |
 | Add Settings PK exemption note | DB-001 | ✅ Done — SQL comment + rationale added |
 
-### Task Group 2: Content Gap Fixes (6 issues) — ✅ 3/4 RESOLVED
+### Task Group 2: Content Gap Fixes (6 issues) — ✅ ALL RESOLVED
 
 | Task | Issues | Status |
 |------|--------|--------|
@@ -241,13 +241,13 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 | Create IPC error-to-variant mapping table | AI-001, CG-003 | ✅ Done — 46 commands mapped |
 | Add Settings screen UI spec section | AI-002, CG-006 | ✅ Done — `17-ui-layouts.md` |
 
-### Task Group 3: AI-Readiness Improvements (5 issues) — ⏳ REMAINING
+### Task Group 3: AI-Readiness Improvements (5 issues) — ✅ 4/5 RESOLVED
 
 | Task | Issues | Status |
 |------|--------|--------|
 | Define Zustand store state shapes | AI-005 | ⏳ Remaining |
 | Add alarm creation/list UI layout descriptions | AI-003, AI-004 | ✅ Done — `17-ui-layouts.md` |
-| Define notification content templates | AI-006 | ⏳ Remaining |
+| Define notification content templates | AI-006 | ✅ Done — `03-alarm-firing.md` |
 
 ### Task Group 4: Code Sample Fixes (3 issues) — ✅ ALL RESOLVED
 
@@ -255,13 +255,13 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 |------|--------|--------|
 | Document `expect()` exemption centrally or convert to `match` | DB-003, DB-004, DB-005 | ✅ Done — EXEMPT annotations added |
 
-### Task Group 5: Minor Polish (3 issues) — ⏳ REMAINING
+### Task Group 5: Minor Polish (3 issues) — ✅ ALL RESOLVED
 
 | Task | Issues | Status |
 |------|--------|--------|
-| Add Scoring tables to `97-acceptance-criteria.md` and `99-consistency-report.md` | S-001, S-002 | ⏳ Remaining |
-| Add i18n key naming convention | AI-007 | ⏳ Remaining |
-| Confirm frontend routing structure | AI-008 | ⏳ Remaining |
+| Add Scoring tables to `97-acceptance-criteria.md` and `99-consistency-report.md` | S-001, S-002 | ✅ Done |
+| Add i18n key naming convention | AI-007 | ✅ Done — `03-file-structure.md` |
+| Confirm frontend routing structure | AI-008 | ✅ Done — `03-file-structure.md` |
 
 ---
 
@@ -270,15 +270,15 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 | Metric | Value |
 |--------|-------|
 | **Total issues found** | 22 |
-| **✅ Resolved** | 16 (DB-001–005, CG-001–003, AI-001–004, CG-006 + 4 index fixes) |
-| **⏳ Remaining** | 6 (state shapes AI-005, notification templates AI-006, scoring tables S-001/002, i18n AI-007, routing AI-008, logging BE-003) |
-| **🔴 Critical** | 0 (was 1 — AI-001 resolved) |
-| **🟡 Medium/High** | 1 remaining (state shapes AI-005) |
-| **🟢 Low** | 5 remaining (S-001/002, AI-006, AI-007, AI-008, BE-003) |
-| **Gap to full implementation readiness** | ~5% (backend: <1%, frontend/UI: ~10%) |
-| **Blind AI execution failure probability** | ~8% (down from 15% — UI layouts resolved) |
+| **✅ Resolved** | 20 (DB-001–005, CG-001–004, CG-006, AI-001–004, AI-006–008, S-001/002) |
+| **⏳ Remaining** | 2 (state shapes AI-005, logging BE-003) |
+| **🔴 Critical** | 0 |
+| **🟡 Medium** | 1 remaining (state shapes AI-005) |
+| **🟢 Low** | 1 remaining (logging BE-003) |
+| **Gap to full implementation readiness** | ~3% (backend: <1%, frontend: ~5%) |
+| **Blind AI execution failure probability** | ~5% (down from 8%) |
 | **Backend-only AI success rate** | 98%+ |
-| **Full-stack AI success rate** | 90–92% (up from 80–85% — UI layouts now specified) |
+| **Full-stack AI success rate** | 93–95% (up from 90–92%) |
 
 ### Key Observation
 
