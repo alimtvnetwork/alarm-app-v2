@@ -236,4 +236,4 @@ All fix phases complete. No remaining work items.
 
 ---
 
-*AI Handoff Readiness Report v3.2.0 — updated: 2026-04-11*
+*AI Handoff Readiness Report v3.3.0 — updated: 2026-04-11*
