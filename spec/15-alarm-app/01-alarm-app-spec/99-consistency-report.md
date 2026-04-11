@@ -35,7 +35,7 @@
 | 1 | `01-fundamentals/` | ✅ (v1.4.0) | ✅ (v2.0.0) | ✅ (v1.0.0 — 64 criteria) | ✅ Complete |
 | 2 | `02-features/` | ✅ | ✅ (v2.0.0) | ✅ (v1.0.0 — 133 criteria) | ✅ Complete |
 | 3 | `03-app-issues/` | ✅ | ✅ (v1.4.0) | — | ✅ Compliant (10 docs, 43/43 resolved) |
-| 4 | `14-spec-issues/` | ✅ (v1.39.0) | — | — | ✅ 458/458 resolved |
+| 4 | `14-spec-issues/` | ✅ (v1.40.0) | — | — | ✅ 472/472 resolved |
 
 ---
 
