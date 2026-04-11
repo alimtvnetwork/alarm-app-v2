@@ -229,7 +229,7 @@ TOTAL: <750ms
 | Data types, schemas, validation | `01-fundamentals/01-data-model.md` |
 | File & folder structure | `01-fundamentals/03-file-structure.md` |
 | Errors, memory, CSS compat | `01-fundamentals/04-platform-constraints.md` |
-| Tauri architecture, IPC, plugins | `01-fundamentals/06-tauri-architecture.md` |
+| Tauri architecture, IPC, plugins | `01-fundamentals/06-tauri-architecture-and-framework-comparison.md` |
 | Startup order, logging | `01-fundamentals/07-startup-sequence.md` |
 | CI/CD, signing, auto-update | `01-fundamentals/08-devops-setup-guide.md` |
 | Test layers, coverage targets | `01-fundamentals/09-test-strategy.md` |

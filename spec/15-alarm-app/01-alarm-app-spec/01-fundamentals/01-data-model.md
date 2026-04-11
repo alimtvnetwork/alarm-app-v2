@@ -1,6 +1,6 @@
 # Data Model
 
-**Version:** 1.15.0  
+**Version:** 1.16.0  
 **Updated:** 2026-04-10  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -761,6 +761,21 @@ pub struct Quote {
     pub is_custom: bool,
     pub created_at: String,
 }
+
+/// NOTE: Struct definitions and field-per-line `from_row` mappers are EXEMPT from the
+/// 15-line function limit (see coding guidelines exemption E-002).
+impl Quote {
+    pub fn from_row(row: &rusqlite::Row) -> rusqlite::Result<Self> {
+        Ok(Self {
+            quote_id: row.get("QuoteId")?,
+            text: row.get("Text")?,
+            author: row.get("Author")?,
+            is_favorite: row.get::<_, i32>("IsFavorite")? != 0,
+            is_custom: row.get::<_, i32>("IsCustom")? != 0,
+            created_at: row.get("CreatedAt")?,
+        })
+    }
+}
 ```
 
 ### StreakData
@@ -803,6 +818,7 @@ interface StreakCalendarDay {
 #### StreakCalendarDay (Rust)
 
 > **Resolves RS-007.** Element of the `Vec` returned by `get_streak_calendar`.
+> **Note:** Computed struct — aggregated from `AlarmEvents` query results. No direct table mapping, no `from_row` needed.
 
 ```rust
 #[derive(Debug, Clone, Serialize, Deserialize)]

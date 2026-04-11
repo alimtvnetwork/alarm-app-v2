@@ -1,6 +1,6 @@
 # Consistency Report: Features
 
-**Version:** 2.1.0  
+**Version:** 2.2.0  
 **Generated:** 2026-04-11  
 **Resolves:** S-002
 
@@ -34,17 +34,17 @@
 | 4 | `03-alarm-firing.md` | 1.12.0 | ✅ Updated (Edge Cases present) |
 | 5 | `04-snooze-system.md` | 1.6.0 | ✅ Updated (Edge Cases table added) |
 | 6 | `05-sound-and-vibration.md` | 1.7.0 | ✅ Updated (Edge Cases table added) |
-| 7 | `06-dismissal-challenges.md` | 1.7.0 | ✅ Updated (Edge Cases table added) |
+| 7 | `06-dismissal-challenges.md` | 1.8.0 | ✅ Updated (Edge Cases table added) |
 | 8 | `07-alarm-groups.md` | 1.6.0 | ✅ Updated (Edge Cases present) |
 | 9 | `08-clock-display.md` | 1.4.0 | ✅ Updated (Edge Cases table added) |
 | 10 | `09-theme-system.md` | 1.5.0 | ✅ Updated (Edge Cases table added) |
 | 11 | `10-export-import.md` | 1.7.0 | ✅ Updated (Edge Cases table added) |
 | 12 | `11-sleep-wellness.md` | 1.4.0 | ✅ Updated |
-| 13 | `12-smart-features.md` | 1.5.0 | ✅ Updated |
+| 13 | `12-smart-features.md` | 1.6.0 | ✅ Updated |
 | 14 | `13-analytics.md` | 1.7.0 | ✅ Updated |
 | 15 | `14-personalization.md` | 1.4.0 | ✅ Updated |
 | 16 | `15-keyboard-shortcuts.md` | 1.2.0 | ✅ Updated |
-| 17 | `16-accessibility-and-nfr.md` | 1.2.0 | ✅ Updated |
+| 17 | `16-accessibility-and-nfr.md` | 1.3.0 | ✅ Updated (Edge Cases table added) |
 | 18 | `17-ui-layouts.md` | 1.0.0 | ✅ Alarm list, alarm form, settings screen layouts, component trees, responsive behavior |
 | 19 | `97-acceptance-criteria.md` | 1.2.0 | ✅ Consolidated rollup of 157 testable criteria (Keywords + Cross-Refs added) |
 

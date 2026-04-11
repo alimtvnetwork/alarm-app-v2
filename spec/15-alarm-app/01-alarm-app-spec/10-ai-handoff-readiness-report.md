@@ -83,7 +83,7 @@ All 524 spec quality issues have been resolved across 36 discovery phases, 42 fi
 | `03-file-structure.md` | 1.11.0 | Full src/ + src-tauri/ tree, Cargo.toml deps (all `=` pinned), npm deps (all `=` pinned), i18n setup, Zustand store shapes, routing, i18n key convention | ✅ |
 | `04-platform-constraints.md` | 1.7.0 | Error handling (12 errors), WebView CSS compat, memory budget (200MB), IPC error format, code pattern exemptions | ✅ |
 | `05-platform-strategy.md` | 1.1.0 | Legacy — superseded by Tauri architecture doc | ⚠️ |
-| `06-tauri-architecture.md` | 1.6.0 | Tauri 2.x architecture, IPC registry (40+ commands), plugins (exact versions + API signatures), build pipeline, casing boundary | ✅ |
+| `06-tauri-architecture-and-framework-comparison.md` | 1.6.0 | Tauri 2.x architecture, IPC registry (40+ commands), plugins (exact versions + API signatures), build pipeline, casing boundary | ✅ |
 | `07-startup-sequence.md` | 1.5.0 | 9-step sequence, parallel init, logging strategy, error handling per step, intentional panic docs | ✅ |
 | `08-devops-setup-guide.md` | 1.1.0 | macOS/Windows signing, GitHub Actions CI, auto-update keys | ✅ |
 | `09-test-strategy.md` | 1.2.0 | 6 test layers, coverage targets, CI YAML, PascalCase fixtures, platform E2E, dep compat | ✅ |
@@ -147,7 +147,7 @@ All 524 spec quality issues have been resolved across 36 discovery phases, 42 fi
 
 | Gap | Impact | Recommendation |
 |-----|--------|---------------|
-| `05-platform-strategy.md` is legacy | None | Keep for reference, superseded by `06-tauri-architecture.md` |
+| `05-platform-strategy.md` is legacy | None | Keep for reference, superseded by `06-tauri-architecture-and-framework-comparison.md` |
 | P3 features are high-level | None | Intentional — detail when prioritized |
 | Code signing is human-only | Irreducible | Cannot be automated by AI |
 
