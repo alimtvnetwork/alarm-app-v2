@@ -95,6 +95,40 @@ interface UpdateGroupPayload {
 }
 ```
 
+### Rust Structs
+
+```rust
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct CreateGroupPayload {
+    pub name: String,
+    pub color: Option<String>,
+    pub position: Option<i32>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct UpdateGroupPayload {
+    pub alarm_group_id: String,
+    pub name: Option<String>,
+    pub color: Option<String>,
+    pub position: Option<i32>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct DeleteGroupPayload {
+    pub alarm_group_id: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct ToggleGroupPayload {
+    pub alarm_group_id: String,
+    pub is_enabled: bool,
+}
+```
+
 ### Rust Command Handler Pattern
 
 > **Resolves GA2-003.** Canonical example of a Tauri IPC command handler. Other under-specified features should reference this pattern.
