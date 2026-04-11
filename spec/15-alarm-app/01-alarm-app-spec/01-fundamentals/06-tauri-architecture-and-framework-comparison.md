@@ -176,16 +176,16 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 |---------|-----------|---------|---------|
 | `list_alarm_events` | FE → BE | `{ Filter: HistoryFilter }` | `AlarmEvent[]` |
 | `export_history_csv` | FE → BE | `{ Filter: HistoryFilter }` | `string` (file path) |
-| `clear_history` | FE → BE | `{ Before?: string }` | `{ Deleted: number }` |
+| `clear_history` | FE → BE | `ClearHistoryPayload` | `ClearHistoryResult` |
 
 #### Smart Feature Commands
 
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
-| `create_webhook` | FE → BE | `{ AlarmId: string, Url: string, Payload?: Record<string, unknown> }` | `WebhookConfig` |
+| `create_webhook` | FE → BE | `CreateWebhookPayload` | `WebhookConfig` |
 | `delete_webhook` | FE → BE | `{ WebhookId: string }` | `void` |
-| `test_webhook` | FE → BE | `{ WebhookId: string }` | `{ Success: boolean, StatusCode: number \| null, Error: string \| null }` |
-| `get_weather_briefing` | FE → BE | `{ Latitude: number, Longitude: number }` | `WeatherBriefing` |
+| `test_webhook` | FE → BE | `{ WebhookId: string }` | `TestWebhookResult` |
+| `get_weather_briefing` | FE → BE | `GetWeatherPayload` | `WeatherBriefing` |
 
 #### System Commands
 
