@@ -7,6 +7,7 @@ import AnalogClock from "@/components/clock/AnalogClock";
 import DigitalTime from "@/components/clock/DigitalTime";
 import AlarmList from "@/components/alarm/AlarmList";
 import AlarmForm from "@/components/alarm/AlarmForm";
+import MissedAlarmBanner from "@/components/alarm/MissedAlarmBanner";
 import { useAlarmStore } from "@/stores/alarm-store";
 import { useSettingsStore } from "@/stores/settings-store";
 import type { Alarm } from "@/types/alarm";
@@ -44,6 +45,9 @@ const Index = () => {
 
   return (
     <div className="flex flex-col items-center gap-6">
+      {/* Missed alarm banner */}
+      <MissedAlarmBanner />
+
       {/* Clock card — cream background */}
       <div className="w-full rounded-xl bg-card p-6 shadow-sm">
         <div className="flex flex-col items-center gap-4">
