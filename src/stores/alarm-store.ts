@@ -7,6 +7,7 @@ import { create } from "zustand";
 import type { Alarm, AlarmGroup } from "@/types/alarm";
 import { RepeatType, DEFAULT_REPEAT_PATTERN } from "@/types/alarm";
 import * as ipc from "@/lib/mock-ipc";
+import { computeNextFireTime } from "@/lib/next-fire-time";
 
 interface AlarmStore {
   alarms: Alarm[];
@@ -72,12 +73,14 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
 
   addAlarm: (partial) => {
     const alarm = createDefaultAlarm(partial);
+    alarm.NextFireTime = computeNextFireTime(alarm);
     ipc.createAlarm(alarm);
     set((s) => ({ alarms: [...s.alarms, alarm] }));
     return alarm;
   },
 
   updateAlarm: (alarm) => {
+    alarm.NextFireTime = computeNextFireTime(alarm);
     ipc.updateAlarm(alarm);
     set((s) => ({
       alarms: s.alarms.map((a) => (a.AlarmId === alarm.AlarmId ? alarm : a)),
