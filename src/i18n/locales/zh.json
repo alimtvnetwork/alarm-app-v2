@@ -174,5 +174,21 @@
     "typingTitle": "打字关闭",
     "typingPlaceholder": "请输入上面的句子...",
     "complete": "完成"
+  },
+  "onboarding": {
+    "alarms": "智能闹钟",
+    "alarmsDesc": "创建带有自定义铃声、贪睡限制和数学题或打字等关闭挑战的闹钟。",
+    "sleep": "睡眠与健康",
+    "sleepDesc": "追踪睡眠质量，设置就寝提醒，获取最佳起床时间建议。",
+    "analytics": "数据分析与历史",
+    "analyticsDesc": "查看闹钟模式、贪睡趋势，并将历史记录导出为 CSV。",
+    "personalize": "个性化定制",
+    "personalizeDesc": "选择主题、强调色和皮肤。在日历上追踪你的连续打卡记录。",
+    "shortcuts": "键盘快捷键",
+    "shortcutsDesc": "按 Ctrl+N 新建闹钟，Ctrl+E 导出，按 ? 查看所有快捷键。",
+    "next": "下一步",
+    "back": "返回",
+    "skip": "跳过引导",
+    "getStarted": "开始使用"
   }
 }
