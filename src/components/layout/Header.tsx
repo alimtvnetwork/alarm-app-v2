@@ -15,6 +15,7 @@ const Header = () => {
             size="icon"
             className="h-9 w-9"
             aria-label="Add alarm"
+            onClick={() => window.dispatchEvent(new Event("alarm:new"))}
           >
             <Plus className="h-5 w-5" />
           </Button>
