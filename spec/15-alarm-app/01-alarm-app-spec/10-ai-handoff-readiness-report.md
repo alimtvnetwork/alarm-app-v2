@@ -215,7 +215,7 @@ All fix phases complete. No remaining work items.
 | Gap 7 | 18 | Settings reconciliation, missing schemas, Zustand stores, logging spec, boolean exemptions |
 | Gap 8 | 20 | Stale metrics update, table counts, cross-references, scoring table, IPC name alignment |
 | Gap 9 | 21 | Acceptance criteria sync (133→157), settings seed count (9→16), WebhookError (4→7), SettingsStore casing, Timezone clarification, consistency reports |
-| Gap 11–17 | 52 | OS service layer alignment, dependency pins, notification templates, field names, bookkeeping, stale counts |
+| Gap 11–19 | 54 | OS service layer alignment, dependency pins, notification templates, field names, bookkeeping, stale counts, coverage matrix |
 
 ---
 
