@@ -97,7 +97,7 @@
 | Acceptance criteria rollups created | ✅ 229 criteria (157 feature + 72 fundamental) |
 | IPC commands defined in all feature files | ✅ |
 | Boolean semantic inverses documented | ✅ |
-| Settings seeding spec with 17 defaults | ✅ |
+| Settings seeding spec with 16 defaults | ✅ |
 | UI states spec (loading/empty/error/populated) | ✅ |
 | UI layout descriptions for all major screens | ✅ |
 | Coding guidelines cross-refs in feature + fundamental files | ✅ |

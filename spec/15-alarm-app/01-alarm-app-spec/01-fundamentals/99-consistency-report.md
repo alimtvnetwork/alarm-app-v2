@@ -46,7 +46,7 @@
 | No stale cross-references | ✅ |
 | Data model v1.12.0 consistent with feature specs | ✅ |
 | Settings schema includes ValueType column | ✅ |
-| Settings seeding spec with 17 defaults | ✅ |
+| Settings seeding spec with 16 defaults | ✅ |
 | Domain enums (13) defined in data model | ✅ |
 | Boolean semantic inverses documented | ✅ |
 | Single-DB decision documented | ✅ |
