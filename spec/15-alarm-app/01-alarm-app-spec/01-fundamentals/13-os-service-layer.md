@@ -1,6 +1,6 @@
 # OS Service Layer Specification
 
-**Version:** 2.2.0  
+**Version:** 2.3.0  
 **Updated:** 2026-04-11  
 **Target Platform:** macOS (primary), Windows/Linux (future)  
 **Architecture:** Tauri 2.x (Rust core)  
@@ -869,4 +869,4 @@ This persists across app updates and is not deleted when the app is removed (use
 
 ---
 
-*OS Service Layer Specification v2.2.0 — updated: 2026-04-11*
+*OS Service Layer Specification v2.3.0 — updated: 2026-04-11*
