@@ -3,12 +3,14 @@
  */
 
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { AlertTriangle, X } from "lucide-react";
 import { detectMissedAlarms, type MissedAlarm } from "@/lib/missed-alarm-detector";
 
 const MissedAlarmBanner = () => {
   const [missed, setMissed] = useState<MissedAlarm[]>([]);
   const [dismissed, setDismissed] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const result = detectMissedAlarms();
@@ -29,12 +31,15 @@ const MissedAlarmBanner = () => {
           <AlertTriangle className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
           <div className="flex flex-col gap-1">
             <p className="text-sm font-heading font-semibold text-destructive">
-              {missed.length} missed alarm{missed.length > 1 ? "s" : ""}
+              {t("missed.title", { count: missed.length })}
             </p>
             <div className="flex flex-col gap-0.5">
               {missed.map((m) => (
                 <p key={m.alarm.AlarmId} className="text-xs font-body text-muted-foreground">
-                  {m.alarm.Label || m.alarm.Time} — missed at {formatMissedTime(m.missedAt)}
+                  {t("missed.missedAt", {
+                    name: m.alarm.Label || m.alarm.Time,
+                    time: formatMissedTime(m.missedAt),
+                  })}
                 </p>
               ))}
             </div>

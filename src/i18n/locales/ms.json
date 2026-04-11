@@ -12,9 +12,15 @@
     "settings": "Tetapan"
   },
   "clock": {
-    "alarms": "Penggera",
+    "alarms": "Penggera Saya",
     "noAlarms": "Tiada penggera lagi",
-    "tapToCreate": "Ketik + untuk cipta"
+    "tapToCreate": "Ketik + untuk cipta",
+    "alarmIn": "Penggera dalam {{time}}",
+    "hours_one": "{{count}} jam",
+    "hours_other": "{{count}} jam",
+    "minutes_one": "{{count}} minit",
+    "minutes_other": "{{count}} minit",
+    "and": "dan"
   },
   "alarmForm": {
     "newAlarm": "Penggera Baru",
@@ -26,6 +32,10 @@
     "daily": "Harian",
     "weekly": "Mingguan",
     "sound": "Bunyi",
+    "classicBeep": "Bip Klasik",
+    "gentleChime": "Loceng Lembut",
+    "birds": "Burung",
+    "digitalPulse": "Denyut Digital",
     "gradualVolume": "Volum Beransur",
     "snoozeMin": "Tunda (min)",
     "maxSnoozes": "Maks Tunda",
@@ -85,6 +95,7 @@
     "alarmDefaults": "Lalai Penggera",
     "snoozeDuration": "Tempoh Tunda",
     "maxSnoozes": "Maks Tunda",
+    "noneOption": "Tiada",
     "autoDismiss": "Auto-Tutup",
     "manual": "Manual",
     "defaultSound": "Bunyi Lalai",
@@ -96,15 +107,21 @@
     "autoLaunch": "Auto-Lancar Semasa Mula",
     "minimizeToTray": "Kecilkan ke Tray",
     "language": "Bahasa",
+    "english": "English",
+    "bahasaMelayu": "Bahasa Melayu",
     "data": "Data",
     "eventRetention": "Penyimpanan Peristiwa",
+    "days": "{{count}} hari",
+    "year": "1 tahun",
     "exportPrivacy": "Amaran Privasi Eksport",
     "timezone": "Zon Masa",
-    "version": "Versi"
+    "version": "Versi",
+    "min": "{{count}} min"
   },
   "overlay": {
+    "snooze": "Tunda {{min}}m",
     "autoDismissIn": "Auto-tutup dalam {{time}}",
-    "snoozedCount": "Ditunda {{count}}/{{max}} kali",
+    "snoozedCount": "Tunda {{current}} daripada {{max}} · {{remaining}} lagi",
     "dismiss": "Tutup",
     "solveToDissmiss": "Selesaikan untuk tutup",
     "submit": "Hantar",
@@ -116,7 +133,15 @@
     "weekends": "Hujung minggu",
     "customSchedule": "Jadual khas",
     "dragToReorder": "Seret untuk susun",
-    "deleteAlarm": "Padam penggera"
+    "deleteAlarm": "Padam penggera",
+    "deleted": "\"{{name}}\" dipadam",
+    "undo": "Buat Semula",
+    "copy": "(salinan)"
+  },
+  "missed": {
+    "title_one": "{{count}} penggera terlepas",
+    "title_other": "{{count}} penggera terlepas",
+    "missedAt": "{{name}} — terlepas pada {{time}}"
   },
   "export": {
     "title": "Eksport / Import",

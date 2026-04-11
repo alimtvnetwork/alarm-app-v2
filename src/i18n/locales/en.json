@@ -12,9 +12,15 @@
     "settings": "Settings"
   },
   "clock": {
-    "alarms": "Alarms",
+    "alarms": "My Alarms",
     "noAlarms": "No alarms yet",
-    "tapToCreate": "Tap + to create one"
+    "tapToCreate": "Tap + to create one",
+    "alarmIn": "Alarm in {{time}}",
+    "hours_one": "{{count}} hour",
+    "hours_other": "{{count}} hours",
+    "minutes_one": "{{count}} minute",
+    "minutes_other": "{{count}} minutes",
+    "and": "and"
   },
   "alarmForm": {
     "newAlarm": "New Alarm",
@@ -26,6 +32,10 @@
     "daily": "Daily",
     "weekly": "Weekly",
     "sound": "Sound",
+    "classicBeep": "Classic Beep",
+    "gentleChime": "Gentle Chime",
+    "birds": "Birds",
+    "digitalPulse": "Digital Pulse",
     "gradualVolume": "Gradual Volume",
     "snoozeMin": "Snooze (min)",
     "maxSnoozes": "Max Snoozes",
@@ -85,6 +95,7 @@
     "alarmDefaults": "Alarm Defaults",
     "snoozeDuration": "Snooze Duration",
     "maxSnoozes": "Max Snoozes",
+    "noneOption": "None",
     "autoDismiss": "Auto-Dismiss",
     "manual": "Manual",
     "defaultSound": "Default Sound",
@@ -96,15 +107,21 @@
     "autoLaunch": "Auto-Launch on Startup",
     "minimizeToTray": "Minimize to Tray",
     "language": "Language",
+    "english": "English",
+    "bahasaMelayu": "Bahasa Melayu",
     "data": "Data",
     "eventRetention": "Event Retention",
+    "days": "{{count}} days",
+    "year": "1 year",
     "exportPrivacy": "Export Privacy Warning",
     "timezone": "Timezone",
-    "version": "Version"
+    "version": "Version",
+    "min": "{{count}} min"
   },
   "overlay": {
+    "snooze": "Snooze {{min}}m",
     "autoDismissIn": "Auto-dismiss in {{time}}",
-    "snoozedCount": "Snoozed {{count}}/{{max}} times",
+    "snoozedCount": "Snooze {{current}} of {{max}} · {{remaining}} remaining",
     "dismiss": "Dismiss",
     "solveToDissmiss": "Solve to dismiss",
     "submit": "Submit",
@@ -116,7 +133,15 @@
     "weekends": "Weekends",
     "customSchedule": "Custom schedule",
     "dragToReorder": "Drag to reorder",
-    "deleteAlarm": "Delete alarm"
+    "deleteAlarm": "Delete alarm",
+    "deleted": "\"{{name}}\" deleted",
+    "undo": "Undo",
+    "copy": "(copy)"
+  },
+  "missed": {
+    "title_one": "{{count}} missed alarm",
+    "title_other": "{{count}} missed alarms",
+    "missedAt": "{{name}} — missed at {{time}}"
   },
   "export": {
     "title": "Export / Import",

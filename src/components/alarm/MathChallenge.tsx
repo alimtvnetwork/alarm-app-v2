@@ -1,9 +1,9 @@
 /**
  * MathChallenge — Generates math problems by difficulty tier.
- * Easy: a + b (single digit), Medium: a × b (two digit), Hard: a × b + c (two digit).
  */
 
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChallengeDifficulty } from "@/types/alarm";
@@ -45,6 +45,7 @@ const MathChallenge = ({ difficulty, onSolved }: MathChallengeProps) => {
   const [startTime] = useState(Date.now());
   const [userAnswer, setUserAnswer] = useState("");
   const [isWrong, setIsWrong] = useState(false);
+  const { t } = useTranslation();
 
   const handleSubmit = useCallback(() => {
     const parsed = parseInt(userAnswer, 10);
@@ -61,7 +62,7 @@ const MathChallenge = ({ difficulty, onSolved }: MathChallengeProps) => {
   return (
     <div className="flex flex-col items-center gap-4">
       <p className="text-sm font-body text-muted-foreground uppercase tracking-wider">
-        Solve to dismiss
+        {t("overlay.solveToDissmiss")}
       </p>
       <p className="text-4xl font-heading font-bold text-foreground">
         {problem.question} = ?
@@ -81,10 +82,10 @@ const MathChallenge = ({ difficulty, onSolved }: MathChallengeProps) => {
         />
       </div>
       <Button onClick={handleSubmit} size="lg" className="w-48">
-        Submit
+        {t("overlay.submit")}
       </Button>
       {isWrong && (
-        <p className="text-sm text-destructive font-body">Try again!</p>
+        <p className="text-sm text-destructive font-body">{t("overlay.tryAgain")}</p>
       )}
     </div>
   );

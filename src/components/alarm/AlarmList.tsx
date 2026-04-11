@@ -16,6 +16,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { useTranslation } from "react-i18next";
 import { useAlarmStore } from "@/stores/alarm-store";
 import type { Alarm, AlarmGroup } from "@/types/alarm";
 import AlarmCard from "./AlarmCard";
@@ -32,6 +33,7 @@ const AlarmList = ({ onEditAlarm }: AlarmListProps) => {
   const reorderAlarms = useAlarmStore((s) => s.reorderAlarms);
   const deleteAlarm = useAlarmStore((s) => s.deleteAlarm);
   const addAlarm = useAlarmStore((s) => s.addAlarm);
+  const { t } = useTranslation();
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -58,9 +60,9 @@ const AlarmList = ({ onEditAlarm }: AlarmListProps) => {
   const handleDelete = useCallback(
     (alarm: Alarm) => {
       deleteAlarm(alarm.AlarmId);
-      toast(`"${alarm.Label || alarm.Time}" deleted`, {
+      toast(t("alarm.deleted", { name: alarm.Label || alarm.Time }), {
         action: {
-          label: "Undo",
+          label: t("alarm.undo"),
           onClick: () => {
             addAlarm({ ...alarm, AlarmId: undefined as unknown as string });
           },
@@ -68,14 +70,14 @@ const AlarmList = ({ onEditAlarm }: AlarmListProps) => {
         duration: 5000,
       });
     },
-    [deleteAlarm, addAlarm]
+    [deleteAlarm, addAlarm, t]
   );
 
   if (alarms.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 py-8 text-muted-foreground">
-        <p className="text-sm font-body">No alarms yet</p>
-        <p className="text-xs">Tap + to create one</p>
+        <p className="text-sm font-body">{t("clock.noAlarms")}</p>
+        <p className="text-xs">{t("clock.tapToCreate")}</p>
       </div>
     );
   }
