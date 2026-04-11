@@ -190,5 +190,20 @@
     "back": "返回",
     "skip": "跳过引导",
     "getStarted": "开始使用"
+  },
+  "ambient": {
+    "title": "环境音",
+    "whiteNoise": "白噪音",
+    "rain": "雨声",
+    "ocean": "海浪",
+    "forest": "森林",
+    "volume": "音量",
+    "play": "播放",
+    "stop": "停止",
+    "noTimer": "无定时",
+    "min15": "15 分钟",
+    "min30": "30 分钟",
+    "min60": "60 分钟",
+    "min90": "90 分钟"
   }
 }

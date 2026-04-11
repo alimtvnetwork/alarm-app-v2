@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Moon, Sun, Star } from "lucide-react";
 import BedtimeReminderCard from "@/components/sleep/BedtimeReminderCard";
+import AmbientPlayer from "@/components/sleep/AmbientPlayer";
 
 const MOCK_SLEEP_DATA = [
   { day: "Mon", hours: 7.5, quality: 4 },
@@ -101,6 +102,8 @@ const Sleep = () => {
       </Card>
 
       <BedtimeReminderCard />
+
+      <AmbientPlayer />
 
       <Card>
         <CardHeader>

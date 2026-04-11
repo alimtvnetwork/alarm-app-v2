@@ -196,5 +196,20 @@
     "back": "Back",
     "skip": "Skip tour",
     "getStarted": "Get Started"
+  },
+  "ambient": {
+    "title": "Ambient Sounds",
+    "whiteNoise": "White Noise",
+    "rain": "Rain",
+    "ocean": "Ocean",
+    "forest": "Forest",
+    "volume": "Volume",
+    "play": "Play",
+    "stop": "Stop",
+    "noTimer": "No timer",
+    "min15": "15 min",
+    "min30": "30 min",
+    "min60": "60 min",
+    "min90": "90 min"
   }
 }
