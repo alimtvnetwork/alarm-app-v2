@@ -225,7 +225,7 @@ Webview (sandboxed, no Node.js, no filesystem)
 │     └─→ Spawn polling engine (tokio task)                │
 │                                                          │
 │  3. RUNNING STATE                                        │
-│     ├─→ Polling loop checks DB every 800ms               │
+│     ├─→ Polling loop checks DB every 30s                │
 │     ├─→ Fires notifications for due alarms               │
 │     ├─→ Handles notification actions (Snooze/Dismiss)    │
 │     ├─→ Updates tray badge on alarm state changes        │
@@ -661,7 +661,7 @@ src-tauri/src/
   main.rs                   — Tauri app entry point, plugin & command registration
   lib.rs                    — Module declarations
   engine/
-    polling.rs              — 800ms polling loop (tokio::spawn + tokio::time::interval)
+    polling.rs              — 30s polling loop (tokio::spawn + tokio::time::interval)
     scheduler.rs            — Next-alarm calculation for recurring alarms
     interval_checker.rs     — HTTP polling for interval-check alarms (reqwest)
     wake_handler.rs         — Sleep/wake event listener, missed alarm recovery
