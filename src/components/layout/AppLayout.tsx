@@ -4,7 +4,7 @@ import BottomNav from "./BottomNav";
 
 const AppLayout = () => {
   return (
-    <div className="relative mx-auto min-h-screen max-w-md bg-background">
+    <div className="relative mx-auto min-h-screen w-full max-w-[448px] bg-background">
       {/* Skip to main content — a11y */}
       <a
         href="#main-content"
@@ -13,7 +13,7 @@ const AppLayout = () => {
         Skip to main content
       </a>
       <Header />
-      <main id="main-content" className="px-4 pb-20 pt-4" role="main">
+      <main id="main-content" className="px-6 pb-24 pt-6" role="main">
         <Outlet />
       </main>
       <BottomNav />

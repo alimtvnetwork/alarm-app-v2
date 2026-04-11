@@ -1,16 +1,16 @@
 /**
- * AlarmCard — Single alarm item with toggle, label, time, repeat info.
- * Used inside AlarmList. Supports drag handle via dnd-kit.
+ * AlarmCard — Single alarm item: time on left, label/repeat on right, toggle far right.
+ * Swipe-left to delete with undo toast. 24px card padding per design spec.
  */
 
-import { GripVertical, Trash2 } from "lucide-react";
+import { GripVertical } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
 import type { Alarm, AlarmGroup } from "@/types/alarm";
 import { RepeatType } from "@/types/alarm";
 import { useAlarmStore } from "@/stores/alarm-store";
+import { useState, useRef } from "react";
 
 const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -49,11 +49,11 @@ interface AlarmCardProps {
   alarm: Alarm;
   group: AlarmGroup | undefined;
   onEdit: (alarm: Alarm) => void;
+  onDelete: (alarm: Alarm) => void;
 }
 
-const AlarmCard = ({ alarm, group, onEdit }: AlarmCardProps) => {
+const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
   const toggleAlarm = useAlarmStore((s) => s.toggleAlarm);
-  const deleteAlarm = useAlarmStore((s) => s.deleteAlarm);
 
   const {
     attributes,
@@ -70,6 +70,32 @@ const AlarmCard = ({ alarm, group, onEdit }: AlarmCardProps) => {
     opacity: isDragging ? 0.5 : 1,
   };
 
+  // Swipe-to-delete state
+  const [swipeX, setSwipeX] = useState(0);
+  const startXRef = useRef(0);
+  const swipingRef = useRef(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    startXRef.current = e.touches[0].clientX;
+    swipingRef.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const diff = e.touches[0].clientX - startXRef.current;
+    if (diff < -10) {
+      swipingRef.current = true;
+      setSwipeX(Math.max(diff, -100));
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (swipeX < -60) {
+      onDelete(alarm);
+    }
+    setSwipeX(0);
+    swipingRef.current = false;
+  };
+
   const is24Hour = false; // TODO: read from settings store
   const displayTime = (() => {
     const [h, m] = alarm.Time.split(":").map(Number);
@@ -82,10 +108,18 @@ const AlarmCard = ({ alarm, group, onEdit }: AlarmCardProps) => {
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className={`flex items-center gap-3 rounded-lg bg-card p-3 transition-colors ${
+      style={{
+        ...style,
+        transform: swipeX !== 0
+          ? `translateX(${swipeX}px)`
+          : CSS.Transform.toString(transform),
+      }}
+      className={`relative flex items-center gap-3 rounded-xl bg-card p-6 transition-colors ${
         alarm.IsEnabled ? "" : "opacity-60"
       }`}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Drag handle */}
       <button
@@ -108,7 +142,7 @@ const AlarmCard = ({ alarm, group, onEdit }: AlarmCardProps) => {
       {/* Content — clickable to edit */}
       <button
         className="flex flex-1 flex-col items-start gap-0.5 text-left"
-        onClick={() => onEdit(alarm)}
+        onClick={() => !swipingRef.current && onEdit(alarm)}
       >
         <span className="text-2xl font-heading font-semibold leading-tight text-foreground">
           {displayTime}
@@ -125,17 +159,6 @@ const AlarmCard = ({ alarm, group, onEdit }: AlarmCardProps) => {
         onCheckedChange={(checked) => toggleAlarm(alarm.AlarmId, checked)}
         aria-label={`Toggle ${alarm.Label || "alarm"}`}
       />
-
-      {/* Delete */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8 text-muted-foreground hover:text-destructive"
-        onClick={() => deleteAlarm(alarm.AlarmId)}
-        aria-label="Delete alarm"
-      >
-        <Trash2 className="h-4 w-4" />
-      </Button>
     </div>
   );
 };

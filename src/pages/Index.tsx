@@ -1,5 +1,5 @@
 /**
- * Index — Main clock page with analog clock, digital time, and alarm list.
+ * Index — Main clock page with analog clock in cream card, digital time, and alarm list.
  */
 
 import { useEffect, useState } from "react";
@@ -44,17 +44,19 @@ const Index = () => {
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* Clock section */}
-      <div className="flex flex-col items-center gap-3 pt-2">
-        <AnalogClock />
-        <DigitalTime />
+      {/* Clock card — cream background */}
+      <div className="w-full rounded-xl bg-card p-6 shadow-sm">
+        <div className="flex flex-col items-center gap-4">
+          <AnalogClock />
+          <DigitalTime />
+        </div>
       </div>
 
       {/* Alarm list */}
       <div className="w-full">
-        <div className="mb-2 flex items-center justify-between">
+        <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-heading font-semibold text-muted-foreground uppercase tracking-wider">
-            Alarms
+            My Alarms
           </h2>
         </div>
         <AlarmList onEditAlarm={handleEdit} />
