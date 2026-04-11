@@ -52,6 +52,7 @@ All feature specifications for the Alarm App (Tauri 2.x native application), org
 | 14 | `14-personalization.md` | P2/P3 | Themes, quotes, streak tracker, native music integration |
 | 15 | `15-keyboard-shortcuts.md` | P1 | Full keyboard shortcut system (global + in-app) |
 | 16 | `16-accessibility-and-nfr.md` | P0/P1 | WCAG 2.1 AA, performance budgets, i18n, offline-first |
+| 17 | `17-ui-layouts.md` | P0 | Alarm list, alarm form, and settings screen UI layouts, component trees, responsive behavior |
 | 99 | `99-consistency-report.md` | — | Folder health check |
 
 ---

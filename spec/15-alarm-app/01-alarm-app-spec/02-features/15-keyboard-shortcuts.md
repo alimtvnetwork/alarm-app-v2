@@ -129,6 +129,19 @@ Select All and bulk operations are **P1** — implemented after core CRUD. The s
 
 ---
 
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Global shortcut conflicts with OS shortcut | Tauri logs warning; shortcut silently fails. Show "Shortcut unavailable" in settings. |
+| Text input focused when shortcut pressed | Suppress all single-key shortcuts (S, Enter, Esc, Space, Delete). Modifier shortcuts (⌘+N) still work. |
+| Global shortcut registration fails (e.g., another app holds it) | Log warning, continue without that shortcut. Show disabled state in shortcut reference. |
+| Overlay visible + alarm list shortcut pressed | Overlay shortcuts take priority. Alarm list shortcuts are suppressed. |
+| Bulk delete of 20+ alarms | Show single "Deleted {N} alarms" toast with single undo that restores all |
+| Select All with search active | Selects only visible (filtered) alarms, not all alarms in DB |
+
+---
+
 ## Discoverability
 
 - Keyboard shortcut hint shown as tooltip on buttons (e.g., "New Alarm (⌘N)")

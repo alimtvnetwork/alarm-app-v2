@@ -837,6 +837,26 @@ CREATE TABLE AlarmEvents (
   AlarmTimeSnapshot TEXT NOT NULL DEFAULT '',   -- Preserves time after alarm deletion (DB-ORPHAN-001)
   Timestamp TEXT NOT NULL
 );
+
+-- Quotes table for motivational quotes feature (P2 — see 14-personalization.md)
+-- Resolves CG-004/AI-002: Quote struct existed but table schema was missing.
+CREATE TABLE Quotes (
+  QuoteId TEXT PRIMARY KEY,
+  Text TEXT NOT NULL,
+  Author TEXT NOT NULL DEFAULT '',
+  IsFavorite INTEGER NOT NULL DEFAULT 0,
+  IsCustom INTEGER NOT NULL DEFAULT 0
+);
+
+-- Webhooks table for webhook integration feature (P3 — see 12-smart-features.md)
+-- Resolves CG-005/AI-003: WebhookConfig struct existed but table schema was missing.
+CREATE TABLE Webhooks (
+  WebhookId TEXT PRIMARY KEY,
+  AlarmId TEXT REFERENCES Alarms(AlarmId) ON DELETE CASCADE,
+  Url TEXT NOT NULL,
+  Payload TEXT,                   -- JSON object or NULL
+  CreatedAt TEXT NOT NULL
+);
 ```
 
 ### SQLite WAL Mode (Resolves BE-CONCUR-001)
@@ -1149,14 +1169,21 @@ CREATE INDEX IdxAlarmEvents_Timestamp ON AlarmEvents(Timestamp);
 -- Default settings (seeded once via V1 migration — see "Settings Seeding Strategy")
 INSERT INTO Settings (Key, Value, ValueType) VALUES
   ('Theme', 'System', 'String'),
+  ('ThemeSkin', 'default', 'String'),
+  ('AccentColor', '#8b7355', 'String'),
   ('TimeFormat', '12h', 'String'),
   ('DefaultSnoozeDuration', '5', 'Integer'),
+  ('DefaultMaxSnoozeCount', '3', 'Integer'),
   ('DefaultSound', 'classic-beep', 'String'),
+  ('AutoDismissMin', '15', 'Integer'),
   ('AutoLaunch', 'false', 'Boolean'),
   ('MinimizeToTray', 'true', 'Boolean'),
   ('Language', 'en', 'String'),
   ('EventRetentionDays', '90', 'Integer'),
-  ('SystemTimezone', '', 'String');
+  ('IsGradualVolumeEnabled', 'false', 'Boolean'),
+  ('GradualVolumeDurationSec', '30', 'Integer'),
+  ('SystemTimezone', '', 'String'),
+  ('ExportWarningDismissed', 'false', 'Boolean');
 ```
 
 ---

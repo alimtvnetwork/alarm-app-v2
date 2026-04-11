@@ -365,6 +365,23 @@ pub struct WebhookPayload {
 
 ---
 
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| Webhook URL returns 500 error | Log error, retry once after 2s, then give up. Show "Webhook failed" in alarm history. |
+| Webhook URL times out (>5s) | Cancel request, log timeout, do not retry. Alarm dismissal is NOT blocked. |
+| Weather API key missing or invalid | Show "Weather unavailable" placeholder instead of briefing. Log warning. |
+| Weather API returns stale data (>30 min old) | Show data with "(last updated X min ago)" note. |
+| Location permission denied by user | Hide location-based alarm option. Show toast explaining why. |
+| Geofence radius < 50m | Clamp to 50m minimum. GPS accuracy makes smaller radii unreliable. |
+| Voice command in unsupported language | Show "Voice commands not available in {language}" toast. |
+| Multiple webhooks on same alarm | Fire all webhooks in parallel. Each has independent timeout and retry. |
+| Webhook URL changes between alarm fire and dismiss | Use URL as configured at dismiss time (read fresh from DB). |
+| DNS resolution of webhook URL returns private IP | Block request — SSRF protection catches this at fire time, not just at save time. |
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Webhook URL validated with 5 SSRF checks (HTTPS, blocked hosts, private IP, standard port, valid URL)

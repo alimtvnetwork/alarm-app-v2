@@ -142,6 +142,21 @@ pub struct ClearHistoryResult {
 
 ---
 
+## Edge Cases
+
+| Scenario | Expected Behavior |
+|----------|-------------------|
+| History view with 0 events | Show empty state: "No alarm history yet" with illustration |
+| Date range filter spans DST change | Events are stored with ISO 8601 timestamps; filter comparison uses UTC. No events lost or duplicated. |
+| CSV export with 10,000+ events | Stream to file via Rust — do NOT load all into memory. Show progress indicator. |
+| Clear history while CSV export is in progress | Queue the clear until export completes. Show "Export in progress" toast. |
+| AlarmEvents references deleted alarm (AlarmId = NULL) | Display `AlarmLabelSnapshot` and `AlarmTimeSnapshot` instead of live alarm data. |
+| Filter returns 0 results | Show "No events match your filters" with a "Clear filters" button |
+| History retention purge removes events user is currently viewing | Refresh view after purge. Events disappear from list. |
+| SortField = SnoozeCount with many ties | Secondary sort by Timestamp (newest first) to ensure stable ordering |
+
+---
+
 ## Acceptance Criteria
 
 - [ ] All alarm events (fired, snoozed, dismissed, missed) logged automatically
