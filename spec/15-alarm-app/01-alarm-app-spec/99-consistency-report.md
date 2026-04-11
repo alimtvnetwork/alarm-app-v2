@@ -12,9 +12,9 @@
 
 | # | File | Status |
 |---|------|--------|
-| 1 | `00-overview.md` | ✅ Present (v2.8.3) |
+| 1 | `00-overview.md` | ✅ Present (v2.9.0) |
 | 2 | `09-ai-handoff-reliability-report.md` | ✅ Present (v1.0.0 — supplementary, 94-task breakdown superseded) |
-| 3 | `10-ai-handoff-readiness-report.md` | ✅ Present (v2.7.0 — 100/100 readiness, 472/472 resolved) |
+| 3 | `10-ai-handoff-readiness-report.md` | ✅ Present (v2.9.0 — 100/100 readiness, 484/484 resolved) |
 | 4 | `11-atomic-task-breakdown.md` | ✅ Present (v1.1.0 — 62 authoritative tasks, 12 phases) |
 | 5 | `12-platform-and-concurrency-guide.md` | ✅ Present (v1.0.0 — PascalCase table names, corrected field refs) |
 | 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.1.0 — domain enums, thiserror 2.x, PascalCase examples) |
