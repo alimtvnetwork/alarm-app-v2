@@ -744,7 +744,7 @@ When `pending.len() > 0`, show a badge on the `AlarmOverlay`:
 └──────────────────────────────────┘
 ```
 
-### Edge Cases
+## Edge Cases
 
 | Scenario | Behavior |
 |----------|----------|
