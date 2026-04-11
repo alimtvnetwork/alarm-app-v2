@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 2.8.2  
+**Version:** 2.8.3  
 **Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** None
@@ -26,6 +26,21 @@
 ---
 
 ## Version History
+
+### v2.8.3 — 2026-04-11
+
+**Theme:** IPC Completeness — Rust struct definitions for all remaining payloads, registry alignment, export/import/webhook/analytics/system structs
+
+#### Key Changes
+
+- **Discovery Phases 32–34** resolved 33 issues: missing Rust structs for IPC payloads, registry mismatches, inline object standardization
+- **Phase 32 (7 issues):** Added `ExportDataPayload`, `ConfirmImportPayload`, `CreateWebhookPayload`, `GetWeatherPayload`, `LogFromFrontendPayload`, `ClearHistoryPayload`, `TestWebhookResult`, `ClearHistoryResult`, `NextAlarmResponse`, `WebhookPayload` (outgoing) Rust structs
+- **Phase 33 (11 issues):** Fixed IPC registry mismatches — `get_challenge` returns `AlarmChallenge | null`, `set_custom_background` returns `{ SavedPath: string }`, removed phantom fields
+- **Phase 34 (15 issues):** Added Groups CRUD, Personalization, Sound, Challenge Rust structs with `#[serde(rename_all = "PascalCase")]`
+- **IPC Registry:** Updated `create_group`/`update_group` payloads to reference named structs matching feature spec definitions
+- **Total issues:** 458/458 resolved
+
+---
 
 ### v2.8.2 — 2026-04-11
 
