@@ -1,6 +1,6 @@
 # Fundamentals
 
-**Version:** 1.5.0  
+**Version:** 1.6.0  
 **Status:** Active  
 **Updated:** 2026-04-11
 **AI Confidence:** High  

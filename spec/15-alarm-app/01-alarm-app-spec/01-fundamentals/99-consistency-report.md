@@ -16,20 +16,20 @@
 
 | # | File | Version | Status |
 |---|------|---------|--------|
-| 1 | `00-overview.md` | 1.5.0 | ✅ Present |
+| 1 | `00-overview.md` | 1.6.0 | ✅ Present |
 | 2 | `01-data-model.md` | 1.16.0 | ✅ Updated (domain enums, semantic inverses, single-DB decision, settings seeding, seedable config cross-ref, Quote from_row, StreakCalendarDay computed note) |
 | 3 | `02-design-system.md` | 1.5.0 | ✅ Updated (tray icon assets, UI states spec, `list_alarm_events` IPC, Scoring) |
 | 4 | `03-file-structure.md` | 1.8.0 | ✅ Updated (exact Cargo.toml + npm pins, Scoring, Zustand store shapes, i18n keys, routing) |
 | 5 | `04-platform-constraints.md` | 1.8.0 | ✅ Updated (error enums, IPC error format, code pattern exemptions, typed safeInvoke generic) |
 | 6 | `05-platform-strategy.md` | 1.1.0 | ⚠️ Legacy — SUPERSEDED banner added, retained for framework evaluation context (Scoring added) |
-| 7 | `06-tauri-architecture-and-framework-comparison.md` | 1.4.0 | ✅ Updated (plugin versions + API signatures, camelCase boundary comment, Scoring) |
+| 7 | `06-tauri-architecture-and-framework-comparison.md` | 1.7.0 | ✅ Updated (plugin versions + API signatures, auto-start IPC commands) |
 | 8 | `07-startup-sequence.md` | 1.5.0 | ✅ Updated (FATAL markers, `AlarmEventType::Missed` enum, Scoring) |
 | 9 | `08-devops-setup-guide.md` | 1.1.0 | ✅ Present (Scoring added) |
 | 10 | `09-test-strategy.md` | 1.2.0 | ✅ Updated (platform E2E + dep compat tests, serde comments, Scoring) |
 | 11 | `10-dependency-lock.md` | 1.1.0 | ✅ Exact version pins for all Rust crates + npm packages (Scoring added) |
 | 12 | `11-platform-verification-matrix.md` | 1.1.0 | ✅ Feature × Platform × Behavior × Test × Fallback (Scoring added) |
 | 13 | `12-logging-and-telemetry.md` | 1.0.0 | ✅ Log levels, JSON format, daily rotation, 7-day retention, never-log list, frontend IPC forwarding |
-| 14 | `13-os-service-layer.md` | 2.1.0 | ✅ Background service — auto-start, polling engine, tray, notifications, wake/sleep |
+| 14 | `13-os-service-layer.md` | 2.2.0 | ✅ Background service — auto-start, polling engine, tray, notifications, wake/sleep, exact pins, objc2 |
 | 15 | `97-acceptance-criteria.md` | 1.2.0 | ✅ Consolidated rollup of 73 testable criteria (Keywords added) |
 
 ---
