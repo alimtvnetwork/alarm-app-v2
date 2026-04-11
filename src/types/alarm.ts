@@ -178,6 +178,10 @@ export interface Settings {
   DefaultSound: string;
   ExportWarningDismissed: boolean;
   SystemTimezone: string;
+  BedtimeEnabled: boolean;
+  BedtimeTime: string;              // "HH:MM" 24h
+  BedtimeReminderMinBefore: number; // minutes before bedtime
+  SleepGoalHours: number;           // target sleep hours
 }
 
 export interface Quote {
@@ -241,4 +245,8 @@ export const DEFAULT_SETTINGS: Settings = {
   DefaultSound: "classic-beep",
   ExportWarningDismissed: false,
   SystemTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  BedtimeEnabled: false,
+  BedtimeTime: "22:30",
+  BedtimeReminderMinBefore: 30,
+  SleepGoalHours: 8,
 };

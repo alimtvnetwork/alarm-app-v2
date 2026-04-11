@@ -79,7 +79,12 @@
     "tired": "Letih",
     "ok": "OK",
     "good": "Baik",
-    "great": "Hebat"
+    "great": "Hebat",
+    "bedtimeReminder": "Peringatan Tidur",
+    "bedtime": "Waktu Tidur",
+    "remindBefore": "Ingatkan sebelum",
+    "sleepGoal": "Sasaran Tidur",
+    "bedtimeHint": "Anda akan diingatkan {{reminder}} min sebelum {{time}}"
   },
   "personalization": {
     "title": "Pemperibadian",
