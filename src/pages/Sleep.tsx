@@ -3,6 +3,7 @@
  */
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   BarChart,
   Bar,
@@ -17,7 +18,6 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Moon, Sun, Star } from "lucide-react";
 
-// Mock weekly sleep data
 const MOCK_SLEEP_DATA = [
   { day: "Mon", hours: 7.5, quality: 4 },
   { day: "Tue", hours: 6.2, quality: 3 },
@@ -28,17 +28,18 @@ const MOCK_SLEEP_DATA = [
   { day: "Sun", hours: 8.5, quality: 4 },
 ];
 
-const MOODS = [
-  { emoji: "😴", label: "Exhausted" },
-  { emoji: "😐", label: "Tired" },
-  { emoji: "🙂", label: "OK" },
-  { emoji: "😊", label: "Good" },
-  { emoji: "🤩", label: "Great" },
-];
-
 const Sleep = () => {
   const [sleepQuality, setSleepQuality] = useState(3);
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
+  const { t } = useTranslation();
+
+  const MOODS = [
+    { emoji: "😴", label: t("sleep.exhausted") },
+    { emoji: "😐", label: t("sleep.tired") },
+    { emoji: "🙂", label: t("sleep.ok") },
+    { emoji: "😊", label: t("sleep.good") },
+    { emoji: "🤩", label: t("sleep.great") },
+  ];
 
   const avgHours = (
     MOCK_SLEEP_DATA.reduce((sum, d) => sum + d.hours, 0) / MOCK_SLEEP_DATA.length
@@ -50,30 +51,28 @@ const Sleep = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-heading font-bold">Sleep</h1>
+      <h1 className="text-xl font-heading font-bold">{t("sleep.title")}</h1>
 
-      {/* Summary cards */}
       <div className="grid grid-cols-2 gap-2">
         <Card>
           <CardContent className="flex flex-col items-center p-4">
             <Moon className="mb-1 h-5 w-5 text-primary" />
             <span className="text-2xl font-heading font-bold">{avgHours}h</span>
-            <span className="text-xs text-muted-foreground font-body">Avg Sleep</span>
+            <span className="text-xs text-muted-foreground font-body">{t("sleep.avgSleep")}</span>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="flex flex-col items-center p-4">
             <Star className="mb-1 h-5 w-5 text-alarm-snooze" />
             <span className="text-2xl font-heading font-bold">{avgQuality}/5</span>
-            <span className="text-xs text-muted-foreground font-body">Avg Quality</span>
+            <span className="text-xs text-muted-foreground font-body">{t("sleep.avgQuality")}</span>
           </CardContent>
         </Card>
       </div>
 
-      {/* Weekly chart */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-heading">This Week</CardTitle>
+          <CardTitle className="text-sm font-heading">{t("sleep.thisWeek")}</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={180}>
@@ -100,19 +99,17 @@ const Sleep = () => {
         </CardContent>
       </Card>
 
-      {/* Log today's sleep */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-sm font-heading">
             <Sun className="h-4 w-4" />
-            How did you sleep?
+            {t("sleep.howDidYouSleep")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          {/* Quality slider */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs text-muted-foreground font-body">
-              <span>Quality</span>
+              <span>{t("sleep.quality")}</span>
               <span>{sleepQuality}/5</span>
             </div>
             <Slider
@@ -124,9 +121,8 @@ const Sleep = () => {
             />
           </div>
 
-          {/* Mood selector */}
           <div className="space-y-2">
-            <span className="text-xs text-muted-foreground font-body">Mood</span>
+            <span className="text-xs text-muted-foreground font-body">{t("sleep.mood")}</span>
             <div className="flex justify-between gap-1">
               {MOODS.map((mood, i) => (
                 <button
@@ -145,7 +141,7 @@ const Sleep = () => {
             </div>
           </div>
 
-          <Button className="w-full">Save</Button>
+          <Button className="w-full">{t("sleep.save")}</Button>
         </CardContent>
       </Card>
     </div>

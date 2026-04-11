@@ -1,8 +1,9 @@
 /**
- * Index — Main clock page with analog clock in cream card, digital time, and alarm list.
+ * Index — Main clock page with analog clock, digital time, and alarm list.
  */
 
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import AnalogClock from "@/components/clock/AnalogClock";
 import DigitalTime from "@/components/clock/DigitalTime";
 import AlarmList from "@/components/alarm/AlarmList";
@@ -16,6 +17,7 @@ const Index = () => {
   const loadAlarms = useAlarmStore((s) => s.loadAlarms);
   const loadGroups = useAlarmStore((s) => s.loadGroups);
   const loadSettings = useSettingsStore((s) => s.loadSettings);
+  const { t } = useTranslation();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingAlarm, setEditingAlarm] = useState<Alarm | null>(null);
@@ -36,7 +38,6 @@ const Index = () => {
     setIsFormOpen(true);
   };
 
-  // Expose handleNew globally for Header's + button
   useEffect(() => {
     const handler = () => handleNew();
     window.addEventListener("alarm:new", handler);
@@ -45,10 +46,8 @@ const Index = () => {
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* Missed alarm banner */}
       <MissedAlarmBanner />
 
-      {/* Clock card — cream background */}
       <div className="w-full rounded-xl bg-card p-6 shadow-sm">
         <div className="flex flex-col items-center gap-4">
           <AnalogClock />
@@ -56,17 +55,15 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Alarm list */}
       <div className="w-full">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-heading font-semibold text-muted-foreground uppercase tracking-wider">
-            My Alarms
+            {t("clock.alarms")}
           </h2>
         </div>
         <AlarmList onEditAlarm={handleEdit} />
       </div>
 
-      {/* Form sheet */}
       <AlarmForm
         alarm={editingAlarm}
         isOpen={isFormOpen}

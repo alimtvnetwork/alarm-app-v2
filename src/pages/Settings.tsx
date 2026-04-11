@@ -1,8 +1,9 @@
 /**
- * Settings Page — All 16 settings keys organized into sections.
+ * Settings Page — All settings organized into sections with i18n.
  */
 
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -20,9 +21,7 @@ import {
   Volume2,
   Bell,
   Globe,
-  Shield,
   Laptop,
-  Timer,
   Database,
 } from "lucide-react";
 
@@ -30,27 +29,33 @@ const Settings = () => {
   const settings = useSettingsStore((s) => s.settings);
   const loadSettings = useSettingsStore((s) => s.loadSettings);
   const updateSettings = useSettingsStore((s) => s.updateSettings);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     loadSettings();
   }, []);
 
+  const handleLanguageChange = (lang: string) => {
+    updateSettings({ Language: lang });
+    i18n.changeLanguage(lang);
+    localStorage.setItem("alarm_app_language", lang);
+  };
+
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-heading font-bold">Settings</h1>
+      <h1 className="text-xl font-heading font-bold">{t("settings.title")}</h1>
 
       {/* Alarm Defaults */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-sm font-heading">
             <Bell className="h-4 w-4" />
-            Alarm Defaults
+            {t("settings.alarmDefaults")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          {/* Default Snooze Duration */}
           <div className="flex items-center justify-between">
-            <Label className="font-body text-sm">Snooze Duration</Label>
+            <Label className="font-body text-sm">{t("settings.snoozeDuration")}</Label>
             <Select
               value={String(settings.DefaultSnoozeDurationMin)}
               onValueChange={(v) => updateSettings({ DefaultSnoozeDurationMin: Number(v) })}
@@ -60,15 +65,14 @@ const Settings = () => {
               </SelectTrigger>
               <SelectContent>
                 {[1, 3, 5, 10, 15, 20, 30].map((n) => (
-                  <SelectItem key={n} value={String(n)}>{n} min</SelectItem>
+                  <SelectItem key={n} value={String(n)}>{t("settings.min", { count: n })}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          {/* Default Max Snooze Count */}
           <div className="flex items-center justify-between">
-            <Label className="font-body text-sm">Max Snoozes</Label>
+            <Label className="font-body text-sm">{t("settings.maxSnoozes")}</Label>
             <Select
               value={String(settings.DefaultMaxSnoozeCount)}
               onValueChange={(v) => updateSettings({ DefaultMaxSnoozeCount: Number(v) })}
@@ -79,16 +83,15 @@ const Settings = () => {
               <SelectContent>
                 {[0, 1, 2, 3, 5, 10].map((n) => (
                   <SelectItem key={n} value={String(n)}>
-                    {n === 0 ? "None" : String(n)}
+                    {n === 0 ? t("settings.noneOption") : String(n)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          {/* Auto-Dismiss */}
           <div className="flex items-center justify-between">
-            <Label className="font-body text-sm">Auto-Dismiss</Label>
+            <Label className="font-body text-sm">{t("settings.autoDismiss")}</Label>
             <Select
               value={String(settings.AutoDismissMin)}
               onValueChange={(v) => updateSettings({ AutoDismissMin: Number(v) })}
@@ -97,19 +100,18 @@ const Settings = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="0">Manual</SelectItem>
+                <SelectItem value="0">{t("settings.manual")}</SelectItem>
                 {[1, 5, 10, 15, 30, 60].map((n) => (
-                  <SelectItem key={n} value={String(n)}>{n} min</SelectItem>
+                  <SelectItem key={n} value={String(n)}>{t("settings.min", { count: n })}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          {/* Default Sound */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Volume2 className="h-4 w-4 text-muted-foreground" />
-              <Label className="font-body text-sm">Default Sound</Label>
+              <Label className="font-body text-sm">{t("settings.defaultSound")}</Label>
             </div>
             <Select
               value={settings.DefaultSound}
@@ -119,17 +121,16 @@ const Settings = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="classic-beep">Classic Beep</SelectItem>
-                <SelectItem value="gentle-chime">Gentle Chime</SelectItem>
-                <SelectItem value="nature-birds">Birds</SelectItem>
-                <SelectItem value="digital-pulse">Digital Pulse</SelectItem>
+                <SelectItem value="classic-beep">{t("alarmForm.classicBeep")}</SelectItem>
+                <SelectItem value="gentle-chime">{t("alarmForm.gentleChime")}</SelectItem>
+                <SelectItem value="nature-birds">{t("alarmForm.birds")}</SelectItem>
+                <SelectItem value="digital-pulse">{t("alarmForm.digitalPulse")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* Gradual Volume */}
           <div className="flex items-center justify-between">
-            <Label className="font-body text-sm">Gradual Volume</Label>
+            <Label className="font-body text-sm">{t("settings.gradualVolume")}</Label>
             <Switch
               checked={settings.IsGradualVolumeEnabled}
               onCheckedChange={(v) => updateSettings({ IsGradualVolumeEnabled: v })}
@@ -138,7 +139,7 @@ const Settings = () => {
 
           {settings.IsGradualVolumeEnabled && (
             <div className="flex items-center justify-between pl-4">
-              <Label className="font-body text-xs text-muted-foreground">Duration</Label>
+              <Label className="font-body text-xs text-muted-foreground">{t("settings.duration")}</Label>
               <Select
                 value={String(settings.GradualVolumeDurationSec)}
                 onValueChange={(v) => updateSettings({ GradualVolumeDurationSec: Number(v) })}
@@ -162,12 +163,12 @@ const Settings = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-sm font-heading">
             <Clock className="h-4 w-4" />
-            Display
+            {t("settings.display")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <Label className="font-body text-sm">24-Hour Clock</Label>
+            <Label className="font-body text-sm">{t("settings.clock24h")}</Label>
             <Switch
               checked={settings.Is24Hour}
               onCheckedChange={(v) => updateSettings({ Is24Hour: v })}
@@ -181,19 +182,19 @@ const Settings = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-sm font-heading">
             <Laptop className="h-4 w-4" />
-            System
+            {t("settings.system")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <Label className="font-body text-sm">Auto-Launch on Startup</Label>
+            <Label className="font-body text-sm">{t("settings.autoLaunch")}</Label>
             <Switch
               checked={settings.AutoLaunch}
               onCheckedChange={(v) => updateSettings({ AutoLaunch: v })}
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label className="font-body text-sm">Minimize to Tray</Label>
+            <Label className="font-body text-sm">{t("settings.minimizeToTray")}</Label>
             <Switch
               checked={settings.MinimizeToTray}
               onCheckedChange={(v) => updateSettings({ MinimizeToTray: v })}
@@ -207,20 +208,20 @@ const Settings = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-sm font-heading">
             <Globe className="h-4 w-4" />
-            Language
+            {t("settings.language")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Select
             value={settings.Language}
-            onValueChange={(v) => updateSettings({ Language: v })}
+            onValueChange={handleLanguageChange}
           >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="ms">Bahasa Melayu</SelectItem>
+              <SelectItem value="en">{t("settings.english")}</SelectItem>
+              <SelectItem value="ms">{t("settings.bahasaMelayu")}</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>
@@ -231,12 +232,12 @@ const Settings = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-sm font-heading">
             <Database className="h-4 w-4" />
-            Data
+            {t("settings.data")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <Label className="font-body text-sm">Event Retention</Label>
+            <Label className="font-body text-sm">{t("settings.eventRetention")}</Label>
             <Select
               value={String(settings.EventRetentionDays)}
               onValueChange={(v) => updateSettings({ EventRetentionDays: Number(v) })}
@@ -245,16 +246,16 @@ const Settings = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="30">30 days</SelectItem>
-                <SelectItem value="60">60 days</SelectItem>
-                <SelectItem value="90">90 days</SelectItem>
-                <SelectItem value="180">180 days</SelectItem>
-                <SelectItem value="365">1 year</SelectItem>
+                <SelectItem value="30">{t("settings.days", { count: 30 })}</SelectItem>
+                <SelectItem value="60">{t("settings.days", { count: 60 })}</SelectItem>
+                <SelectItem value="90">{t("settings.days", { count: 90 })}</SelectItem>
+                <SelectItem value="180">{t("settings.days", { count: 180 })}</SelectItem>
+                <SelectItem value="365">{t("settings.year")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="flex items-center justify-between">
-            <Label className="font-body text-sm">Export Privacy Warning</Label>
+            <Label className="font-body text-sm">{t("settings.exportPrivacy")}</Label>
             <Switch
               checked={settings.ExportWarningDismissed}
               onCheckedChange={(v) => updateSettings({ ExportWarningDismissed: v })}
@@ -267,12 +268,12 @@ const Settings = () => {
       <Card>
         <CardContent className="flex flex-col gap-1 p-4 text-xs text-muted-foreground font-body">
           <div className="flex justify-between">
-            <span>Timezone</span>
+            <span>{t("settings.timezone")}</span>
             <span>{settings.SystemTimezone}</span>
           </div>
           <Separator className="my-1" />
           <div className="flex justify-between">
-            <span>Version</span>
+            <span>{t("settings.version")}</span>
             <span>1.0.0</span>
           </div>
         </CardContent>
