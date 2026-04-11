@@ -1,15 +1,15 @@
 ---
 name: Alarm App Spec Issues Audit
-description: 425 total spec issues — ALL 425 RESOLVED, 0 OPEN. 31 discovery phases, 42 fix phases.
+description: 432 total spec issues — ALL 432 RESOLVED, 0 OPEN. 32 discovery phases, 42 fix phases.
 type: feature
 ---
 
 ## Audit Status — ✅ ALL RESOLVED
 
-- **Total issues:** 425
+- **Total issues:** 432
 - **Open:** 0
-- **Resolved:** 425
-- **Discovery phases:** 31
+- **Resolved:** 432
+- **Discovery phases:** 32
 - **Fix phases:** 42 (Phases 1–20, A–V)
 
 ## Root Cause Analysis
