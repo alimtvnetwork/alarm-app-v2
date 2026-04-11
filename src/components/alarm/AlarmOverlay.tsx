@@ -1,7 +1,7 @@
 /**
  * AlarmOverlay — Full-screen overlay when an alarm fires.
- * Shows time, label, snooze/dismiss buttons, optional math challenge,
- * and auto-dismiss countdown.
+ * Dark charcoal background, rectangular side-by-side snooze/dismiss buttons,
+ * "Snooze X of Y remaining" text, auto-dismiss countdown.
  */
 
 import { useEffect, useState, useCallback } from "react";
@@ -55,6 +55,10 @@ const AlarmOverlay = () => {
     return true;
   })();
 
+  const snoozeRemaining = alarm
+    ? alarm.MaxSnoozeCount - (snoozeState?.SnoozeCount ?? 0)
+    : 0;
+
   const handleDismissClick = useCallback(() => {
     if (alarm?.ChallengeType === ChallengeType.Math) {
       setShowChallenge(true);
@@ -79,73 +83,73 @@ const AlarmOverlay = () => {
   if (!isVisible || !alarm) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/95 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#2a2420] text-[#f0ebe3]">
       {/* Auto-dismiss countdown */}
       {autoDismissRemaining !== null && (
-        <p className="absolute top-6 text-xs text-muted-foreground font-body">
+        <p className="absolute top-6 text-xs font-body opacity-60">
           Auto-dismiss in {formatCountdown(autoDismissRemaining)}
         </p>
       )}
 
       {/* Alarm icon + animation */}
-      <div className="mb-6 animate-pulse-glow">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/20">
-          <Bell className="h-10 w-10 text-primary" />
+      <div className="mb-8 animate-pulse-glow">
+        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary/20">
+          <Bell className="h-12 w-12 text-primary" />
         </div>
       </div>
 
       {/* Time */}
-      <h1 className="text-6xl font-heading font-bold text-foreground">
+      <h1 className="text-7xl font-heading font-bold">
         {alarm.Time}
       </h1>
 
       {/* Label */}
       {alarm.Label && (
-        <p className="mt-2 text-lg font-body text-muted-foreground">
+        <p className="mt-3 text-xl font-body opacity-70">
           {alarm.Label}
         </p>
       )}
 
-      {/* Snooze count */}
+      {/* Snooze remaining */}
       {snoozeState && snoozeState.SnoozeCount > 0 && (
-        <p className="mt-1 text-xs font-body text-muted-foreground">
-          Snoozed {snoozeState.SnoozeCount}/{alarm.MaxSnoozeCount} times
+        <p className="mt-2 text-sm font-body opacity-50">
+          Snooze {snoozeState.SnoozeCount} of {alarm.MaxSnoozeCount} · {snoozeRemaining} remaining
         </p>
       )}
 
       {/* Challenge or buttons */}
       {showChallenge ? (
-        <div className="mt-8">
+        <div className="mt-10">
           <MathChallenge
             difficulty={alarm.ChallengeDifficulty ?? ChallengeDifficulty.Easy}
             onSolved={handleChallengeSolved}
           />
         </div>
       ) : (
-        <div className="mt-10 flex gap-6">
-          {/* Snooze */}
+        <div className="mt-12 flex gap-4 px-6 w-full max-w-xs">
+          {/* Snooze — rectangular */}
           {canSnooze && (
             <Button
               onClick={snooze}
               variant="outline"
               size="lg"
-              className="flex h-20 w-20 flex-col items-center gap-1 rounded-full border-2 border-alarm-snooze text-alarm-snooze hover:bg-alarm-snooze/10"
+              className="flex-1 h-16 flex-col gap-1 rounded-xl border-2 border-alarm-snooze text-alarm-snooze hover:bg-alarm-snooze/10"
             >
-              <Moon className="h-6 w-6" />
-              <span className="text-[10px] font-body">
-                {alarm.SnoozeDurationMin}m
+              <Moon className="h-5 w-5" />
+              <span className="text-xs font-body">
+                Snooze {alarm.SnoozeDurationMin}m
               </span>
             </Button>
           )}
 
-          {/* Dismiss */}
+          {/* Dismiss — rectangular */}
           <Button
             onClick={handleDismissClick}
             size="lg"
-            className="flex h-20 w-20 flex-col items-center gap-1 rounded-full bg-alarm-dismiss text-primary-foreground hover:bg-alarm-dismiss/90"
+            className="flex-1 h-16 flex-col gap-1 rounded-xl bg-alarm-dismiss text-primary-foreground hover:bg-alarm-dismiss/90"
           >
-            <X className="h-6 w-6" />
-            <span className="text-[10px] font-body">Dismiss</span>
+            <X className="h-5 w-5" />
+            <span className="text-xs font-body">Dismiss</span>
           </Button>
         </div>
       )}
