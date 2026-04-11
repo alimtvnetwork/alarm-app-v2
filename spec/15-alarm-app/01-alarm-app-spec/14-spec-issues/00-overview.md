@@ -1,6 +1,6 @@
 # Spec Issues — Overview
 
-**Version:** 1.38.0  
+**Version:** 1.39.0  
 **Updated:** 2026-04-11
 
 ---
