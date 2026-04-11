@@ -17,8 +17,8 @@
 | 3 | `10-ai-handoff-readiness-report.md` | ✅ Present (v2.9.3 — 100/100 readiness, 524/524 resolved) |
 | 4 | `11-atomic-task-breakdown.md` | ✅ Present (v1.1.0 — 62 authoritative tasks, 12 phases) |
 | 5 | `12-platform-and-concurrency-guide.md` | ✅ Present (v1.0.0 — PascalCase table names, corrected field refs) |
-| 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.2.0 — domain enums, thiserror 2.x, PascalCase examples) |
-| 7 | `98-changelog.md` | ✅ Present (v2.9.1 — v1.0.0 → v2.9.1) |
+| 6 | `13-ai-cheat-sheet.md` | ✅ Present (v1.3.0 — domain enums, thiserror 2.x, PascalCase examples) |
+| 7 | `98-changelog.md` | ✅ Present (v2.9.2 — v1.0.0 → v2.9.2) |
 
 ### Reference Documents
 

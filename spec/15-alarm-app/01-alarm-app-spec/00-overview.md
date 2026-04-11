@@ -82,6 +82,7 @@ AlarmGroup {
   AlarmGroupId: string (uuid)
   Name: string
   Color: string (hex)
+  Position: number
   IsEnabled: boolean
 }
 
