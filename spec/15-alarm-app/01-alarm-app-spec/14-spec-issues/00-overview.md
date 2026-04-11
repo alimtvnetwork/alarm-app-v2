@@ -66,6 +66,10 @@ This folder tracks all specification quality issues found during the deep audit 
 | 55 | `55-issue-summary-index.md` | Summary Index — All 484 issues by category, phase, and root cause | — | — | — |
 | 56 | `56-gap-analysis-phase-6.md` | Gap Analysis Phase 6 — Post-completion fresh audit | 22 | 0 | 22 |
 | 57 | `57-gap-analysis-phase-7.md` | Gap Analysis Phase 7 — Comprehensive fresh audit (Settings, schemas, stores, logging) | 18 | 0 | 18 |
+| 58 | `58-gap-analysis-phase-11.md` | Gap Analysis Phase 11 — OS service layer initial audit | 10 | 0 | 10 |
+| 59 | `59-gap-analysis-phase-12.md` | Gap Analysis Phase 12 — OS service layer foundational alignment | 16 | 0 | 16 |
+| 60 | `63-gap-analysis-phase-13.md` | Gap Analysis Phase 13 — Post-Phase 12B verification (dependency pins, crate modernization) | 6 | 0 | 6 |
+| 61 | `64-gap-analysis-phase-14.md` | Gap Analysis Phase 14 — Post-Phase 13B verification (field names, version pins, notification templates) | 8 | 0 | 8 |
 
 ---
 
@@ -74,11 +78,11 @@ This folder tracks all specification quality issues found during the deep audit 
 | Severity | Count |
 |----------|:-----:|
 | 🔴 Critical | 104 |
-| 🟡 Medium | 297 |
-| 🟢 Low | 123 |
-| **Grand Total** | **524** |
+| 🟡 Medium | 319 |
+| 🟢 Low | 141 |
+| **Grand Total** | **564** |
 | **Open** | **0** |
-| **Resolved** | **524** |
+| **Resolved** | **564** |
 
 ---
 
@@ -161,6 +165,10 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Discovery Phase 36** | **Final Sweep: IPC Registry Alignment & Stale References (12 issues)** | **✅ Done (+12 = 484, 12 resolved)** |
 | **Gap Analysis Phase 6** | **Post-completion fresh audit — UI layouts, notification templates, i18n, routing, scoring (22 issues)** | **✅ Done (+22 = 506, 22 resolved)** |
 | **Gap Analysis Phase 7** | **Comprehensive fresh audit — Settings reconciliation, missing schemas, Zustand stores, logging (18 issues)** | **✅ Done (+18 = 524, 18 resolved)** |
+| **Gap Analysis Phase 11** | **OS service layer initial audit — legacy columns, polling interval, missing metadata (10 issues)** | **✅ Done (+10 = 534, 10 resolved)** |
+| **Gap Analysis Phase 12** | **OS service layer foundational alignment — data model, IPC registry, edge cases (16 issues)** | **✅ Done (+16 = 550, 16 resolved)** |
+| **Gap Analysis Phase 13** | **Post-Phase 12B verification — dependency pins, cocoa→objc2, version bumps (6 issues)** | **✅ Done (+6 = 556, 6 resolved)** |
+| **Gap Analysis Phase 14** | **Post-Phase 13B verification — field names, version pins, notification templates (8 issues)** | **✅ Done (+8 = 564, 8 resolved)** |
 
 ---
 

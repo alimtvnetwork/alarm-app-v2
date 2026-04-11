@@ -29,7 +29,7 @@
 | 11 | `10-dependency-lock.md` | 1.1.0 | ✅ Exact version pins for all Rust crates + npm packages (Scoring added) |
 | 12 | `11-platform-verification-matrix.md` | 1.1.0 | ✅ Feature × Platform × Behavior × Test × Fallback (Scoring added) |
 | 13 | `12-logging-and-telemetry.md` | 1.0.0 | ✅ Log levels, JSON format, daily rotation, 7-day retention, never-log list, frontend IPC forwarding |
-| 14 | `13-os-service-layer.md` | 2.2.0 | ✅ Background service — auto-start, polling engine, tray, notifications, wake/sleep, exact pins, objc2 |
+| 14 | `13-os-service-layer.md` | 2.3.0 | ✅ Background service — auto-start, polling engine, tray, notifications, wake/sleep, exact pins, objc2, aligned notification templates |
 | 15 | `97-acceptance-criteria.md` | 1.2.0 | ✅ Consolidated rollup of 73 testable criteria (Keywords added) |
 
 ---

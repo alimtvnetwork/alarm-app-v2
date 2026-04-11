@@ -1,6 +1,6 @@
 # OS Service Layer Specification
 
-**Version:** 2.2.0  
+**Version:** 2.3.0  
 **Updated:** 2026-04-11  
 **Target Platform:** macOS (primary), Windows/Linux (future)  
 **Architecture:** Tauri 2.x (Rust core)  
@@ -419,10 +419,12 @@ CREATE INDEX IdxAlarms_NextFireTime ON Alarms(NextFireTime) WHERE IsEnabled = 1 
 
 ### Notification Content
 
+> **Canonical templates** are defined in `../02-features/03-alarm-firing.md` → Notification Content Templates. This section summarizes for service-layer context.
+
 | Field | Value |
 |-------|-------|
-| Title | Alarm title |
-| Body | First 100 chars of alarm note, or "Alarm is due!" if no note |
+| Title | `"⏰ {Label}"` or `"⏰ Alarm"` if label is empty |
+| Body | `"{Time} — Tap to dismiss or snooze"` (uses `Is24Hour` setting for format) |
 | Sound | System default (configurable via settings) |
 | Actions | **Snooze** — reschedule alarm; **Dismiss** — mark as dismissed |
 
@@ -431,17 +433,14 @@ CREATE INDEX IdxAlarms_NextFireTime ON Alarms(NextFireTime) WHERE IsEnabled = 1 
 ```rust
 use tauri_plugin_notification::NotificationExt;
 
-fn fire_alarm_notification(app: &AppHandle, alarm: &Alarm, is_sound_enabled: bool) {
-    let body = if alarm.note.is_empty() {
-        "Alarm is due!".to_string()
-    } else {
-        alarm.note.chars().take(100).collect()
-    };
+fn fire_alarm_notification(app: &AppHandle, alarm: &Alarm, is_24_hour: bool, is_sound_enabled: bool) {
+    let label = if alarm.label.is_empty() { "Alarm" } else { &alarm.label };
+    let time_str = format_time(&alarm.time, is_24_hour);
 
     let mut notification = app.notification()
         .builder()
-        .title(&alarm.title)
-        .body(&body)
+        .title(&format!("⏰ {label}"))
+        .body(&format!("{time_str} — Tap to dismiss or snooze"))
         .action_type_id("alarm-actions");
     
     if is_sound_enabled {
@@ -460,7 +459,9 @@ fn fire_alarm_notification(app: &AppHandle, alarm: &Alarm, is_sound_enabled: boo
             ..Default::default()
         })
         .show()
-        .expect("Failed to show notification");
+        .unwrap_or_else(|e| {
+            tracing::warn!(error = %e, "Failed to show notification");
+        });
 }
 ```
 
@@ -684,8 +685,8 @@ src-tauri/src/
 
 ```toml
 [dependencies]
-tauri = { version = "=2.5.1", features = ["tray-icon"] }
-tauri-plugin-notification = "=2.5.1"
+tauri = { version = "=2.10.3", features = ["tray-icon"] }
+tauri-plugin-notification = "=2.3.3"
 tauri-plugin-autostart = "=2.5.1"
 rusqlite = { version = "=0.32.1", features = ["bundled"] }
 tokio = { version = "=1.51.1", features = ["full"] }
@@ -868,4 +869,4 @@ This persists across app updates and is not deleted when the app is removed (use
 
 ---
 
-*OS Service Layer Specification v2.2.0 — updated: 2026-04-11*
+*OS Service Layer Specification v2.3.0 — updated: 2026-04-11*
