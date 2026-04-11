@@ -225,43 +225,43 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 
 ## Phase 5: Issue Grouping — Atomic Fix Tasks
 
-### Task Group 1: Database Convention Fixes (4 issues)
+### Task Group 1: Database Convention Fixes (4 issues) — ✅ ALL RESOLVED
 
-| Task | Issues | Effort |
+| Task | Issues | Status |
 |------|--------|--------|
-| Fix 4 index names to use `Idx{Table}_{Column}` separator | DB-002 | 10 min |
-| Add Settings PK exemption note OR restructure table | DB-001 | 15 min |
+| Fix 4 index names to use `Idx{Table}_{Column}` separator | DB-002 | ✅ Done |
+| Add Settings PK exemption note | DB-001 | ✅ Done — SQL comment + rationale added |
 
-### Task Group 2: Content Gap Fixes (6 issues)
+### Task Group 2: Content Gap Fixes (6 issues) — ✅ 3/4 RESOLVED
 
-| Task | Issues | Effort |
+| Task | Issues | Status |
 |------|--------|--------|
-| Add edge cases table to `11-sleep-wellness.md` | CG-001 | 20 min |
-| Add edge cases table to `14-personalization.md` | CG-002 | 20 min |
-| Create IPC error-to-variant mapping table | AI-001, CG-003 | 30 min |
-| Add Settings screen UI spec section | AI-002, CG-006 | 30 min |
+| Add edge cases table to `11-sleep-wellness.md` | CG-001 | ✅ Done — 12 edge cases |
+| Add edge cases table to `14-personalization.md` | CG-002 | ✅ Done — 12 edge cases |
+| Create IPC error-to-variant mapping table | AI-001, CG-003 | ✅ Done — 46 commands mapped |
+| Add Settings screen UI spec section | AI-002, CG-006 | ⏳ Remaining (UI spec) |
 
-### Task Group 3: AI-Readiness Improvements (5 issues)
+### Task Group 3: AI-Readiness Improvements (5 issues) — ⏳ REMAINING
 
-| Task | Issues | Effort |
+| Task | Issues | Status |
 |------|--------|--------|
-| Define Zustand store state shapes | AI-005 | 30 min |
-| Add alarm creation/list UI layout descriptions | AI-003, AI-004 | 45 min |
-| Define notification content templates | AI-006 | 15 min |
+| Define Zustand store state shapes | AI-005 | ⏳ Remaining |
+| Add alarm creation/list UI layout descriptions | AI-003, AI-004 | ⏳ Remaining |
+| Define notification content templates | AI-006 | ⏳ Remaining |
 
-### Task Group 4: Code Sample Fixes (3 issues)
+### Task Group 4: Code Sample Fixes (3 issues) — ✅ ALL RESOLVED
 
-| Task | Issues | Effort |
+| Task | Issues | Status |
 |------|--------|--------|
-| Document `expect()` exemption centrally or convert to `match` | DB-003, DB-004, DB-005 | 20 min |
+| Document `expect()` exemption centrally or convert to `match` | DB-003, DB-004, DB-005 | ✅ Done — EXEMPT annotations added |
 
-### Task Group 5: Minor Polish (3 issues)
+### Task Group 5: Minor Polish (3 issues) — ⏳ REMAINING
 
-| Task | Issues | Effort |
+| Task | Issues | Status |
 |------|--------|--------|
-| Add Scoring tables to `97-acceptance-criteria.md` and `99-consistency-report.md` | S-001, S-002 | 10 min |
-| Add i18n key naming convention | AI-007 | 15 min |
-| Confirm frontend routing structure | AI-008 | 10 min |
+| Add Scoring tables to `97-acceptance-criteria.md` and `99-consistency-report.md` | S-001, S-002 | ⏳ Remaining |
+| Add i18n key naming convention | AI-007 | ⏳ Remaining |
+| Confirm frontend routing structure | AI-008 | ⏳ Remaining |
 
 ---
 
