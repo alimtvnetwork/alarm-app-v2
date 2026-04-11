@@ -164,5 +164,11 @@
     "newAlarm": "Penggera baharu",
     "snooze": "Tunda (overlay)",
     "dismiss": "Tutup (overlay)"
+  },
+  "personalization": {
+    "streakCalendar": "Rekod Berturutan",
+    "dayStreak": "hari berturut-turut",
+    "less": "Kurang",
+    "more": "Lebih"
   }
 }

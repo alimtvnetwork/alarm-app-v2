@@ -1,5 +1,5 @@
 /**
- * Personalization Page — Theme switcher, accent color picker, skin selector.
+ * Personalization Page — Theme switcher, accent color picker, skin selector, streak calendar.
  */
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +14,7 @@ import {
 import { ThemeMode } from "@/types/alarm";
 import { useSettingsStore } from "@/stores/settings-store";
 import { Sun, Moon, Monitor, Palette } from "lucide-react";
+import StreakCalendar from "@/components/personalization/StreakCalendar";
 
 const ACCENT_COLORS = [
   { value: "#8b7355", label: "Warm Brown" },
@@ -37,6 +38,9 @@ const Personalization = () => {
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-xl font-heading font-bold">Personalization</h1>
+
+      {/* Streak Calendar */}
+      <StreakCalendar />
 
       {/* Theme */}
       <Card>
