@@ -45,7 +45,8 @@
 | 15 | `14-personalization.md` | 1.4.0 | ✅ Updated |
 | 16 | `15-keyboard-shortcuts.md` | 1.2.0 | ✅ Updated |
 | 17 | `16-accessibility-and-nfr.md` | 1.2.0 | ✅ Updated |
-| 18 | `97-acceptance-criteria.md` | 1.0.0 | ✅ Consolidated rollup of 133 testable criteria (Keywords + Cross-Refs added) |
+| 18 | `17-ui-layouts.md` | 1.0.0 | ✅ Alarm list, alarm form, settings screen layouts, component trees, responsive behavior |
+| 19 | `97-acceptance-criteria.md` | 1.1.0 | ✅ Consolidated rollup of 133 testable criteria (Keywords + Cross-Refs added) |
 
 ---
 
@@ -57,7 +58,7 @@
 | `99-consistency-report.md` present | ✅ |
 | `97-acceptance-criteria.md` present | ✅ (133 criteria) |
 | Lowercase kebab-case naming | ✅ |
-| Numeric prefixes sequential (01–16) | ✅ |
+| Numeric prefixes sequential (01–17) | ✅ |
 | All 17 feature files listed in overview | ✅ |
 | No stale cross-references | ✅ |
 | `@dnd-kit/core` in CRUD spec ↔ FE-DND-001 | ✅ |
