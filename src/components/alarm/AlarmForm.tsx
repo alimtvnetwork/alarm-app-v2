@@ -1,9 +1,9 @@
 /**
  * AlarmForm — Sheet-based create/edit form for alarms.
- * Covers time, label, repeat, sound, snooze, challenge settings.
  */
 
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Sheet,
   SheetContent,
@@ -27,7 +27,6 @@ import {
   RepeatType,
   ChallengeType,
   ChallengeDifficulty,
-  DEFAULT_REPEAT_PATTERN,
 } from "@/types/alarm";
 import { useAlarmStore } from "@/stores/alarm-store";
 
@@ -44,8 +43,8 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
   const addAlarm = useAlarmStore((s) => s.addAlarm);
   const updateAlarm = useAlarmStore((s) => s.updateAlarm);
   const isEditing = alarm !== null;
+  const { t } = useTranslation();
 
-  // Form state
   const [time, setTime] = useState("07:00");
   const [label, setLabel] = useState("");
   const [repeatType, setRepeatType] = useState<RepeatType>(RepeatType.Once);
@@ -136,12 +135,11 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
       <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl">
         <SheetHeader>
           <SheetTitle className="font-heading">
-            {isEditing ? "Edit Alarm" : "New Alarm"}
+            {isEditing ? t("alarmForm.editAlarm") : t("alarmForm.newAlarm")}
           </SheetTitle>
         </SheetHeader>
 
         <div className="flex flex-col gap-5 py-4">
-          {/* Time picker */}
           <div className="flex flex-col items-center gap-2">
             <input
               type="time"
@@ -151,20 +149,18 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
             />
           </div>
 
-          {/* Label */}
           <div className="space-y-1.5">
-            <Label className="font-body text-sm">Label</Label>
+            <Label className="font-body text-sm">{t("alarmForm.label")}</Label>
             <Input
               value={label}
               onChange={(e) => setLabel(e.target.value)}
-              placeholder="Alarm name"
+              placeholder={t("alarmForm.labelPlaceholder")}
               maxLength={100}
             />
           </div>
 
-          {/* Repeat */}
           <div className="space-y-2">
-            <Label className="font-body text-sm">Repeat</Label>
+            <Label className="font-body text-sm">{t("alarmForm.repeat")}</Label>
             <Select
               value={repeatType}
               onValueChange={(v) => setRepeatType(v as RepeatType)}
@@ -173,9 +169,9 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={RepeatType.Once}>Once</SelectItem>
-                <SelectItem value={RepeatType.Daily}>Daily</SelectItem>
-                <SelectItem value={RepeatType.Weekly}>Weekly</SelectItem>
+                <SelectItem value={RepeatType.Once}>{t("alarmForm.once")}</SelectItem>
+                <SelectItem value={RepeatType.Daily}>{t("alarmForm.daily")}</SelectItem>
+                <SelectItem value={RepeatType.Weekly}>{t("alarmForm.weekly")}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -200,32 +196,29 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
             )}
           </div>
 
-          {/* Sound */}
           <div className="space-y-1.5">
-            <Label className="font-body text-sm">Sound</Label>
+            <Label className="font-body text-sm">{t("alarmForm.sound")}</Label>
             <Select value={soundFile} onValueChange={setSoundFile}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="classic-beep">Classic Beep</SelectItem>
-                <SelectItem value="gentle-chime">Gentle Chime</SelectItem>
-                <SelectItem value="nature-birds">Birds</SelectItem>
-                <SelectItem value="digital-pulse">Digital Pulse</SelectItem>
+                <SelectItem value="classic-beep">{t("alarmForm.classicBeep")}</SelectItem>
+                <SelectItem value="gentle-chime">{t("alarmForm.gentleChime")}</SelectItem>
+                <SelectItem value="nature-birds">{t("alarmForm.birds")}</SelectItem>
+                <SelectItem value="digital-pulse">{t("alarmForm.digitalPulse")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* Gradual volume */}
           <div className="flex items-center justify-between">
-            <Label className="font-body text-sm">Gradual Volume</Label>
+            <Label className="font-body text-sm">{t("alarmForm.gradualVolume")}</Label>
             <Switch checked={isGradualVolume} onCheckedChange={setIsGradualVolume} />
           </div>
 
-          {/* Snooze */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="font-body text-xs">Snooze (min)</Label>
+              <Label className="font-body text-xs">{t("alarmForm.snoozeMin")}</Label>
               <Select
                 value={String(snoozeDuration)}
                 onValueChange={(v) => setSnoozeDuration(Number(v))}
@@ -243,7 +236,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="font-body text-xs">Max Snoozes</Label>
+              <Label className="font-body text-xs">{t("alarmForm.maxSnoozes")}</Label>
               <Select
                 value={String(maxSnooze)}
                 onValueChange={(v) => setMaxSnooze(Number(v))}
@@ -254,7 +247,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
                 <SelectContent>
                   {[0, 1, 2, 3, 5, 10].map((n) => (
                     <SelectItem key={n} value={String(n)}>
-                      {n === 0 ? "No snooze" : String(n)}
+                      {n === 0 ? t("alarmForm.noSnooze") : String(n)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -262,9 +255,8 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
             </div>
           </div>
 
-          {/* Challenge */}
           <div className="space-y-2">
-            <Label className="font-body text-sm">Dismiss Challenge</Label>
+            <Label className="font-body text-sm">{t("alarmForm.challenge")}</Label>
             <Select
               value={challengeType}
               onValueChange={(v) => setChallengeType(v as ChallengeType | "none")}
@@ -273,10 +265,10 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">None</SelectItem>
-                <SelectItem value={ChallengeType.Math}>Math Problem</SelectItem>
-                <SelectItem value={ChallengeType.Shake}>Shake Phone</SelectItem>
-                <SelectItem value={ChallengeType.Typing}>Typing</SelectItem>
+                <SelectItem value="none">{t("alarmForm.none")}</SelectItem>
+                <SelectItem value={ChallengeType.Math}>{t("alarmForm.mathProblem")}</SelectItem>
+                <SelectItem value={ChallengeType.Shake}>{t("alarmForm.shakePhone")}</SelectItem>
+                <SelectItem value={ChallengeType.Typing}>{t("alarmForm.typing")}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -291,9 +283,9 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={ChallengeDifficulty.Easy}>Easy</SelectItem>
-                  <SelectItem value={ChallengeDifficulty.Medium}>Medium</SelectItem>
-                  <SelectItem value={ChallengeDifficulty.Hard}>Hard</SelectItem>
+                  <SelectItem value={ChallengeDifficulty.Easy}>{t("alarmForm.easy")}</SelectItem>
+                  <SelectItem value={ChallengeDifficulty.Medium}>{t("alarmForm.medium")}</SelectItem>
+                  <SelectItem value={ChallengeDifficulty.Hard}>{t("alarmForm.hard")}</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -302,10 +294,10 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
 
         <SheetFooter className="flex gap-2 pt-2">
           <Button variant="outline" onClick={onClose} className="flex-1">
-            Cancel
+            {t("alarmForm.cancel")}
           </Button>
           <Button onClick={handleSave} className="flex-1">
-            {isEditing ? "Save" : "Create"}
+            {isEditing ? t("alarmForm.save") : t("alarmForm.create")}
           </Button>
         </SheetFooter>
       </SheetContent>
