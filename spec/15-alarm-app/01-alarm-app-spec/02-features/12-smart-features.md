@@ -254,7 +254,7 @@ fn log_webhook_result(url: &Url, response: Result<reqwest::Response, reqwest::Er
 | `test_webhook` | `{ WebhookId: string }` | `TestWebhookResult` |
 | `get_weather_briefing` | `GetWeatherPayload` | `WeatherBriefing` |
 
-> **Note:** Location-based alarms and voice commands use platform-native APIs invoked directly from Rust — no frontend IPC commands needed. Multi-timezone support is handled by `create_alarm`/`update_alarm` with a `Timezone` field.
+> **Note:** Location-based alarms and voice commands use platform-native APIs invoked directly from Rust — no frontend IPC commands needed. Multi-timezone support is a P3 future feature — when implemented, a per-alarm `Timezone` field will be added to the `Alarm` interface and `CreateAlarmPayload`/`UpdateAlarmPayload`. Until then, all alarms use the global `SystemTimezone` setting.
 
 ### Payload Interfaces
 

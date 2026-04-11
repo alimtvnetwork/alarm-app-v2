@@ -385,8 +385,8 @@ interface SettingsStore {
   Language: string;
   DefaultSnoozeDuration: number;
 
-  FetchSettings: () => Promise<void>;
-  UpdateSetting: (Key: string, Value: string) => Promise<void>;
+  fetchSettings: () => Promise<void>;
+  updateSetting: (key: string, value: string) => Promise<void>;
 }
 ```
 

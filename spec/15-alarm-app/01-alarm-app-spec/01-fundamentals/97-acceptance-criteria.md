@@ -30,7 +30,7 @@
 - [ ] 2 additional tables created for P2/P3 features: `Quotes`, `Webhooks` (7 total)
 - [ ] All table/column/index names use PascalCase
 - [ ] 4 indexes created: `IdxAlarms_NextFireTime`, `IdxAlarms_GroupId`, `IdxAlarmEvents_AlarmId`, `IdxAlarmEvents_Timestamp`
-- [ ] All 9 default settings seeded by V1 migration (Theme, TimeFormat, DefaultSnoozeDuration, DefaultSound, AutoLaunch, MinimizeToTray, Language, EventRetentionDays, SystemTimezone)
+- [ ] All 16 default settings seeded by V1 migration (Theme, ThemeSkin, AccentColor, TimeFormat, DefaultSnoozeDuration, DefaultMaxSnoozeCount, DefaultSound, AutoDismissMin, AutoLaunch, MinimizeToTray, Language, EventRetentionDays, IsGradualVolumeEnabled, GradualVolumeDurationSec, SystemTimezone, ExportWarningDismissed)
 - [ ] `refinery_schema_history` table auto-created by migration runner
 - [ ] All 13 domain enums implemented in both TypeScript and Rust with PascalCase variants
 - [ ] `AlarmRow.from_row()` correctly maps SQLite INTEGER → bool and TEXT → enum
@@ -60,8 +60,8 @@
 ## 04 — Platform Constraints (`04-platform-constraints.md`)
 
 - [ ] `AlarmAppError` enum has all 13 variants with `thiserror` derive
-- [ ] `WebhookError` enum has all 4 variants
-- [ ] IPC error response format: `{ Code: string, Message: string, Details?: string }`
+- [ ] `WebhookError` enum has all 7 variants (InvalidUrl, InsecureScheme, BlockedHost, MissingHost, PrivateIp, NonStandardPort, RequestFailed)
+- [ ] IPC error response format: `{ Code: string, Message: string }`
 - [ ] `safeInvoke()` wrapper handles timeout (5s) and error toast
 - [ ] WebKitGTK CSS fallbacks use `@supports` for `backdrop-filter`
 - [ ] Code pattern exemptions documented: startup panics, mutex poisoning, test assertions
@@ -132,7 +132,7 @@
 - [ ] Old log files are cleaned up on startup
 - [ ] All alarm lifecycle events (create, fire, snooze, dismiss, miss) are logged at INFO
 - [ ] Sensitive data (passwords, personal label text at ERROR+) is never logged
-- [ ] Frontend errors are forwarded to Rust logger via IPC (`log_frontend_error`)
+- [ ] Frontend errors are forwarded to Rust logger via IPC (`log_from_frontend`)
 - [ ] `LogLevel` setting controls minimum severity in release builds
 - [ ] DEBUG-level logs are disabled in release builds by default
 
