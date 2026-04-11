@@ -259,10 +259,13 @@ fn log_webhook_result(url: &Url, response: Result<reqwest::Response, reqwest::Er
 ### Payload Interfaces
 
 ```typescript
+/** JSON-safe value types for webhook payloads — `unknown` is banned per type-safety guidelines. */
+type JsonSafeValue = string | number | boolean | null;
+
 interface CreateWebhookPayload {
   AlarmId: string;
   Url: string;
-  Payload?: Record<string, unknown>;
+  Payload?: Record<string, JsonSafeValue>;
 }
 
 interface GetWeatherPayload {
@@ -280,7 +283,7 @@ interface WebhookConfig {
   WebhookId: string;
   AlarmId: string;
   Url: string;
-  Payload: Record<string, unknown> | null;
+  Payload: Record<string, JsonSafeValue> | null;
   CreatedAt: string;  // ISO 8601
 }
 
