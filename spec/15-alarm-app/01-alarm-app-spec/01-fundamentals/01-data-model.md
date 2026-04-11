@@ -625,25 +625,32 @@ impl AlarmEventRow {
 
 ### Settings
 
-> **Resolves PL-004.** The `Settings` table is key-value, but the frontend needs a typed interface.
+> **Resolves PL-004, S-004, CG-006, AI-001.** The `Settings` table is key-value, but the frontend needs a typed interface. Every field here has a matching row in the Settings Keys table below.
 
 ```typescript
 interface Settings {
-  Theme: ThemeMode;
-  ThemeSkin: string;                    // e.g., "default", "midnight"
-  AccentColor: string;                  // Hex color, e.g., "#6366F1"
-  Is24Hour: boolean;
-  DefaultSnoozeDurationMin: number;     // Default: 5
-  DefaultMaxSnoozeCount: number;        // Default: 3
-  AutoDismissMin: number;               // Default: 15
-  EventRetentionDays: number;           // Default: 365
-  IsGradualVolumeEnabled: boolean;
-  GradualVolumeDurationSec: number;     // Default: 30
-  SystemTimezone: string;               // IANA timezone, e.g., "Asia/Kuala_Lumpur"
+  Theme: ThemeMode;                     // Key: "Theme" — default "System"
+  ThemeSkin: string;                    // Key: "ThemeSkin" — default "default"
+  AccentColor: string;                  // Key: "AccentColor" — default "#8b7355"
+  Is24Hour: boolean;                    // DERIVED: true when Settings.Key="TimeFormat" value is "24h"
+  DefaultSnoozeDurationMin: number;     // Key: "DefaultSnoozeDuration" — default 5
+  DefaultMaxSnoozeCount: number;        // Key: "DefaultMaxSnoozeCount" — default 3
+  AutoDismissMin: number;               // Key: "AutoDismissMin" — default 15
+  EventRetentionDays: number;           // Key: "EventRetentionDays" — default 90
+  IsGradualVolumeEnabled: boolean;      // Key: "IsGradualVolumeEnabled" — default false
+  GradualVolumeDurationSec: number;     // Key: "GradualVolumeDurationSec" — default 30
+  AutoLaunch: boolean;                  // Key: "AutoLaunch" — default false
+  MinimizeToTray: boolean;              // Key: "MinimizeToTray" — default true
+  Language: string;                     // Key: "Language" — default "en"
+  DefaultSound: string;                 // Key: "DefaultSound" — default "classic-beep"
+  ExportWarningDismissed: boolean;      // Key: "ExportWarningDismissed" — default false
+  SystemTimezone: string;               // Key: "SystemTimezone" — auto-detected IANA string
 }
 ```
 
 > **Note:** Stored as individual key-value rows in SQLite `Settings` table. `get_settings` reads all rows and maps them into this typed interface. `update_setting` writes a single key.
+>
+> **`Is24Hour` is derived, not stored directly.** The DB stores `TimeFormat` as `"12h"` or `"24h"`. The frontend derives `Is24Hour = (TimeFormat === "24h")`. There is no `Is24Hour` key in the Settings table.
 
 #### Settings (Rust)
 
@@ -656,13 +663,18 @@ pub struct SettingsResponse {
     pub theme: ThemeMode,
     pub theme_skin: String,
     pub accent_color: String,
-    pub is_24_hour: bool,
+    pub is_24_hour: bool,                    // Derived from TimeFormat key
     pub default_snooze_duration_min: i32,
     pub default_max_snooze_count: i32,
     pub auto_dismiss_min: i32,
     pub event_retention_days: i32,
     pub is_gradual_volume_enabled: bool,
     pub gradual_volume_duration_sec: i32,
+    pub auto_launch: bool,
+    pub minimize_to_tray: bool,
+    pub language: String,
+    pub default_sound: String,
+    pub export_warning_dismissed: bool,
     pub system_timezone: String,
 }
 ```
@@ -758,6 +770,10 @@ CREATE TABLE Alarms (
   Date TEXT,                                        -- YYYY-MM-DD or NULL
   Label TEXT NOT NULL DEFAULT '',
   IsEnabled INTEGER NOT NULL DEFAULT 1,
+  -- EXEMPTION (B-001): IsPreviousEnabled is nullable (no NOT NULL DEFAULT).
+  -- Rationale: NULL = no saved state (alarm was never part of a group toggle).
+  -- true/false = saved IsEnabled state before group was disabled.
+  -- A three-state value (null/true/false) is semantically correct here.
   IsPreviousEnabled INTEGER,                        -- Saved state for group toggle (FE-STATE-001)
   RepeatType TEXT NOT NULL DEFAULT 'Once',            -- Once|Daily|Weekly|Interval|Cron
   RepeatDaysOfWeek TEXT NOT NULL DEFAULT '[]',       -- JSON array
@@ -821,6 +837,26 @@ CREATE TABLE AlarmEvents (
   AlarmTimeSnapshot TEXT NOT NULL DEFAULT '',   -- Preserves time after alarm deletion (DB-ORPHAN-001)
   Timestamp TEXT NOT NULL
 );
+
+-- Quotes table for motivational quotes feature (P2 — see 14-personalization.md)
+-- Resolves CG-004/AI-002: Quote struct existed but table schema was missing.
+CREATE TABLE Quotes (
+  QuoteId TEXT PRIMARY KEY,
+  Text TEXT NOT NULL,
+  Author TEXT NOT NULL DEFAULT '',
+  IsFavorite INTEGER NOT NULL DEFAULT 0,
+  IsCustom INTEGER NOT NULL DEFAULT 0
+);
+
+-- Webhooks table for webhook integration feature (P3 — see 12-smart-features.md)
+-- Resolves CG-005/AI-003: WebhookConfig struct existed but table schema was missing.
+CREATE TABLE Webhooks (
+  WebhookId TEXT PRIMARY KEY,
+  AlarmId TEXT REFERENCES Alarms(AlarmId) ON DELETE CASCADE,
+  Url TEXT NOT NULL,
+  Payload TEXT,                   -- JSON object or NULL
+  CreatedAt TEXT NOT NULL
+);
 ```
 
 ### SQLite WAL Mode (Resolves BE-CONCUR-001)
@@ -867,18 +903,24 @@ pub fn purge_old_events(conn: &Connection) {
 
 ### Settings Keys
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `Theme` | `ThemeMode` | `"System"` | Theme preference (use `ThemeMode` enum) |
-| `TimeFormat` | `string` | `"12h"` | Clock display format (`"12h"` or `"24h"`) |
-| `DefaultSnoozeDuration` | `number` | `"5"` | Default snooze minutes for new alarms |
-| `DefaultSound` | `string` | `"classic-beep"` | Default sound for new alarms |
-| `AutoLaunch` | `boolean` | `"false"` | Start on system boot |
-| `MinimizeToTray` | `boolean` | `"true"` | Keep running when window closed |
-| `Language` | `string` | `"en"` | i18n locale code |
-| `EventRetentionDays` | `number` | `"90"` | Days to keep `AlarmEvents` |
-| `SystemTimezone` | `string` | `""` | IANA timezone string (auto-detected at startup) |
-| `ExportWarningDismissed` | `boolean` | `"false"` | Whether user dismissed the export privacy warning |
+| Key | Type | Default | Maps to `Settings` Field | Description |
+|-----|------|---------|--------------------------|-------------|
+| `Theme` | `ThemeMode` | `"System"` | `Theme` | Theme preference (use `ThemeMode` enum) |
+| `ThemeSkin` | `string` | `"default"` | `ThemeSkin` | Visual skin preset (e.g., "default", "midnight") |
+| `AccentColor` | `string` | `"#8b7355"` | `AccentColor` | Hex color for accent UI elements |
+| `TimeFormat` | `string` | `"12h"` | `Is24Hour` (derived) | Clock display format (`"12h"` or `"24h"`) — frontend derives `Is24Hour` |
+| `DefaultSnoozeDuration` | `number` | `"5"` | `DefaultSnoozeDurationMin` | Default snooze minutes for new alarms |
+| `DefaultMaxSnoozeCount` | `number` | `"3"` | `DefaultMaxSnoozeCount` | Default max snooze count for new alarms |
+| `DefaultSound` | `string` | `"classic-beep"` | `DefaultSound` | Default sound for new alarms |
+| `AutoDismissMin` | `number` | `"15"` | `AutoDismissMin` | Default auto-dismiss minutes for new alarms |
+| `AutoLaunch` | `boolean` | `"false"` | `AutoLaunch` | Start on system boot |
+| `MinimizeToTray` | `boolean` | `"true"` | `MinimizeToTray` | Keep running when window closed |
+| `Language` | `string` | `"en"` | `Language` | i18n locale code |
+| `EventRetentionDays` | `number` | `"90"` | `EventRetentionDays` | Days to keep `AlarmEvents` |
+| `IsGradualVolumeEnabled` | `boolean` | `"false"` | `IsGradualVolumeEnabled` | Default gradual volume for new alarms |
+| `GradualVolumeDurationSec` | `number` | `"30"` | `GradualVolumeDurationSec` | Default gradual volume duration |
+| `SystemTimezone` | `string` | `""` | `SystemTimezone` | IANA timezone string (auto-detected at startup) |
+| `ExportWarningDismissed` | `boolean` | `"false"` | `ExportWarningDismissed` | Whether user dismissed the export privacy warning |
 
 ---
 
@@ -1127,14 +1169,21 @@ CREATE INDEX IdxAlarmEvents_Timestamp ON AlarmEvents(Timestamp);
 -- Default settings (seeded once via V1 migration — see "Settings Seeding Strategy")
 INSERT INTO Settings (Key, Value, ValueType) VALUES
   ('Theme', 'System', 'String'),
+  ('ThemeSkin', 'default', 'String'),
+  ('AccentColor', '#8b7355', 'String'),
   ('TimeFormat', '12h', 'String'),
   ('DefaultSnoozeDuration', '5', 'Integer'),
+  ('DefaultMaxSnoozeCount', '3', 'Integer'),
   ('DefaultSound', 'classic-beep', 'String'),
+  ('AutoDismissMin', '15', 'Integer'),
   ('AutoLaunch', 'false', 'Boolean'),
   ('MinimizeToTray', 'true', 'Boolean'),
   ('Language', 'en', 'String'),
   ('EventRetentionDays', '90', 'Integer'),
-  ('SystemTimezone', '', 'String');
+  ('IsGradualVolumeEnabled', 'false', 'Boolean'),
+  ('GradualVolumeDurationSec', '30', 'Integer'),
+  ('SystemTimezone', '', 'String'),
+  ('ExportWarningDismissed', 'false', 'Boolean');
 ```
 
 ---
