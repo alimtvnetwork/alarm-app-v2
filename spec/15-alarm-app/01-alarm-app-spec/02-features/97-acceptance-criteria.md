@@ -1,9 +1,9 @@
 # Feature Acceptance Criteria — Consolidated Rollup
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-11  
 **Purpose:** Single document collecting all testable acceptance criteria from the 17 feature specs  
-**Resolves:** P14-001, S-001
+**Resolves:** P14-001, S-001, GA9-015, GA9-016
 
 ---
 
@@ -28,6 +28,13 @@
 
 ## 01 — Alarm CRUD (`01-alarm-crud.md`)
 
+- [ ] All alarm items are focusable via keyboard (`Tab`)
+- [ ] `Space` enters reorder mode with visual + audible feedback
+- [ ] Arrow keys move items; `Ctrl+Arrow` crosses group boundaries
+- [ ] `Escape` cancels reorder and restores original position
+- [ ] Screen reader announces all state changes via `aria-live` region
+- [ ] No drag-only interactions — every action has a keyboard equivalent
+- [ ] Focus indicator visible on all interactive elements (2px outline min)
 - [ ] User can create an alarm with time, label, date, repeat pattern, snooze, sound, and group
 - [ ] User can edit any field of an existing alarm
 - [ ] User can duplicate an alarm with one click
@@ -193,6 +200,9 @@
 - [ ] Tooltips show shortcut hints on buttons
 - [ ] No conflicts with OS-level shortcuts
 - [ ] Shortcuts disabled when a text input field is focused
+- [ ] Search filters alarm list by label substring (case-insensitive, client-side)
+- [ ] Select All selects all visible alarms; Esc deselects
+- [ ] Bulk delete triggers individual undo toasts per alarm
 
 ## 16 — Accessibility & NFR (`16-accessibility-and-nfr.md`)
 
@@ -207,13 +217,30 @@
 - [ ] 100% offline functionality
 - [ ] All strings extracted to locale files (i18n-ready)
 
+## 17 — UI Layouts (`17-ui-layouts.md`)
+
+- [ ] Alarm list displays alarms grouped by `AlarmGroup`, sorted by time within each group
+- [ ] Groups are collapsible with chevron toggle; expand/collapse state is preserved in Zustand
+- [ ] "Ungrouped" section always appears last
+- [ ] Empty groups show "(No alarms)" text
+- [ ] Alarm card shows drag handle, time, AM/PM (if 12h), label, schedule summary, and toggle switch
+- [ ] Tapping/clicking an alarm card opens the edit form dialog
+- [ ] Alarm form is a `Dialog` with sections in the defined order (Time → Label → Repeat → Date → Group → Sound → Snooze → Advanced)
+- [ ] Advanced section is collapsed by default on create, expanded if non-default values on edit
+- [ ] Date picker only shown when `RepeatType === Once`
+- [ ] Conditional challenge fields appear based on selected `ChallengeType`
+- [ ] Settings screen has 7 sections in defined order (Appearance → Clock → Alarm Defaults → System → Data → Language → About)
+- [ ] Each setting saves immediately via IPC — no Save button
+- [ ] Settings changes trigger `settings-changed` event and UI refresh
+- [ ] All three screens handle loading, populated, empty, and error states per `02-design-system.md`
+
 ---
 
 ## Summary
 
 | Feature | Criteria Count |
 |---------|:-:|
-| 01 Alarm CRUD | 11 |
+| 01 Alarm CRUD | 18 |
 | 02 Scheduling | 9 |
 | 03 Firing | 15 |
 | 04 Snooze | 7 |
@@ -227,13 +254,14 @@
 | 12 Smart Features | 7 |
 | 13 Analytics | 6 |
 | 14 Personalization | 8 |
-| 15 Keyboard Shortcuts | 7 |
+| 15 Keyboard Shortcuts | 10 |
 | 16 Accessibility & NFR | 10 |
-| **Total** | **133** |
+| 17 UI Layouts | 14 |
+| **Total** | **157** |
 
 ---
 
-*Feature acceptance criteria rollup — created: 2026-04-10*
+*Feature acceptance criteria rollup — updated: 2026-04-11*
 
 ---
 
