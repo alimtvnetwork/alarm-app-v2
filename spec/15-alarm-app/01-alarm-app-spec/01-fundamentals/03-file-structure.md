@@ -37,7 +37,7 @@ src/                          — Frontend (React + TypeScript)
   types/
     alarm.ts                  — Alarm, AlarmGroup, AlarmSound interfaces
 
-  stores/                     — Zustand global state stores (Resolves UX-STATE-001)
+  stores/                     — Zustand global state stores (Resolves UX-STATE-001, AI-004)
     useAlarmStore.ts          — Alarm CRUD + groups + loading/error state
     useOverlayStore.ts        — Active alarm, queue mirror, overlay visibility
     useSettingsStore.ts       — Theme, TimeFormat, Language, DefaultSnoozeDuration
