@@ -97,6 +97,8 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
   toggleAlarm: (alarmId, isEnabled) => {
     const updated = ipc.toggleAlarm(alarmId, isEnabled);
     if (updated) {
+      updated.NextFireTime = computeNextFireTime(updated);
+      ipc.updateAlarm(updated);
       set((s) => ({
         alarms: s.alarms.map((a) => (a.AlarmId === alarmId ? updated : a)),
       }));
