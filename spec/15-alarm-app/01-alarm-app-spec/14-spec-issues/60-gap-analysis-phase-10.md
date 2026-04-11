@@ -1,10 +1,11 @@
 # Gap Analysis — Phase 10
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Date:** 2026-04-11  
 **Auditor:** AI  
 **Scope:** Full audit of 17 feature specs + 13 fundamentals against coding guidelines, boolean rules, enum patterns, split DB, seedable config, and naming conventions  
-**Previous:** Phase 9 (21 issues, 21 resolved)
+**Previous:** Phase 9 (21 issues, 21 resolved)  
+**Status:** ✅ All 14 issues resolved
 
 ---
 
@@ -171,38 +172,38 @@ The specification is **95–97% implementation-ready**. The 14 issues found are:
 
 ## Issue Summary Table
 
-| ID | Severity | Category | Description |
-|----|----------|----------|-------------|
-| GA10-001 | Low | Version staleness | Feature consistency report version numbers outdated |
-| GA10-002 | Low | Version staleness | Root consistency report cheat sheet version wrong |
-| GA10-003 | Low | Version staleness | Root consistency report changelog version wrong |
-| GA10-004 | Medium | Enum/Type | `safeInvoke` uses banned `Record<string, unknown>` |
-| GA10-005 | Medium | Enum/Type | `CreateWebhookPayload.Payload` uses `unknown` |
-| GA10-006 | Medium | Enum/Type | `WebhookConfig.Payload` uses `unknown` |
-| GA10-007 | Low | Boolean | Missing semantic inverses for `Quote.IsFavorite` / `IsCustom` |
-| GA10-008 | Low | Boolean | Missing semantic inverse for `StreakCalendarDay.IsOnTime` |
-| GA10-009 | Low | Boolean | `ChallengeResult.correct` bare adjective (serde handles it) |
-| GA10-010 | Medium | Completeness | Missing `FromStr` for 4 DB-stored enums |
-| GA10-011 | Low | Completeness | IPC-only enums don't need `FromStr` — clarify rule |
-| GA10-012 | Medium | Completeness | `Quotes` table missing `CreatedAt` column |
-| GA10-013 | Medium | Completeness | Missing `WebhookConfigRow::from_row` |
-| GA10-014 | Low | Cross-ref | `AlarmGroups` column count wrong in summaries |
+| ID | Severity | Category | Description | Status |
+|----|----------|----------|-------------|--------|
+| GA10-001 | Low | Version staleness | Feature consistency report version numbers outdated | ✅ Resolved |
+| GA10-002 | Low | Version staleness | Root consistency report cheat sheet version wrong | ✅ Resolved |
+| GA10-003 | Low | Version staleness | Root consistency report changelog version wrong | ✅ Resolved |
+| GA10-004 | Medium | Enum/Type | `safeInvoke` uses banned `Record<string, unknown>` | ✅ Resolved |
+| GA10-005 | Medium | Enum/Type | `CreateWebhookPayload.Payload` uses `unknown` | ✅ Resolved |
+| GA10-006 | Medium | Enum/Type | `WebhookConfig.Payload` uses `unknown` | ✅ Resolved |
+| GA10-007 | Low | Boolean | Missing semantic inverses for `Quote.IsFavorite` / `IsCustom` | ✅ Resolved |
+| GA10-008 | Low | Boolean | Missing semantic inverse for `StreakCalendarDay.IsOnTime` | ✅ Resolved |
+| GA10-009 | Low | Boolean | `ChallengeResult.correct` bare adjective (serde handles it) | ✅ Resolved |
+| GA10-010 | Medium | Completeness | Missing `FromStr` for 4 DB-stored enums | ✅ Resolved |
+| GA10-011 | Low | Completeness | IPC-only enums don't need `FromStr` — clarify rule | ✅ Resolved |
+| GA10-012 | Medium | Completeness | `Quotes` table missing `CreatedAt` column | ✅ Resolved |
+| GA10-013 | Medium | Completeness | Missing `WebhookConfigRow::from_row` | ✅ Resolved |
+| GA10-014 | Low | Cross-ref | `AlarmGroups` column count wrong in summaries | ✅ Resolved |
 
 ---
 
-## Remaining Tasks
+## Resolution Summary
 
-When you say **next**, Phase 10B will execute all 14 fixes:
+All 14 issues resolved in Phase 10B:
 
-1. Update version numbers in both consistency reports (GA10-001, GA10-002, GA10-003)
-2. Replace `Record<string, unknown>` with typed alternatives (GA10-004, GA10-005, GA10-006)
-3. Add boolean semantic inverses for Quote and StreakCalendarDay (GA10-007, GA10-008)
-4. Add clarifying note for `ChallengeResult.correct` (GA10-009)
-5. Add `FromStr` implementations for 4 enums (GA10-010)
-6. Add IPC-only enum clarification note (GA10-011)
-7. Add `CreatedAt` to Quotes table and interfaces (GA10-012)
-8. Add `WebhookConfigRow::from_row` (GA10-013)
-9. Fix AlarmGroups column count in summaries (GA10-014)
+1. ✅ Updated version numbers in both consistency reports (GA10-001, GA10-002, GA10-003)
+2. ✅ Replaced `Record<string, unknown>` with `JsonSafeValue` typed alternatives in `safeInvoke`, `CreateWebhookPayload`, `WebhookConfig` (GA10-004, GA10-005, GA10-006)
+3. ✅ Added boolean semantic inverses for `Quote.IsFavorite`→`isNotFavorite()`, `Quote.IsCustom`→`isBuiltIn()`, `StreakCalendarDay.IsOnTime`→`isLate()` (GA10-007, GA10-008)
+4. ✅ Added clarifying serde note for `ChallengeResult.correct` (GA10-009)
+5. ✅ Added `FromStr` implementations for `ChallengeDifficulty`, `SoundCategory`, `SettingsValueType`, `ThemeMode` (GA10-010)
+6. ✅ Added IPC-only enum clarification in Enum Conventions table (GA10-011)
+7. ✅ Added `CreatedAt` to Quotes table, TypeScript interface, and Rust struct (GA10-012)
+8. ✅ Added `WebhookConfig::from_row` implementation (GA10-013)
+9. ✅ Fixed AlarmGroups column count to 5 in AI cheat sheet and added `Position` to overview (GA10-014)
 
 ```
 Do you understand? Can you please do that?
@@ -210,4 +211,4 @@ Do you understand? Can you please do that?
 
 ---
 
-*Gap Analysis Phase 10 — 2026-04-11*
+*Gap Analysis Phase 10 — Resolved 2026-04-11*
