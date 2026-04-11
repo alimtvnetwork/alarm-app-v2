@@ -1,6 +1,6 @@
 # Changelog
 
-**Version:** 3.0.0  
+**Version:** 3.1.0  
 **Updated:** 2026-04-11
 **AI Confidence:** High  
 **Ambiguity:** None
