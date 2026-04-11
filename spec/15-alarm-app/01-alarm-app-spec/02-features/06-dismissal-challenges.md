@@ -153,6 +153,30 @@ interface AlarmChallenge {
 - `get_challenge` — Returns the challenge configuration for the firing alarm. Returns `null` if no challenge is configured.
 - `submit_challenge_answer` — Validates the user's answer. If correct, logs `SolveTimeSec` to `AlarmEvents.ChallengeSolveTimeSec` and allows dismissal. If incorrect, returns `Correct: false` and the alarm continues firing.
 
+### Rust Structs
+
+```rust
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct GetChallengePayload {
+    pub alarm_id: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct SubmitChallengePayload {
+    pub alarm_id: String,
+    pub answer: String,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct ChallengeResult {
+    pub correct: bool,
+    pub solve_time_sec: f64,
+}
+```
+
 ---
 
 ## Edge Cases
