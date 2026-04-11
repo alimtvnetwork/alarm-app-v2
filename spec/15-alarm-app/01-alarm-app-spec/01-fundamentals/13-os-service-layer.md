@@ -797,7 +797,7 @@ This persists across app updates and is not deleted when the app is removed (use
 |----------|----------|
 | Computer was asleep when alarm was due | On wake, missed alarm detected and notification fired immediately |
 | Multiple alarms due at the same time | Each gets its own notification, fired sequentially |
-| User snoozes 100 times | `SnoozeCount` increments; no limit enforced (v1) |
+| User reaches snooze limit | Snooze button hidden/disabled after `MaxSnoozeCount` reached (default 3) — see `04-snooze-system.md` |
 | Database file is corrupted | `rusqlite` error → create new database; old data lost (v1) |
 | App is force-quit | `tauri-plugin-autostart` restarts on next login; alarms persist in SQLite |
 | Notification permission denied | Fall back to in-app overlay in webview |
