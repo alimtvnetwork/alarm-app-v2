@@ -170,6 +170,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Gap Analysis Phase 12** | **OS service layer foundational alignment — data model, IPC registry, edge cases (16 issues)** | **✅ Done (+16 = 550, 16 resolved)** |
 | **Gap Analysis Phase 13** | **Post-Phase 12B verification — dependency pins, cocoa→objc2, version bumps (6 issues)** | **✅ Done (+6 = 556, 6 resolved)** |
 | **Gap Analysis Phase 14** | **Post-Phase 13B verification — field names, version pins, notification templates (8 issues)** | **✅ Done (+8 = 564, 8 resolved)** |
+| **Gap Analysis Phase 15** | **Post-Phase 14B verification — bookkeeping (file numbers, stale count) (2 issues)** | **✅ Done (+2 = 566, 2 resolved)** |
 
 ---
 
