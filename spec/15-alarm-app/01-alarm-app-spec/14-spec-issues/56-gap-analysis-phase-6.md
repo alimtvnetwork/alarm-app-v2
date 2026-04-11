@@ -1,6 +1,6 @@
 # Gap Analysis — Phase 6 (Fresh Comprehensive Audit)
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -53,10 +53,10 @@ Comprehensive gap analysis of the Alarm App specification (`01-alarm-app-spec/`)
 |------|-----------|-------------|--------|
 | Table names: PascalCase | `AgentSites`, `Transactions` | ✅ `Alarms`, `AlarmGroups`, `Settings`, `SnoozeState`, `AlarmEvents` | Fully compliant |
 | Column names: PascalCase | `PluginSlug`, `CreatedAt` | ✅ All columns PascalCase | Fully compliant |
-| Primary key: `{TableName}Id` | `TransactionId` | ⚠️ **Settings uses `Key TEXT PRIMARY KEY`** | **DB-001** — violates `{TableName}Id` pattern |
+| Primary key: `{TableName}Id` | `TransactionId` | ⚠️ **Settings uses `Key TEXT PRIMARY KEY`** | **DB-001** — documented exemption added (key-value store pattern) ✅ |
 | Foreign key: same name as referenced PK | `AgentSiteId` | ✅ `GroupId` references `AlarmGroupId` (shortened but consistent) | Minor — `GroupId` vs `AlarmGroupId` is acceptable shorthand |
 | Boolean columns: `Is`/`Has` prefix, positive only | `IsActive`, `HasLicense` | ✅ All booleans use `Is` prefix, all positive | Fully compliant |
-| Index names: `Idx{Table}_{Column}` | `IdxTransactions_CreatedAt` | ❌ **Missing underscore separator** | **DB-002** — 4 index names violate pattern |
+| Index names: `Idx{Table}_{Column}` | `IdxTransactions_CreatedAt` | ✅ **Fixed** — all 4 indexes renamed | **DB-002** — ✅ Resolved |
 | Abbreviations: first letter only | `Id`, `Url`, `Api` | ✅ All use `Id` not `ID`, `Url` not `URL` | Fully compliant |
 
 ### 2.2 Index Naming Violations (DB-002)
@@ -124,16 +124,16 @@ The alarm app uses a single SQLite file by design. The spec documents this in:
 - `06-tauri-architecture...md`: Architecture section
 - This is appropriate — split DB is for multi-project CLI tools, not single-app desktop software
 
-### 2.9 `expect()` Usage in Code Samples
+### 2.9 `expect()` Usage in Code Samples — ✅ All Exempted
 
 | File | Usage | Assessment |
 |------|-------|-----------|
 | `04-platform-constraints.md` | Documents `expect("mutex poisoned")` as allowed | ✅ Documented exemption |
-| `07-startup-sequence.md` | `expect("FATAL: ...")` for unrecoverable startup failures | ⚠️ **DB-003** — guideline says use `match`, not `expect()` |
-| `01-alarm-crud.md` | `conn.lock().expect("DB lock poisoned")` | ⚠️ **DB-004** — should use `match` per coding guidelines |
-| `07-alarm-groups.md` | `state.db.lock().expect("DB lock")` | ⚠️ **DB-005** — same pattern |
+| `07-startup-sequence.md` | `expect("FATAL: ...")` for unrecoverable startup failures | ✅ Documented exemption (line 114: "These expect() calls are exempt") |
+| `01-alarm-crud.md` | `conn.lock().expect("DB lock poisoned")` | ✅ **EXEMPT annotation added** — references `04-platform-constraints.md § Allowed Patterns` |
+| `07-alarm-groups.md` | `state.db.lock().expect("DB lock")` | ✅ **EXEMPT annotation added** — references `04-platform-constraints.md § Allowed Patterns` |
 
-**Note:** `04-platform-constraints.md` explicitly lists `expect("mutex poisoned")` as an allowed Rust pattern with documented rationale ("Thread panicked while holding lock — unrecoverable. Idiomatic Rust."). The startup sequence uses `expect("FATAL: ...")` for similar reasons. These may be intentionally exempt — but the exemption should be explicitly stated in each usage or in a centralized exemption table.
+**Status:** ✅ All `expect()` usages are now either in the centralized exemption table (`04-platform-constraints.md`) or have inline `EXEMPT` annotations referencing it. DB-003, DB-004, DB-005 resolved.
 
 ### 2.10 `unwrap()` in Test Code — ✅ Acceptable
 
@@ -157,10 +157,10 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 | `08-clock-display.md` | ✅ | ✅ | ✅ | — | ✅ | Complete (frontend-only) |
 | `09-theme-system.md` | ✅ | ✅ | ✅ | — | ✅ | Complete |
 | `10-export-import.md` | ✅ | ✅ | ✅ | ✅ | ✅ | Complete |
-| `11-sleep-wellness.md` | ✅ | — | ✅ | ✅ | ✅ (8) | ⚠️ Missing edge cases table |
+| `11-sleep-wellness.md` | ✅ | ✅ (12) | ✅ | ✅ | ✅ (8) | ✅ Complete — edge cases added |
 | `12-smart-features.md` | ✅ | ✅ | ✅ | ✅ | ✅ | Complete |
 | `13-analytics.md` | ✅ | ✅ | ✅ | ✅ | ✅ | Complete |
-| `14-personalization.md` | ✅ | — | ✅ | ✅ | ✅ | ⚠️ Missing edge cases table |
+| `14-personalization.md` | ✅ | ✅ (12) | ✅ | ✅ | ✅ | ✅ Complete — edge cases added |
 | `15-keyboard-shortcuts.md` | ✅ | ✅ | ✅ | — | ✅ | Complete (frontend-only) |
 | `16-accessibility-and-nfr.md` | ✅ | — | — | — | ✅ | Complete (NFR doc) |
 
@@ -168,9 +168,9 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 
 | # | Issue | Severity | File | Details |
 |---|-------|----------|------|---------|
-| CG-001 | Missing edge cases table | 🟡 Medium | `11-sleep-wellness.md` | All other P0/P1 features have edge case tables; this P2 feature should too (e.g., bedtime reminder during DST, ambient sound when alarm fires, overlapping timers) |
-| CG-002 | Missing edge cases table | 🟡 Medium | `14-personalization.md` | Missing edge cases for streak calculation (timezone changes, missed days, counter reset), quote rotation, theme skin conflicts |
-| CG-003 | No error handling spec for IPC commands | 🟡 Medium | Multiple features | While `AlarmAppError` enum exists (13 variants), individual feature specs don't consistently document WHICH error variant each IPC command returns on failure. An AI would have to guess the mapping. |
+| CG-001 | ~~Missing edge cases table~~ | ✅ Resolved | `11-sleep-wellness.md` | 12 edge cases added (DST, ambient overlap, validation, etc.) |
+| CG-002 | ~~Missing edge cases table~~ | ✅ Resolved | `14-personalization.md` | 12 edge cases added (streak calc, quote validation, background, etc.) |
+| CG-003 | ~~No error handling spec for IPC commands~~ | ✅ Resolved | `04-platform-constraints.md` | Complete IPC → AlarmAppError mapping table added (46 commands) |
 | CG-004 | No UI mockup or wireframe descriptions | 🟡 Medium | All features | Feature specs describe behavior but rarely describe exact UI layout (which components, where buttons go, responsive behavior). The design system spec covers tokens but not feature-specific layouts. |
 | CG-005 | No onboarding/first-run experience spec | 🟡 Medium | Missing file | The feature overview mentions "Onboarding" as a P3 feature but there's no spec file for it |
 | CG-006 | Settings UI not specified | 🟡 Medium | Missing | Settings keys are defined in data model, but no feature spec describes the settings screen layout, interactions, or component tree |
@@ -191,7 +191,7 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 
 | # | Gap | Severity | AI Failure Risk | Details |
 |---|-----|----------|:---------------:|---------|
-| AI-001 | IPC error → `AlarmAppError` variant mapping | 🔴 Critical | **High** | 13 error variants exist, but no table maps which IPC command returns which error. AI will guess wrong. |
+| AI-001 | ~~IPC error → `AlarmAppError` variant mapping~~ | ✅ Resolved | — | Complete 46-command mapping table added to `04-platform-constraints.md` |
 | AI-002 | Settings screen UI layout | 🟡 Medium | **Medium** | Keys defined, but no spec for the UI. AI will invent a layout. |
 | AI-003 | Alarm creation form UI layout | 🟡 Medium | **Medium** | Fields defined, but the form layout (sections, order, conditional visibility) is not specified. |
 | AI-004 | Alarm list layout/sorting behavior | 🟡 Medium | **Medium** | "Sorted by time within each group" — but no spec for: collapsed/expanded groups, group header layout, empty group behavior, list vs. card view. |
@@ -216,9 +216,9 @@ All `unwrap()` calls appear exclusively in `09-test-strategy.md` test examples, 
 
 | Risk Level | Count | Description |
 |:----------:|:-----:|-------------|
-| 🔴 Critical | 1 | IPC error-to-variant mapping (AI-001) |
-| 🟡 High | 3 | DB index naming (DB-002), Settings PK (DB-001), UI layout gaps (AI-002/003/004) |
-| 🟡 Medium | 6 | Edge cases gaps (CG-001/002), error handling per-command (CG-003), state shapes (AI-005), expect() usage (DB-003/004/005) |
+| 🔴 Critical | 0 | ~~IPC error-to-variant mapping (AI-001)~~ — ✅ Resolved |
+| 🟡 High | 1 | ~~DB index naming (DB-002)~~ ✅, ~~Settings PK (DB-001)~~ ✅ exempted, UI layout gaps (AI-002/003/004) remain |
+| 🟡 Medium | 3 | ~~Edge cases (CG-001/002)~~ ✅, ~~error handling (CG-003)~~ ✅, state shapes (AI-005), ~~expect() (DB-003/004/005)~~ ✅ |
 | 🟢 Low | 5 | Scoring tables (S-001/002), i18n keys (AI-007), routing (AI-008), logging spec (BE-003) |
 
 ---
