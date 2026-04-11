@@ -68,7 +68,7 @@ interface ClockState {
   Hours: number;      // 0–23
   Minutes: number;    // 0–59
   Seconds: number;    // 0–59
-  Is24Hour: boolean;  // Derived from Settings: `getSettings("TimeFormat") === "24h"`
+  Is24Hour: boolean;  // Derived from Settings: `getSettings("TimeFormat")` returns the `TimeFormat` enum value; `Is24Hour = value === TimeFormat.TwentyFourHour`
 }
 
 function useClock(): ClockState;
