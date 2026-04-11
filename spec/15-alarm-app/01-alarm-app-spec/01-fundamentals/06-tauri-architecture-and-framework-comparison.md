@@ -1,7 +1,7 @@
 # Tauri Architecture & Cross-Platform Framework Comparison
 
-**Version:** 1.5.0  
-**Updated:** 2026-04-10  
+**Version:** 1.6.0  
+**Updated:** 2026-04-11  
 **AI Confidence:** High  
 **Ambiguity:** None
 
@@ -114,21 +114,21 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
 | `list_sounds` | FE → BE | `void` | `AlarmSound[]` |
-| `set_custom_sound` | FE → BE | `{ FilePath: string }` | `AlarmSound` |
+| `set_custom_sound` | FE → BE | `SetCustomSoundPayload` | `AlarmSound` |
 
 #### Challenge Commands
 
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
 | `get_challenge` | FE → BE | `{ AlarmId: string }` | `AlarmChallenge \| null` |
-| `submit_challenge_answer` | FE → BE | `{ AlarmId: string, Answer: string }` | `{ Correct: boolean, SolveTimeSec: number }` |
+| `submit_challenge_answer` | FE → BE | `SubmitChallengePayload` | `ChallengeResult` |
 
 #### Sleep & Wellness Commands
 
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
-| `log_sleep_quality` | FE → BE | `{ AlarmEventId: string, Quality: number, Mood: string \| null }` | `void` |
-| `play_ambient` | FE → BE | `{ SoundId: string, DurationMin: number }` | `void` |
+| `log_sleep_quality` | FE → BE | `LogSleepQualityPayload` | `void` |
+| `play_ambient` | FE → BE | `PlayAmbientPayload` | `void` |
 | `stop_ambient` | FE → BE | `void` | `void` |
 
 #### Personalization Commands
@@ -136,12 +136,12 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
 | `get_daily_quote` | FE → BE | `void` | `Quote` |
-| `save_favorite_quote` | FE → BE | `{ QuoteId: string }` | `void` |
-| `add_custom_quote` | FE → BE | `{ Text: string, Author: string \| null }` | `Quote` |
-| `set_custom_background` | FE → BE | `{ FilePath: string }` | `{ SavedPath: string }` |
+| `save_favorite_quote` | FE → BE | `SaveFavoriteQuotePayload` | `void` |
+| `add_custom_quote` | FE → BE | `AddCustomQuotePayload` | `Quote` |
+| `set_custom_background` | FE → BE | `SetCustomBackgroundPayload` | `CustomBackgroundResponse` |
 | `clear_custom_background` | FE → BE | `void` | `void` |
 | `get_streak_data` | FE → BE | `void` | `StreakData` |
-| `get_streak_calendar` | FE → BE | `{ Month: number, Year: number }` | `StreakCalendarDay[]` |
+| `get_streak_calendar` | FE → BE | `GetStreakCalendarPayload` | `StreakCalendarDay[]` |
 
 #### Keyboard Shortcut Commands
 
@@ -157,18 +157,18 @@ All frontend ↔ backend communication uses Tauri's `invoke()` system.
 | `get_theme` | FE → BE | `void` | `{ Theme: ThemeMode }` |
 | `set_theme` | FE → BE | `{ Theme: ThemeMode }` | `void` |
 
-#### Sound Commands
+#### Sound Commands (Validation)
 
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
-| `validate_custom_sound` | FE → BE | `{ FilePath: string }` | `{ IsValid: boolean, Error: string \| null }` |
+| `validate_custom_sound` | FE → BE | `ValidateCustomSoundPayload` | `SoundValidationResult` |
 
-#### Sleep & Wellness Commands
+#### Sleep & Wellness Commands (Bedtime)
 
 | Command | Direction | Payload | Returns |
 |---------|-----------|---------|---------|
-| `get_bedtime_reminder` | FE → BE | `void` | `{ Bedtime: string \| null, ReminderMinBefore: number }` |
-| `set_bedtime_reminder` | FE → BE | `{ Bedtime: string, ReminderMinBefore: number }` | `void` |
+| `get_bedtime_reminder` | FE → BE | `void` | `BedtimeReminderResponse` |
+| `set_bedtime_reminder` | FE → BE | `SetBedtimeReminderPayload` | `void` |
 
 #### Analytics & History Commands
 
