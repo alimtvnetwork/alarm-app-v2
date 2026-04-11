@@ -120,7 +120,7 @@ Two gap analysis passes (Phase 8: 20 issues, Phase 9: 21 issues) identified and 
 |------|--------|
 | `00-overview.md` | v2.9.2 — status updated for Phase 6–9, acceptance criteria count in readiness report link |
 | `01-fundamentals/01-data-model.md` | Settings count prose: "only 9" → "16" |
-| `01-fundamentals/06-tauri-architecture.md` | SettingsStore methods: PascalCase → camelCase |
+| `01-fundamentals/06-tauri-architecture-and-framework-comparison.md` | SettingsStore methods: PascalCase → camelCase |
 | `01-fundamentals/97-acceptance-criteria.md` | Settings 9→16 (all keys listed), WebhookError 4→7, IPC name fixed, Details? removed |
 | `02-features/12-smart-features.md` | Timezone field clarified as P3 future |
 | `02-features/97-acceptance-criteria.md` | v1.2.0 — rebuilt with 157 criteria (was 133), all 17 feature specs synced |
@@ -580,7 +580,7 @@ This milestone release marks the completion of the IPC Completeness arc (Phases 
 - `01-fundamentals/00-overview.md` → v1.4.0: Added files 10, 11 to inventory
 - `01-fundamentals/02-design-system.md` → v1.2.0: Tray icon assets section
 - `01-fundamentals/03-file-structure.md` → v1.6.0: Cargo.toml exact pins, npm section, thiserror added
-- `01-fundamentals/06-tauri-architecture.md` → v1.2.0: Plugin versions + API signatures
+- `01-fundamentals/06-tauri-architecture-and-framework-comparison.md` → v1.2.0: Plugin versions + API signatures
 - `01-fundamentals/09-test-strategy.md` → v1.1.0: Platform E2E + dep compat test layers
 - `10-ai-handoff-readiness-report.md` → v1.3.0: 100/100 score, 12 fundamentals, 6 test layers, dep pins
 - All `99-consistency-report.md` files updated to reflect v2.0.0
