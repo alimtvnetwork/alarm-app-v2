@@ -111,7 +111,7 @@ Tables:
 
 | # | Module | Description |
 |---|--------|-------------|
-| 01 | [Fundamentals](./01-fundamentals/00-overview.md) | Architecture, data model, design system, platform strategy, startup, devops, tests, dependency lock, platform verification matrix (12 docs) |
+| 01 | [Fundamentals](./01-fundamentals/00-overview.md) | Architecture, data model, design system, platform strategy, startup, devops, tests, dependency lock, platform verification matrix, logging/telemetry (13 docs) |
 | 02 | [Features](./02-features/00-overview.md) | All feature specifications (17 docs) |
 | 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking — 43/43 issues resolved |
 | 09 | [AI Handoff Reliability Report](./09-ai-handoff-reliability-report.md) | Supplementary failure analysis (62-task breakdown is authoritative), top 15 risk points |
