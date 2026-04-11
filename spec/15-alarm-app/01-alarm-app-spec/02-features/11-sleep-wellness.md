@@ -144,6 +144,27 @@ pub struct BedtimeReminderResponse {
 
 ---
 
+## Edge Cases
+
+> **Resolves CG-001.** Edge cases for Sleep & Wellness features.
+
+| # | Scenario | Expected Behavior |
+|---|----------|-------------------|
+| 1 | Bedtime reminder during DST spring-forward | Reminder adjusts to new local time; does not fire twice or skip |
+| 2 | Bedtime reminder during DST fall-back | Reminder fires once at the new local time; no duplicate |
+| 3 | Ambient sound auto-stop overlaps with alarm firing | Alarm audio takes priority; ambient stops immediately when alarm fires |
+| 4 | `play_ambient` called while ambient already playing | Replace current ambient sound with new selection; do not layer |
+| 5 | `log_sleep_quality` with Quality = 0 or Quality = 6 | Return `Validation` error — Quality must be 1–5 |
+| 6 | `log_sleep_quality` with invalid AlarmEventId | Return `Validation` error — AlarmEventId not found in `AlarmEvents` table |
+| 7 | `play_ambient` with SoundId not in allowlist | Return `Validation` error — unknown ambient sound ID |
+| 8 | `set_bedtime_reminder` with Bedtime = "" (empty) | Return `Validation` error — Bedtime must be non-empty HH:MM |
+| 9 | `stop_ambient` when nothing is playing | No-op — return success silently |
+| 10 | Sleep calculator with wake time in the past (earlier today) | Calculate for next day; do not show negative durations |
+| 11 | Ambient sound playback when system audio device changes | Gracefully re-acquire audio output; resume or stop cleanly |
+| 12 | Bedtime reminder when system clock jumps (NTP sync) | Re-evaluate reminder schedule on clock change detection |
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Bedtime reminder sends OS-native notification 15–30 min before configured bedtime

@@ -153,6 +153,27 @@ pub struct GetStreakCalendarPayload {
 
 ---
 
+## Edge Cases
+
+> **Resolves CG-002.** Edge cases for Personalization features.
+
+| # | Scenario | Expected Behavior |
+|---|----------|-------------------|
+| 1 | Streak calculation across timezone change (travel) | Streak uses alarm's local fire time; timezone change does not break streak if alarm was dismissed on-time in the original zone |
+| 2 | Streak calculation when alarm missed one day | Streak resets to 0; next on-time dismissal starts new streak at 1 |
+| 3 | Streak calculation when snooze limit exceeded | Streak resets — excessive snoozing counts as not "on time" |
+| 4 | `get_streak_calendar` with Month = 0 or Month = 13 | Return `Validation` error — Month must be 1–12 |
+| 5 | `add_custom_quote` with empty Text | Return `Validation` error — Text must be non-empty |
+| 6 | `add_custom_quote` with Text > 500 chars | Return `Validation` error — Text exceeds maximum length |
+| 7 | `save_favorite_quote` with non-existent QuoteId | Return `Validation` error — QuoteId not found |
+| 8 | `get_daily_quote` when bundled quote library is empty | Return a hardcoded fallback quote ("Good morning!") — never return null |
+| 9 | Custom background image file deleted after selection | Show default background; log warning; clear `SavedPath` setting |
+| 10 | Theme skin conflicts with custom accent color | Accent color overrides theme skin's default accent; no conflict — skin provides layout, accent provides color |
+| 11 | `set_custom_background` with unsupported image format | Return `Validation` error — only PNG, JPG, JPEG, WEBP allowed |
+| 12 | Streak badge milestone (7/30/100 days) — display timing | Badge notification shown once on the day the milestone is reached; persisted to prevent re-showing |
+
+---
+
 ## Acceptance Criteria
 
 - [ ] Theme/skin selection persisted in SQLite `Settings` table via `update_setting` IPC

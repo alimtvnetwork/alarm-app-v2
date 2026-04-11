@@ -180,6 +180,65 @@ pub enum AlarmAppError {
 }
 ```
 
+### IPC Command → Error Variant Mapping
+
+> **Resolves AI-001 / CG-003.** Every IPC command explicitly lists which `AlarmAppError` variants it can return. AI agents MUST use only the listed variants — do not guess.
+
+| IPC Command | Possible Error Variants | Notes |
+|-------------|------------------------|-------|
+| `create_alarm` | `Database`, `Validation` | Validation for label length, repeat pattern, time format |
+| `update_alarm` | `Database`, `Validation`, `ConcurrentModification` | Concurrent if row changed between read and write |
+| `delete_alarm` | `Database`, `Validation` | Validation if AlarmId not found |
+| `undo_delete_alarm` | `Database`, `Validation` | Validation if UndoToken expired or invalid |
+| `toggle_alarm` | `Database`, `Validation` | Validation if AlarmId not found |
+| `duplicate_alarm` | `Database`, `Validation` | Validation if source AlarmId not found |
+| `move_alarm_to_group` | `Database`, `Validation` | Validation if AlarmId or GroupId not found |
+| `list_alarms` | `Database` | Read-only, no validation errors |
+| `dismiss_alarm` | `Database`, `Validation` | Validation if alarm not currently firing |
+| `snooze_alarm` | `Database`, `Validation` | Validation if snooze limit exceeded or alarm not firing |
+| `get_snooze_state` | `Database` | Read-only |
+| `cancel_snooze` | `Database`, `Validation` | Validation if no active snooze for AlarmId |
+| `list_sounds` | `Database` | Read-only |
+| `set_custom_sound` | `Database`, `FileNotFound`, `InvalidSoundFormat`, `SymlinkRejected`, `SoundFileTooLarge`, `RestrictedPath` | Full file validation pipeline |
+| `validate_custom_sound` | `FileNotFound`, `InvalidSoundFormat`, `SymlinkRejected`, `SoundFileTooLarge`, `RestrictedPath` | Validation only, no DB write |
+| `get_challenge` | `Database`, `Validation` | Validation if AlarmId not found |
+| `submit_challenge_answer` | `Database`, `Validation` | Validation if AlarmId not found or no active challenge |
+| `create_group` | `Database`, `Validation` | Validation for name length (1–50 chars) |
+| `update_group` | `Database`, `Validation`, `ConcurrentModification` | |
+| `delete_group` | `Database`, `Validation` | Validation if group has alarms (prevent orphans) |
+| `list_groups` | `Database` | Read-only |
+| `toggle_group` | `Database`, `Validation` | Validation if AlarmGroupId not found |
+| `get_next_alarm_time` | `Database` | Read-only |
+| `get_theme` | `Database` | Read-only |
+| `set_theme` | `Database`, `Validation` | Validation if theme value not in `ThemeMode` enum |
+| `export_data` | `Database`, `ExportImport`, `FileNotFound` | FileNotFound if export directory invalid |
+| `import_data` | `Database`, `ExportImport`, `Validation` | Validation for malformed import file |
+| `confirm_import` | `Database`, `ExportImport`, `Validation` | Validation if preview token expired |
+| `log_sleep_quality` | `Database`, `Validation` | Validation if Quality not 1–5 or AlarmEventId not found |
+| `play_ambient` | `Audio`, `Validation` | Validation if SoundId not in allowlist |
+| `stop_ambient` | `Audio` | No validation — stops whatever is playing |
+| `get_bedtime_reminder` | `Database` | Read-only |
+| `set_bedtime_reminder` | `Database`, `Validation` | Validation for HH:MM format |
+| `get_daily_quote` | `Database` | Read-only |
+| `save_favorite_quote` | `Database`, `Validation` | Validation if QuoteId not found |
+| `add_custom_quote` | `Database`, `Validation` | Validation for empty text |
+| `update_setting` | `Database`, `Validation` | Validation if Key not in allowed settings keys |
+| `set_custom_background` | `Database`, `FileNotFound`, `RestrictedPath` | File must exist and not be in system dirs |
+| `clear_custom_background` | `Database` | Idempotent — no error if already cleared |
+| `get_streak_data` | `Database` | Read-only |
+| `get_streak_calendar` | `Database`, `Validation` | Validation if Month not 1–12 |
+| `create_webhook` | `Database`, `Validation` | Validation for URL format |
+| `delete_webhook` | `Database`, `Validation` | Validation if WebhookId not found |
+| `test_webhook` | `Database`, `Validation`, `IpcTimeout` | Timeout if webhook endpoint unreachable |
+| `get_weather_briefing` | `Database`, `IpcTimeout` | Timeout if weather API unreachable |
+| `list_alarm_events` | `Database` | Read-only |
+| `export_history_csv` | `Database`, `ExportImport` | |
+| `clear_history` | `Database`, `Validation` | Validation if date range invalid |
+| `register_shortcuts` | — | Frontend-only, no Rust IPC error |
+| `unregister_shortcuts` | — | Frontend-only, no Rust IPC error |
+
+> **Note:** `Migration` and `NotificationDenied` are startup-time errors (not IPC command errors). They occur during the startup sequence (Steps 3 and 6 respectively) and are handled before IPC commands are available.
+
 ### IPC Error Response Format
 
 > **Resolves P14-019.** Defines the error envelope returned from all IPC commands so the frontend handles errors consistently.
