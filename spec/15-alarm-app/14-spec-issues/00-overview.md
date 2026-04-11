@@ -83,12 +83,12 @@ This folder tracks all specification quality issues found during the deep audit 
 
 | Severity | Count |
 |----------|:-----:|
-| 🔴 Critical | 107 |
-| 🟡 Medium | 331 |
-| 🟢 Low | 153 |
-| **Grand Total** | **591** |
-| **Open** | **2** |
-| **Resolved** | **589** |
+| 🔴 Critical | 110 |
+| 🟡 Medium | 333 |
+| 🟢 Low | 154 |
+| **Grand Total** | **597** |
+| **Accepted** | **5** |
+| **Resolved** | **592** |
 
 ---
 
@@ -180,6 +180,8 @@ This folder tracks all specification quality issues found during the deep audit 
 | **Gap Analysis Phase 17** | **Post-Phase 16B verification — stale counts, math errors, phase count conflicts (7 issues, 6 fixed, 1 accepted)** | **✅ Done (+7 = 577, 6 resolved, 1 accepted)** |
 | **Gap Analysis Phase 18** | **Post-Phase 17B verification — clean (0 issues)** | **✅ Done (0 new issues)** |
 | **Gap Analysis Phase 19** | **Final comprehensive audit — coverage matrix staleness (2 issues, 2 fixed)** | **✅ Done (+2 = 579, 2 resolved)** |
+| **Gap Analysis Phase 20** | **Post-flattening structural + comprehensive audit (12 issues, 9 fixed, 3 accepted)** | **✅ Done (+12 = 591, 9 resolved, 3 accepted)** |
+| **Gap Analysis Phase 21** | **Post-Phase 20B verification (6 issues, 4 fixed, 2 accepted)** | **✅ Done (+6 = 597, 4 resolved, 2 accepted)** |
 
 ---
 

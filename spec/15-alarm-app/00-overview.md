@@ -131,11 +131,11 @@ Tables:
 | 02 | [Features](./02-features/00-overview.md) | All feature specifications (17 docs) |
 | 03 | [App Issues](./03-app-issues/00-overview.md) | Bug tracking — 43/43 issues resolved |
 | 09 | [AI Handoff Reliability Report](./09-ai-handoff-reliability-report.md) | Supplementary failure analysis (62-task breakdown is authoritative), top 15 risk points |
-| 10 | [AI Handoff Readiness Report](./10-ai-handoff-readiness-report.md) | 100/100 readiness score, 579 issues found / 577 resolved, 229 acceptance criteria |
+| 10 | [AI Handoff Readiness Report](./10-ai-handoff-readiness-report.md) | 100/100 readiness score, 597 issues found / 592 resolved, 229 acceptance criteria |
 | 11 | [Atomic Task Breakdown](./11-atomic-task-breakdown.md) | **Authoritative** 62 dependency-ordered tasks, effort estimates, risk levels |
 | 12 | [Platform & Concurrency Guide](./12-platform-and-concurrency-guide.md) | Platform gotchas, race condition safeguards, async safety, error recovery |
 | 13 | [AI Cheat Sheet](./13-ai-cheat-sheet.md) | Single-page quick reference for AI coding agents |
-| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 579 found, 577 resolved, 2 accepted across 36 discovery + 42 fix phases + 12 gap analyses ✅ |
+| 14 | [Spec Issues](./14-spec-issues/00-overview.md) | Audit tracker — 597 found, 592 resolved, 5 accepted across 36 discovery + 42 fix phases + 14 gap analyses ✅ |
 | 15 | [Reference](./15-reference/00-overview.md) | Feature inventories and planning references |
 | 98 | [Changelog](./98-changelog.md) | Version history v1.0.0–v3.1.0 |
 
