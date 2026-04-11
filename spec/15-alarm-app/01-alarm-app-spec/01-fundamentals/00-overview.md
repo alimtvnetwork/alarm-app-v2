@@ -1,8 +1,8 @@
 # Fundamentals
 
-**Version:** 1.4.0  
+**Version:** 1.5.0  
 **Status:** Active  
-**Updated:** 2026-04-10  
+**Updated:** 2026-04-11
 **AI Confidence:** High  
 **Ambiguity:** None
 
@@ -47,6 +47,7 @@ Core architectural decisions, data model definitions, design system tokens, file
 | 09 | `09-test-strategy.md` | Test layers (Rust unit/integration, frontend, E2E), coverage targets, CI integration |
 | 10 | `10-dependency-lock.md` | Exact version pins for all Rust crates and npm packages, API surface, breaking change notes |
 | 11 | `11-platform-verification-matrix.md` | Feature × Platform × Behavior × Test Method × Fallback for all runtime-dependent features |
+| 12 | `12-logging-and-telemetry.md` | Log levels, structured JSON format, file rotation, retention, what to log vs never log, frontend error forwarding |
 
 ---
 

@@ -1,6 +1,6 @@
 # Gap Analysis — Phase 7 (Comprehensive Fresh Audit)
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Updated:** 2026-04-11
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -227,10 +227,10 @@ All Rust code samples in feature specs follow the ≤15-line rule or have EXEMPT
 |--------|-------|
 | **Total issues found** | 18 |
 | **✅ Resolved** | 17 |
-| **⏳ Remaining** | 1 (BE-003 logging/telemetry spec) |
+| **⏳ Remaining** | 0 |
 | **🔴 Critical** | 0 |
 | **🟡 Medium** | 0 remaining |
-| **🟢 Low** | 1 remaining (BE-003) |
+| **🟢 Low** | 0 remaining |
 | **Gap to full readiness** | ~1% (backend: <1%, frontend: ~2%) |
 | **Blind AI execution success** | 95–97% |
 | **Backend-only AI success** | 98%+ |
@@ -246,6 +246,7 @@ All Rust code samples in feature specs follow the ≤15-line rule or have EXEMPT
 | 4. Missing edge cases | CG-001, CG-002, CG-003 | ✅ Done — 10+8+6 edge cases added to smart-features, analytics, keyboard-shortcuts |
 | 5. Boolean exemptions | B-001, B-002, CG-007 | ✅ Done — `IsPreviousEnabled` nullable exemption documented in SQL, `Is24Hour` derivation noted |
 | 6. Zustand store shapes | AI-004 | ✅ Done — `AlarmStoreState`, `OverlayStoreState`, `SettingsStoreState` interfaces added to `03-file-structure.md` |
+| 7. Logging/telemetry spec | BE-003 | ✅ Done — `12-logging-and-telemetry.md` added to fundamentals: log levels, JSON format, daily rotation, 7-day retention, never-log list, frontend IPC forwarding |
 
 ### Key Observations
 
@@ -274,13 +275,13 @@ All Rust code samples in feature specs follow the ≤15-line rule or have EXEMPT
 
 ---
 
-*Gap Analysis Phase 7 v1.1.0 — all 6 task groups resolved: 2026-04-11*
+*Gap Analysis Phase 7 v1.2.0 — all 18/18 issues resolved: 2026-04-11*
 
 ```
 Do you understand? Always add this part at the end of the writing inside the code block.
 
 Remaining Tasks:
-- BE-003: Add logging/telemetry spec (Low severity — defines log levels, rotation, what to log vs not)
+- None. All 18 Phase 7 issues are resolved (including BE-003 logging/telemetry spec).
 
-All other Phase 7 issues (17/18) are resolved. Say "next" to add the logging spec or proceed to version bump.
+Ready for version bump to v2.9.1.
 ```
