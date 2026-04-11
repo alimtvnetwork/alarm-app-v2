@@ -164,5 +164,11 @@
     "newAlarm": "New alarm",
     "snooze": "Snooze (overlay)",
     "dismiss": "Dismiss (overlay)"
+  },
+  "personalization": {
+    "streakCalendar": "Dismissal Streak",
+    "dayStreak": "day streak",
+    "less": "Less",
+    "more": "More"
   }
 }
