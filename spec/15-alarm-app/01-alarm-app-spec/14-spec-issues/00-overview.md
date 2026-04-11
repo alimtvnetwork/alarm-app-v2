@@ -63,6 +63,7 @@ This folder tracks all specification quality issues found during the deep audit 
 | 52 | `52-discovery-phase-34.md` | Discovery Phase 34 — IPC Inline Objects & Remaining Rust Structs Audit | 15 | 0 | 15 |
 | 53 | `53-discovery-phase-35.md` | Discovery Phase 35 — Export/Import, Webhook, Analytics & System IPC Struct Audit | 14 | 0 | 14 |
 | 54 | `54-discovery-phase-36.md` | Discovery Phase 36 — Final Sweep: IPC Registry Alignment & Stale References | 12 | 0 | 12 |
+| 55 | `55-issue-summary-index.md` | Summary Index — All 484 issues by category, phase, and root cause | — | — | — |
 
 ---
 
