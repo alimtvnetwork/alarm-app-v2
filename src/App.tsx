@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import AppLayout from "./components/layout/AppLayout";
+import AlarmOverlay from "./components/alarm/AlarmOverlay";
 import Index from "./pages/Index";
 import Settings from "./pages/Settings";
 import Analytics from "./pages/Analytics";
@@ -18,6 +19,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <AlarmOverlay />
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
