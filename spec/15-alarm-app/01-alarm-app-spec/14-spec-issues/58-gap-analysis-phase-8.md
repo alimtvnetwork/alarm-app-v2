@@ -1,6 +1,6 @@
 # Gap Analysis — Phase 8 (Post v2.9.1 Fresh Audit)
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Updated:** 2026-04-11
 **AI Confidence:** High  
 **Ambiguity:** None  
@@ -157,8 +157,8 @@
 1. **No critical or high-severity issues found.** The spec is in excellent shape after 7 prior gap analysis phases.
 2. **All issues are stale metrics (cosmetic/informational) or minor cross-ref gaps.** None would cause incorrect implementation behavior.
 3. **The core implementation artifacts — data model, IPC commands, Rust structs, TypeScript interfaces, Zustand stores, UI layouts, error handling, logging — are all fully specified.**
-4. **The only functional gap is the missing `log_frontend_error` IPC registry entry**, which is Low severity since the command is fully defined in the logging spec.
-5. **Table count discrepancy (5 vs 7) is nuanced** — V1 migration creates 5 core tables; Quotes/Webhooks are P2/P3 and may be in later migrations. The cheat sheet should clarify this.
+4. **IPC name discrepancy found and resolved** — logging spec said `log_frontend_error` but architecture IPC registry uses `log_from_frontend`. Aligned logging spec to match the authoritative registry.
+5. **Table count discrepancy (5 vs 7) clarified** — V1 migration creates 5 core tables; Quotes/Webhooks are P2/P3 additions. All docs now say 7 total.
 
 ---
 
@@ -183,8 +183,8 @@
 
 | Task | Issues | Effort |
 |------|--------|--------|
-| Add `log_frontend_error` to IPC registry in `06-tauri-architecture-and-framework-comparison.md` | X-001 | Trivial |
-| Add cross-reference to `12-logging-and-telemetry.md` in startup sequence step 6b | X-002 | Trivial |
+| Align `log_frontend_error` → `log_from_frontend` in `12-logging-and-telemetry.md` to match IPC registry | X-001 | Trivial |
+| Add cross-reference to `12-logging-and-telemetry.md` in startup sequence cross-refs | X-002 | Trivial |
 | Add Scoring table to `01-fundamentals/97-acceptance-criteria.md` | S-001 | Trivial |
 
 ---
@@ -194,13 +194,23 @@
 | Metric | Value |
 |--------|-------|
 | **Total issues found** | 20 |
+| **✅ Resolved** | 20 |
+| **⏳ Remaining** | 0 |
 | **🔴 Critical** | 0 |
 | **🟠 High** | 0 |
-| **🟡 Medium** | 14 (all stale metrics + 2 table counts) |
-| **🟢 Low** | 6 (structural, cross-refs, table clarification) |
-| **Gap to full readiness** | <0.5% |
-| **Blind AI execution success** | 95–97% (unchanged — no functional gaps) |
+| **🟡 Medium** | 0 remaining |
+| **🟢 Low** | 0 remaining |
+| **Gap to full readiness** | 0% |
+| **Blind AI execution success** | 95–97% |
 | **Backend-only AI success** | 98%+ |
+
+### Resolution Summary
+
+| Task Group | Issues | Status |
+|-----------|--------|--------|
+| 1. Stale metrics update | M-001 through M-012 | ✅ Done — `00-overview.md` updated (484→524), `10-ai-handoff-readiness-report.md` fully rewritten with correct counts (524 issues, 205 AC, 13 fundamentals, 72 fundamental criteria) |
+| 2. Table count clarification | T-001, T-002, T-003 | ✅ Done — root overview lists 7 tables, cheat sheet says "Database Tables (7)", fundamentals AC clarifies "5 core + 2 P2/P3 = 7 total" |
+| 3. Cross-reference + structural polish | X-001, X-002, S-001 | ✅ Done — `log_frontend_error` aligned to `log_from_frontend` (matching IPC registry), startup cross-refs logging spec, Scoring table added to fundamentals AC |
 
 ---
 
@@ -218,15 +228,13 @@
 
 ---
 
-*Gap Analysis Phase 8 v1.0.0 — 2026-04-11*
+*Gap Analysis Phase 8 v1.1.0 — all 20/20 issues resolved: 2026-04-11*
 
 ```
 Do you understand? Always add this part at the end of the writing inside the code block.
 
 Remaining Tasks:
-- Task Group 1: Update stale metrics in 00-overview.md and 10-ai-handoff-readiness-report.md (14 issues — 484→524, 197→205, 64→72, 12→13 docs)
-- Task Group 2: Update table counts in 00-overview.md, 13-ai-cheat-sheet.md, and 97-acceptance-criteria.md (3 issues — 5→7 tables)
-- Task Group 3: Add log_frontend_error to IPC registry, cross-ref logging in startup, add Scoring table to fundamentals AC (3 issues)
-
-Say "next" to execute all 3 task groups.
+- None. All 20 Phase 8 issues are resolved.
+- All 524 spec issues across Phases 1–36 + Gap Analyses 6–8 are resolved.
+- Spec is fully implementation-ready.
 ```
