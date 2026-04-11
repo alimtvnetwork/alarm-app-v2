@@ -1,10 +1,12 @@
 # OS Service Layer Specification
 
-**Version:** 2.0.0  
+**Version:** 2.1.0  
 **Updated:** 2026-04-11  
 **Target Platform:** macOS (primary), Windows/Linux (future)  
 **Architecture:** Tauri 2.x (Rust core)  
-**Scope:** Background service behavior — auto-start, polling engine, tray icon, notifications, wake/sleep, packaging
+**Scope:** Background service behavior — auto-start, polling engine, tray icon, notifications, wake/sleep, packaging  
+**AI Confidence:** High  
+**Ambiguity:** Low
 
 ---
 
@@ -29,6 +31,23 @@
 
 ---
 
+## Keywords
+
+`background-service`, `polling-engine`, `tray-icon`, `notifications`, `auto-start`, `wake-sleep`, `launchagent`, `daemon`, `os-service`
+
+---
+
+## Scoring
+
+| Criterion | Status |
+|-----------|--------|
+| Version present | ✅ |
+| Keywords present | ✅ |
+| Cross-References present | ✅ |
+| Acceptance Criteria present | ⚠️ N/A (architecture spec — no AC needed) |
+
+---
+
 ## 1. Purpose & Scope
 
 This document specifies **how AlarmDaemon behaves as an operating system background service**. It covers the service lifecycle, auto-start, polling engine, notification dispatch, system tray presence, and wake/sleep recovery.
@@ -37,7 +56,7 @@ This document specifies **how AlarmDaemon behaves as an operating system backgro
 
 - How the app starts automatically on login
 - How it runs silently in the background (no dock icon, no visible window)
-- How the 800ms polling engine works
+- How the 30-second polling engine works
 - How native OS notifications are fired and handled
 - How the system tray icon behaves
 - How the app recovers from sleep/shutdown (missed alarm detection)
@@ -69,7 +88,7 @@ A desktop application for macOS that behaves like a **Windows Service** — a pr
 
 - **Starts automatically** when the computer boots (no manual launch required)
 - **Runs silently in the background** with no visible window or dock icon
-- **Continuously monitors** a local database every 800 milliseconds for pending alarms
+- **Continuously monitors** a local database every **30 seconds** for pending alarms
 - **Delivers native OS notifications** when an alarm is due, with actionable buttons (Snooze / Dismiss)
 - **Provides a minimal tray UI** (accessed via the menu bar icon) for quick access to the alarm app
 - **Survives sleep/wake cycles** — detects and surfaces missed alarms on resume
@@ -120,7 +139,7 @@ A background service is a process that:
 │  ┌─ Tauri Rust Core (the "service") ─────────────────────┐   │
 │  │                                                        │   │
 │  │  ┌─ Polling Loop (tokio task) ────────────────────┐   │   │
-│  │  │  Every 800ms:                                  │   │   │
+│  │  │  Every 30s:                                   │   │   │
 │  │  │  1. Query SQLite for due alarms                │   │   │
 │  │  │  2. For each result → fire native notification │   │   │
 │  │  │  3. Update alarm status accordingly            │   │   │
