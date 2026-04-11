@@ -1,96 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Figtree:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Alarm App Design System — Warm Cream/Charcoal palette
+   Spec: 02-design-system.md
+   All colors MUST be HSL. */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Warm cream light palette */
+    --background: 30 33% 97%;       /* #faf8f5 cream */
+    --foreground: 20 18% 20%;       /* dark warm brown */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 30 25% 95%;             /* #f5f0e8 soft cream */
+    --card-foreground: 20 18% 20%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 30 33% 97%;
+    --popover-foreground: 20 18% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 30 22% 42%;          /* #8b7355 warm brown */
+    --primary-foreground: 30 33% 97%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 30 20% 90%;        /* #f0ebe3 linen */
+    --secondary-foreground: 20 18% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 30 15% 92%;
+    --muted-foreground: 20 10% 50%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 30 25% 70%;           /* #c9b99a tan */
+    --accent-foreground: 20 18% 15%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 30 15% 85%;
+    --input: 30 15% 85%;
+    --ring: 30 22% 42%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Alarm-specific tokens */
+    --clock-face: 30 25% 95%;
+    --clock-hand: 20 18% 20%;
+    --clock-tick: 30 22% 42%;
+    --alarm-active: 142 72% 40%;    /* green for enabled */
+    --alarm-inactive: 30 10% 65%;
+    --overlay-backdrop: 0 0% 0%;
+    --snooze: 38 92% 50%;           /* warm amber */
+    --dismiss: 142 72% 40%;         /* green */
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 30 25% 95%;
+    --sidebar-foreground: 20 18% 20%;
+    --sidebar-primary: 30 22% 42%;
+    --sidebar-primary-foreground: 30 33% 97%;
+    --sidebar-accent: 30 20% 90%;
+    --sidebar-accent-foreground: 20 18% 20%;
+    --sidebar-border: 30 15% 85%;
+    --sidebar-ring: 30 22% 42%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Warm charcoal dark palette */
+    --background: 20 14% 14%;       /* #2a2420 charcoal */
+    --foreground: 30 20% 90%;       /* #f0ebe3 cream text */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 20 11% 18%;             /* #3d3530 warm gray */
+    --card-foreground: 30 20% 90%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 20 14% 14%;
+    --popover-foreground: 30 20% 90%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 30 25% 70%;          /* #c9b99a muted tan */
+    --primary-foreground: 20 14% 14%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 20 11% 22%;
+    --secondary-foreground: 30 20% 90%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 20 11% 22%;
+    --muted-foreground: 30 10% 60%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 30 22% 42%;           /* #8b7355 */
+    --accent-foreground: 30 20% 90%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 40%;
+    --destructive-foreground: 30 20% 90%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 20 11% 25%;
+    --input: 20 11% 25%;
+    --ring: 30 25% 70%;
+
+    /* Alarm-specific tokens (dark) */
+    --clock-face: 20 11% 18%;
+    --clock-hand: 30 20% 90%;
+    --clock-tick: 30 25% 70%;
+    --alarm-active: 142 60% 45%;
+    --alarm-inactive: 20 8% 45%;
+    --overlay-backdrop: 0 0% 0%;
+    --snooze: 38 80% 55%;
+    --dismiss: 142 60% 45%;
+
+    --sidebar-background: 20 14% 14%;
+    --sidebar-foreground: 30 20% 90%;
+    --sidebar-primary: 30 25% 70%;
+    --sidebar-primary-foreground: 20 14% 14%;
+    --sidebar-accent: 20 11% 22%;
+    --sidebar-accent-foreground: 30 20% 90%;
+    --sidebar-border: 20 11% 25%;
+    --sidebar-ring: 30 25% 70%;
   }
 }
 
@@ -100,6 +118,10 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
   }
 }
