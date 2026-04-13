@@ -155,7 +155,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent side="bottom" className="mx-auto max-h-[70vh] max-w-md overflow-y-auto rounded-t-2xl px-4 pb-5">
+      <SheetContent side="bottom" className="mx-auto max-h-[75vh] max-w-md overflow-y-auto rounded-t-2xl px-4 pb-5 scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
         <SheetHeader className="pb-0">
           <SheetTitle className="font-heading text-base">
             {isEditing ? t("alarmForm.editAlarm") : t("alarmForm.newAlarm")}
