@@ -94,7 +94,7 @@ const Personalization = () => {
             </p>
           </CardHeader>
           <CardContent>
-            <div className="flex items-end justify-between gap-2 overflow-x-auto pb-1">
+            <div className="flex items-end justify-between">
               {SKIN_OPTIONS.map(({ value, label, colors }) => {
                 const isActive = (settings.ThemeSkin ?? "default") === value;
                 return (
@@ -102,9 +102,9 @@ const Personalization = () => {
                     <TooltipTrigger asChild>
                       <button
                         onClick={() => updateSettings({ ThemeSkin: value })}
-                        className={`flex flex-col items-center gap-2 rounded-xl p-2 transition-all shrink-0 ${
+                        className={`flex flex-col items-center gap-1 rounded-lg p-1.5 transition-all ${
                           isActive
-                            ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
+                            ? "ring-2 ring-primary ring-offset-1 ring-offset-background"
                             : "hover:bg-secondary/50"
                         }`}
                       >
@@ -112,12 +112,12 @@ const Personalization = () => {
                           {colors.map((c, i) => (
                             <div
                               key={i}
-                              className="h-10 w-5"
+                              className="h-7 w-3.5"
                               style={{ backgroundColor: c }}
                             />
                           ))}
                         </div>
-                        <span className="text-[10px] font-body text-muted-foreground">{label}</span>
+                        <span className="text-[9px] font-body text-muted-foreground">{label}</span>
                       </button>
                     </TooltipTrigger>
                     <TooltipContent>{label} theme</TooltipContent>
