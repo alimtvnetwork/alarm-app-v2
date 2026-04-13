@@ -1,7 +1,7 @@
 # Memory: constraints/coding-guidelines-summary
 
 **Updated:** 2026-04-08  
-**Version:** 1.0.1  
+**Version:** 1.0.0  
 **Status:** Active
 
 ---
