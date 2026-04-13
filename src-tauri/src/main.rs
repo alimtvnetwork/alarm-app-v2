@@ -68,8 +68,18 @@ fn main() {
             let pool: DbPool = Arc::new(Mutex::new(conn));
             app.manage(pool);
 
-            // Step 7-9: Engine start, missed alarm check, tray update
-            // (Will be implemented in Phase 3+)
+            // Step 7: Start alarm engine (30s polling loop)
+            let engine_pool: DbPool = Arc::new(Mutex::new(
+                Connection::open(&db_path).expect("FATAL: Failed to open engine DB connection"),
+            ));
+            alarm_app::engine::alarm_engine::start_engine(
+                engine_pool,
+                app_handle.clone(),
+            );
+
+            tracing::info!("Alarm engine started");
+
+            // Step 8-9: Tray update, etc. (Phase 10)
 
             Ok(())
         })
