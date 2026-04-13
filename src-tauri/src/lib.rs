@@ -5,3 +5,4 @@ pub mod audio;
 pub mod errors;
 pub mod notifications;
 pub mod tray;
+pub mod webhooks;
