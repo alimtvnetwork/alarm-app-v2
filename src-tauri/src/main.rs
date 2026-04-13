@@ -101,6 +101,10 @@ fn main() {
             alarm_app::commands::group::toggle_group,
             alarm_app::commands::history::list_alarm_events,
             alarm_app::commands::history::clear_history,
+            alarm_app::commands::snooze::snooze_alarm,
+            alarm_app::commands::snooze::get_snooze_state,
+            alarm_app::commands::snooze::cancel_snooze,
+            alarm_app::commands::snooze::dismiss_alarm,
             log_from_frontend,
         ])
         .run(tauri::generate_context!())
