@@ -101,44 +101,50 @@ const AlarmOverlay = () => {
       aria-modal="true"
       aria-label={`Alarm: ${alarm.Label || alarm.Time}`}
       className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ background: "hsl(20 14% 10%)" }}
+      style={{ background: "hsl(20 14% 8%)" }}
     >
       {/* Card container */}
-      <div className="relative flex flex-col items-center justify-center w-[340px] h-[500px] rounded-3xl border border-border/20 bg-card/40 backdrop-blur-sm shadow-2xl">
+      <div
+        className="relative flex flex-col items-center justify-center w-[340px] h-[500px] rounded-3xl border shadow-2xl"
+        style={{
+          background: "hsl(20 12% 14% / 0.85)",
+          borderColor: "hsl(30 15% 30% / 0.3)",
+        }}
+      >
         {autoDismissRemaining !== null && (
-          <p className="absolute top-5 text-xs font-body text-muted-foreground">
+          <p className="absolute top-5 text-xs font-body" style={{ color: "hsl(30 20% 65%)" }}>
             {t("overlay.autoDismissIn", { time: formatCountdown(autoDismissRemaining) })}
           </p>
         )}
 
         {/* Concentric ripple rings + bell */}
         <div className="relative flex items-center justify-center mb-6">
-          <div className="absolute w-64 h-64 rounded-full border border-primary/10" />
-          <div className="absolute w-48 h-48 rounded-full border border-primary/15" />
-          <div className="absolute w-32 h-32 rounded-full border border-primary/20" />
+          <div className="absolute w-64 h-64 rounded-full" style={{ border: "1px solid hsl(30 15% 40% / 0.15)" }} />
+          <div className="absolute w-48 h-48 rounded-full" style={{ border: "1px solid hsl(30 15% 40% / 0.25)" }} />
+          <div className="absolute w-32 h-32 rounded-full" style={{ border: "1px solid hsl(30 15% 40% / 0.35)" }} />
           <div className="animate-pulse-glow">
-            <Bell className="h-12 w-12 text-primary/70" />
+            <Bell className="h-12 w-12" style={{ color: "hsl(30 25% 55%)" }} />
           </div>
         </div>
 
         {alarm.IsGradualVolume && (
-          <div className="mb-3 flex items-center gap-2 text-xs font-body text-muted-foreground">
+          <div className="mb-3 flex items-center gap-2 text-xs font-body" style={{ color: "hsl(30 15% 55%)" }}>
             {volumePercent < 33 ? <Volume className="h-4 w-4" /> : volumePercent < 66 ? <Volume1 className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-            <div className="w-20 h-1 rounded-full bg-muted overflow-hidden">
-              <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${volumePercent}%` }} />
+            <div className="w-20 h-1 rounded-full overflow-hidden" style={{ background: "hsl(20 10% 25%)" }}>
+              <div className="h-full rounded-full transition-all" style={{ width: `${volumePercent}%`, background: "hsl(30 25% 55%)" }} />
             </div>
             <span>{volumePercent}%</span>
           </div>
         )}
 
         {/* Time */}
-        <h1 className="text-6xl font-heading font-bold tracking-tight text-foreground">
+        <h1 className="text-6xl font-heading font-bold tracking-tight" style={{ color: "hsl(30 20% 88%)" }}>
           {alarm.Time}
         </h1>
 
         {/* Label */}
         {alarm.Label && (
-          <p className="mt-2 text-lg font-body text-muted-foreground">{alarm.Label}</p>
+          <p className="mt-2 text-lg font-body" style={{ color: "hsl(30 18% 60%)" }}>{alarm.Label}</p>
         )}
 
         {/* Buttons or Challenge */}
@@ -158,7 +164,12 @@ const AlarmOverlay = () => {
             {canSnooze && (
               <button
                 onClick={snooze}
-                className="flex-1 flex items-center justify-center gap-2 h-14 rounded-2xl border border-primary/30 bg-primary/10 text-primary font-body text-sm font-medium transition-colors hover:bg-primary/20"
+                className="flex-1 flex items-center justify-center gap-2 h-14 rounded-2xl font-body text-sm font-medium transition-colors"
+                style={{
+                  background: "hsl(35 25% 65% / 0.2)",
+                  border: "1px solid hsl(35 25% 55% / 0.3)",
+                  color: "hsl(35 30% 75%)",
+                }}
               >
                 <Moon className="h-4 w-4" />
                 {t("overlay.snooze", { min: alarm.SnoozeDurationMin })}
@@ -166,7 +177,11 @@ const AlarmOverlay = () => {
             )}
             <button
               onClick={handleDismissClick}
-              className="flex-1 flex items-center justify-center gap-2 h-14 rounded-2xl bg-primary text-primary-foreground font-body text-sm font-medium transition-colors hover:bg-primary/90"
+              className="flex-1 flex items-center justify-center gap-2 h-14 rounded-2xl font-body text-sm font-medium transition-colors"
+              style={{
+                background: "hsl(33 30% 45%)",
+                color: "hsl(30 20% 92%)",
+              }}
             >
               <X className="h-4 w-4" />
               {t("overlay.dismiss")}
@@ -176,7 +191,7 @@ const AlarmOverlay = () => {
 
         {/* Snooze count */}
         {snoozeState && snoozeState.SnoozeCount > 0 && (
-          <p className="mt-4 text-xs font-body text-muted-foreground/60">
+          <p className="mt-4 text-xs font-body" style={{ color: "hsl(30 15% 50% / 0.6)" }}>
             {t("overlay.snoozedCount", {
               current: snoozeState.SnoozeCount,
               max: alarm.MaxSnoozeCount,
