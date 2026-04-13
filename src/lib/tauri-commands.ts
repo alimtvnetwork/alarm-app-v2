@@ -32,14 +32,16 @@ async function safeInvoke<T>(
   }
 
   try {
-    const { invoke } = await import("@tauri-apps/api/core");
+    // Dynamic import — @tauri-apps/api is only available in Tauri runtime
+    const tauriApi = await import("@tauri-apps/api/core" as string);
+    const invoke = tauriApi.invoke as (cmd: string, args?: Record<string, unknown>) => Promise<unknown>;
     const result = await Promise.race([
-      invoke<T>(command, args),
+      invoke(command, args),
       new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error("timeout")), IPC_TIMEOUT_MS)
       ),
     ]);
-    return result;
+    return result as T;
   } catch (error) {
     const message = getErrorMessage(error);
     toast.error(message);
