@@ -31,15 +31,19 @@ export async function initTauriListeners(
   }
 
   try {
-    const { listen } = await import("@tauri-apps/api/event" as string);
+    const eventApi = await import("@tauri-apps/api/event" as string);
+    const listenFn = eventApi.listen as (
+      event: string,
+      handler: (event: { payload: unknown }) => void,
+    ) => Promise<UnlistenFn>;
 
-    const u1 = await listen<AlarmFiredPayload>("alarm-fired", (event) => {
-      onAlarmFired(event.payload);
+    const u1 = await listenFn("alarm-fired", (event) => {
+      onAlarmFired(event.payload as AlarmFiredPayload);
     });
     unlisteners.push(u1);
 
-    const u2 = await listen<string>("snooze-expired", (event) => {
-      onSnoozeExpired(event.payload);
+    const u2 = await listenFn("snooze-expired", (event) => {
+      onSnoozeExpired(event.payload as string);
     });
     unlisteners.push(u2);
   } catch (error) {

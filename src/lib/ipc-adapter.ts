@@ -188,7 +188,8 @@ export async function listSounds(): Promise<AlarmSound[]> {
     const mock = await getMock();
     return mock.listSounds();
   }
-  return (await getTauri()).listSounds();
+  const sounds = await (await getTauri()).listSounds();
+  return sounds as unknown as AlarmSound[];
 }
 
 // ─── Snooze Commands ─────────────────────────────────────────────
