@@ -50,18 +50,19 @@ const StreakCalendar = () => {
 
   const cells: Array<{ day: number; key: string; isCurrentMonth: boolean; isToday: boolean; hasDismissal: boolean }> = [];
 
+  const toLocalKey = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
   // Previous month trailing days
   for (let i = firstDay - 1; i >= 0; i--) {
     const d = prevMonthDays - i;
-    const dateObj = new Date(year, month - 1, d);
-    const key = dateObj.toISOString().slice(0, 10);
+    const key = toLocalKey(new Date(year, month - 1, d));
     cells.push({ day: d, key, isCurrentMonth: false, isToday: false, hasDismissal: (history[key] ?? 0) > 0 });
   }
 
   // Current month days
   for (let d = 1; d <= daysInMonth; d++) {
-    const dateObj = new Date(year, month, d);
-    const key = dateObj.toISOString().slice(0, 10);
+    const key = toLocalKey(new Date(year, month, d));
     cells.push({ day: d, key, isCurrentMonth: true, isToday: key === todayStr, hasDismissal: (history[key] ?? 0) > 0 });
   }
 
@@ -69,8 +70,7 @@ const StreakCalendar = () => {
   const remaining = 7 - (cells.length % 7);
   if (remaining < 7) {
     for (let d = 1; d <= remaining; d++) {
-      const dateObj = new Date(year, month + 1, d);
-      const key = dateObj.toISOString().slice(0, 10);
+      const key = toLocalKey(new Date(year, month + 1, d));
       cells.push({ day: d, key, isCurrentMonth: false, isToday: false, hasDismissal: (history[key] ?? 0) > 0 });
     }
   }
