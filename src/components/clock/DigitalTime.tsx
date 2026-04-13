@@ -1,6 +1,6 @@
 /**
  * DigitalTime — Flip-clock style digital time display.
- * Shows DAY : HOURS : MINUTES : SECONDS on a dark card with AM/PM badge.
+ * Shows HOURS : MINUTES on a dark card with AM/PM badge.
  */
 
 import { useEffect, useState } from "react";
@@ -9,31 +9,26 @@ import { useSettingsStore } from "@/stores/settings-store";
 import { useAlarmStore } from "@/stores/alarm-store";
 import type { Alarm } from "@/types/alarm";
 
-const DAY_LABELS = ["SU", "MO", "TU", "WE", "TH", "FR", "SA"];
-
 interface FlipSegmentProps {
   value: string;
   label: string;
 }
 
 const FlipSegment = ({ value, label }: FlipSegmentProps) => (
-  <div className="flex flex-col items-center gap-1.5">
-    <span className="text-[2.5rem] sm:text-[3.25rem] font-heading font-extralight tracking-wider text-primary-foreground leading-none tabular-nums">
+  <div className="flex flex-col items-center gap-1">
+    <span className="text-5xl font-heading font-light tracking-wide text-flip-clock-text leading-none tabular-nums">
       {value}
     </span>
-    <span className="text-[0.6rem] font-body font-medium tracking-[0.2em] uppercase text-primary-foreground/40">
+    <span className="text-[0.6rem] font-body font-medium tracking-[0.2em] uppercase text-flip-clock-text/40">
       {label}
     </span>
   </div>
 );
 
 const Colon = () => (
-  <div className="flex flex-col items-center gap-1.5 pt-0.5">
-    <span className="text-[2rem] sm:text-[2.5rem] font-heading font-extralight text-primary-foreground/30 leading-none">
-      :
-    </span>
-    <span className="text-[0.6rem] invisible">.</span>
-  </div>
+  <span className="text-3xl font-heading font-light text-flip-clock-text/25 leading-none mb-4">
+    :
+  </span>
 );
 
 const DigitalTime = () => {
@@ -49,12 +44,9 @@ const DigitalTime = () => {
 
   const h = now.getHours();
   const m = now.getMinutes();
-  const s = now.getSeconds();
-  const dayLabel = DAY_LABELS[now.getDay()];
 
   const displayHour = is24Hour ? String(h).padStart(2, "0") : String(h % 12 || 12).padStart(2, "0");
   const displayMin = String(m).padStart(2, "0");
-  const displaySec = String(s).padStart(2, "0");
   const period = is24Hour ? null : (h >= 12 ? "PM" : "AM");
 
   const countdown = getCountdown(alarms, t);
@@ -62,28 +54,24 @@ const DigitalTime = () => {
   return (
     <div className="flex flex-col items-center gap-3 w-full">
       {/* Flip-clock card */}
-      <div className="relative w-full rounded-2xl bg-foreground px-6 py-6 sm:px-10 sm:py-8 shadow-lg">
-        <div className="flex items-center justify-center gap-4 sm:gap-6">
-          <FlipSegment value={dayLabel} label={t("clock.dayLabel", "DAY")} />
-          <Colon />
+      <div className="relative w-full max-w-sm rounded-2xl bg-flip-clock-bg px-8 py-7 shadow-lg">
+        <div className="flex items-center justify-center gap-6">
           <FlipSegment value={displayHour} label={t("clock.hoursLabel", "HOURS")} />
           <Colon />
           <FlipSegment value={displayMin} label={t("clock.minutesLabel", "MINUTES")} />
-          <Colon />
-          <FlipSegment value={displaySec} label={t("clock.secondsLabel", "SECONDS")} />
         </div>
 
         {/* AM/PM badge */}
         {period && (
-          <div className="absolute top-3 right-3 rounded-md bg-primary/80 px-2 py-0.5">
-            <span className="text-[0.65rem] font-heading font-semibold tracking-wider text-primary-foreground">
+          <div className="absolute top-3 right-3 rounded-lg bg-primary px-2.5 py-1.5">
+            <span className="text-xs font-heading font-semibold tracking-wider text-flip-clock-text">
               {period}
             </span>
           </div>
         )}
       </div>
 
-      {/* Date + countdown below the card */}
+      {/* Date below */}
       <p className="text-sm text-muted-foreground font-body">
         {now.toLocaleDateString("en-US", {
           weekday: "long",

@@ -48,6 +48,8 @@
     --alarm-active: 142 72% 40%;    /* green for enabled */
     --alarm-inactive: 30 10% 65%;
     --overlay-backdrop: 0 0% 0%;
+    --flip-clock-bg: 20 18% 20%;
+    --flip-clock-text: 30 33% 97%;
     --snooze: 38 92% 50%;           /* warm amber */
     --dismiss: 142 72% 40%;         /* green */
 
@@ -98,6 +100,8 @@
     --alarm-active: 142 60% 45%;
     --alarm-inactive: 20 8% 45%;
     --overlay-backdrop: 0 0% 0%;
+    --flip-clock-bg: 20 14% 12%;
+    --flip-clock-text: 30 20% 90%;
     --snooze: 38 80% 55%;
     --dismiss: 142 60% 45%;
 
