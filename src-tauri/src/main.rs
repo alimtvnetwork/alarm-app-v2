@@ -72,14 +72,31 @@ fn main() {
             let engine_pool: DbPool = Arc::new(Mutex::new(
                 Connection::open(&db_path).expect("FATAL: Failed to open engine DB connection"),
             ));
+            let engine_pool_clone = engine_pool.clone();
+            let engine_handle = app_handle.clone();
             alarm_app::engine::alarm_engine::start_engine(
-                engine_pool,
+                engine_pool.clone(),
                 app_handle.clone(),
             );
 
             tracing::info!("Alarm engine started");
 
-            // Step 8-9: Tray update, etc. (Phase 10)
+            // Step 8: Start wake listener for sleep/wake detection
+            let wake_pool = engine_pool_clone;
+            let wake_handle = engine_handle;
+            let wake_listener = alarm_app::engine::wake_listener::create_wake_listener();
+            let _ = wake_listener.start(Box::new(move || {
+                let pool = wake_pool.clone();
+                let handle = wake_handle.clone();
+                tokio::spawn(async move {
+                    tracing::info!("Wake detected — running missed alarm check");
+                    alarm_app::engine::alarm_engine::on_system_wake(&pool, &handle).await;
+                });
+            }));
+
+            tracing::info!("Wake listener started");
+
+            // Step 9: Tray update, etc. (Phase 10)
 
             Ok(())
         })
