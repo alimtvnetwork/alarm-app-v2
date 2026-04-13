@@ -272,17 +272,29 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
           {/* Sound */}
           <div className="space-y-1.5">
             <Label className="font-body text-sm font-medium">{t("alarmForm.sound")}</Label>
-            <Select value={soundFile} onValueChange={setSoundFile}>
-              <SelectTrigger className="rounded-xl">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="classic-beep">{t("alarmForm.classicBeep")}</SelectItem>
-                <SelectItem value="gentle-chime">{t("alarmForm.gentleChime")}</SelectItem>
-                <SelectItem value="nature-birds">{t("alarmForm.birds")}</SelectItem>
-                <SelectItem value="digital-pulse">{t("alarmForm.digitalPulse")}</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-2">
+              <Select value={soundFile} onValueChange={setSoundFile}>
+                <SelectTrigger className="rounded-xl flex-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="classic-beep">{t("alarmForm.classicBeep")}</SelectItem>
+                  <SelectItem value="gentle-chime">{t("alarmForm.gentleChime")}</SelectItem>
+                  <SelectItem value="nature-birds">{t("alarmForm.birds")}</SelectItem>
+                  <SelectItem value="digital-pulse">{t("alarmForm.digitalPulse")}</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="shrink-0 rounded-xl"
+                onClick={togglePreview}
+                aria-label={isPreviewPlaying ? t("alarmForm.stopPreview") : t("alarmForm.playPreview")}
+              >
+                {isPreviewPlaying ? <Square className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+              </Button>
+            </div>
           </div>
 
           {/* Gradual Volume */}
