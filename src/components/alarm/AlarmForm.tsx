@@ -364,13 +364,13 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
         </div>
 
         {/* Full-width dark create button */}
-        <div className="flex gap-2 pt-5">
-          <Button variant="outline" onClick={onClose} className="flex-1 rounded-xl">
+        <div className="flex gap-3 pt-5">
+          <Button variant="outline" onClick={onClose} className="flex-1 rounded-xl h-12 text-sm font-medium">
             {t("alarmForm.cancel")}
           </Button>
           <Button
             onClick={handleSave}
-            className="flex-1 rounded-xl bg-foreground text-background hover:bg-foreground/90"
+            className="flex-[1.5] rounded-xl h-12 text-sm font-medium bg-foreground text-background hover:bg-foreground/90"
           >
             {isEditing ? t("alarmForm.save") : t("alarmForm.create")}
           </Button>
