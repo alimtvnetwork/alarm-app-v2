@@ -96,82 +96,95 @@ const AlarmOverlay = () => {
   if (!isVisible || !alarm) return null;
 
   return (
-    <div role="alertdialog" aria-modal="true" aria-label={`Alarm: ${alarm.Label || alarm.Time}`} className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background text-foreground">
-      {autoDismissRemaining !== null && (
-        <p className="absolute top-6 text-xs font-body opacity-60">
-          {t("overlay.autoDismissIn", { time: formatCountdown(autoDismissRemaining) })}
-        </p>
-      )}
+    <div
+      role="alertdialog"
+      aria-modal="true"
+      aria-label={`Alarm: ${alarm.Label || alarm.Time}`}
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ background: "hsl(20 14% 10%)" }}
+    >
+      {/* Card container */}
+      <div className="relative flex flex-col items-center justify-center w-[340px] h-[500px] rounded-3xl border border-border/20 bg-card/40 backdrop-blur-sm shadow-2xl">
+        {autoDismissRemaining !== null && (
+          <p className="absolute top-5 text-xs font-body text-muted-foreground">
+            {t("overlay.autoDismissIn", { time: formatCountdown(autoDismissRemaining) })}
+          </p>
+        )}
 
-      <div className="mb-8 animate-pulse-glow">
-        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary/20">
-          <Bell className="h-12 w-12 text-primary" />
-        </div>
-      </div>
-
-      {alarm.IsGradualVolume && (
-        <div className="mb-4 flex items-center gap-2 text-xs font-body opacity-60">
-          {volumePercent < 33 ? <Volume className="h-4 w-4" /> : volumePercent < 66 ? <Volume1 className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-          <div className="w-24 h-1.5 rounded-full bg-muted-foreground/20 overflow-hidden">
-            <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${volumePercent}%` }} />
+        {/* Concentric ripple rings + bell */}
+        <div className="relative flex items-center justify-center mb-6">
+          <div className="absolute w-64 h-64 rounded-full border border-primary/10" />
+          <div className="absolute w-48 h-48 rounded-full border border-primary/15" />
+          <div className="absolute w-32 h-32 rounded-full border border-primary/20" />
+          <div className="animate-pulse-glow">
+            <Bell className="h-12 w-12 text-primary/70" />
           </div>
-          <span>{volumePercent}%</span>
         </div>
-      )}
 
-      <h1 className="text-7xl font-heading font-bold">{alarm.Time}</h1>
+        {alarm.IsGradualVolume && (
+          <div className="mb-3 flex items-center gap-2 text-xs font-body text-muted-foreground">
+            {volumePercent < 33 ? <Volume className="h-4 w-4" /> : volumePercent < 66 ? <Volume1 className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+            <div className="w-20 h-1 rounded-full bg-muted overflow-hidden">
+              <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${volumePercent}%` }} />
+            </div>
+            <span>{volumePercent}%</span>
+          </div>
+        )}
 
-      {alarm.Label && (
-        <p className="mt-3 text-xl font-body opacity-70">{alarm.Label}</p>
-      )}
+        {/* Time */}
+        <h1 className="text-6xl font-heading font-bold tracking-tight text-foreground">
+          {alarm.Time}
+        </h1>
 
-      {snoozeState && snoozeState.SnoozeCount > 0 && (
-        <p className="mt-2 text-sm font-body opacity-50">
-          {t("overlay.snoozedCount", {
-            current: snoozeState.SnoozeCount,
-            max: alarm.MaxSnoozeCount,
-            remaining: snoozeRemaining,
-          })}
-        </p>
-      )}
+        {/* Label */}
+        {alarm.Label && (
+          <p className="mt-2 text-lg font-body text-muted-foreground">{alarm.Label}</p>
+        )}
 
-      {showChallenge ? (
-        <div className="mt-10 w-full flex justify-center">
-          {alarm.ChallengeType === ChallengeType.Typing ? (
-            <TypingChallenge onSolved={handleChallengeSolved} />
-          ) : (
-            <MathChallenge
-              difficulty={suggestDifficulty(alarm.ChallengeDifficulty ?? ChallengeDifficulty.Easy)}
-              onSolved={handleChallengeSolved}
-            />
-          )}
-        </div>
-      ) : (
-        <div className="mt-12 flex gap-4 px-6 w-full max-w-xs">
-          {canSnooze && (
-            <Button
-              onClick={snooze}
-              variant="outline"
-              size="lg"
-              className="flex-1 h-16 flex-col gap-1 rounded-xl border-2 border-alarm-snooze text-alarm-snooze hover:bg-alarm-snooze/10"
-            >
-              <Moon className="h-5 w-5" />
-              <span className="text-xs font-body">
+        {/* Buttons or Challenge */}
+        {showChallenge ? (
+          <div className="mt-8 w-full flex justify-center px-4">
+            {alarm.ChallengeType === ChallengeType.Typing ? (
+              <TypingChallenge onSolved={handleChallengeSolved} />
+            ) : (
+              <MathChallenge
+                difficulty={suggestDifficulty(alarm.ChallengeDifficulty ?? ChallengeDifficulty.Easy)}
+                onSolved={handleChallengeSolved}
+              />
+            )}
+          </div>
+        ) : (
+          <div className="mt-10 flex gap-3 w-full max-w-[300px] px-4">
+            {canSnooze && (
+              <button
+                onClick={snooze}
+                className="flex-1 flex items-center justify-center gap-2 h-14 rounded-2xl border border-primary/30 bg-primary/10 text-primary font-body text-sm font-medium transition-colors hover:bg-primary/20"
+              >
+                <Moon className="h-4 w-4" />
                 {t("overlay.snooze", { min: alarm.SnoozeDurationMin })}
-              </span>
-            </Button>
-          )}
+              </button>
+            )}
+            <button
+              onClick={handleDismissClick}
+              className="flex-1 flex items-center justify-center gap-2 h-14 rounded-2xl bg-primary text-primary-foreground font-body text-sm font-medium transition-colors hover:bg-primary/90"
+            >
+              <X className="h-4 w-4" />
+              {t("overlay.dismiss")}
+            </button>
+          </div>
+        )}
 
-          <Button
-            onClick={handleDismissClick}
-            size="lg"
-            className="flex-1 h-16 flex-col gap-1 rounded-xl bg-alarm-dismiss text-primary-foreground hover:bg-alarm-dismiss/90"
-          >
-            <X className="h-5 w-5" />
-            <span className="text-xs font-body">{t("overlay.dismiss")}</span>
-          </Button>
-        </div>
-      )}
+        {/* Snooze count */}
+        {snoozeState && snoozeState.SnoozeCount > 0 && (
+          <p className="mt-4 text-xs font-body text-muted-foreground/60">
+            {t("overlay.snoozedCount", {
+              current: snoozeState.SnoozeCount,
+              max: alarm.MaxSnoozeCount,
+              remaining: snoozeRemaining,
+            })}
+          </p>
+        )}
+      </div>
     </div>
   );
 };
