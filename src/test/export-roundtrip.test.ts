@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it, beforeEach } from "vitest";
-import { exportAlarmsToJson, importAlarmsFromJson } from "@/lib/export-import";
+import { importAlarmsFromJson } from "@/lib/export-import";
 import { ImportMode, DEFAULT_SETTINGS } from "@/types/alarm";
 import * as ipc from "@/lib/mock-ipc";
 import { MOCK_ALARMS, MOCK_GROUPS } from "@/test/fixtures";
