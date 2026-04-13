@@ -156,18 +156,40 @@ function Install-NodeJS {
 function Install-Rust {
     Write-Host "  Rust not found. Attempting auto-install..." -ForegroundColor Yellow
     if ($IsMacOS -or $IsLinux) {
-        # Use rustup installer on Unix
-        Write-Host "  → Installing via rustup..." -ForegroundColor Gray
-        bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
-        if ($LASTEXITCODE -ne 0) { throw "rustup install failed" }
-        # Source cargo env for current session
-        $cargoEnv = Join-Path $env:HOME ".cargo/env"
-        if (Test-Path $cargoEnv) {
-            bash -c "source '$cargoEnv'"
+        # Check if rustup exists but rustc isn't in PATH
+        $rustupBin = Join-Path $env:HOME ".cargo/bin/rustup"
+        $rustcBin = Join-Path $env:HOME ".cargo/bin/rustc"
+        if (Test-Path $rustcBin) {
+            # Rust is installed but not in PATH — just add it
+            Write-Host "  Found Rust at ~/.cargo/bin — adding to PATH..." -ForegroundColor Gray
+            $env:Path = "$env:HOME/.cargo/bin:$env:Path"
+            Write-Host "  ✓ Rust found and PATH updated" -ForegroundColor Green
+            return
+        }
+        if (Test-Path $rustupBin) {
+            # rustup exists — just run default stable
+            Write-Host "  Found rustup — setting up stable toolchain..." -ForegroundColor Gray
+            $env:Path = "$env:HOME/.cargo/bin:$env:Path"
+            bash -c "$env:HOME/.cargo/bin/rustup default stable" 2>&1 | Out-Host
+            Write-Host "  ✓ Rust toolchain configured" -ForegroundColor Green
+            return
+        }
+        # Fresh install — use --no-modify-path to avoid permission errors with shell profiles
+        Write-Host "  → Installing via rustup (fresh install)..." -ForegroundColor Gray
+        bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path'
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "  WARNING: rustup install had errors — checking if Rust is usable..." -ForegroundColor Yellow
         }
         $env:Path = "$env:HOME/.cargo/bin:$env:Path"
-        Refresh-Path
-        Write-Host "  ✓ Rust installed via rustup" -ForegroundColor Green
+        # Verify
+        if (Test-Path $rustcBin) {
+            Write-Host "  ✓ Rust installed via rustup" -ForegroundColor Green
+            Write-Host "  ℹ Add to your shell profile: export PATH=`"$env:HOME/.cargo/bin:`$PATH`"" -ForegroundColor Gray
+        } else {
+            Write-Host "ERROR: Rust install failed. Try manually:" -ForegroundColor Red
+            Write-Host "  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh" -ForegroundColor Red
+            exit 1
+        }
     } elseif (Test-Command "winget") {
         winget install Rustlang.Rustup --accept-package-agreements --accept-source-agreements
         if ($LASTEXITCODE -ne 0) { throw "winget install failed" }
