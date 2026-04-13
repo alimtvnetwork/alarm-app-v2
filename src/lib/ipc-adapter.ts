@@ -111,8 +111,7 @@ export async function reorderAlarms(alarmIds: string[]): Promise<void> {
     mock.reorderAlarms(alarmIds);
     return;
   }
-  // Tauri reorder is a no-op (frontend-maintained order)
-  await (await getTauri()).listAlarms();
+  await (await getTauri()).reorderAlarms(alarmIds);
 }
 
 // ─── Group Commands ──────────────────────────────────────────────
