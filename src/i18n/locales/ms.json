@@ -1,10 +1,15 @@
 {
   "nav": {
     "clock": "Jam",
+    "alarms": "Penggera",
     "analytics": "Analitik",
     "sleep": "Tidur",
     "style": "Gaya",
     "settings": "Tetapan"
+  },
+  "alarms": {
+    "title": "Penggera Saya",
+    "add": "Baru"
   },
   "header": {
     "title": "Penggera",

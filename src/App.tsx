@@ -9,6 +9,7 @@ import KeyboardShortcutsHelp from "./components/layout/KeyboardShortcutsHelp";
 import OnboardingModal from "./components/onboarding/OnboardingModal";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import Index from "./pages/Index";
+import Alarms from "./pages/Alarms";
 import Settings from "./pages/Settings";
 import Analytics from "./pages/Analytics";
 import Sleep from "./pages/Sleep";
@@ -30,6 +31,7 @@ const AppInner = () => {
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<Index />} />
+            <Route path="/alarms" element={<Alarms />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/sleep" element={<Sleep />} />

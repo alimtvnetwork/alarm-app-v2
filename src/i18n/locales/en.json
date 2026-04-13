@@ -1,10 +1,15 @@
 {
   "nav": {
     "clock": "Clock",
+    "alarms": "Alarms",
     "analytics": "Analytics",
     "sleep": "Sleep",
     "style": "Style",
     "settings": "Settings"
+  },
+  "alarms": {
+    "title": "My Alarms",
+    "add": "New"
   },
   "header": {
     "title": "Alarm",
