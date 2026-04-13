@@ -120,7 +120,6 @@ fn compute_cron(cron_expr: &str, ctx: &AlarmContext) -> Option<DateTime<Utc>> {
     let cron = Cron::new(cron_expr).parse().ok()?;
     cron.find_next_occurrence(&ctx.now_local, false)
         .ok()
-        .flatten()
         .map(|dt: DateTime<Tz>| dt.with_timezone(&Utc))
 }
 
