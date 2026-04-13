@@ -68,8 +68,10 @@
     "avgChallengeTime": "平均挑战时间",
     "history": "历史",
     "snoozeTrend": "贪睡趋势",
-    "dailyAlarmEvents": "每日闹钟事件",
+    "breakdown": "分布",
+    "dailyEvents": "每日闹钟事件",
     "snoozeCountTrend": "贪睡次数趋势",
+    "eventBreakdown": "事件分布",
     "noData": "暂无数据",
     "noSnoozeData": "暂无贪睡数据",
     "exportCsv": "导出 CSV"

@@ -68,8 +68,10 @@
     "avgChallengeTime": "平均チャレンジ時間",
     "history": "履歴",
     "snoozeTrend": "スヌーズ傾向",
-    "dailyAlarmEvents": "日別アラームイベント",
+    "breakdown": "内訳",
+    "dailyEvents": "日別アラームイベント",
     "snoozeCountTrend": "スヌーズ回数の推移",
+    "eventBreakdown": "イベント内訳",
     "noData": "データなし",
     "noSnoozeData": "スヌーズデータなし",
     "exportCsv": "CSV出力"
