@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import AppLayout from "./components/layout/AppLayout";
 import AlarmOverlay from "./components/alarm/AlarmOverlay";
+import AlarmChecker from "./components/alarm/AlarmChecker";
 import KeyboardShortcutsHelp from "./components/layout/KeyboardShortcutsHelp";
 import OnboardingModal from "./components/onboarding/OnboardingModal";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
@@ -25,6 +26,7 @@ const AppInner = () => {
       <Toaster />
       <Sonner />
       <AlarmOverlay />
+      <AlarmChecker />
       <KeyboardShortcutsHelp />
       <OnboardingModal />
       <BrowserRouter>
