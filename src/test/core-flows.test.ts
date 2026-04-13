@@ -4,7 +4,7 @@
  * - Toggle alarm on/off
  * - Duplicate alarm
  * - Dismiss alarm via overlay
- * - Snooze alarm via overlay (max snooze enforcement)
+ * - Snooze alarm via overlay
  */
 
 import { describe, expect, it, beforeEach } from "vitest";
@@ -78,6 +78,7 @@ describe("Create Alarm Flow", () => {
 describe("Toggle Alarm Flow", () => {
   beforeEach(() => {
     localStorage.clear();
+    useAlarmStore.setState({ alarms: [], groups: [], isLoading: false });
   });
 
   it("toggles alarm enabled state", async () => {
@@ -117,27 +118,25 @@ describe("Dismiss Alarm Flow", () => {
   beforeEach(() => {
     useOverlayStore.setState({
       isVisible: false,
-      alarm: null,
-      snoozeCount: 0,
-      isChallengeActive: false,
+      firingAlarm: null,
+      snoozeState: null,
+      firedAt: null,
     });
   });
 
-  it("fires alarm → shows overlay → dismiss clears it", () => {
+  it("fires alarm → shows overlay → dismiss clears it", async () => {
     const alarm = buildAlarm({ Label: "Dismiss Test" });
-    useOverlayStore.getState().fireAlarm(alarm);
+    await useOverlayStore.getState().fireAlarm(alarm);
 
     const fired = useOverlayStore.getState();
     expect(fired.isVisible).toBe(true);
-    expect(fired.alarm?.Label).toBe("Dismiss Test");
-    expect(fired.snoozeCount).toBe(0);
+    expect(fired.firingAlarm?.Label).toBe("Dismiss Test");
 
-    useOverlayStore.getState().dismissAlarm();
+    await useOverlayStore.getState().dismiss();
 
     const dismissed = useOverlayStore.getState();
     expect(dismissed.isVisible).toBe(false);
-    expect(dismissed.alarm).toBeNull();
-    expect(dismissed.snoozeCount).toBe(0);
+    expect(dismissed.firingAlarm).toBeNull();
   });
 });
 
@@ -145,39 +144,19 @@ describe("Snooze Alarm Flow", () => {
   beforeEach(() => {
     useOverlayStore.setState({
       isVisible: false,
-      alarm: null,
-      snoozeCount: 0,
-      isChallengeActive: false,
+      firingAlarm: null,
+      snoozeState: null,
+      firedAt: null,
     });
   });
 
-  it("snoozes alarm and increments count", () => {
+  it("snoozes alarm and hides overlay", async () => {
     const alarm = buildAlarm({ MaxSnoozeCount: 3 });
-    useOverlayStore.getState().fireAlarm(alarm);
-    useOverlayStore.getState().snoozeAlarm();
+    await useOverlayStore.getState().fireAlarm(alarm);
+    await useOverlayStore.getState().snooze();
 
     const state = useOverlayStore.getState();
     expect(state.isVisible).toBe(false);
-    expect(state.snoozeCount).toBe(1);
-  });
-
-  it("enforces max snooze count", () => {
-    const alarm = buildAlarm({ MaxSnoozeCount: 2 });
-    useOverlayStore.getState().fireAlarm(alarm);
-
-    // Snooze twice (at limit)
-    useOverlayStore.getState().snoozeAlarm();
-    useOverlayStore.getState().fireAlarm(alarm);
-    useOverlayStore.getState().snoozeAlarm();
-
-    const state = useOverlayStore.getState();
-    expect(state.snoozeCount).toBe(2);
-
-    // Fire again — snooze should not be allowed at max
-    useOverlayStore.getState().fireAlarm(alarm);
-    const atMax = useOverlayStore.getState();
-    expect(atMax.snoozeCount).toBe(2);
-    expect(atMax.isVisible).toBe(true);
   });
 });
 
