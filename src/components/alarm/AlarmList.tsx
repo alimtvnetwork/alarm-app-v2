@@ -121,12 +121,12 @@ const AlarmList = ({ onEditAlarm }: AlarmListProps) => {
               <div key={groupId ?? "ungrouped"} className="flex flex-col">
                 {/* Group section header */}
                 {group && (
-                  <div className="flex items-center gap-2 px-3 py-2">
+                  <div className="flex items-center gap-2.5 px-4 pt-4 pb-1">
                     <div
-                      className="h-2 w-2 rounded-full"
+                      className="h-2.5 w-2.5 rounded-full shadow-sm"
                       style={{ backgroundColor: group.Color }}
                     />
-                    <span className="text-xs font-body font-medium text-muted-foreground">
+                    <span className="text-sm font-body font-semibold text-foreground/70">
                       {group.Name}
                     </span>
                   </div>

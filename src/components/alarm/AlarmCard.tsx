@@ -127,8 +127,8 @@ const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
                 ? `translateX(${swipeX}px)`
                 : CSS.Transform.toString(transform),
           }}
-          className={`relative flex items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-accent/30 ${
-            alarm.IsEnabled ? "" : "opacity-50"
+          className={`relative flex items-center gap-3 rounded-xl px-4 py-4 transition-all hover:bg-secondary/80 ${
+            alarm.IsEnabled ? "" : "opacity-40"
           }`}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
@@ -149,14 +149,14 @@ const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
             className="flex flex-1 items-center gap-3 text-left"
             onClick={() => !swipingRef.current && onEdit(alarm)}
           >
-            <span className="text-2xl font-heading font-semibold leading-tight text-foreground tabular-nums">
+            <span className="text-[1.75rem] font-heading font-bold leading-tight text-foreground tabular-nums tracking-tight">
               {displayTime}
             </span>
-            <div className="flex flex-col gap-0">
-              <span className="text-sm font-body text-foreground">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-sm font-body font-medium text-foreground">
                 {alarm.Label || t("alarmForm.once")}
               </span>
-              <span className="text-xs text-muted-foreground font-body">
+              <span className="text-xs text-muted-foreground/80 font-body">
                 {formatRepeat(alarm, t)}
               </span>
             </div>
