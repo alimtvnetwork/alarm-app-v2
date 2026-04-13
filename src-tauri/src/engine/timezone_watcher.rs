@@ -10,7 +10,7 @@ type DbPool = Arc<Mutex<Connection>>;
 
 /// Start a background task that detects timezone changes.
 pub fn start_timezone_watcher(pool: Arc<Mutex<Connection>>, app_handle: tauri::AppHandle) {
-    tokio::spawn(async move {
+    tauri::async_runtime::spawn(async move {
         let mut ticker = interval(Duration::from_secs(60));
         let mut last_tz = get_system_timezone();
 
