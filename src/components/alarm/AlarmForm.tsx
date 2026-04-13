@@ -198,19 +198,10 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
         <div className="flex flex-col gap-3 pt-1">
           {/* Time display — styled card with AM/PM */}
           <div className="relative flex items-center justify-center rounded-xl border border-border bg-secondary/50 px-4 py-3">
-            <label className="flex cursor-pointer items-center transition-colors hover:opacity-80">
-              <span className="text-3xl font-heading font-bold tracking-tight text-foreground">
-                {h12}:{minute}
-              </span>
-              <Clock className="ml-3 h-5 w-5 text-foreground/60" />
-              <input
-                ref={timeInputRef}
-                type="time"
-                value={time}
-                onChange={(e) => e.target.value && setTime(e.target.value)}
-                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-              />
-            </label>
+            <span className="text-3xl font-heading font-bold tracking-tight text-foreground pointer-events-none">
+              {h12}:{minute}
+            </span>
+            <Clock className="ml-3 h-5 w-5 text-foreground/60 pointer-events-none" />
             <button
               type="button"
               onClick={() => setTime(togglePeriod(time))}
@@ -219,6 +210,14 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
             >
               {period}
             </button>
+            <input
+              ref={timeInputRef}
+              type="time"
+              value={time}
+              onChange={(e) => e.target.value && setTime(e.target.value)}
+              className="absolute inset-0 z-[1] h-full w-full cursor-pointer opacity-0"
+              aria-label="Select time"
+            />
           </div>
 
           {/* Label */}
