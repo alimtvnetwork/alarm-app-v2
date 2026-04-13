@@ -1,15 +1,15 @@
 /**
  * AlarmForm — Sheet-based create/edit form for alarms.
+ * Redesigned with custom time display, pill repeat buttons, and modern layout.
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetFooter,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Clock, RotateCcw, CalendarClock, CalendarDays, X } from "lucide-react";
 import type { Alarm } from "@/types/alarm";
 import {
   RepeatType,
@@ -32,6 +33,14 @@ import { useAlarmStore } from "@/stores/alarm-store";
 
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 const DAY_FULL = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/** Convert 24h "HH:MM" to { h12, minute, period } */
+const parse12h = (time24: string) => {
+  const [h, m] = time24.split(":").map(Number);
+  const period = h >= 12 ? "PM" : "AM";
+  const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return { h12: String(h12).padStart(2, "0"), minute: String(m).padStart(2, "0"), period };
+};
 
 interface AlarmFormProps {
   alarm: Alarm | null;
@@ -44,6 +53,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
   const updateAlarm = useAlarmStore((s) => s.updateAlarm);
   const isEditing = alarm !== null;
   const { t } = useTranslation();
+  const timeInputRef = useRef<HTMLInputElement>(null);
 
   const [time, setTime] = useState("07:00");
   const [label, setLabel] = useState("");
@@ -135,53 +145,86 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
     onClose();
   };
 
+  const { h12, minute, period } = parse12h(time);
+
+  const repeatOptions = [
+    { value: RepeatType.Once, label: t("alarmForm.once"), icon: X },
+    { value: RepeatType.Daily, label: t("alarmForm.daily"), icon: RotateCcw },
+    { value: RepeatType.Weekly, label: t("alarmForm.weekly"), icon: CalendarClock },
+  ];
+
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl">
-        <SheetHeader>
-          <SheetTitle className="font-heading">
+      <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl px-5 pb-6">
+        <SheetHeader className="pb-1">
+          <SheetTitle className="font-heading text-lg">
             {isEditing ? t("alarmForm.editAlarm") : t("alarmForm.newAlarm")}
           </SheetTitle>
         </SheetHeader>
 
-        <div className="flex flex-col gap-5 py-4">
-          <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col gap-5 pt-2">
+          {/* Time display — styled card with AM/PM */}
+          <button
+            type="button"
+            onClick={() => timeInputRef.current?.showPicker?.()}
+            className="relative flex items-center justify-center rounded-2xl border-2 border-border bg-secondary/50 px-6 py-5 transition-colors hover:border-primary/40"
+          >
+            <span className="text-5xl font-heading font-bold tracking-tight text-foreground">
+              {h12}:{minute}
+            </span>
+            <span className="ml-2 text-2xl font-heading font-semibold text-muted-foreground">
+              {period}
+            </span>
+            <Clock className="absolute right-5 h-6 w-6 text-foreground/60" />
+            {/* Hidden native time input */}
             <input
+              ref={timeInputRef}
               type="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              className="w-full rounded-lg border border-input bg-card px-4 py-3 text-center text-4xl font-heading font-bold text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="absolute inset-0 cursor-pointer opacity-0"
+              tabIndex={-1}
             />
-          </div>
+          </button>
 
+          {/* Label */}
           <div className="space-y-1.5">
-            <Label className="font-body text-sm">{t("alarmForm.label")}</Label>
+            <Label className="font-body text-sm font-medium">{t("alarmForm.label")}</Label>
             <Input
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder={t("alarmForm.labelPlaceholder")}
               maxLength={100}
+              className="rounded-xl"
             />
           </div>
 
+          {/* Repeat — pill buttons */}
           <div className="space-y-2">
-            <Label className="font-body text-sm">{t("alarmForm.repeat")}</Label>
-            <Select
-              value={repeatType}
-              onValueChange={(v) => setRepeatType(v as RepeatType)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={RepeatType.Once}>{t("alarmForm.once")}</SelectItem>
-                <SelectItem value={RepeatType.Daily}>{t("alarmForm.daily")}</SelectItem>
-                <SelectItem value={RepeatType.Weekly}>{t("alarmForm.weekly")}</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label className="font-body text-sm font-medium">{t("alarmForm.repeat")}</Label>
+            <div className="flex gap-2">
+              {repeatOptions.map((opt) => {
+                const isActive = repeatType === opt.value;
+                const Icon = opt.icon;
+                return (
+                  <button
+                    key={opt.value}
+                    onClick={() => setRepeatType(opt.value)}
+                    className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-body font-medium transition-all ${
+                      isActive
+                        ? "bg-foreground text-background shadow-sm"
+                        : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                    }`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
 
             {repeatType === RepeatType.Weekly && (
-              <div className="flex gap-1 pt-1">
+              <div className="flex gap-1.5 pt-1">
                 {DAY_LABELS.map((d, i) => (
                   <button
                     key={i}
@@ -201,10 +244,11 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
             )}
           </div>
 
+          {/* Sound */}
           <div className="space-y-1.5">
-            <Label className="font-body text-sm">{t("alarmForm.sound")}</Label>
+            <Label className="font-body text-sm font-medium">{t("alarmForm.sound")}</Label>
             <Select value={soundFile} onValueChange={setSoundFile}>
-              <SelectTrigger>
+              <SelectTrigger className="rounded-xl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -216,9 +260,10 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
             </Select>
           </div>
 
+          {/* Gradual Volume */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label className="font-body text-sm">{t("alarmForm.gradualVolume")}</Label>
+              <Label className="font-body text-sm font-medium">{t("alarmForm.gradualVolume")}</Label>
               <Switch checked={isGradualVolume} onCheckedChange={setIsGradualVolume} />
             </div>
             {isGradualVolume && (
@@ -226,7 +271,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
                 value={String(gradualDuration)}
                 onValueChange={(v) => setGradualDuration(Number(v))}
               >
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -240,14 +285,15 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
             )}
           </div>
 
+          {/* Snooze */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="font-body text-xs">{t("alarmForm.snoozeMin")}</Label>
+              <Label className="font-body text-xs font-medium">{t("alarmForm.snoozeMin")}</Label>
               <Select
                 value={String(snoozeDuration)}
                 onValueChange={(v) => setSnoozeDuration(Number(v))}
               >
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -260,12 +306,12 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="font-body text-xs">{t("alarmForm.maxSnoozes")}</Label>
+              <Label className="font-body text-xs font-medium">{t("alarmForm.maxSnoozes")}</Label>
               <Select
                 value={String(maxSnooze)}
                 onValueChange={(v) => setMaxSnooze(Number(v))}
               >
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -279,13 +325,14 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
             </div>
           </div>
 
+          {/* Challenge */}
           <div className="space-y-2">
-            <Label className="font-body text-sm">{t("alarmForm.challenge")}</Label>
+            <Label className="font-body text-sm font-medium">{t("alarmForm.challenge")}</Label>
             <Select
               value={challengeType}
               onValueChange={(v) => setChallengeType(v as ChallengeType | "none")}
             >
-              <SelectTrigger>
+              <SelectTrigger className="rounded-xl">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -303,7 +350,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
                   setChallengeDifficulty(v as ChallengeDifficulty)
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -316,14 +363,18 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
           </div>
         </div>
 
-        <SheetFooter className="flex gap-2 pt-2">
-          <Button variant="outline" onClick={onClose} className="flex-1">
+        {/* Full-width dark create button */}
+        <div className="flex gap-2 pt-5">
+          <Button variant="outline" onClick={onClose} className="flex-1 rounded-xl">
             {t("alarmForm.cancel")}
           </Button>
-          <Button onClick={handleSave} className="flex-1">
+          <Button
+            onClick={handleSave}
+            className="flex-1 rounded-xl bg-foreground text-background hover:bg-foreground/90"
+          >
             {isEditing ? t("alarmForm.save") : t("alarmForm.create")}
           </Button>
-        </SheetFooter>
+        </div>
       </SheetContent>
     </Sheet>
   );
