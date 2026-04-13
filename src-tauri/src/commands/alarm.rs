@@ -283,7 +283,7 @@ pub async fn reorder_alarms(
     pool: State<'_, DbPool>,
     alarm_ids: Vec<String>,
 ) -> Result<(), AlarmAppError> {
-    let conn = pool.0.lock().await;
+    let conn = pool.lock().await;
     let now = chrono::Utc::now().to_rfc3339();
 
     for (i, id) in alarm_ids.iter().enumerate() {

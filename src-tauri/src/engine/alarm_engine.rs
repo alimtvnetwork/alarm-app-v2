@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use chrono::{DateTime, NaiveDate, NaiveTime, Utc};
 use chrono_tz::Tz;
-use rusqlite::Connection;
+use rusqlite::{params, Connection};
 use tokio::sync::Mutex;
 use tokio::time::{interval, Duration};
 

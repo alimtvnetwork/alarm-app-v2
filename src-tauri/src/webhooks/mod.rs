@@ -1,9 +1,11 @@
+pub mod errors;
+
 use reqwest::Client;
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
-use crate::errors::WebhookError;
+use self::errors::WebhookError;
 
 /// Maximum retry attempts for webhook delivery.
 const MAX_RETRIES: u32 = 3;

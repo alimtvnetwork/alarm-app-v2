@@ -1,8 +1,6 @@
 use thiserror::Error;
 use serde::Serialize;
 
-pub use crate::webhooks::errors::WebhookError;
-
 #[derive(Error, Debug)]
 pub enum AlarmAppError {
     #[error("Database error: {0}")]

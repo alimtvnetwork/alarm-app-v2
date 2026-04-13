@@ -15,7 +15,7 @@ type DbPool = Arc<Mutex<rusqlite::Connection>>;
 
 // ── Export Payload ──
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct ExportData {
     pub version: String,
