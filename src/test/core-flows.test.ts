@@ -30,6 +30,7 @@ function buildAlarm(overrides: Partial<Alarm> = {}): Alarm {
     ChallengeShakeCount: null,
     ChallengeStepCount: null,
     NextFireTime: null,
+    Position: 0,
     DeletedAt: null,
     CreatedAt: new Date().toISOString(),
     UpdatedAt: new Date().toISOString(),
