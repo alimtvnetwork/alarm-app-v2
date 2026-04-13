@@ -33,8 +33,10 @@ describe("ipc-adapter (web mode)", () => {
   it("createAlarm adds and returns alarm", async () => {
     const before = await adapter.listAlarms();
     const alarm = await adapter.createAlarm({
+      AlarmId: crypto.randomUUID(),
       Time: "09:00",
       Label: "Test Adapter",
+      DeletedAt: null,
     });
     expect(alarm).not.toBeNull();
 
