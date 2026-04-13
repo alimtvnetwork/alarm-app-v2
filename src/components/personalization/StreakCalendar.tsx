@@ -119,15 +119,15 @@ const StreakCalendar = () => {
                 key={cell.key}
                 onClick={() => setSelectedDate(cell.key === selectedDate ? null : cell.key)}
                 className={`relative flex items-center justify-center aspect-square text-sm font-body transition-colors rounded-full
-                  ${cell.isCurrentMonth ? "text-foreground" : "text-muted-foreground/40"}
-                  ${cell.isToday && !isSelected ? "bg-foreground text-background font-semibold" : ""}
-                  ${isSelected ? "bg-secondary font-semibold" : ""}
-                  ${!cell.isToday && !isSelected ? "hover:bg-secondary/60" : ""}
+                  ${!cell.isCurrentMonth ? "text-muted-foreground/40" : ""}
+                  ${cell.isToday ? "bg-foreground text-card font-semibold" : ""}
+                  ${isSelected && !cell.isToday ? "bg-secondary font-semibold text-foreground" : ""}
+                  ${cell.isCurrentMonth && !cell.isToday && !isSelected ? "text-foreground hover:bg-secondary/60" : ""}
                 `}
               >
                 {cell.day}
                 {cell.hasDismissal && (
-                  <span className={`absolute bottom-1 h-1 w-1 rounded-full ${cell.isToday ? "bg-background/60" : "bg-primary"}`} />
+                  <span className={`absolute bottom-1 h-1 w-1 rounded-full ${cell.isToday ? "bg-card/60" : "bg-primary"}`} />
                 )}
               </button>
             );
