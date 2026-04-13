@@ -101,6 +101,11 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.6" },
         },
+        "ripple-pulse": {
+          "0%": { transform: "scale(1)", opacity: "0.3" },
+          "50%": { transform: "scale(1.05)", opacity: "0.15" },
+          "100%": { transform: "scale(1)", opacity: "0.3" },
+        },
         shake: {
           "0%, 100%": { transform: "translateX(0)" },
           "10%, 30%, 50%, 70%, 90%": { transform: "translateX(-4px)" },
@@ -111,6 +116,9 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "ripple-1": "ripple-pulse 3s ease-in-out infinite",
+        "ripple-2": "ripple-pulse 3s ease-in-out 0.6s infinite",
+        "ripple-3": "ripple-pulse 3s ease-in-out 1.2s infinite",
         shake: "shake 0.5s ease-in-out",
       },
     },
