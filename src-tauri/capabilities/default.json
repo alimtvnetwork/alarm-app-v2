@@ -1,0 +1,48 @@
+{
+  "identifier": "default",
+  "description": "Main window capabilities for the Alarm App",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:default",
+    "core:window:allow-close",
+    "core:window:allow-set-fullscreen",
+    "core:window:allow-set-focus",
+    "core:app:default",
+    "core:event:default",
+
+    "sql:default",
+    "sql:allow-execute",
+    "sql:allow-select",
+
+    "notification:default",
+    "notification:allow-notify",
+    "notification:allow-request-permission",
+    "notification:allow-is-permission-granted",
+
+    "dialog:default",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "dialog:allow-message",
+    "dialog:allow-ask",
+
+    "fs:default",
+    "fs:allow-read-file",
+    "fs:allow-exists",
+
+    "global-shortcut:default",
+    "global-shortcut:allow-register",
+    "global-shortcut:allow-unregister",
+
+    "tray:default",
+
+    "autostart:default",
+    "autostart:allow-enable",
+    "autostart:allow-disable",
+    "autostart:allow-is-enabled",
+
+    "updater:default",
+    "updater:allow-check",
+    "updater:allow-download-and-install"
+  ]
+}
