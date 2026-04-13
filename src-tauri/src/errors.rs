@@ -86,9 +86,7 @@ impl Serialize for AlarmAppError {
     where
         S: serde::Serializer,
     {
-        let response = IpcErrorResponse::from(AlarmAppError::Validation(self.to_string()));
-        // Re-derive from self properly
-        let response = IpcErrorResponse {
+91:         let response = IpcErrorResponse {
             message: self.to_string(),
             code: error_code(self),
         };

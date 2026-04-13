@@ -5,7 +5,7 @@ use tokio::sync::Mutex;
 use std::sync::Arc;
 
 use crate::errors::AlarmAppError;
-use crate::storage::models::{AlarmEventType, SnoozeStateRow};
+use crate::storage::models::SnoozeStateRow;
 
 type DbPool = Arc<Mutex<rusqlite::Connection>>;
 

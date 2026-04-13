@@ -10,7 +10,7 @@ use tokio::sync::Mutex;
 use tokio::time::{interval, Duration};
 
 use crate::engine::scheduler::{compute_next_fire_time, AlarmContext};
-use crate::errors::AlarmAppError;
+use crate::errors;
 use crate::storage::models::{AlarmEventType, AlarmRow, RepeatType};
 
 /// Polling interval: 30 seconds

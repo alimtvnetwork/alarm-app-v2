@@ -2,7 +2,7 @@
 // Quotes, streak tracker
 
 use rusqlite::params;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use tauri::State;
 use tokio::sync::Mutex;
 use std::sync::Arc;
