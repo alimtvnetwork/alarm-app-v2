@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 # Tauri core
-tauri = { version = "=2.10.3", features = ["tray-icon", "global-shortcut"] }
+tauri = { version = "=2.10.3", features = ["tray-icon"] }
 
 # Tauri plugins
 tauri-plugin-notification = "=2.3.3"
