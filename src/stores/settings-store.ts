@@ -1,19 +1,20 @@
 /**
  * Settings Store — Zustand store for app settings.
- * Uses mock IPC layer (swap for real Tauri invoke in production).
+ * Uses async IPC adapter (mock in web, Tauri IPC in native).
  */
 
 import { create } from "zustand";
 import type { Settings } from "@/types/alarm";
 import { ThemeMode, DEFAULT_SETTINGS } from "@/types/alarm";
-import * as ipc from "@/lib/mock-ipc";
+import * as ipc from "@/lib/ipc-adapter";
 
 interface SettingsStore {
   settings: Settings;
-  loadSettings: () => void;
-  updateSettings: (partial: Partial<Settings>) => void;
-  setTheme: (theme: ThemeMode) => void;
-  toggleIs24Hour: () => void;
+  isLoading: boolean;
+  loadSettings: () => Promise<void>;
+  updateSettings: (partial: Partial<Settings>) => Promise<void>;
+  setTheme: (theme: ThemeMode) => Promise<void>;
+  toggleIs24Hour: () => Promise<void>;
 }
 
 function hexToHSL(hex: string): string | null {
@@ -61,16 +62,22 @@ function applyAccentColor(hex: string): void {
 
 export const useSettingsStore = create<SettingsStore>((set, get) => ({
   settings: { ...DEFAULT_SETTINGS },
+  isLoading: false,
 
-  loadSettings: () => {
-    const settings = ipc.getSettings();
-    set({ settings });
-    applyThemeClass(settings.Theme);
-    applyAccentColor(settings.AccentColor);
+  loadSettings: async () => {
+    set({ isLoading: true });
+    try {
+      const settings = await ipc.getSettings();
+      set({ settings });
+      applyThemeClass(settings.Theme);
+      applyAccentColor(settings.AccentColor);
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
-  updateSettings: (partial) => {
-    const updated = ipc.updateSettings(partial);
+  updateSettings: async (partial) => {
+    const updated = await ipc.updateSettings(partial);
     set({ settings: updated });
     if (partial.Theme !== undefined) {
       applyThemeClass(partial.Theme);
@@ -80,12 +87,12 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
     }
   },
 
-  setTheme: (theme) => {
-    get().updateSettings({ Theme: theme });
+  setTheme: async (theme) => {
+    await get().updateSettings({ Theme: theme });
   },
 
-  toggleIs24Hour: () => {
+  toggleIs24Hour: async () => {
     const current = get().settings.Is24Hour;
-    get().updateSettings({ Is24Hour: !current });
+    await get().updateSettings({ Is24Hour: !current });
   },
 }));

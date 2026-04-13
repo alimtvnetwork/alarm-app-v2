@@ -1,12 +1,13 @@
 /**
  * Overlay Store — Zustand store for alarm firing overlay state.
  * Logs alarm events (fired, snoozed, dismissed) with challenge solve time.
+ * Uses async IPC adapter.
  */
 
 import { create } from "zustand";
 import type { Alarm, AlarmEvent, SnoozeState } from "@/types/alarm";
 import { AlarmEventType } from "@/types/alarm";
-import * as ipc from "@/lib/mock-ipc";
+import * as ipc from "@/lib/ipc-adapter";
 
 interface OverlayStore {
   isVisible: boolean;
@@ -14,18 +15,19 @@ interface OverlayStore {
   snoozeState: SnoozeState | null;
   firedAt: string | null;
 
-  fireAlarm: (alarm: Alarm) => void;
-  snooze: () => void;
-  dismiss: (challengeSolveTimeSec?: number) => void;
+  fireAlarm: (alarm: Alarm) => Promise<void>;
+  fireAlarmById: (alarmId: string) => Promise<void>;
+  snooze: () => Promise<void>;
+  dismiss: (challengeSolveTimeSec?: number) => Promise<void>;
   hide: () => void;
 }
 
-function logEvent(
+async function logEvent(
   alarm: Alarm,
   type: AlarmEventType,
   snoozeCount: number,
   challengeSolveTimeSec?: number
-): void {
+): Promise<void> {
   const now = new Date().toISOString();
   const event: AlarmEvent = {
     AlarmEventId: crypto.randomUUID(),
@@ -42,7 +44,7 @@ function logEvent(
     AlarmTimeSnapshot: alarm.Time,
     Timestamp: now,
   };
-  ipc.createAlarmEvent(event);
+  await ipc.createAlarmEvent(event);
 }
 
 export const useOverlayStore = create<OverlayStore>((set, get) => ({
@@ -51,10 +53,10 @@ export const useOverlayStore = create<OverlayStore>((set, get) => ({
   snoozeState: null,
   firedAt: null,
 
-  fireAlarm: (alarm) => {
-    const existing = ipc.getSnoozeState(alarm.AlarmId);
+  fireAlarm: async (alarm) => {
+    const existing = await ipc.getSnoozeState(alarm.AlarmId);
     const now = new Date().toISOString();
-    logEvent(alarm, AlarmEventType.Fired, existing?.SnoozeCount ?? 0);
+    await logEvent(alarm, AlarmEventType.Fired, existing?.SnoozeCount ?? 0);
     set({
       isVisible: true,
       firingAlarm: alarm,
@@ -63,7 +65,14 @@ export const useOverlayStore = create<OverlayStore>((set, get) => ({
     });
   },
 
-  snooze: () => {
+  fireAlarmById: async (alarmId) => {
+    const alarm = await ipc.getAlarm(alarmId);
+    if (alarm) {
+      await get().fireAlarm(alarm);
+    }
+  },
+
+  snooze: async () => {
     const { firingAlarm, snoozeState } = get();
     if (!firingAlarm) return;
 
@@ -74,19 +83,21 @@ export const useOverlayStore = create<OverlayStore>((set, get) => ({
 
     if (!canSnooze) return;
 
-    const newState = ipc.snoozeAlarm(
+    const newState = await ipc.snoozeAlarm(
       firingAlarm.AlarmId,
       firingAlarm.SnoozeDurationMin
     );
-    logEvent(firingAlarm, AlarmEventType.Snoozed, newState.SnoozeCount);
-    set({ isVisible: false, snoozeState: newState });
+    if (newState) {
+      await logEvent(firingAlarm, AlarmEventType.Snoozed, newState.SnoozeCount);
+      set({ isVisible: false, snoozeState: newState });
+    }
   },
 
-  dismiss: (challengeSolveTimeSec) => {
+  dismiss: async (challengeSolveTimeSec) => {
     const { firingAlarm, snoozeState } = get();
     if (firingAlarm) {
-      ipc.clearSnooze(firingAlarm.AlarmId);
-      logEvent(
+      await ipc.dismissAlarm(firingAlarm.AlarmId);
+      await logEvent(
         firingAlarm,
         AlarmEventType.Dismissed,
         snoozeState?.SnoozeCount ?? 0,
