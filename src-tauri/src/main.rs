@@ -98,7 +98,7 @@ fn main() {
                 Box::new(move || {
                     let pool = wake_pool.clone();
                     let handle = wake_handle.clone();
-                    tokio::spawn(async move {
+                    tauri::async_runtime::spawn(async move {
                         tracing::info!("Wake detected — running missed alarm check");
                         alarm_app::engine::alarm_engine::on_system_wake(&pool, &handle).await;
                     });

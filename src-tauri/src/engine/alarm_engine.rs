@@ -37,7 +37,7 @@ pub fn start_engine(
     pool: Arc<Mutex<Connection>>,
     app_handle: tauri::AppHandle,
 ) {
-    tokio::spawn(async move {
+    tauri::async_runtime::spawn(async move {
         tracing::info!("Alarm engine started ({}s interval)", POLL_INTERVAL_SECS);
 
         // Cold-start: check for missed alarms immediately
