@@ -9,6 +9,7 @@ import AlarmChecker from "./components/alarm/AlarmChecker";
 import KeyboardShortcutsHelp from "./components/layout/KeyboardShortcutsHelp";
 import OnboardingModal from "./components/onboarding/OnboardingModal";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
+import { useTauriEvents } from "./hooks/useTauriEvents";
 import Index from "./pages/Index";
 import Alarms from "./pages/Alarms";
 import Settings from "./pages/Settings";
@@ -21,6 +22,7 @@ const queryClient = new QueryClient();
 
 const AppInner = () => {
   useKeyboardShortcuts();
+  useTauriEvents();
   return (
     <>
       <Toaster />
