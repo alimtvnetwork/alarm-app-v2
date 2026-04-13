@@ -69,7 +69,19 @@ const AlarmChecker = () => {
     check();
 
     const id = setInterval(check, POLL_INTERVAL_MS);
-    return () => clearInterval(id);
+
+    // Re-check immediately when tab becomes visible again (background wake)
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        check();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      clearInterval(id);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
   }, [fireAlarm, isVisible, refreshAlarms]);
 
   // Clear fired tracking when overlay closes (alarm was handled)
