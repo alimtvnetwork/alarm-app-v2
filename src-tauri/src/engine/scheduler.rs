@@ -1,7 +1,7 @@
 // Scheduler — Phase 3 implementation
 // compute_next_fire_time() + resolve_local_to_utc() for all 5 RepeatType variants
 
-use chrono::{DateTime, Duration, Local, LocalResult, NaiveDate, NaiveDateTime, NaiveTime, Utc, Weekday, Datelike, Timelike};
+use chrono::{DateTime, Duration, LocalResult, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc, Datelike};
 use chrono_tz::Tz;
 use croner::Cron;
 
@@ -118,10 +118,9 @@ fn compute_cron(cron_expr: &str, ctx: &AlarmContext) -> Option<DateTime<Utc>> {
         return None;
     }
     let cron = Cron::new(cron_expr).parse().ok()?;
-    cron.find_next_occurrence(&ctx.now_local.naive_local(), false)
+    cron.find_next_occurrence(&ctx.now_local, false)
         .ok()
-        .flatten()
-        .and_then(|naive| resolve_local_to_utc(naive.date(), naive.time(), &ctx.timezone))
+        .map(|dt: DateTime<Tz>| dt.with_timezone(&Utc))
 }
 
 // ── DST Resolution ──

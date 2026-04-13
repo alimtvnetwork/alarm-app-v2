@@ -1,8 +1,6 @@
 use thiserror::Error;
 use serde::Serialize;
 
-pub use crate::webhooks::errors::WebhookError;
-
 #[derive(Error, Debug)]
 pub enum AlarmAppError {
     #[error("Database error: {0}")]
@@ -88,8 +86,6 @@ impl Serialize for AlarmAppError {
     where
         S: serde::Serializer,
     {
-        let response = IpcErrorResponse::from(AlarmAppError::Validation(self.to_string()));
-        // Re-derive from self properly
         let response = IpcErrorResponse {
             message: self.to_string(),
             code: error_code(self),

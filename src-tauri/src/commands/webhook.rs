@@ -4,7 +4,7 @@ use tauri::State;
 use std::sync::Mutex;
 
 use crate::errors::AlarmAppError;
-use crate::webhooks::{WebhookConfig, WebhookResult, fire_webhooks_for_alarm};
+use crate::webhooks::{WebhookConfig, WebhookResult};
 
 #[derive(Deserialize)]
 pub struct CreateWebhookArgs {
