@@ -4,6 +4,8 @@
  */
 
 import { useEffect, useState } from "react";
+import { useSettingsStore } from "@/stores/settings-store";
+import { getTimeParts } from "@/lib/timezone-clock";
 
 const CLOCK_SIZE = 220;
 const CENTER = CLOCK_SIZE / 2;
@@ -12,15 +14,14 @@ const HOUR_HAND_LENGTH = 52;
 const MINUTE_HAND_LENGTH = 72;
 const SECOND_HAND_LENGTH = 78;
 
-function getHandAngles(date: Date) {
-  const h = date.getHours() % 12;
-  const m = date.getMinutes();
-  const s = date.getSeconds();
+function getHandAngles(date: Date, timeZone: string) {
+  const { hours, minutes, seconds } = getTimeParts(date, timeZone);
+  const h = hours % 12;
   const ms = date.getMilliseconds();
 
-  const secondAngle = ((s + ms / 1000) / 60) * 360;
-  const minuteAngle = ((m + s / 60) / 60) * 360;
-  const hourAngle = ((h + m / 60) / 12) * 360;
+  const secondAngle = ((seconds + ms / 1000) / 60) * 360;
+  const minuteAngle = ((minutes + seconds / 60) / 60) * 360;
+  const hourAngle = ((h + minutes / 60) / 12) * 360;
 
   return { hourAngle, minuteAngle, secondAngle };
 }
@@ -55,13 +56,14 @@ function HandLine({
 
 const AnalogClock = () => {
   const [now, setNow] = useState(new Date());
+  const timeZone = useSettingsStore((s) => s.settings.SystemTimezone);
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  const { hourAngle, minuteAngle, secondAngle } = getHandAngles(now);
+  const { hourAngle, minuteAngle, secondAngle } = getHandAngles(now, timeZone);
 
   // Tick marks
   const ticks = Array.from({ length: 60 }, (_, i) => {
