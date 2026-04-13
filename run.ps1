@@ -141,8 +141,12 @@ function Install-NodeJS {
         Refresh-Path
         Write-Host "  ✓ Node.js installed" -ForegroundColor Green
     } elseif (Test-Command "brew") {
-        brew install node
+        brew install node@20
         Write-Host "  ✓ Node.js installed via Homebrew" -ForegroundColor Green
+    } elseif (Test-Command "nvm") {
+        nvm install --lts
+        nvm use --lts
+        Write-Host "  ✓ Node.js installed via nvm" -ForegroundColor Green
     } else {
         Write-Host "ERROR: Cannot auto-install Node.js. Install manually: https://nodejs.org/" -ForegroundColor Red
         exit 1
@@ -151,12 +155,25 @@ function Install-NodeJS {
 
 function Install-Rust {
     Write-Host "  Rust not found. Attempting auto-install..." -ForegroundColor Yellow
-    if (Test-Command "winget") {
+    if ($IsMacOS -or $IsLinux) {
+        # Use rustup installer on Unix
+        Write-Host "  → Installing via rustup..." -ForegroundColor Gray
+        bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
+        if ($LASTEXITCODE -ne 0) { throw "rustup install failed" }
+        # Source cargo env for current session
+        $cargoEnv = Join-Path $env:HOME ".cargo/env"
+        if (Test-Path $cargoEnv) {
+            bash -c "source '$cargoEnv'"
+        }
+        $env:Path = "$env:HOME/.cargo/bin:$env:Path"
+        Refresh-Path
+        Write-Host "  ✓ Rust installed via rustup" -ForegroundColor Green
+    } elseif (Test-Command "winget") {
         winget install Rustlang.Rustup --accept-package-agreements --accept-source-agreements
         if ($LASTEXITCODE -ne 0) { throw "winget install failed" }
         Refresh-Path
         rustup default stable 2>&1 | Out-Host
-        Write-Host "  ✓ Rust installed" -ForegroundColor Green
+        Write-Host "  ✓ Rust installed via winget" -ForegroundColor Green
     } else {
         Write-Host "ERROR: Cannot auto-install Rust. Install manually: https://rustup.rs/" -ForegroundColor Red
         exit 1
@@ -167,6 +184,32 @@ function Install-TauriCli {
     Write-Host "  Installing Tauri CLI..." -ForegroundColor Yellow
     npm install -D @tauri-apps/cli
     Write-Host "  ✓ Tauri CLI installed" -ForegroundColor Green
+}
+
+function Install-XcodeCommandLineTools {
+    if (-not $IsMacOS) { return }
+    Write-Host "  Checking Xcode Command Line Tools..." -ForegroundColor Gray
+    $xcodeCheck = bash -c 'xcode-select -p 2>/dev/null'
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "  Xcode CLT not found. Installing..." -ForegroundColor Yellow
+        bash -c 'xcode-select --install'
+        Write-Host "  ⚠ Xcode CLT installer launched — complete the dialog, then re-run." -ForegroundColor Yellow
+        Write-Host "    After install finishes, run: .\run.ps1 -i" -ForegroundColor Yellow
+        exit 0
+    } else {
+        Write-Host "  ✓ Xcode Command Line Tools: $xcodeCheck" -ForegroundColor Green
+    }
+}
+
+function Install-LinuxDependencies {
+    if (-not $IsLinux) { return }
+    Write-Host "  Installing Linux system libraries for Tauri..." -ForegroundColor Yellow
+    bash -c 'sudo apt update && sudo apt install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf'
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "  WARNING: Some system libraries failed to install." -ForegroundColor Yellow
+    } else {
+        Write-Host "  ✓ Linux system libraries installed" -ForegroundColor Green
+    }
 }
 
 # ============================================================================
@@ -292,30 +335,84 @@ Write-Host "  ⏱ $(Format-ElapsedTime $stepWatch)" -ForegroundColor DarkGray
 Write-Host ""
 
 # ============================================================================
-# INSTALL MODE (-i): Install all npm dependencies
+# INSTALL MODE (-i): Full dev environment setup
 # ============================================================================
 if ($install) {
     $stepWatch = [System.Diagnostics.Stopwatch]::StartNew()
-    Write-Host "[INSTALL] Installing dependencies..." -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "========================================" -ForegroundColor Cyan
+    Write-Host "  ⏰ $ProjectName — Dev Setup" -ForegroundColor Cyan
+    Write-Host "========================================" -ForegroundColor Cyan
     Write-Host ""
 
     if ($rebuild) {
-        Write-Host "  Rebuild mode: deferring until after force-clean..." -ForegroundColor Yellow
+        Write-Host "  Rebuild mode: deferring npm install until after force-clean..." -ForegroundColor Yellow
     } else {
+        # 1. macOS: Xcode Command Line Tools
+        Install-XcodeCommandLineTools
+
+        # 2. Linux: system libraries
+        Install-LinuxDependencies
+
+        # 3. Check/install Rust
+        Write-Host ""
+        Write-Host "  Checking Rust..." -ForegroundColor Gray
+        if (-not (Test-Command "rustc")) {
+            Install-Rust
+        } else {
+            $rustVer = rustc --version 2>&1
+            Write-Host "  ✓ Rust: $rustVer" -ForegroundColor Green
+            # Update Rust toolchain
+            Write-Host "  Updating Rust toolchain..." -ForegroundColor Gray
+            rustup update stable 2>&1 | Out-Host
+        }
+
+        # 4. Check/install Node.js
+        Write-Host ""
+        Write-Host "  Checking Node.js..." -ForegroundColor Gray
+        if (-not (Test-Command "node")) {
+            Install-NodeJS
+        } else {
+            $nodeVer = node --version 2>&1
+            Write-Host "  ✓ Node.js: $nodeVer" -ForegroundColor Green
+        }
+
+        # 5. Install npm dependencies
+        Write-Host ""
+        Write-Host "  Installing npm dependencies..." -ForegroundColor Gray
         Push-Location $FrontendDir
         try {
-            Write-Host "  Running: $InstallCommand" -ForegroundColor Gray
             Invoke-Expression $InstallCommand
             if ($LASTEXITCODE -ne 0) { throw "npm install failed" }
-            Write-Host "  ✓ Dependencies installed" -ForegroundColor Green
+            Write-Host "  ✓ npm dependencies installed" -ForegroundColor Green
         }
         finally { Pop-Location }
 
+        # 6. Check/install Tauri CLI
+        Write-Host ""
+        Write-Host "  Checking Tauri CLI..." -ForegroundColor Gray
+        $tauriFound = $false
+        try {
+            $tauriVer = npx tauri --version 2>&1
+            if ($LASTEXITCODE -eq 0) { $tauriFound = $true }
+        } catch {}
+        if (-not $tauriFound) {
+            Install-TauriCli
+        } else {
+            Write-Host "  ✓ Tauri CLI: $tauriVer" -ForegroundColor Green
+        }
+
+        # 7. Summary
         $stepWatch.Stop()
         Write-Host ""
         Write-Host "========================================" -ForegroundColor Cyan
-        Write-Host "  Dependencies installed!" -ForegroundColor Cyan
+        Write-Host "  ✅ Dev environment ready!" -ForegroundColor Green
         Write-Host "  Time: $(Format-ElapsedTime $stepWatch)" -ForegroundColor Cyan
+        Write-Host "" -ForegroundColor Cyan
+        Write-Host "  Next steps:" -ForegroundColor Cyan
+        Write-Host "    .\run.ps1        Build + start dev server" -ForegroundColor White
+        Write-Host "    .\run.ps1 -td    Tauri dev mode (hot-reload)" -ForegroundColor White
+        Write-Host "    .\run.ps1 -t     Build Tauri desktop app" -ForegroundColor White
         Write-Host "========================================" -ForegroundColor Cyan
         exit 0
     }
