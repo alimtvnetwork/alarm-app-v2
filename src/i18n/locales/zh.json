@@ -1,10 +1,15 @@
 {
   "nav": {
     "clock": "时钟",
+    "alarms": "闹钟",
     "analytics": "数据分析",
     "sleep": "睡眠",
     "style": "个性化",
     "settings": "设置"
+  },
+  "alarms": {
+    "title": "我的闹钟",
+    "add": "新建"
   },
   "header": {
     "title": "闹钟",

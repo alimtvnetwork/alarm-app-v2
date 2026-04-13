@@ -1,10 +1,15 @@
 {
   "nav": {
     "clock": "時計",
+    "alarms": "アラーム",
     "analytics": "分析",
     "sleep": "睡眠",
     "style": "カスタマイズ",
     "settings": "設定"
+  },
+  "alarms": {
+    "title": "マイアラーム",
+    "add": "新規"
   },
   "header": {
     "title": "アラーム",
