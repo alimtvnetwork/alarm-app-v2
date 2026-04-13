@@ -247,7 +247,8 @@ const Analytics = () => {
                       cy="45%"
                       innerRadius={45}
                       outerRadius={70}
-                      paddingAngle={4}
+                      paddingAngle={1}
+                      stroke="none"
                       dataKey="value"
                       label={false}
                     >
