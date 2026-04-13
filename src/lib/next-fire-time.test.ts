@@ -26,6 +26,7 @@ function buildAlarm(partial: Partial<Alarm>): Alarm {
     ChallengeShakeCount: null,
     ChallengeStepCount: null,
     NextFireTime: null,
+    Position: 0,
     DeletedAt: null,
     CreatedAt: "2026-04-13T00:00:00.000Z",
     UpdatedAt: "2026-04-13T00:00:00.000Z",

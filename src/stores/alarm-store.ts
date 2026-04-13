@@ -67,6 +67,7 @@ function createDefaultAlarm(partial: Partial<Alarm>): Alarm {
     ChallengeShakeCount: null,
     ChallengeStepCount: null,
     NextFireTime: null,
+    Position: 0,
     DeletedAt: null,
     CreatedAt: now,
     UpdatedAt: now,

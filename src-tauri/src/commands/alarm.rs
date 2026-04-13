@@ -38,7 +38,7 @@ pub struct CreateAlarmPayload {
 pub async fn list_alarms(pool: State<'_, DbPool>) -> Result<Vec<AlarmRow>, AlarmAppError> {
     let conn = pool.lock().await;
     let mut stmt = conn.prepare(
-        "SELECT * FROM Alarms WHERE DeletedAt IS NULL ORDER BY CreatedAt DESC"
+        "SELECT * FROM Alarms WHERE DeletedAt IS NULL ORDER BY Position ASC, CreatedAt DESC"
     )?;
     let alarms = stmt
         .query_map([], AlarmRow::from_row)?
@@ -283,9 +283,16 @@ pub async fn reorder_alarms(
     pool: State<'_, DbPool>,
     alarm_ids: Vec<String>,
 ) -> Result<(), AlarmAppError> {
-    // Reorder is a frontend-only operation — the order is maintained by the list
-    // In the native app, we don't have a Position column on Alarms (unlike Groups)
-    // The frontend maintains order in Zustand state
+    let conn = pool.0.lock().await;
+    let now = chrono::Utc::now().to_rfc3339();
+
+    for (i, id) in alarm_ids.iter().enumerate() {
+        conn.execute(
+            "UPDATE Alarms SET Position = ?1, UpdatedAt = ?2 WHERE AlarmId = ?3",
+            rusqlite::params![i as i32, now, id],
+        )?;
+    }
+
     Ok(())
 }
 
