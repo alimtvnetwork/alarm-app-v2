@@ -6,6 +6,7 @@
 
 import type { Alarm, AlarmGroup, AlarmEvent, AlarmSound, Settings, SnoozeState } from "@/types/alarm";
 import { DEFAULT_SETTINGS } from "@/types/alarm";
+import { normalizeAlarmTimezone } from "@/lib/alarm-timezone";
 import { MOCK_ALARMS, MOCK_GROUPS, MOCK_SOUNDS, MOCK_EVENTS } from "@/test/fixtures";
 
 // ─── Storage Keys ────────────────────────────────────────────────
@@ -31,6 +32,13 @@ function loadJson<T>(key: string, fallback: T): T {
 
 function saveJson<T>(key: string, data: T): void {
   localStorage.setItem(key, JSON.stringify(data));
+}
+
+function normalizeSettings(settings: Settings): Settings {
+  return {
+    ...settings,
+    SystemTimezone: normalizeAlarmTimezone(settings.SystemTimezone),
+  };
 }
 
 function seedIfEmpty(): void {
@@ -155,12 +163,17 @@ export function deleteGroup(groupId: string): void {
 // ─── Settings Commands ───────────────────────────────────────────
 
 export function getSettings(): Settings {
-  return loadJson<Settings>(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+  const stored = loadJson<Settings>(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
+  const normalized = normalizeSettings(stored);
+  if (normalized.SystemTimezone !== stored.SystemTimezone) {
+    saveJson(STORAGE_KEYS.SETTINGS, normalized);
+  }
+  return normalized;
 }
 
 export function updateSettings(partial: Partial<Settings>): Settings {
   const current = getSettings();
-  const updated = { ...current, ...partial };
+  const updated = normalizeSettings({ ...current, ...partial });
   saveJson(STORAGE_KEYS.SETTINGS, updated);
   return updated;
 }

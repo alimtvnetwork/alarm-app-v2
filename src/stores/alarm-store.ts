@@ -33,6 +33,10 @@ function generateId(): string {
   return crypto.randomUUID();
 }
 
+function getAlarmTimeZone(): string {
+  return ipc.getSettings().SystemTimezone;
+}
+
 function createDefaultAlarm(partial: Partial<Alarm>): Alarm {
   const now = new Date().toISOString();
   return {
@@ -68,9 +72,10 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
   groups: [],
 
   loadAlarms: () => {
+    const timeZone = getAlarmTimeZone();
     const alarms = ipc.listAlarms().map((a) => {
       if (!a.NextFireTime && a.IsEnabled) {
-        a.NextFireTime = computeNextFireTime(a);
+        a.NextFireTime = computeNextFireTime(a, timeZone);
         ipc.updateAlarm(a);
       }
       return a;
@@ -80,14 +85,14 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
 
   addAlarm: (partial) => {
     const alarm = createDefaultAlarm(partial);
-    alarm.NextFireTime = computeNextFireTime(alarm);
+    alarm.NextFireTime = computeNextFireTime(alarm, getAlarmTimeZone());
     ipc.createAlarm(alarm);
     set((s) => ({ alarms: [...s.alarms, alarm] }));
     return alarm;
   },
 
   updateAlarm: (alarm) => {
-    alarm.NextFireTime = computeNextFireTime(alarm);
+    alarm.NextFireTime = computeNextFireTime(alarm, getAlarmTimeZone());
     ipc.updateAlarm(alarm);
     set((s) => ({
       alarms: s.alarms.map((a) => (a.AlarmId === alarm.AlarmId ? alarm : a)),
@@ -104,7 +109,7 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
   toggleAlarm: (alarmId, isEnabled) => {
     const updated = ipc.toggleAlarm(alarmId, isEnabled);
     if (updated) {
-      updated.NextFireTime = computeNextFireTime(updated);
+      updated.NextFireTime = computeNextFireTime(updated, getAlarmTimeZone());
       ipc.updateAlarm(updated);
       set((s) => ({
         alarms: s.alarms.map((a) => (a.AlarmId === alarmId ? updated : a)),
