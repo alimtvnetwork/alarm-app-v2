@@ -4,10 +4,20 @@
 
 import { describe, expect, it, beforeEach } from "vitest";
 import * as adapter from "@/lib/ipc-adapter";
+import { MOCK_ALARMS, MOCK_GROUPS, MOCK_SOUNDS, MOCK_EVENTS } from "@/test/fixtures";
+import { DEFAULT_SETTINGS } from "@/types/alarm";
+
+function seed() {
+  localStorage.setItem("alarm_app_alarms", JSON.stringify(MOCK_ALARMS));
+  localStorage.setItem("alarm_app_groups", JSON.stringify(MOCK_GROUPS));
+  localStorage.setItem("alarm_app_settings", JSON.stringify(DEFAULT_SETTINGS));
+  localStorage.setItem("alarm_app_events", JSON.stringify(MOCK_EVENTS));
+}
 
 describe("ipc-adapter (web mode)", () => {
   beforeEach(() => {
     localStorage.clear();
+    seed();
   });
 
   it("isTauri returns false in web preview", () => {

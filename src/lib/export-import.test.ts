@@ -4,12 +4,20 @@
 
 import { describe, expect, it, beforeEach, vi } from "vitest";
 import { importAlarmsFromJson } from "@/lib/export-import";
-import { ImportMode } from "@/types/alarm";
+import { ImportMode, DEFAULT_SETTINGS } from "@/types/alarm";
 import * as ipc from "@/lib/mock-ipc";
+import { MOCK_ALARMS, MOCK_GROUPS } from "@/test/fixtures";
+
+function seed() {
+  localStorage.setItem("alarm_app_alarms", JSON.stringify(MOCK_ALARMS));
+  localStorage.setItem("alarm_app_groups", JSON.stringify(MOCK_GROUPS));
+  localStorage.setItem("alarm_app_settings", JSON.stringify(DEFAULT_SETTINGS));
+}
 
 describe("export-import", () => {
   beforeEach(() => {
     localStorage.clear();
+    seed();
   });
 
   it("importAlarmsFromJson in Merge mode skips existing IDs", () => {

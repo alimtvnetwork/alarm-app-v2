@@ -4,10 +4,19 @@
 
 import { describe, expect, it, beforeEach } from "vitest";
 import { useAlarmStore } from "@/stores/alarm-store";
+import { MOCK_ALARMS, MOCK_GROUPS } from "@/test/fixtures";
+import { DEFAULT_SETTINGS } from "@/types/alarm";
+
+function seed() {
+  localStorage.setItem("alarm_app_alarms", JSON.stringify(MOCK_ALARMS));
+  localStorage.setItem("alarm_app_groups", JSON.stringify(MOCK_GROUPS));
+  localStorage.setItem("alarm_app_settings", JSON.stringify(DEFAULT_SETTINGS));
+}
 
 describe("alarm-store", () => {
   beforeEach(() => {
     localStorage.clear();
+    seed();
     useAlarmStore.setState({ alarms: [], groups: [], isLoading: false });
   });
 
