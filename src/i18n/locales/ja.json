@@ -41,6 +41,8 @@
     "gentleChime": "やさしいチャイム",
     "birds": "鳥の声",
     "digitalPulse": "デジタルパルス",
+    "playPreview": "サウンドプレビュー",
+    "stopPreview": "プレビュー停止",
     "gradualVolume": "徐々に音量アップ",
     "snoozeMin": "スヌーズ（分）",
     "maxSnoozes": "最大スヌーズ回数",

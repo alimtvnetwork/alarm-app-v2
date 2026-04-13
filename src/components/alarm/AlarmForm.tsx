@@ -3,7 +3,9 @@
  * Redesigned with custom time display, pill repeat buttons, and modern layout.
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Play, Square } from "lucide-react";
+import { playAlarmSound } from "@/lib/alarm-audio";
 import { useTranslation } from "react-i18next";
 import {
   Sheet,
@@ -64,6 +66,30 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
   const [soundFile, setSoundFile] = useState("classic-beep");
   const [isGradualVolume, setIsGradualVolume] = useState(false);
   const [gradualDuration, setGradualDuration] = useState(30);
+  const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
+  const previewRef = useRef<{ stop: () => void } | null>(null);
+
+  const stopPreview = useCallback(() => {
+    previewRef.current?.stop();
+    previewRef.current = null;
+    setIsPreviewPlaying(false);
+  }, []);
+
+  const togglePreview = useCallback(() => {
+    if (isPreviewPlaying) {
+      stopPreview();
+    } else {
+      stopPreview();
+      previewRef.current = playAlarmSound(soundFile, false, 30);
+      setIsPreviewPlaying(true);
+      // Auto-stop after 3 seconds
+      setTimeout(() => stopPreview(), 3000);
+    }
+  }, [isPreviewPlaying, soundFile, stopPreview]);
+
+  // Stop preview when sheet closes or sound changes
+  useEffect(() => { stopPreview(); }, [soundFile, stopPreview]);
+  useEffect(() => { if (!isOpen) stopPreview(); }, [isOpen, stopPreview]);
   const [challengeType, setChallengeType] = useState<ChallengeType | "none">("none");
   const [challengeDifficulty, setChallengeDifficulty] = useState<ChallengeDifficulty>(
     ChallengeDifficulty.Easy
@@ -246,17 +272,29 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
           {/* Sound */}
           <div className="space-y-1.5">
             <Label className="font-body text-sm font-medium">{t("alarmForm.sound")}</Label>
-            <Select value={soundFile} onValueChange={setSoundFile}>
-              <SelectTrigger className="rounded-xl">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="classic-beep">{t("alarmForm.classicBeep")}</SelectItem>
-                <SelectItem value="gentle-chime">{t("alarmForm.gentleChime")}</SelectItem>
-                <SelectItem value="nature-birds">{t("alarmForm.birds")}</SelectItem>
-                <SelectItem value="digital-pulse">{t("alarmForm.digitalPulse")}</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-2">
+              <Select value={soundFile} onValueChange={setSoundFile}>
+                <SelectTrigger className="rounded-xl flex-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="classic-beep">{t("alarmForm.classicBeep")}</SelectItem>
+                  <SelectItem value="gentle-chime">{t("alarmForm.gentleChime")}</SelectItem>
+                  <SelectItem value="nature-birds">{t("alarmForm.birds")}</SelectItem>
+                  <SelectItem value="digital-pulse">{t("alarmForm.digitalPulse")}</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="shrink-0 rounded-xl"
+                onClick={togglePreview}
+                aria-label={isPreviewPlaying ? t("alarmForm.stopPreview") : t("alarmForm.playPreview")}
+              >
+                {isPreviewPlaying ? <Square className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+              </Button>
+            </div>
           </div>
 
           {/* Gradual Volume */}

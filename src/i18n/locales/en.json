@@ -41,6 +41,8 @@
     "gentleChime": "Gentle Chime",
     "birds": "Birds",
     "digitalPulse": "Digital Pulse",
+    "playPreview": "Preview sound",
+    "stopPreview": "Stop preview",
     "gradualVolume": "Gradual Volume",
     "snoozeMin": "Snooze (min)",
     "maxSnoozes": "Max Snoozes",
