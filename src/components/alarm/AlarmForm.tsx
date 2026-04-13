@@ -3,7 +3,9 @@
  * Redesigned with custom time display, pill repeat buttons, and modern layout.
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Play, Square } from "lucide-react";
+import { playAlarmSound } from "@/lib/alarm-audio";
 import { useTranslation } from "react-i18next";
 import {
   Sheet,
