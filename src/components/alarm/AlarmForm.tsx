@@ -220,9 +220,8 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
               ref={timeInputRef}
               type="time"
               value={time}
-              onChange={(e) => setTime(e.target.value)}
+              onChange={(e) => e.target.value && setTime(e.target.value)}
               className="absolute inset-0 cursor-pointer opacity-0"
-              style={{ pointerEvents: "none" }}
               tabIndex={-1}
             />
           </div>
