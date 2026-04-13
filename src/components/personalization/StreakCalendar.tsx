@@ -111,23 +111,23 @@ const StreakCalendar = () => {
         </div>
 
         {/* Day grid */}
-        <div className="grid grid-cols-7 gap-0">
+        <div className="grid grid-cols-7 gap-1">
           {cells.map((cell) => {
             const isSelected = cell.key === selectedDate;
             return (
               <button
                 key={cell.key}
                 onClick={() => setSelectedDate(cell.key === selectedDate ? null : cell.key)}
-                className={`relative flex flex-col items-center justify-center py-2 text-sm font-body transition-colors rounded-lg
+                className={`relative flex items-center justify-center aspect-square text-sm font-body transition-colors rounded-full
                   ${cell.isCurrentMonth ? "text-foreground" : "text-muted-foreground/40"}
-                  ${cell.isToday && !isSelected ? "bg-foreground text-background font-bold rounded-lg" : ""}
-                  ${isSelected ? "bg-primary text-primary-foreground font-bold" : ""}
-                  ${!cell.isToday && !isSelected ? "hover:bg-secondary" : ""}
+                  ${cell.isToday && !isSelected ? "bg-foreground text-background font-semibold" : ""}
+                  ${isSelected ? "bg-secondary font-semibold" : ""}
+                  ${!cell.isToday && !isSelected ? "hover:bg-secondary/60" : ""}
                 `}
               >
                 {cell.day}
                 {cell.hasDismissal && (
-                  <span className={`absolute bottom-1 h-1 w-1 rounded-full ${isSelected || cell.isToday ? "bg-current opacity-60" : "bg-primary"}`} />
+                  <span className={`absolute bottom-1 h-1 w-1 rounded-full ${cell.isToday ? "bg-background/60" : "bg-primary"}`} />
                 )}
               </button>
             );
