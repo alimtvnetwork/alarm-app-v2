@@ -1,13 +1,20 @@
 /**
  * AlarmCard — Compact alarm row: drag handle, time+label+repeat, toggle.
- * Swipe-left to delete with undo toast. Desktop-optimized layout.
+ * Right-click context menu for Edit, Duplicate, Delete. Swipe-left to delete on touch.
  */
 
-import { GripVertical } from "lucide-react";
+import { GripVertical, Pencil, Copy, Trash2 } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useTranslation } from "react-i18next";
 import { Switch } from "@/components/ui/switch";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import type { Alarm, AlarmGroup } from "@/types/alarm";
 import { RepeatType } from "@/types/alarm";
 import { useAlarmStore } from "@/stores/alarm-store";
@@ -55,6 +62,7 @@ interface AlarmCardProps {
 
 const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
   const toggleAlarm = useAlarmStore((s) => s.toggleAlarm);
+  const duplicateAlarm = useAlarmStore((s) => s.duplicateAlarm);
   const { t } = useTranslation();
 
   const {
@@ -108,57 +116,86 @@ const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
   })();
 
   return (
-    <div
-      ref={setNodeRef}
-      style={{
-        ...style,
-        transform:
-          swipeX !== 0
-            ? `translateX(${swipeX}px)`
-            : CSS.Transform.toString(transform),
-      }}
-      className={`relative flex items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-accent/30 ${
-        alarm.IsEnabled ? "" : "opacity-50"
-      }`}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      {/* Drag handle */}
-      <button
-        {...attributes}
-        {...listeners}
-        className="touch-none text-muted-foreground/50 hover:text-muted-foreground"
-        aria-label={t("alarm.dragToReorder")}
-      >
-        <GripVertical className="h-4 w-4" />
-      </button>
+    <ContextMenu>
+      <ContextMenuTrigger asChild>
+        <div
+          ref={setNodeRef}
+          style={{
+            ...style,
+            transform:
+              swipeX !== 0
+                ? `translateX(${swipeX}px)`
+                : CSS.Transform.toString(transform),
+          }}
+          className={`relative flex items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-accent/30 ${
+            alarm.IsEnabled ? "" : "opacity-50"
+          }`}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Drag handle */}
+          <button
+            {...attributes}
+            {...listeners}
+            className="touch-none text-muted-foreground/50 hover:text-muted-foreground"
+            aria-label={t("alarm.dragToReorder")}
+          >
+            <GripVertical className="h-4 w-4" />
+          </button>
 
-      {/* Content — clickable to edit */}
-      <button
-        className="flex flex-1 items-center gap-3 text-left"
-        onClick={() => !swipingRef.current && onEdit(alarm)}
-      >
-        <span className="text-2xl font-heading font-semibold leading-tight text-foreground tabular-nums">
-          {displayTime}
-        </span>
-        <div className="flex flex-col gap-0">
-          <span className="text-sm font-body text-foreground">
-            {alarm.Label || t("alarmForm.once")}
-          </span>
-          <span className="text-xs text-muted-foreground font-body">
-            {formatRepeat(alarm, t)}
-          </span>
+          {/* Content — clickable to edit */}
+          <button
+            className="flex flex-1 items-center gap-3 text-left"
+            onClick={() => !swipingRef.current && onEdit(alarm)}
+          >
+            <span className="text-2xl font-heading font-semibold leading-tight text-foreground tabular-nums">
+              {displayTime}
+            </span>
+            <div className="flex flex-col gap-0">
+              <span className="text-sm font-body text-foreground">
+                {alarm.Label || t("alarmForm.once")}
+              </span>
+              <span className="text-xs text-muted-foreground font-body">
+                {formatRepeat(alarm, t)}
+              </span>
+            </div>
+          </button>
+
+          {/* Toggle */}
+          <Switch
+            checked={alarm.IsEnabled}
+            onCheckedChange={(checked) => toggleAlarm(alarm.AlarmId, checked)}
+            aria-label={`Toggle ${alarm.Label || "alarm"}`}
+          />
         </div>
-      </button>
+      </ContextMenuTrigger>
 
-      {/* Toggle */}
-      <Switch
-        checked={alarm.IsEnabled}
-        onCheckedChange={(checked) => toggleAlarm(alarm.AlarmId, checked)}
-        aria-label={`Toggle ${alarm.Label || "alarm"}`}
-      />
-    </div>
+      <ContextMenuContent className="w-44">
+        <ContextMenuItem
+          onClick={() => onEdit(alarm)}
+          className="flex items-center gap-2"
+        >
+          <Pencil className="h-3.5 w-3.5" />
+          {t("alarm.edit", "Edit")}
+        </ContextMenuItem>
+        <ContextMenuItem
+          onClick={() => duplicateAlarm(alarm.AlarmId)}
+          className="flex items-center gap-2"
+        >
+          <Copy className="h-3.5 w-3.5" />
+          {t("alarm.duplicate", "Duplicate")}
+        </ContextMenuItem>
+        <ContextMenuSeparator />
+        <ContextMenuItem
+          onClick={() => onDelete(alarm)}
+          className="flex items-center gap-2 text-destructive focus:text-destructive"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          {t("alarm.delete", "Delete")}
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 };
 
