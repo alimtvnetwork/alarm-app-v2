@@ -1,6 +1,6 @@
 /**
- * AlarmCard — Single alarm item: time on left, label/repeat on right, toggle far right.
- * Swipe-left to delete with undo toast. 24px card padding per design spec.
+ * AlarmCard — Compact alarm row: drag handle, time+label+repeat, toggle.
+ * Swipe-left to delete with undo toast. Desktop-optimized layout.
  */
 
 import { GripVertical } from "lucide-react";
@@ -112,12 +112,13 @@ const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
       ref={setNodeRef}
       style={{
         ...style,
-        transform: swipeX !== 0
-          ? `translateX(${swipeX}px)`
-          : CSS.Transform.toString(transform),
+        transform:
+          swipeX !== 0
+            ? `translateX(${swipeX}px)`
+            : CSS.Transform.toString(transform),
       }}
-      className={`relative flex items-center gap-3 rounded-xl bg-card p-6 transition-colors ${
-        alarm.IsEnabled ? "" : "opacity-60"
+      className={`relative flex items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-accent/30 ${
+        alarm.IsEnabled ? "" : "opacity-50"
       }`}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -127,32 +128,28 @@ const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
       <button
         {...attributes}
         {...listeners}
-        className="touch-none text-muted-foreground hover:text-foreground"
+        className="touch-none text-muted-foreground/50 hover:text-muted-foreground"
         aria-label={t("alarm.dragToReorder")}
       >
-        <GripVertical className="h-5 w-5" />
+        <GripVertical className="h-4 w-4" />
       </button>
-
-      {/* Group color indicator */}
-      {group && (
-        <div
-          className="h-8 w-1 rounded-full"
-          style={{ backgroundColor: group.Color }}
-        />
-      )}
 
       {/* Content — clickable to edit */}
       <button
-        className="flex flex-1 flex-col items-start gap-0.5 text-left"
+        className="flex flex-1 items-center gap-3 text-left"
         onClick={() => !swipingRef.current && onEdit(alarm)}
       >
-        <span className="text-2xl font-heading font-semibold leading-tight text-foreground">
+        <span className="text-2xl font-heading font-semibold leading-tight text-foreground tabular-nums">
           {displayTime}
         </span>
-        <span className="text-xs text-muted-foreground font-body">
-          {alarm.Label && `${alarm.Label} · `}
-          {formatRepeat(alarm, t)}
-        </span>
+        <div className="flex flex-col gap-0">
+          <span className="text-sm font-body text-foreground">
+            {alarm.Label || t("alarmForm.once")}
+          </span>
+          <span className="text-xs text-muted-foreground font-body">
+            {formatRepeat(alarm, t)}
+          </span>
+        </div>
       </button>
 
       {/* Toggle */}

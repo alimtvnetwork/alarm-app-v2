@@ -1,5 +1,6 @@
 /**
- * AlarmList — Sortable list with group section headers, colored dots, and undo toast.
+ * AlarmList — Sortable list with group headers, colored dots, and undo toast.
+ * Compact layout matching desktop alarm manager design.
  */
 
 import {
@@ -93,7 +94,6 @@ const AlarmList = ({ onEditAlarm }: AlarmListProps) => {
 
   const groupMap = new Map(groups.map((g) => [g.AlarmGroupId, g]));
 
-  // Sort: grouped alarms first (by group position), ungrouped last
   const sortedGroupKeys = Array.from(groupedAlarms.keys()).sort((a, b) => {
     if (a === null) return 1;
     if (b === null) return -1;
@@ -112,21 +112,21 @@ const AlarmList = ({ onEditAlarm }: AlarmListProps) => {
         items={alarms.map((a) => a.AlarmId)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
           {sortedGroupKeys.map((groupId) => {
             const group = groupId ? groupMap.get(groupId) : undefined;
             const groupAlarms = groupedAlarms.get(groupId) ?? [];
 
             return (
-              <div key={groupId ?? "ungrouped"} className="flex flex-col gap-2">
+              <div key={groupId ?? "ungrouped"} className="flex flex-col">
                 {/* Group section header */}
                 {group && (
-                  <div className="flex items-center gap-2 px-1 pt-1">
+                  <div className="flex items-center gap-2 px-3 py-2">
                     <div
-                      className="h-2.5 w-2.5 rounded-full"
+                      className="h-2 w-2 rounded-full"
                       style={{ backgroundColor: group.Color }}
                     />
-                    <span className="text-xs font-heading font-semibold text-muted-foreground uppercase tracking-wider">
+                    <span className="text-xs font-body font-medium text-muted-foreground">
                       {group.Name}
                     </span>
                   </div>
