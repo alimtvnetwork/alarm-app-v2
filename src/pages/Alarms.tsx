@@ -66,6 +66,10 @@ const Alarms = () => {
         </div>
       </div>
 
+      <div className="mt-4">
+        <AlarmTestButtons />
+      </div>
+
       <AlarmForm
         alarm={editingAlarm}
         isOpen={isFormOpen}
@@ -74,8 +78,6 @@ const Alarms = () => {
           setEditingAlarm(null);
         }}
       />
-
-      <AlarmTestButtons />
 
       {import.meta.env.DEV && <AlarmDebugPanel />}
     </div>
