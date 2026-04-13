@@ -16,17 +16,17 @@ interface FlipSegmentProps {
 
 const FlipSegment = ({ value, label }: FlipSegmentProps) => (
   <div className="flex flex-col items-center gap-1">
-    <span className="text-5xl font-heading font-light tracking-wide text-background leading-none tabular-nums">
+    <span className="text-5xl font-heading font-light tracking-wide text-flip-clock-text leading-none tabular-nums">
       {value}
     </span>
-    <span className="text-[0.6rem] font-body font-medium tracking-[0.2em] uppercase text-background/40">
+    <span className="text-[0.6rem] font-body font-medium tracking-[0.2em] uppercase text-flip-clock-text/40">
       {label}
     </span>
   </div>
 );
 
 const Colon = () => (
-  <span className="text-3xl font-heading font-light text-background/25 leading-none mb-4">
+  <span className="text-3xl font-heading font-light text-flip-clock-text/25 leading-none mb-4">
     :
   </span>
 );
@@ -54,7 +54,7 @@ const DigitalTime = () => {
   return (
     <div className="flex flex-col items-center gap-3 w-full">
       {/* Flip-clock card */}
-      <div className="relative w-full max-w-sm rounded-2xl bg-foreground px-8 py-7 shadow-lg">
+      <div className="relative w-full max-w-sm rounded-2xl bg-flip-clock-bg px-8 py-7 shadow-lg">
         <div className="flex items-center justify-center gap-6">
           <FlipSegment value={displayHour} label={t("clock.hoursLabel", "HOURS")} />
           <Colon />
@@ -64,7 +64,7 @@ const DigitalTime = () => {
         {/* AM/PM badge */}
         {period && (
           <div className="absolute top-3 right-3 rounded-lg bg-primary px-2.5 py-1.5">
-            <span className="text-xs font-heading font-semibold tracking-wider text-background">
+            <span className="text-xs font-heading font-semibold tracking-wider text-flip-clock-text">
               {period}
             </span>
           </div>

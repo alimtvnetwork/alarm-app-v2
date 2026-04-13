@@ -72,6 +72,10 @@ export default {
           hand: "hsl(var(--clock-hand))",
           tick: "hsl(var(--clock-tick))",
         },
+        "flip-clock": {
+          bg: "hsl(var(--flip-clock-bg))",
+          text: "hsl(var(--flip-clock-text))",
+        },
         alarm: {
           active: "hsl(var(--alarm-active))",
           inactive: "hsl(var(--alarm-inactive))",
