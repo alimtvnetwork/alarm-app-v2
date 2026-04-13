@@ -41,6 +41,8 @@
     "gentleChime": "柔和铃声",
     "birds": "鸟鸣",
     "digitalPulse": "电子脉冲",
+    "playPreview": "预览铃声",
+    "stopPreview": "停止预览",
     "gradualVolume": "渐进音量",
     "snoozeMin": "贪睡（分钟）",
     "maxSnoozes": "最大贪睡次数",
