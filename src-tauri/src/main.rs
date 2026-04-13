@@ -56,8 +56,16 @@ fn main() {
             // Step 5: Load settings
             let settings = db::load_settings(&conn);
 
-            // Step 6: Parallel init (logging + tray)
+            // Step 6a: Init logging
             init_logging(&app_dir);
+
+            // Step 6b: Configure platform audio session
+            #[cfg(target_os = "macos")]
+            {
+                if let Err(e) = alarm_app::audio::platform_macos::configure_audio_session() {
+                    tracing::warn!(error = %e, "macOS audio session config failed (non-fatal)");
+                }
+            }
 
             tracing::info!(
                 db_path = %db_path.display(),

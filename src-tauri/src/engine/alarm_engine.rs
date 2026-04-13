@@ -158,10 +158,14 @@ async fn poll_due_alarms(
             tracing::warn!(alarm_id = %alarm.alarm_id, "Alarm missed (>{MISSED_ALARM_GRACE_SECS}s late)");
             log_alarm_event(&conn, &alarm.alarm_id, AlarmEventType::Missed);
             advance_next_fire_time(&conn, alarm, &tz);
-            emit_missed_alarms(app_handle, &[alarm.label.clone()]);
+            let labels = vec![if alarm.label.is_empty() { alarm.time.clone() } else { alarm.label.clone() }];
+            crate::notifications::send_missed_alarms(app_handle, &labels);
+            emit_missed_alarms(app_handle, &labels);
         } else {
             tracing::info!(alarm_id = %alarm.alarm_id, label = %alarm.label, "Firing alarm");
             log_alarm_event(&conn, &alarm.alarm_id, AlarmEventType::Fired);
+            let is_24h = load_is_24_hour(&conn);
+            crate::notifications::send_alarm_fired(app_handle, alarm, is_24h);
             emit_alarm_fired(app_handle, alarm);
             advance_next_fire_time(&conn, alarm, &tz);
         }
@@ -270,6 +274,17 @@ fn load_timezone(conn: &Connection) -> Tz {
         .unwrap_or_else(|_| "UTC".to_string());
 
     tz_str.parse::<Tz>().unwrap_or(chrono_tz::UTC)
+}
+
+/// Load the Is24Hour setting. Falls back to false.
+fn load_is_24_hour(conn: &Connection) -> bool {
+    conn.query_row(
+        "SELECT Value FROM Settings WHERE Key = 'TimeFormat'",
+        [],
+        |row| row.get::<_, String>(0),
+    )
+    .map(|v| v == "24h")
+    .unwrap_or(false)
 }
 
 // ── IPC Event Emitters ──
