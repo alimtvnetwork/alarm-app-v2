@@ -44,6 +44,13 @@ const parse12h = (time24: string) => {
   return { h12: String(h12).padStart(2, "0"), minute: String(m).padStart(2, "0"), period };
 };
 
+/** Toggle AM↔PM by adding/subtracting 12 hours */
+const togglePeriod = (time24: string): string => {
+  const [h, m] = time24.split(":").map(Number);
+  const newH = h >= 12 ? h - 12 : h + 12;
+  return `${String(newH).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+};
+
 interface AlarmFormProps {
   alarm: Alarm | null;
   isOpen: boolean;
@@ -190,27 +197,35 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
 
         <div className="flex flex-col gap-3 pt-1">
           {/* Time display — styled card with AM/PM */}
-          <button
-            type="button"
-            onClick={() => timeInputRef.current?.showPicker?.()}
-            className="relative flex items-center justify-center rounded-xl border border-border bg-secondary/50 px-4 py-3 transition-colors hover:border-primary/40"
-          >
-            <span className="text-3xl font-heading font-bold tracking-tight text-foreground">
-              {h12}:{minute}
-            </span>
-            <span className="ml-1.5 text-lg font-heading font-semibold text-muted-foreground">
+          <div className="relative flex items-center justify-center rounded-xl border border-border bg-secondary/50 px-4 py-3">
+            <button
+              type="button"
+              onClick={() => timeInputRef.current?.showPicker?.()}
+              className="flex items-center transition-colors hover:opacity-80"
+            >
+              <span className="text-3xl font-heading font-bold tracking-tight text-foreground">
+                {h12}:{minute}
+              </span>
+              <Clock className="ml-3 h-5 w-5 text-foreground/60" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setTime(togglePeriod(time))}
+              className="ml-2 rounded-lg bg-primary/20 px-2.5 py-1 text-lg font-heading font-semibold text-primary transition-colors hover:bg-primary/30"
+              aria-label={`Switch to ${period === "AM" ? "PM" : "AM"}`}
+            >
               {period}
-            </span>
-            <Clock className="absolute right-4 h-5 w-5 text-foreground/60" />
+            </button>
             <input
               ref={timeInputRef}
               type="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
               className="absolute inset-0 cursor-pointer opacity-0"
+              style={{ pointerEvents: "none" }}
               tabIndex={-1}
             />
-          </button>
+          </div>
 
           {/* Label */}
           <div className="space-y-1.5">
