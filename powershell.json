@@ -11,15 +11,16 @@
     "go": false,
     "node": true,
     "pnpm": false,
-    "rust": false,
-    "tauri": false
+    "rust": true,
+    "tauri": true
   },
   "usePnp": false,
   "pnpmStorePath": null,
   "cleanPaths": [
     "node_modules",
     "dist",
-    ".vite"
+    ".vite",
+    "src-tauri/target"
   ],
   "buildCommand": "npm run build",
   "installCommand": "npm install",
