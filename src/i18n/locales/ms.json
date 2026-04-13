@@ -68,10 +68,13 @@
     "avgChallengeTime": "Purata Masa Cabaran",
     "history": "Sejarah",
     "snoozeTrend": "Trend Tunda",
-    "dailyAlarmEvents": "Peristiwa Penggera Harian",
+    "breakdown": "Pecahan",
+    "dailyEvents": "Peristiwa Penggera Harian",
     "snoozeCountTrend": "Trend Kiraan Tunda",
+    "eventBreakdown": "Pecahan Peristiwa",
     "noData": "Tiada data lagi",
-    "noSnoozeData": "Tiada data tunda lagi"
+    "noSnoozeData": "Tiada data tunda lagi",
+    "exportCsv": "Eksport CSV"
   },
   "sleep": {
     "title": "Tidur",
