@@ -239,24 +239,42 @@ const Analytics = () => {
               {pieData.length === 0 ? (
                 <p className="py-8 text-center text-sm text-muted-foreground">{t("analytics.noData")}</p>
               ) : (
-                <ResponsiveContainer width="100%" height={220}>
+                <ResponsiveContainer width="100%" height={240}>
                   <PieChart>
                     <Pie
                       data={pieData}
                       cx="50%"
-                      cy="50%"
-                      innerRadius={50}
-                      outerRadius={80}
-                      paddingAngle={3}
+                      cy="45%"
+                      innerRadius={45}
+                      outerRadius={70}
+                      paddingAngle={4}
                       dataKey="value"
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      label={false}
                     >
                       {pieData.map((_entry, index) => (
                         <Cell key={index} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                       ))}
                     </Pie>
-                    <Legend />
-                    <Tooltip />
+                    <Legend
+                      verticalAlign="bottom"
+                      iconType="circle"
+                      iconSize={8}
+                      wrapperStyle={{ fontSize: 11, paddingTop: 8 }}
+                      formatter={(value: string, entry: any) => {
+                        const total = pieData.reduce((s, d) => s + d.value, 0);
+                        const item = pieData.find((d) => d.name === value);
+                        const pct = item && total > 0 ? Math.round((item.value / total) * 100) : 0;
+                        return <span style={{ color: "hsl(var(--muted-foreground))" }}>{value} {pct}%</span>;
+                      }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "hsl(var(--card))",
+                        border: "1px solid hsl(var(--border))",
+                        borderRadius: 8,
+                        fontSize: 12,
+                      }}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
               )}
