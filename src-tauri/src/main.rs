@@ -104,8 +104,21 @@ fn main() {
 
             tracing::info!("Wake listener started");
 
-            // Step 9: Tray update, etc. (Phase 10)
+            // Step 9: System tray
+            if let Err(e) = alarm_app::tray::setup_tray(&app_handle) {
+                tracing::warn!(error = %format!("{e}"), "Failed to set up system tray");
+            }
 
+            // Step 10: Timezone change watcher
+            let tz_pool: DbPool = Arc::new(Mutex::new(
+                Connection::open(&db_path).expect("FATAL: Failed to open tz-watcher DB connection"),
+            ));
+            alarm_app::engine::timezone_watcher::start_timezone_watcher(
+                tz_pool,
+                app_handle.clone(),
+            );
+
+            tracing::info!("Phase 10 init complete (tray + timezone watcher)");
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
