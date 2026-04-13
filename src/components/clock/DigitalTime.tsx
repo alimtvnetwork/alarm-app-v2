@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettingsStore } from "@/stores/settings-store";
 import { useAlarmStore } from "@/stores/alarm-store";
+import { getTimeParts } from "@/lib/timezone-clock";
 import type { Alarm } from "@/types/alarm";
 
 interface FlipSegmentProps {
@@ -34,6 +35,7 @@ const Colon = () => (
 const DigitalTime = () => {
   const [now, setNow] = useState(new Date());
   const is24Hour = useSettingsStore((s) => s.settings.Is24Hour);
+  const timeZone = useSettingsStore((s) => s.settings.SystemTimezone);
   const alarms = useAlarmStore((s) => s.alarms);
   const { t } = useTranslation();
 
@@ -42,9 +44,7 @@ const DigitalTime = () => {
     return () => clearInterval(id);
   }, []);
 
-  const h = now.getHours();
-  const m = now.getMinutes();
-  const s = now.getSeconds();
+  const { hours: h, minutes: m, seconds: s } = getTimeParts(now, timeZone);
 
   const displayHour = is24Hour ? String(h).padStart(2, "0") : String(h % 12 || 12).padStart(2, "0");
   const displayMin = String(m).padStart(2, "0");
@@ -78,6 +78,7 @@ const DigitalTime = () => {
       {/* Date below */}
       <p className="text-sm text-muted-foreground font-body">
         {now.toLocaleDateString("en-US", {
+          timeZone,
           weekday: "long",
           month: "long",
           day: "numeric",
