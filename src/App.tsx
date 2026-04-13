@@ -26,6 +26,7 @@ const AppInner = () => {
       <Toaster />
       <Sonner />
       <AlarmOverlay />
+      <AlarmChecker />
       <KeyboardShortcutsHelp />
       <OnboardingModal />
       <BrowserRouter>
