@@ -60,6 +60,16 @@ function applyAccentColor(hex: string): void {
   root.style.setProperty("--ring", hsl);
 }
 
+const SKIN_CLASSES = ["skin-midnight", "skin-sunrise", "skin-ocean", "skin-forest"];
+
+function applySkin(skin: string): void {
+  const root = document.documentElement;
+  SKIN_CLASSES.forEach((cls) => root.classList.remove(cls));
+  if (skin && skin !== "default") {
+    root.classList.add(`skin-${skin}`);
+  }
+}
+
 export const useSettingsStore = create<SettingsStore>((set, get) => ({
   settings: { ...DEFAULT_SETTINGS },
   isLoading: false,
@@ -71,6 +81,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
       set({ settings });
       applyThemeClass(settings.Theme);
       applyAccentColor(settings.AccentColor);
+      applySkin(settings.ThemeSkin ?? "default");
     } finally {
       set({ isLoading: false });
     }
@@ -84,6 +95,9 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
     }
     if (partial.AccentColor !== undefined) {
       applyAccentColor(partial.AccentColor);
+    }
+    if (partial.ThemeSkin !== undefined) {
+      applySkin(partial.ThemeSkin);
     }
   },
 

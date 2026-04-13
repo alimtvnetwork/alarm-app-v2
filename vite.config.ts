@@ -22,6 +22,14 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       external: [/^@tauri-apps\//],
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router-dom", "zustand"],
+          ui: ["@radix-ui/react-tooltip", "@radix-ui/react-dialog", "@radix-ui/react-select", "lucide-react"],
+          query: ["@tanstack/react-query"],
+          charts: ["recharts"],
+        },
+      },
     },
   },
 }));

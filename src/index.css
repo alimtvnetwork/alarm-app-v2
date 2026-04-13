@@ -114,6 +114,110 @@
     --sidebar-border: 20 11% 25%;
     --sidebar-ring: 30 25% 70%;
   }
+
+  /* ── Skin: Midnight ── */
+  .skin-midnight {
+    --background: 230 25% 10%;
+    --foreground: 220 20% 90%;
+    --card: 230 20% 14%;
+    --card-foreground: 220 20% 90%;
+    --popover: 230 25% 10%;
+    --popover-foreground: 220 20% 90%;
+    --primary: 220 80% 60%;
+    --primary-foreground: 230 25% 10%;
+    --secondary: 230 18% 18%;
+    --secondary-foreground: 220 20% 90%;
+    --muted: 230 15% 18%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 220 60% 50%;
+    --accent-foreground: 220 20% 95%;
+    --border: 230 15% 22%;
+    --input: 230 15% 22%;
+    --ring: 220 80% 60%;
+    --clock-face: 230 20% 14%;
+    --clock-hand: 220 20% 90%;
+    --clock-tick: 220 80% 60%;
+    --snooze: 38 80% 55%;
+    --dismiss: 142 60% 45%;
+  }
+
+  /* ── Skin: Sunrise ── */
+  .skin-sunrise {
+    --background: 25 60% 96%;
+    --foreground: 15 30% 18%;
+    --card: 25 50% 92%;
+    --card-foreground: 15 30% 18%;
+    --popover: 25 60% 96%;
+    --popover-foreground: 15 30% 18%;
+    --primary: 15 80% 55%;
+    --primary-foreground: 25 60% 96%;
+    --secondary: 30 40% 88%;
+    --secondary-foreground: 15 30% 18%;
+    --muted: 30 30% 90%;
+    --muted-foreground: 15 15% 45%;
+    --accent: 30 70% 60%;
+    --accent-foreground: 15 30% 15%;
+    --border: 30 25% 82%;
+    --input: 30 25% 82%;
+    --ring: 15 80% 55%;
+    --clock-face: 25 50% 92%;
+    --clock-hand: 15 30% 18%;
+    --clock-tick: 15 80% 55%;
+    --snooze: 38 92% 50%;
+    --dismiss: 142 72% 40%;
+  }
+
+  /* ── Skin: Ocean ── */
+  .skin-ocean {
+    --background: 200 30% 12%;
+    --foreground: 195 20% 88%;
+    --card: 200 25% 16%;
+    --card-foreground: 195 20% 88%;
+    --popover: 200 30% 12%;
+    --popover-foreground: 195 20% 88%;
+    --primary: 185 70% 45%;
+    --primary-foreground: 200 30% 10%;
+    --secondary: 200 20% 20%;
+    --secondary-foreground: 195 20% 88%;
+    --muted: 200 18% 20%;
+    --muted-foreground: 195 12% 55%;
+    --accent: 185 50% 40%;
+    --accent-foreground: 195 20% 92%;
+    --border: 200 18% 24%;
+    --input: 200 18% 24%;
+    --ring: 185 70% 45%;
+    --clock-face: 200 25% 16%;
+    --clock-hand: 195 20% 88%;
+    --clock-tick: 185 70% 45%;
+    --snooze: 38 80% 55%;
+    --dismiss: 160 60% 45%;
+  }
+
+  /* ── Skin: Forest ── */
+  .skin-forest {
+    --background: 150 20% 10%;
+    --foreground: 140 15% 88%;
+    --card: 150 18% 14%;
+    --card-foreground: 140 15% 88%;
+    --popover: 150 20% 10%;
+    --popover-foreground: 140 15% 88%;
+    --primary: 145 55% 42%;
+    --primary-foreground: 150 20% 8%;
+    --secondary: 150 15% 18%;
+    --secondary-foreground: 140 15% 88%;
+    --muted: 150 12% 18%;
+    --muted-foreground: 140 8% 52%;
+    --accent: 145 40% 35%;
+    --accent-foreground: 140 15% 92%;
+    --border: 150 12% 22%;
+    --input: 150 12% 22%;
+    --ring: 145 55% 42%;
+    --clock-face: 150 18% 14%;
+    --clock-hand: 140 15% 88%;
+    --clock-tick: 145 55% 42%;
+    --snooze: 38 80% 55%;
+    --dismiss: 145 55% 42%;
+  }
 }
 
 @layer base {

@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -11,15 +12,25 @@ import OnboardingModal from "./components/onboarding/OnboardingModal";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useTauriEvents } from "./hooks/useTauriEvents";
 import { useLanguageSync } from "./hooks/useLanguageSync";
+
+// Eagerly loaded (P0 — always visible)
 import Index from "./pages/Index";
 import Alarms from "./pages/Alarms";
-import Settings from "./pages/Settings";
-import Analytics from "./pages/Analytics";
-import Sleep from "./pages/Sleep";
-import Personalization from "./pages/Personalization";
-import NotFound from "./pages/NotFound";
+
+// Lazy loaded (P1-P2 — visited less frequently)
+const Settings = lazy(() => import("./pages/Settings"));
+const Analytics = lazy(() => import("./pages/Analytics"));
+const Sleep = lazy(() => import("./pages/Sleep"));
+const Personalization = lazy(() => import("./pages/Personalization"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
+
+const LazyFallback = () => (
+  <div className="flex h-40 items-center justify-center">
+    <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+  </div>
+);
 
 const AppInner = () => {
   useKeyboardShortcuts();
@@ -34,17 +45,19 @@ const AppInner = () => {
       <KeyboardShortcutsHelp />
       <OnboardingModal />
       <BrowserRouter>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route path="/" element={<Index />} />
-            <Route path="/alarms" element={<Alarms />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/sleep" element={<Sleep />} />
-            <Route path="/personalization" element={<Personalization />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<LazyFallback />}>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<Index />} />
+              <Route path="/alarms" element={<Alarms />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/sleep" element={<Sleep />} />
+              <Route path="/personalization" element={<Personalization />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </>
   );
