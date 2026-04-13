@@ -1,0 +1,78 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
+import type { Alarm } from "@/types/alarm";
+import { DEFAULT_REPEAT_PATTERN, RepeatType } from "@/types/alarm";
+import { DEFAULT_ALARM_TIMEZONE, normalizeAlarmTimezone } from "@/lib/alarm-timezone";
+import { computeNextFireTime } from "@/lib/next-fire-time";
+
+function buildAlarm(partial: Partial<Alarm>): Alarm {
+  return {
+    AlarmId: "alarm-1",
+    Time: "08:01",
+    Date: null,
+    Label: "Test",
+    IsEnabled: true,
+    IsPreviousEnabled: null,
+    Repeat: { ...DEFAULT_REPEAT_PATTERN, Type: RepeatType.Daily },
+    GroupId: null,
+    SnoozeDurationMin: 5,
+    MaxSnoozeCount: 3,
+    SoundFile: "classic-beep",
+    IsVibrationEnabled: false,
+    IsGradualVolume: false,
+    GradualVolumeDurationSec: 30,
+    AutoDismissMin: 15,
+    ChallengeType: null,
+    ChallengeDifficulty: null,
+    ChallengeShakeCount: null,
+    ChallengeStepCount: null,
+    NextFireTime: null,
+    DeletedAt: null,
+    CreatedAt: "2026-04-13T00:00:00.000Z",
+    UpdatedAt: "2026-04-13T00:00:00.000Z",
+    ...partial,
+  };
+}
+
+describe("computeNextFireTime", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("computes the next daily alarm in Malaysia time", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-04-13T00:00:00.000Z"));
+
+    const nextFireTime = computeNextFireTime(buildAlarm({}), DEFAULT_ALARM_TIMEZONE);
+
+    expect(nextFireTime).toBe("2026-04-13T00:01:00.000Z");
+  });
+
+  it("rolls the next daily alarm to tomorrow after the local time passes", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-04-13T00:02:00.000Z"));
+
+    const nextFireTime = computeNextFireTime(buildAlarm({}), DEFAULT_ALARM_TIMEZONE);
+
+    expect(nextFireTime).toBe("2026-04-14T00:01:00.000Z");
+  });
+
+  it("preserves explicit once dates in Malaysia time", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-04-12T16:00:00.000Z"));
+
+    const nextFireTime = computeNextFireTime(
+      buildAlarm({
+        Time: "07:30",
+        Date: "2026-04-13",
+        Repeat: { ...DEFAULT_REPEAT_PATTERN, Type: RepeatType.Once },
+      }),
+      DEFAULT_ALARM_TIMEZONE,
+    );
+
+    expect(nextFireTime).toBe("2026-04-12T23:30:00.000Z");
+  });
+
+  it("normalizes legacy UTC settings to Malaysia time", () => {
+    expect(normalizeAlarmTimezone("UTC")).toBe(DEFAULT_ALARM_TIMEZONE);
+  });
+});

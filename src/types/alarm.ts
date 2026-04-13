@@ -244,7 +244,7 @@ export const DEFAULT_SETTINGS: Settings = {
   Language: "en",
   DefaultSound: "classic-beep",
   ExportWarningDismissed: false,
-  SystemTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  SystemTimezone: "Asia/Kuala_Lumpur",
   BedtimeEnabled: false,
   BedtimeTime: "22:30",
   BedtimeReminderMinBefore: 30,

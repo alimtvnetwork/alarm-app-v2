@@ -49,7 +49,10 @@ const AlarmChecker = () => {
 
           // Advance NextFireTime for repeating alarms
           const updated = { ...alarm };
-          updated.NextFireTime = computeNextFireTime(updated);
+          updated.NextFireTime = computeNextFireTime(
+            updated,
+            ipc.getSettings().SystemTimezone,
+          );
           if (!updated.NextFireTime) {
             updated.IsEnabled = false;
           }
