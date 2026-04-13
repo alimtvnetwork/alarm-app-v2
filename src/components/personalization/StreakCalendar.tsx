@@ -34,7 +34,7 @@ const StreakCalendar = () => {
   const history = useMemo(loadDismissHistory, []);
 
   const today = new Date();
-  const todayStr = today.toISOString().slice(0, 10);
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
@@ -50,18 +50,19 @@ const StreakCalendar = () => {
 
   const cells: Array<{ day: number; key: string; isCurrentMonth: boolean; isToday: boolean; hasDismissal: boolean }> = [];
 
+  const toLocalKey = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
   // Previous month trailing days
   for (let i = firstDay - 1; i >= 0; i--) {
     const d = prevMonthDays - i;
-    const dateObj = new Date(year, month - 1, d);
-    const key = dateObj.toISOString().slice(0, 10);
+    const key = toLocalKey(new Date(year, month - 1, d));
     cells.push({ day: d, key, isCurrentMonth: false, isToday: false, hasDismissal: (history[key] ?? 0) > 0 });
   }
 
   // Current month days
   for (let d = 1; d <= daysInMonth; d++) {
-    const dateObj = new Date(year, month, d);
-    const key = dateObj.toISOString().slice(0, 10);
+    const key = toLocalKey(new Date(year, month, d));
     cells.push({ day: d, key, isCurrentMonth: true, isToday: key === todayStr, hasDismissal: (history[key] ?? 0) > 0 });
   }
 
@@ -69,8 +70,7 @@ const StreakCalendar = () => {
   const remaining = 7 - (cells.length % 7);
   if (remaining < 7) {
     for (let d = 1; d <= remaining; d++) {
-      const dateObj = new Date(year, month + 1, d);
-      const key = dateObj.toISOString().slice(0, 10);
+      const key = toLocalKey(new Date(year, month + 1, d));
       cells.push({ day: d, key, isCurrentMonth: false, isToday: false, hasDismissal: (history[key] ?? 0) > 0 });
     }
   }
@@ -119,15 +119,15 @@ const StreakCalendar = () => {
                 key={cell.key}
                 onClick={() => setSelectedDate(cell.key === selectedDate ? null : cell.key)}
                 className={`relative flex items-center justify-center aspect-square text-sm font-body transition-colors rounded-full
-                  ${cell.isCurrentMonth ? "text-foreground" : "text-muted-foreground/40"}
-                  ${cell.isToday && !isSelected ? "bg-foreground text-background font-semibold" : ""}
-                  ${isSelected ? "bg-secondary font-semibold" : ""}
-                  ${!cell.isToday && !isSelected ? "hover:bg-secondary/60" : ""}
+                  ${!cell.isCurrentMonth ? "text-muted-foreground/40" : ""}
+                  ${cell.isToday ? "bg-foreground text-card font-semibold" : ""}
+                  ${isSelected && !cell.isToday ? "bg-secondary font-semibold text-foreground" : ""}
+                  ${cell.isCurrentMonth && !cell.isToday && !isSelected ? "text-foreground hover:bg-secondary/60" : ""}
                 `}
               >
                 {cell.day}
                 {cell.hasDismissal && (
-                  <span className={`absolute bottom-1 h-1 w-1 rounded-full ${cell.isToday ? "bg-background/60" : "bg-primary"}`} />
+                  <span className={`absolute bottom-1 h-1 w-1 rounded-full ${cell.isToday ? "bg-card/60" : "bg-primary"}`} />
                 )}
               </button>
             );
