@@ -1,4 +1,4 @@
-import { Clock, BarChart3, Moon, Palette, Settings } from "lucide-react";
+import { Clock, Bell, BarChart3, Moon, Palette, Settings } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -7,6 +7,7 @@ const BottomNav = () => {
 
   const navItems = [
     { to: "/", icon: Clock, label: t("nav.clock") },
+    { to: "/alarms", icon: Bell, label: t("nav.alarms") },
     { to: "/analytics", icon: BarChart3, label: t("nav.analytics") },
     { to: "/sleep", icon: Moon, label: t("nav.sleep") },
     { to: "/personalization", icon: Palette, label: t("nav.style") },
@@ -22,14 +23,14 @@ const BottomNav = () => {
             to={to}
             end={to === "/"}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-1 px-3 py-1 text-[0.65rem] font-body transition-colors ${
+              `flex flex-col items-center gap-1 px-2 py-1 text-[0.6rem] font-body transition-colors ${
                 isActive
                   ? "text-primary"
                   : "text-muted-foreground/70 hover:text-foreground"
               }`
             }
           >
-            <Icon className="h-[22px] w-[22px] stroke-[1.5]" />
+            <Icon className="h-[20px] w-[20px] stroke-[1.5]" />
             <span className="font-medium">{label}</span>
           </NavLink>
         ))}
