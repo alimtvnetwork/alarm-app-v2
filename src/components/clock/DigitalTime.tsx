@@ -16,17 +16,17 @@ interface FlipSegmentProps {
 
 const FlipSegment = ({ value, label }: FlipSegmentProps) => (
   <div className="flex flex-col items-center gap-1">
-    <span className="text-5xl font-heading font-light tracking-wide text-primary-foreground leading-none tabular-nums">
+    <span className="text-5xl font-heading font-light tracking-wide text-background leading-none tabular-nums">
       {value}
     </span>
-    <span className="text-[0.6rem] font-body font-medium tracking-[0.2em] uppercase text-primary-foreground/40">
+    <span className="text-[0.6rem] font-body font-medium tracking-[0.2em] uppercase text-background/40">
       {label}
     </span>
   </div>
 );
 
 const Colon = () => (
-  <span className="text-3xl font-heading font-light text-primary-foreground/25 leading-none mb-4">
+  <span className="text-3xl font-heading font-light text-background/25 leading-none mb-4">
     :
   </span>
 );
@@ -63,8 +63,8 @@ const DigitalTime = () => {
 
         {/* AM/PM badge */}
         {period && (
-          <div className="absolute top-3 right-3 rounded-lg bg-primary px-2.5 py-1">
-            <span className="text-xs font-heading font-semibold tracking-wider text-primary-foreground">
+          <div className="absolute top-3 right-3 rounded-lg bg-primary px-2.5 py-1.5">
+            <span className="text-xs font-heading font-semibold tracking-wider text-background">
               {period}
             </span>
           </div>
