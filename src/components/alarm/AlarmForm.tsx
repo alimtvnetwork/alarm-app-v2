@@ -6,6 +6,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Play, Square } from "lucide-react";
 import { playAlarmSound } from "@/lib/alarm-audio";
+import ScrollTimePicker from "@/components/alarm/ScrollTimePicker";
 import { useTranslation } from "react-i18next";
 import {
   Sheet,
@@ -24,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Clock, RotateCcw, CalendarClock, CalendarDays, X } from "lucide-react";
+import { RotateCcw, CalendarClock, X } from "lucide-react";
 import type { Alarm } from "@/types/alarm";
 import {
   RepeatType,
@@ -36,20 +37,6 @@ import { useAlarmStore } from "@/stores/alarm-store";
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 const DAY_FULL = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-/** Convert 24h "HH:MM" to { h12, minute, period } */
-const parse12h = (time24: string) => {
-  const [h, m] = time24.split(":").map(Number);
-  const period = h >= 12 ? "PM" : "AM";
-  const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
-  return { h12: String(h12).padStart(2, "0"), minute: String(m).padStart(2, "0"), period };
-};
-
-/** Toggle AM↔PM by adding/subtracting 12 hours */
-const togglePeriod = (time24: string): string => {
-  const [h, m] = time24.split(":").map(Number);
-  const newH = h >= 12 ? h - 12 : h + 12;
-  return `${String(newH).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-};
 
 interface AlarmFormProps {
   alarm: Alarm | null;
@@ -62,7 +49,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
   const updateAlarm = useAlarmStore((s) => s.updateAlarm);
   const isEditing = alarm !== null;
   const { t } = useTranslation();
-  const timeInputRef = useRef<HTMLInputElement>(null);
+  
 
   const [time, setTime] = useState("07:00");
   const [label, setLabel] = useState("");
@@ -178,7 +165,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
     onClose();
   };
 
-  const { h12, minute, period } = parse12h(time);
+  
 
   const repeatOptions = [
     { value: RepeatType.Once, label: t("alarmForm.once"), icon: X },
@@ -196,29 +183,8 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
         </SheetHeader>
 
         <div className="flex flex-col gap-3 pt-1">
-          {/* Time display — styled card with AM/PM */}
-          <div className="relative flex items-center justify-center rounded-xl border border-border bg-secondary/50 px-4 py-3">
-            <span className="text-3xl font-heading font-bold tracking-tight text-foreground pointer-events-none">
-              {h12}:{minute}
-            </span>
-            <Clock className="ml-3 h-5 w-5 text-foreground/60 pointer-events-none" />
-            <button
-              type="button"
-              onClick={() => setTime(togglePeriod(time))}
-              className="relative z-10 ml-2 rounded-lg bg-primary/20 px-2.5 py-1 text-lg font-heading font-semibold text-primary transition-colors hover:bg-primary/30"
-              aria-label={`Switch to ${period === "AM" ? "PM" : "AM"}`}
-            >
-              {period}
-            </button>
-            <input
-              ref={timeInputRef}
-              type="time"
-              value={time}
-              onChange={(e) => e.target.value && setTime(e.target.value)}
-              className="absolute inset-0 z-[1] h-full w-full cursor-pointer opacity-0"
-              aria-label="Select time"
-            />
-          </div>
+          {/* Scroll wheel time picker */}
+          <ScrollTimePicker value={time} onChange={setTime} />
 
           {/* Label */}
           <div className="space-y-1.5">
