@@ -1,5 +1,5 @@
 /**
- * Analytics Page — Alarm history charts, snooze trends, streak calendar, CSV export.
+ * Analytics Page — Alarm history charts, snooze trends, dismiss ratio, streak, CSV export.
  * Uses recharts + mock event data from localStorage.
  */
 
@@ -9,11 +9,15 @@ import {
   Bar,
   LineChart,
   Line,
+  PieChart,
+  Pie,
+  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -49,6 +53,9 @@ function useDerivedAnalytics() {
 
     const totalFired = events.filter((e) => e.Type === AlarmEventType.Fired).length;
     const totalSnoozed = events.filter((e) => e.Type === AlarmEventType.Snoozed).length;
+    const totalDismissed = events.filter((e) => e.Type === AlarmEventType.Dismissed).length;
+    const totalMissed = events.filter((e) => e.Type === AlarmEventType.Missed).length;
+
     const avgSolveTime = (() => {
       const solved = events.filter((e) => e.ChallengeSolveTimeSec !== null);
       if (solved.length === 0) return 0;
@@ -73,9 +80,23 @@ function useDerivedAnalytics() {
       }
     }
 
-    return { dailyData, snoozeTrend, totalFired, totalSnoozed, avgSolveTime, streak };
+    const pieData = [
+      { name: "Fired", value: totalFired },
+      { name: "Snoozed", value: totalSnoozed },
+      { name: "Dismissed", value: totalDismissed },
+      { name: "Missed", value: totalMissed },
+    ].filter((d) => d.value > 0);
+
+    return { dailyData, snoozeTrend, totalFired, totalSnoozed, avgSolveTime, streak, pieData };
   }, [events]);
 }
+
+const PIE_COLORS = [
+  "hsl(var(--primary))",
+  "hsl(var(--snooze))",
+  "hsl(var(--dismiss))",
+  "hsl(var(--destructive))",
+];
 
 const StatCard = ({ label, value }: { label: string; value: string | number }) => (
   <Card>
@@ -88,7 +109,7 @@ const StatCard = ({ label, value }: { label: string; value: string | number }) =
 
 const Analytics = () => {
   const { t } = useTranslation();
-  const { dailyData, snoozeTrend, totalFired, totalSnoozed, avgSolveTime, streak } =
+  const { dailyData, snoozeTrend, totalFired, totalSnoozed, avgSolveTime, streak, pieData } =
     useDerivedAnalytics();
 
   const exportCsv = useCallback(() => {
@@ -111,7 +132,7 @@ const Analytics = () => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-heading font-bold">Analytics</h1>
+        <h1 className="text-xl font-heading font-bold">{t("analytics.title")}</h1>
         <Button variant="outline" size="sm" onClick={exportCsv} className="gap-1.5">
           <Download className="h-4 w-4" />
           {t("analytics.exportCsv")}
@@ -119,15 +140,15 @@ const Analytics = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-2">
-        <StatCard label="Total Fired" value={totalFired} />
-        <StatCard label="Snoozed" value={totalSnoozed} />
-        <StatCard label="Streak" value={`${streak}d`} />
+        <StatCard label={t("analytics.totalFired")} value={totalFired} />
+        <StatCard label={t("analytics.snoozed")} value={totalSnoozed} />
+        <StatCard label={t("analytics.streak")} value={`${streak}d`} />
       </div>
 
       {avgSolveTime > 0 && (
         <Card>
           <CardContent className="flex items-center justify-between p-4">
-            <span className="text-sm text-muted-foreground font-body">Avg Challenge Time</span>
+            <span className="text-sm text-muted-foreground font-body">{t("analytics.avgChallengeTime")}</span>
             <span className="font-heading font-semibold">{avgSolveTime.toFixed(1)}s</span>
           </CardContent>
         </Card>
@@ -135,18 +156,19 @@ const Analytics = () => {
 
       <Tabs defaultValue="history">
         <TabsList className="w-full">
-          <TabsTrigger value="history" className="flex-1">History</TabsTrigger>
-          <TabsTrigger value="snooze" className="flex-1">Snooze Trend</TabsTrigger>
+          <TabsTrigger value="history" className="flex-1">{t("analytics.history")}</TabsTrigger>
+          <TabsTrigger value="snooze" className="flex-1">{t("analytics.snoozeTrend")}</TabsTrigger>
+          <TabsTrigger value="breakdown" className="flex-1">{t("analytics.breakdown")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="history">
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-heading">Daily Alarm Events</CardTitle>
+              <CardTitle className="text-sm font-heading">{t("analytics.dailyEvents")}</CardTitle>
             </CardHeader>
             <CardContent>
               {dailyData.length === 0 ? (
-                <p className="py-8 text-center text-sm text-muted-foreground">No data yet</p>
+                <p className="py-8 text-center text-sm text-muted-foreground">{t("analytics.noData")}</p>
               ) : (
                 <ResponsiveContainer width="100%" height={200}>
                   <BarChart data={dailyData}>
@@ -175,11 +197,11 @@ const Analytics = () => {
         <TabsContent value="snooze">
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-heading">Snooze Count Trend</CardTitle>
+              <CardTitle className="text-sm font-heading">{t("analytics.snoozeCountTrend")}</CardTitle>
             </CardHeader>
             <CardContent>
               {snoozeTrend.length === 0 ? (
-                <p className="py-8 text-center text-sm text-muted-foreground">No snooze data yet</p>
+                <p className="py-8 text-center text-sm text-muted-foreground">{t("analytics.noSnoozeData")}</p>
               ) : (
                 <ResponsiveContainer width="100%" height={200}>
                   <LineChart data={snoozeTrend}>
@@ -202,6 +224,40 @@ const Analytics = () => {
                       dot={{ fill: "hsl(var(--snooze))", r: 4 }}
                     />
                   </LineChart>
+                </ResponsiveContainer>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="breakdown">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm font-heading">{t("analytics.eventBreakdown")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {pieData.length === 0 ? (
+                <p className="py-8 text-center text-sm text-muted-foreground">{t("analytics.noData")}</p>
+              ) : (
+                <ResponsiveContainer width="100%" height={220}>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={80}
+                      paddingAngle={3}
+                      dataKey="value"
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {pieData.map((_entry, index) => (
+                        <Cell key={index} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Legend />
+                    <Tooltip />
+                  </PieChart>
                 </ResponsiveContainer>
               )}
             </CardContent>

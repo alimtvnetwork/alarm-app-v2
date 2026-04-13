@@ -68,10 +68,13 @@
     "avgChallengeTime": "Avg Challenge Time",
     "history": "History",
     "snoozeTrend": "Snooze Trend",
-    "dailyAlarmEvents": "Daily Alarm Events",
+    "breakdown": "Breakdown",
+    "dailyEvents": "Daily Alarm Events",
     "snoozeCountTrend": "Snooze Count Trend",
+    "eventBreakdown": "Event Breakdown",
     "noData": "No data yet",
-    "noSnoozeData": "No snooze data yet"
+    "noSnoozeData": "No snooze data yet",
+    "exportCsv": "Export CSV"
   },
   "sleep": {
     "title": "Sleep",
@@ -179,9 +182,6 @@
     "dayStreak": "day streak",
     "less": "Less",
     "more": "More"
-  },
-  "analytics": {
-    "exportCsv": "Export CSV"
   },
   "challenge": {
     "typingTitle": "Type to Dismiss",
