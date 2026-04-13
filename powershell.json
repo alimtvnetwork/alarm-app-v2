@@ -1,0 +1,40 @@
+{
+  "projectName": "Alarm App",
+  "rootDir": ".",
+  "backendDir": null,
+  "frontendDir": ".",
+  "distDir": "dist",
+  "targetDir": null,
+  "dataDir": null,
+  "ports": [8080],
+  "prerequisites": {
+    "go": false,
+    "node": true,
+    "pnpm": false,
+    "rust": false,
+    "tauri": false
+  },
+  "usePnp": false,
+  "pnpmStorePath": null,
+  "cleanPaths": [
+    "node_modules",
+    "dist",
+    ".vite"
+  ],
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "runCommand": "npm run dev",
+  "postBuildCommand": "",
+  "tauriBuildCommand": "npm run tauri build",
+  "tauriDevCommand": "npm run tauri dev",
+  "configFile": ".env",
+  "configExampleFile": ".env.example",
+  "requiredModules": [
+    "react",
+    "react-dom",
+    "vite"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  }
+}
