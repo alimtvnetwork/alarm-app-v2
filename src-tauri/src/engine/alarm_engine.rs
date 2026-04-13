@@ -37,7 +37,7 @@ pub fn start_engine(
     pool: Arc<Mutex<Connection>>,
     app_handle: tauri::AppHandle,
 ) {
-    tokio::spawn(async move {
+    tauri::async_runtime::spawn(async move {
         tracing::info!("Alarm engine started ({}s interval)", POLL_INTERVAL_SECS);
 
         // Cold-start: check for missed alarms immediately
@@ -113,7 +113,7 @@ fn recover_snoozes(
                 let remaining = (exp - *now).to_std().unwrap_or_default();
                 let alarm_id = snooze.alarm_id.clone();
                 let handle = app_handle.clone();
-                tokio::spawn(async move {
+                tauri::async_runtime::spawn(async move {
                     tokio::time::sleep(tokio::time::Duration::from(remaining)).await;
                     tracing::info!(alarm_id = %alarm_id, "Recovered snooze expired — re-firing");
                     use tauri::Emitter;
