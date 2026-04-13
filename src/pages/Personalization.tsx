@@ -94,7 +94,7 @@ const Personalization = () => {
             </p>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex items-end justify-between gap-2 overflow-x-auto pb-1">
               {SKIN_OPTIONS.map(({ value, label, colors }) => {
                 const isActive = (settings.ThemeSkin ?? "default") === value;
                 return (
@@ -102,17 +102,17 @@ const Personalization = () => {
                     <TooltipTrigger asChild>
                       <button
                         onClick={() => updateSettings({ ThemeSkin: value })}
-                        className={`flex flex-col items-center gap-2 rounded-xl p-3 transition-all min-w-[72px] ${
+                        className={`flex flex-col items-center gap-2 rounded-xl p-2 transition-all shrink-0 ${
                           isActive
-                            ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-105"
-                            : "hover:scale-105 hover:bg-secondary/50"
+                            ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
+                            : "hover:bg-secondary/50"
                         }`}
                       >
-                        <div className="flex gap-0.5 rounded-full overflow-hidden">
+                        <div className="flex rounded-full overflow-hidden">
                           {colors.map((c, i) => (
                             <div
                               key={i}
-                              className="h-10 w-5 first:rounded-l-full last:rounded-r-full"
+                              className="h-10 w-5"
                               style={{ backgroundColor: c }}
                             />
                           ))}
