@@ -105,6 +105,9 @@ fn main() {
             alarm_app::commands::snooze::get_snooze_state,
             alarm_app::commands::snooze::cancel_snooze,
             alarm_app::commands::snooze::dismiss_alarm,
+            alarm_app::commands::audio::list_sounds,
+            alarm_app::commands::audio::set_custom_sound,
+            alarm_app::commands::audio::validate_custom_sound,
             log_from_frontend,
         ])
         .run(tauri::generate_context!())
