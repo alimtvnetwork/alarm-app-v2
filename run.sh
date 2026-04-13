@@ -193,7 +193,7 @@ install_node() {
 
 install_rust() {
   echo -e "  ${C_YELLOW}Rust not found. Installing via rustup...${C_RESET}"
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
   source "$HOME/.cargo/env"
   print_success "Rust installed: $(rustc --version)"
 }
