@@ -78,6 +78,7 @@ const DigitalTime = () => {
       {/* Date below */}
       <p className="text-sm text-muted-foreground font-body">
         {now.toLocaleDateString("en-US", {
+          timeZone,
           weekday: "long",
           month: "long",
           day: "numeric",
