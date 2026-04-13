@@ -14,18 +14,18 @@ Condensed summary of the entire coding guidelines tree at `spec/02-coding-guidel
 
 ## Category Inventory
 
-| # | Category | Files | Key Topics |
-|---|----------|-------|------------|
-| 01 | Cross-Language | ~35 | Boolean principles, code style, DRY, naming, typing, complexity, casting, regex, mutation, null safety, nesting, SOLID, slugs, magic values, variable naming |
-| 02 | TypeScript | ~13 | Enums (6 enum specs), type safety remediation, promise/await, discriminated unions, ESLint enforcement |
-| 03 | Golang | ~13 | Enum specification (sub-module), boolean standards, HTTP method enum, defer rules, string/slice internals, severity taxonomy, standards reference (sub-module, 6 files) |
-| 04 | PHP | ~13 | Enums, forbidden patterns, naming, spacing/imports, response array standard, ResponseKeyType, PHP-Go consistency audit, standards reference (sub-module, 5 files) |
-| 05 | Rust | ~8 | Naming, error handling, async patterns, memory safety, testing, FFI/platform |
-| 06 | AI Optimization | ~7 | Anti-hallucination rules (40 rules), AI quick-reference checklist, common AI mistakes (20 examples), condensed master guidelines, enum naming quick reference |
-| 07 | C# | ~6 | Naming, method design, error handling, type safety |
-| 08 | File/Folder Naming | ~6 | Per-language file naming (PHP/WP, Go, TS/JS, Rust, C#) |
-| 09 | Security | ~3 | Axios version control, dependency pinning |
-| 10 | Database Conventions | ~8 | Naming (PascalCase), schema design, ORM/views, testing, REST API format, split DB pattern |
+| #   | Category             | Files | Key Topics                                                                                                                                                              |
+| --- | -------------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 01  | Cross-Language       | ~35   | Boolean principles, code style, DRY, naming, typing, complexity, casting, regex, mutation, null safety, nesting, SOLID, slugs, magic values, variable naming            |
+| 02  | TypeScript           | ~13   | Enums (6 enum specs), type safety remediation, promise/await, discriminated unions, ESLint enforcement                                                                  |
+| 03  | Golang               | ~13   | Enum specification (sub-module), boolean standards, HTTP method enum, defer rules, string/slice internals, severity taxonomy, standards reference (sub-module, 6 files) |
+| 04  | PHP                  | ~13   | Enums, forbidden patterns, naming, spacing/imports, response array standard, ResponseKeyType, PHP-Go consistency audit, standards reference (sub-module, 5 files)       |
+| 05  | Rust                 | ~8    | Naming, error handling, async patterns, memory safety, testing, FFI/platform                                                                                            |
+| 06  | AI Optimization      | ~7    | Anti-hallucination rules (40 rules), AI quick-reference checklist, common AI mistakes (20 examples), condensed master guidelines, enum naming quick reference           |
+| 07  | C#                   | ~6    | Naming, method design, error handling, type safety                                                                                                                      |
+| 08  | File/Folder Naming   | ~6    | Per-language file naming (PHP/WP, Go, TS/JS, Rust, C#)                                                                                                                  |
+| 09  | Security             | ~3    | Axios version control, dependency pinning                                                                                                                               |
+| 10  | Database Conventions | ~8    | Naming (PascalCase), schema design, ORM/views, testing, REST API format, split DB pattern                                                                               |
 
 ## Additional Root Files
 
@@ -45,8 +45,8 @@ Condensed summary of the entire coding guidelines tree at `spec/02-coding-guidel
 
 ## Cross-References
 
-| Reference | Location |
-|-----------|----------|
-| Guidelines Root | `spec/02-coding-guidelines/03-coding-guidelines-spec/00-overview.md` |
-| AI Optimization | `spec/02-coding-guidelines/03-coding-guidelines-spec/06-ai-optimization/00-overview.md` |
-| Condensed Review | `spec/02-coding-guidelines/consolidated-review-guide-condensed.md` |
+| Reference        | Location                                                                                |
+| ---------------- | --------------------------------------------------------------------------------------- |
+| Guidelines Root  | `spec/02-coding-guidelines/03-coding-guidelines-spec/00-overview.md`                    |
+| AI Optimization  | `spec/02-coding-guidelines/03-coding-guidelines-spec/06-ai-optimization/00-overview.md` |
+| Condensed Review | `spec/02-coding-guidelines/consolidated-review-guide-condensed.md`                      |
