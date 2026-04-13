@@ -148,6 +148,7 @@ const AlarmCard = ({ alarm, group, onEdit, onDelete }: AlarmCardProps) => {
           <button
             className="flex flex-1 items-center gap-3 text-left"
             onClick={() => !swipingRef.current && onEdit(alarm)}
+            aria-label={t("alarm.edit") + ": " + (alarm.Label || displayTime)}
           >
             <span className="text-[1.75rem] font-heading font-bold leading-tight text-foreground tabular-nums tracking-tight">
               {displayTime}
