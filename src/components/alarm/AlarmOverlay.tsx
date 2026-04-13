@@ -111,14 +111,48 @@ const AlarmOverlay = () => {
     return `${m}:${String(s).padStart(2, "0")}`;
   };
 
+  // Focus trap: trap focus within overlay when visible
+  const overlayRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!isVisible) return;
+    // Announce to screen readers
+    const announcer = document.getElementById("a11y-announcer");
+    if (announcer) {
+      announcer.textContent = `Alarm firing: ${alarm?.Label || alarm?.Time || "Alarm"}`;
+    }
+    // Focus the overlay
+    overlayRef.current?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const focusable = overlayRef.current?.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusable || focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isVisible, alarm]);
+
   if (!isVisible || !alarm) return null;
 
   return (
     <div
+      ref={overlayRef}
       role="alertdialog"
       aria-modal="true"
       aria-label={`Alarm: ${alarm.Label || alarm.Time}`}
-      className="fixed inset-0 z-50 flex items-center justify-center"
+      tabIndex={-1}
+      className="fixed inset-0 z-50 flex items-center justify-center outline-none"
       style={{ background: "hsl(20 14% 8%)" }}
     >
       {/* Card container */}

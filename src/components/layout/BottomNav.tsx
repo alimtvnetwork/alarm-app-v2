@@ -22,6 +22,7 @@ const BottomNav = () => {
             key={to}
             to={to}
             end={to === "/"}
+            aria-label={label}
             className={({ isActive }) =>
               `flex flex-col items-center gap-1 px-2 py-1 text-[0.6rem] font-body transition-colors ${
                 isActive
@@ -30,8 +31,12 @@ const BottomNav = () => {
               }`
             }
           >
-            <Icon className="h-[20px] w-[20px] stroke-[1.5]" />
-            <span className="font-medium">{label}</span>
+            {({ isActive }) => (
+              <>
+                <Icon className="h-[20px] w-[20px] stroke-[1.5]" aria-hidden="true" />
+                <span className="font-medium" aria-current={isActive ? "page" : undefined}>{label}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </div>
