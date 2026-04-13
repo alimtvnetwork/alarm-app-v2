@@ -44,6 +44,13 @@ const parse12h = (time24: string) => {
   return { h12: String(h12).padStart(2, "0"), minute: String(m).padStart(2, "0"), period };
 };
 
+/** Toggle AM↔PM by adding/subtracting 12 hours */
+const togglePeriod = (time24: string): string => {
+  const [h, m] = time24.split(":").map(Number);
+  const newH = h >= 12 ? h - 12 : h + 12;
+  return `${String(newH).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+};
+
 interface AlarmFormProps {
   alarm: Alarm | null;
   isOpen: boolean;
