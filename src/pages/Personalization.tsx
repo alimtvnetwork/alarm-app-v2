@@ -102,10 +102,10 @@ const Personalization = () => {
                     <TooltipTrigger asChild>
                       <button
                         onClick={() => updateSettings({ ThemeSkin: value })}
-                        className={`flex flex-col items-center gap-1 rounded-lg p-1.5 transition-all ${
+                        className={`flex flex-col items-center gap-1 rounded-2xl p-2 transition-all ${
                           isActive
-                            ? "ring-2 ring-primary ring-offset-1 ring-offset-background"
-                            : "hover:bg-secondary/50"
+                            ? "bg-secondary/80 shadow-sm"
+                            : "hover:bg-secondary/40"
                         }`}
                       >
                         <div className="flex rounded-full overflow-hidden">
