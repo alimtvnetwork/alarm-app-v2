@@ -8,3 +8,4 @@ pub mod challenge;
 pub mod wellness;
 pub mod personalization;
 pub mod snooze;
+pub mod webhook;
