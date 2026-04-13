@@ -44,14 +44,14 @@ const Alarms = () => {
     <div className="mx-auto max-w-lg">
       {/* Alarm card */}
       <div className="rounded-2xl bg-card shadow-md overflow-hidden border border-border/50">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-border/30">
-          <h2 className="text-lg font-heading font-bold text-foreground">
+        {/* Dark header */}
+        <div className="flex items-center justify-between rounded-t-2xl bg-foreground px-6 py-5">
+          <h2 className="text-lg font-heading font-bold text-background">
             {t("alarms.title")}
           </h2>
           <button
             onClick={handleNew}
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary text-muted-foreground transition-all hover:bg-accent hover:text-accent-foreground hover:shadow-sm active:scale-95"
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-muted-foreground/30 text-background/70 transition-all hover:bg-muted-foreground/50 hover:text-background active:scale-95"
             aria-label={t("alarms.add")}
           >
             <Plus className="h-4.5 w-4.5" strokeWidth={2} />
