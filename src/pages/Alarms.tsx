@@ -5,11 +5,13 @@
 
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Plus } from "lucide-react";
+import { Plus, Bug } from "lucide-react";
 import AlarmList from "@/components/alarm/AlarmList";
 import AlarmForm from "@/components/alarm/AlarmForm";
 import { useAlarmStore } from "@/stores/alarm-store";
+import { useOverlayStore } from "@/stores/overlay-store";
 import type { Alarm } from "@/types/alarm";
+import { MOCK_ALARMS } from "@/test/fixtures";
 
 const Alarms = () => {
   const loadAlarms = useAlarmStore((s) => s.loadAlarms);
