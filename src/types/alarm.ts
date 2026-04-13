@@ -119,6 +119,7 @@ export interface Alarm {
   ChallengeShakeCount: number | null;
   ChallengeStepCount: number | null;
   NextFireTime: string | null;               // ISO 8601
+  Position: number;                          // 0-based sort order
   DeletedAt: string | null;                  // ISO 8601 soft-delete
   CreatedAt: string;
   UpdatedAt: string;
