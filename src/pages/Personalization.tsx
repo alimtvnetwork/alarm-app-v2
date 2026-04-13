@@ -1,12 +1,12 @@
 /**
- * Personalization Page — Theme switcher, accent color picker, streak calendar, clock format.
+ * Personalization Page — Theme switcher, skin selector, accent color picker, streak calendar, clock format.
  */
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { ThemeMode } from "@/types/alarm";
 import { useSettingsStore } from "@/stores/settings-store";
-import { Sun, Moon, Monitor, Palette, Check } from "lucide-react";
+import { Sun, Moon, Monitor, Palette, Check, Paintbrush } from "lucide-react";
 import StreakCalendar from "@/components/personalization/StreakCalendar";
 import {
   Tooltip,
@@ -28,6 +28,14 @@ const THEME_OPTIONS = [
   { value: ThemeMode.Light, label: "Light", icon: Sun, tip: "Warm cream palette" },
   { value: ThemeMode.Dark, label: "Dark", icon: Moon, tip: "Warm charcoal palette" },
   { value: ThemeMode.System, label: "System", icon: Monitor, tip: "Follow your OS setting" },
+];
+
+const SKIN_OPTIONS = [
+  { value: "default", label: "Default", colors: ["#faf8f5", "#8b7355", "#f0ebe3", "#c9b99a"] },
+  { value: "midnight", label: "Midnight", colors: ["#171b2e", "#4d7df2", "#dde3f0", "#3366cc"] },
+  { value: "sunrise", label: "Sunrise", colors: ["#f5e6d8", "#e05c2d", "#ecd5c2", "#d99040"] },
+  { value: "ocean", label: "Ocean", colors: ["#1a2c33", "#33b8a8", "#d4e6e2", "#408f85"] },
+  { value: "forest", label: "Forest", colors: ["#192319", "#4da652", "#d6e8d6", "#3d8040"] },
 ];
 
 const Personalization = () => {
@@ -70,6 +78,52 @@ const Personalization = () => {
                   <TooltipContent>{tip}</TooltipContent>
                 </Tooltip>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Skin */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-sm font-heading">
+              <Paintbrush className="h-4 w-4" />
+              Skin
+            </CardTitle>
+            <p className="text-xs text-muted-foreground font-body">
+              Choose a color scheme for the entire app.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-5 gap-3">
+              {SKIN_OPTIONS.map(({ value, label, colors }) => {
+                const isActive = (settings.ThemeSkin ?? "default") === value;
+                return (
+                  <Tooltip key={value}>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => updateSettings({ ThemeSkin: value })}
+                        className={`flex flex-col items-center gap-1.5 rounded-lg p-2 transition-all ${
+                          isActive
+                            ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-105"
+                            : "hover:scale-105 hover:bg-secondary/50"
+                        }`}
+                      >
+                        <div className="flex gap-0.5 rounded-md overflow-hidden">
+                          {colors.map((c, i) => (
+                            <div
+                              key={i}
+                              className="h-8 w-4"
+                              style={{ backgroundColor: c }}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-[10px] font-body text-muted-foreground">{label}</span>
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>{label} theme</TooltipContent>
+                  </Tooltip>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
