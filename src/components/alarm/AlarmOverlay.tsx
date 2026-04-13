@@ -2,7 +2,7 @@
  * AlarmOverlay — Full-screen overlay when an alarm fires.
  */
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Bell, Moon, X, Volume, Volume1, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { ChallengeType, ChallengeDifficulty } from "@/types/alarm";
 import { suggestDifficulty } from "@/lib/adaptive-challenge";
 import MathChallenge from "./MathChallenge";
 import TypingChallenge from "./TypingChallenge";
+import { playAlarmSound } from "@/lib/alarm-audio";
 
 const AlarmOverlay = () => {
   const isVisible = useOverlayStore((s) => s.isVisible);
@@ -23,6 +24,23 @@ const AlarmOverlay = () => {
   const [showChallenge, setShowChallenge] = useState(false);
   const [autoDismissRemaining, setAutoDismissRemaining] = useState<number | null>(null);
   const [volumePercent, setVolumePercent] = useState(0);
+  const audioRef = useRef<{ stop: () => void } | null>(null);
+
+  // Start/stop alarm sound with overlay visibility
+  useEffect(() => {
+    if (isVisible && alarm) {
+      audioRef.current = playAlarmSound(
+        alarm.SoundFile,
+        alarm.IsGradualVolume,
+        alarm.GradualVolumeDurationSec || 30,
+      );
+    }
+
+    return () => {
+      audioRef.current?.stop();
+      audioRef.current = null;
+    };
+  }, [isVisible, alarm]);
 
   useEffect(() => {
     if (!isVisible || !alarm || alarm.AutoDismissMin <= 0) {
