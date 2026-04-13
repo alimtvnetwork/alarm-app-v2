@@ -14,6 +14,11 @@ function seed() {
   localStorage.setItem("alarm_app_settings", JSON.stringify(DEFAULT_SETTINGS));
 }
 
+/** Helper: serialize current alarms to JSON string (mirrors exportAlarms JSON logic) */
+function exportAlarmsToJson(): string {
+  return JSON.stringify(ipc.listAlarms(), null, 2);
+}
+
 describe("Export/Import Round-Trip", () => {
   beforeEach(() => {
     localStorage.clear();
