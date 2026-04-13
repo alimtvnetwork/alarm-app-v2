@@ -334,6 +334,10 @@ if ($CheckNode) {
 }
 
 if ($CheckRust) {
+    # Add cargo bin to PATH for macOS/Linux where rustc might not be in default PATH
+    if (($IsMacOS -or $IsLinux) -and (Test-Path "$env:HOME/.cargo/bin")) {
+        $env:Path = "$env:HOME/.cargo/bin:$env:Path"
+    }
     if (-not (Test-Command "rustc")) { Install-Rust }
     $rustVersion = rustc --version 2>&1
     Write-Host "  ✓ Rust: $rustVersion" -ForegroundColor Green
