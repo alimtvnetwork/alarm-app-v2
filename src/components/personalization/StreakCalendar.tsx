@@ -1,16 +1,17 @@
 /**
  * StreakCalendar — 35-day heatmap showing alarm dismissal streak.
- * Reads alarm events from localStorage to compute daily dismiss counts.
+ * Shows date numbers and empty state when no data exists.
  */
 
 import { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Flame, Calendar } from "lucide-react";
+import { Flame, Calendar, Info } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { AlarmEventType } from "@/types/alarm";
 
 interface DayCell {
   date: string;
+  dayNum: number;
   count: number;
   isToday: boolean;
 }
@@ -64,6 +65,7 @@ const StreakCalendar = () => {
   const { t } = useTranslation();
   const history = useMemo(loadDismissHistory, []);
   const streak = useMemo(() => computeStreak(history), [history]);
+  const hasData = Object.keys(history).length > 0;
 
   const days: DayCell[] = useMemo(() => {
     const today = new Date();
@@ -73,7 +75,12 @@ const StreakCalendar = () => {
       const d = new Date(today);
       d.setDate(d.getDate() - i);
       const key = d.toISOString().slice(0, 10);
-      cells.push({ date: key, count: history[key] ?? 0, isToday: key === todayStr });
+      cells.push({
+        date: key,
+        dayNum: d.getDate(),
+        count: history[key] ?? 0,
+        isToday: key === todayStr,
+      });
     }
     return cells;
   }, [history]);
@@ -97,6 +104,15 @@ const StreakCalendar = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
+        {!hasData && (
+          <div className="flex items-center gap-2 rounded-lg bg-secondary p-3 mb-3">
+            <Info className="h-4 w-4 text-muted-foreground shrink-0" />
+            <p className="text-xs text-muted-foreground font-body">
+              Dismiss alarms to start building your streak! Each day you wake up on time will appear here.
+            </p>
+          </div>
+        )}
+
         {/* Week day labels */}
         <div className="grid grid-cols-7 gap-1 mb-1">
           {weekLabels.map((label, i) => (
@@ -106,16 +122,18 @@ const StreakCalendar = () => {
           ))}
         </div>
 
-        {/* Heatmap grid */}
+        {/* Heatmap grid with date numbers */}
         <div className="grid grid-cols-7 gap-1">
           {days.map((day) => (
             <div
               key={day.date}
               title={`${day.date}: ${day.count} dismissed`}
-              className={`aspect-square rounded-sm transition-colors ${getIntensityClass(day.count)} ${
-                day.isToday ? "ring-1 ring-primary" : ""
+              className={`aspect-square rounded-sm transition-colors flex items-center justify-center text-[9px] font-body ${getIntensityClass(day.count)} ${
+                day.isToday ? "ring-1 ring-primary font-bold" : "text-muted-foreground"
               }`}
-            />
+            >
+              {day.dayNum}
+            </div>
           ))}
         </div>
 
