@@ -119,9 +119,9 @@ const AlarmOverlay = () => {
 
         {/* Concentric ripple rings + bell */}
         <div className="relative flex items-center justify-center mb-6">
-          <div className="absolute w-64 h-64 rounded-full" style={{ border: "1px solid hsl(30 15% 40% / 0.15)" }} />
-          <div className="absolute w-48 h-48 rounded-full" style={{ border: "1px solid hsl(30 15% 40% / 0.25)" }} />
-          <div className="absolute w-32 h-32 rounded-full" style={{ border: "1px solid hsl(30 15% 40% / 0.35)" }} />
+          <div className="absolute w-64 h-64 rounded-full animate-ripple-1" style={{ border: "1px solid hsl(30 15% 40% / 0.15)" }} />
+          <div className="absolute w-48 h-48 rounded-full animate-ripple-2" style={{ border: "1px solid hsl(30 15% 40% / 0.25)" }} />
+          <div className="absolute w-32 h-32 rounded-full animate-ripple-3" style={{ border: "1px solid hsl(30 15% 40% / 0.35)" }} />
           <div className="animate-pulse-glow">
             <Bell className="h-12 w-12" style={{ color: "hsl(30 25% 55%)" }} />
           </div>
