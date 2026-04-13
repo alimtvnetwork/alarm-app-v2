@@ -11,10 +11,6 @@
     "core:app:default",
     "core:event:default",
 
-    "sql:default",
-    "sql:allow-execute",
-    "sql:allow-select",
-
     "notification:default",
     "notification:allow-notify",
     "notification:allow-request-permission",
@@ -34,7 +30,7 @@
     "global-shortcut:allow-register",
     "global-shortcut:allow-unregister",
 
-    "tray:default",
+    "core:tray:default",
 
     "autostart:default",
     "autostart:allow-enable",
