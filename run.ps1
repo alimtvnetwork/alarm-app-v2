@@ -335,30 +335,84 @@ Write-Host "  ⏱ $(Format-ElapsedTime $stepWatch)" -ForegroundColor DarkGray
 Write-Host ""
 
 # ============================================================================
-# INSTALL MODE (-i): Install all npm dependencies
+# INSTALL MODE (-i): Full dev environment setup
 # ============================================================================
 if ($install) {
     $stepWatch = [System.Diagnostics.Stopwatch]::StartNew()
-    Write-Host "[INSTALL] Installing dependencies..." -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "========================================" -ForegroundColor Cyan
+    Write-Host "  ⏰ $ProjectName — Dev Setup" -ForegroundColor Cyan
+    Write-Host "========================================" -ForegroundColor Cyan
     Write-Host ""
 
     if ($rebuild) {
-        Write-Host "  Rebuild mode: deferring until after force-clean..." -ForegroundColor Yellow
+        Write-Host "  Rebuild mode: deferring npm install until after force-clean..." -ForegroundColor Yellow
     } else {
+        # 1. macOS: Xcode Command Line Tools
+        Install-XcodeCommandLineTools
+
+        # 2. Linux: system libraries
+        Install-LinuxDependencies
+
+        # 3. Check/install Rust
+        Write-Host ""
+        Write-Host "  Checking Rust..." -ForegroundColor Gray
+        if (-not (Test-Command "rustc")) {
+            Install-Rust
+        } else {
+            $rustVer = rustc --version 2>&1
+            Write-Host "  ✓ Rust: $rustVer" -ForegroundColor Green
+            # Update Rust toolchain
+            Write-Host "  Updating Rust toolchain..." -ForegroundColor Gray
+            rustup update stable 2>&1 | Out-Host
+        }
+
+        # 4. Check/install Node.js
+        Write-Host ""
+        Write-Host "  Checking Node.js..." -ForegroundColor Gray
+        if (-not (Test-Command "node")) {
+            Install-NodeJS
+        } else {
+            $nodeVer = node --version 2>&1
+            Write-Host "  ✓ Node.js: $nodeVer" -ForegroundColor Green
+        }
+
+        # 5. Install npm dependencies
+        Write-Host ""
+        Write-Host "  Installing npm dependencies..." -ForegroundColor Gray
         Push-Location $FrontendDir
         try {
-            Write-Host "  Running: $InstallCommand" -ForegroundColor Gray
             Invoke-Expression $InstallCommand
             if ($LASTEXITCODE -ne 0) { throw "npm install failed" }
-            Write-Host "  ✓ Dependencies installed" -ForegroundColor Green
+            Write-Host "  ✓ npm dependencies installed" -ForegroundColor Green
         }
         finally { Pop-Location }
 
+        # 6. Check/install Tauri CLI
+        Write-Host ""
+        Write-Host "  Checking Tauri CLI..." -ForegroundColor Gray
+        $tauriFound = $false
+        try {
+            $tauriVer = npx tauri --version 2>&1
+            if ($LASTEXITCODE -eq 0) { $tauriFound = $true }
+        } catch {}
+        if (-not $tauriFound) {
+            Install-TauriCli
+        } else {
+            Write-Host "  ✓ Tauri CLI: $tauriVer" -ForegroundColor Green
+        }
+
+        # 7. Summary
         $stepWatch.Stop()
         Write-Host ""
         Write-Host "========================================" -ForegroundColor Cyan
-        Write-Host "  Dependencies installed!" -ForegroundColor Cyan
+        Write-Host "  ✅ Dev environment ready!" -ForegroundColor Green
         Write-Host "  Time: $(Format-ElapsedTime $stepWatch)" -ForegroundColor Cyan
+        Write-Host "" -ForegroundColor Cyan
+        Write-Host "  Next steps:" -ForegroundColor Cyan
+        Write-Host "    .\run.ps1        Build + start dev server" -ForegroundColor White
+        Write-Host "    .\run.ps1 -td    Tauri dev mode (hot-reload)" -ForegroundColor White
+        Write-Host "    .\run.ps1 -t     Build Tauri desktop app" -ForegroundColor White
         Write-Host "========================================" -ForegroundColor Cyan
         exit 0
     }
