@@ -74,6 +74,7 @@ async fn check_missed_alarms_on_start(
             .iter()
             .map(|a| if a.label.is_empty() { a.time.clone() } else { a.label.clone() })
             .collect();
+        crate::notifications::send_missed_alarms(app_handle, &labels);
         emit_missed_alarms(app_handle, &labels);
     }
 
