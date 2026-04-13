@@ -1,29 +1,14 @@
 /**
- * StreakCalendar — 35-day heatmap showing alarm dismissal streak.
- * Shows date numbers and empty state when no data exists.
+ * StreakCalendar — Monthly calendar view showing alarm dismissal history.
+ * Navigation arrows, day grid, today highlight, dismissal dot indicators.
  */
 
-import { useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Flame, Calendar, Info } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { useMemo, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AlarmEventType } from "@/types/alarm";
 
-interface DayCell {
-  date: string;
-  dayNum: number;
-  count: number;
-  isToday: boolean;
-}
-
-const TOTAL_DAYS = 35;
-
-const getIntensityClass = (count: number): string => {
-  if (count === 0) return "bg-secondary";
-  if (count === 1) return "bg-primary/30";
-  if (count <= 3) return "bg-primary/55";
-  return "bg-primary/85";
-};
+const WEEK_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const loadDismissHistory = (): Record<string, number> => {
   try {
@@ -43,109 +28,125 @@ const loadDismissHistory = (): Record<string, number> => {
   }
 };
 
-const computeStreak = (history: Record<string, number>): number => {
+const StreakCalendar = () => {
+  const [viewDate, setViewDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const history = useMemo(loadDismissHistory, []);
+
   const today = new Date();
-  let streak = 0;
-  for (let i = 0; i < 365; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    const key = d.toISOString().slice(0, 10);
-    if ((history[key] ?? 0) > 0) {
-      streak++;
-    } else if (i > 0) {
-      break;
-    } else {
-      break;
+  const todayStr = today.toISOString().slice(0, 10);
+
+  const year = viewDate.getFullYear();
+  const month = viewDate.getMonth();
+
+  const monthLabel = viewDate.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevMonthDays = new Date(year, month, 0).getDate();
+
+  const goToPrevMonth = () => setViewDate(new Date(year, month - 1, 1));
+  const goToNextMonth = () => setViewDate(new Date(year, month + 1, 1));
+
+  const cells: Array<{ day: number; key: string; isCurrentMonth: boolean; isToday: boolean; hasDismissal: boolean }> = [];
+
+  // Previous month trailing days
+  for (let i = firstDay - 1; i >= 0; i--) {
+    const d = prevMonthDays - i;
+    const dateObj = new Date(year, month - 1, d);
+    const key = dateObj.toISOString().slice(0, 10);
+    cells.push({ day: d, key, isCurrentMonth: false, isToday: false, hasDismissal: (history[key] ?? 0) > 0 });
+  }
+
+  // Current month days
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateObj = new Date(year, month, d);
+    const key = dateObj.toISOString().slice(0, 10);
+    cells.push({ day: d, key, isCurrentMonth: true, isToday: key === todayStr, hasDismissal: (history[key] ?? 0) > 0 });
+  }
+
+  // Next month leading days
+  const remaining = 7 - (cells.length % 7);
+  if (remaining < 7) {
+    for (let d = 1; d <= remaining; d++) {
+      const dateObj = new Date(year, month + 1, d);
+      const key = dateObj.toISOString().slice(0, 10);
+      cells.push({ day: d, key, isCurrentMonth: false, isToday: false, hasDismissal: (history[key] ?? 0) > 0 });
     }
   }
-  return streak;
-};
 
-const StreakCalendar = () => {
-  const { t } = useTranslation();
-  const history = useMemo(loadDismissHistory, []);
-  const streak = useMemo(() => computeStreak(history), [history]);
-  const hasData = Object.keys(history).length > 0;
+  const selectedLabel = selectedDate
+    ? new Date(selectedDate + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })
+    : null;
 
-  const days: DayCell[] = useMemo(() => {
-    const today = new Date();
-    const todayStr = today.toISOString().slice(0, 10);
-    const cells: DayCell[] = [];
-    for (let i = TOTAL_DAYS - 1; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      const key = d.toISOString().slice(0, 10);
-      cells.push({
-        date: key,
-        dayNum: d.getDate(),
-        count: history[key] ?? 0,
-        isToday: key === todayStr,
-      });
-    }
-    return cells;
-  }, [history]);
-
-  const weekLabels = ["S", "M", "T", "W", "T", "F", "S"];
+  const selectedCount = selectedDate ? (history[selectedDate] ?? 0) : 0;
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between text-sm font-heading">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-primary" />
-            {t("personalization.streakCalendar")}
-          </div>
-          <div className="flex items-center gap-1.5 text-xs font-body text-primary">
-            <Flame className="h-4 w-4" />
-            <span>
-              {streak} {t("personalization.dayStreak")}
-            </span>
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {!hasData && (
-          <div className="flex items-center gap-2 rounded-lg bg-secondary p-3 mb-3">
-            <Info className="h-4 w-4 text-muted-foreground shrink-0" />
-            <p className="text-xs text-muted-foreground font-body">
-              Dismiss alarms to start building your streak! Each day you wake up on time will appear here.
-            </p>
-          </div>
-        )}
+      <CardContent className="p-4">
+        {/* Month navigation */}
+        <div className="flex items-center justify-between mb-4">
+          <button
+            onClick={goToPrevMonth}
+            className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <span className="text-sm font-heading font-semibold text-foreground">{monthLabel}</span>
+          <button
+            onClick={goToNextMonth}
+            className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
 
-        {/* Week day labels */}
-        <div className="grid grid-cols-7 gap-1 mb-1">
-          {weekLabels.map((label, i) => (
-            <span key={i} className="text-center text-[10px] text-muted-foreground font-body">
+        {/* Weekday headers */}
+        <div className="grid grid-cols-7 gap-0 mb-1">
+          {WEEK_LABELS.map((label) => (
+            <span key={label} className="text-center text-[11px] font-body font-medium text-muted-foreground py-1">
               {label}
             </span>
           ))}
         </div>
 
-        {/* Heatmap grid with date numbers */}
-        <div className="grid grid-cols-7 gap-1">
-          {days.map((day) => (
-            <div
-              key={day.date}
-              title={`${day.date}: ${day.count} dismissed`}
-              className={`aspect-square rounded-sm transition-colors flex items-center justify-center text-[9px] font-body ${getIntensityClass(day.count)} ${
-                day.isToday ? "ring-1 ring-primary font-bold" : "text-muted-foreground"
-              }`}
-            >
-              {day.dayNum}
-            </div>
-          ))}
+        {/* Day grid */}
+        <div className="grid grid-cols-7 gap-0">
+          {cells.map((cell) => {
+            const isSelected = cell.key === selectedDate;
+            return (
+              <button
+                key={cell.key}
+                onClick={() => setSelectedDate(cell.key === selectedDate ? null : cell.key)}
+                className={`relative flex flex-col items-center justify-center py-2 text-sm font-body transition-colors rounded-lg
+                  ${cell.isCurrentMonth ? "text-foreground" : "text-muted-foreground/40"}
+                  ${cell.isToday && !isSelected ? "bg-foreground text-background font-bold rounded-lg" : ""}
+                  ${isSelected ? "bg-primary text-primary-foreground font-bold" : ""}
+                  ${!cell.isToday && !isSelected ? "hover:bg-secondary" : ""}
+                `}
+              >
+                {cell.day}
+                {cell.hasDismissal && (
+                  <span className={`absolute bottom-1 h-1 w-1 rounded-full ${isSelected || cell.isToday ? "bg-current opacity-60" : "bg-primary"}`} />
+                )}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Legend */}
-        <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-muted-foreground font-body">
-          <span>{t("personalization.less")}</span>
-          <div className="h-3 w-3 rounded-sm bg-secondary" />
-          <div className="h-3 w-3 rounded-sm bg-primary/30" />
-          <div className="h-3 w-3 rounded-sm bg-primary/55" />
-          <div className="h-3 w-3 rounded-sm bg-primary/85" />
-          <span>{t("personalization.more")}</span>
-        </div>
+        {/* Selected date detail */}
+        {selectedLabel && (
+          <div className="mt-4 pt-3 border-t border-border">
+            <p className="text-sm font-heading font-semibold text-foreground">{selectedLabel}</p>
+            {selectedCount > 0 ? (
+              <p className="text-xs font-body text-muted-foreground mt-1">
+                {selectedCount} alarm{selectedCount > 1 ? "s" : ""} dismissed
+              </p>
+            ) : (
+              <p className="text-xs font-body text-muted-foreground mt-1">No alarms dismissed</p>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
