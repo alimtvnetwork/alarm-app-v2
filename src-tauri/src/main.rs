@@ -2,7 +2,6 @@
 
 use std::path::Path;
 use std::sync::Arc;
-use std::time::Duration;
 
 use rusqlite::Connection;
 use tauri::Manager;
@@ -10,7 +9,7 @@ use tokio::sync::Mutex;
 use tracing_appender::rolling;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
-use alarm_app::errors::AlarmAppError;
+
 use alarm_app::storage::db;
 
 mod commands_registration;
