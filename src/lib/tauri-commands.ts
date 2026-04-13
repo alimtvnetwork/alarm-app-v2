@@ -1,0 +1,185 @@
+/**
+ * Tauri IPC Command Wrappers
+ * All frontend IPC calls go through safeInvoke() with 5s timeout + error toast.
+ *
+ * NOTE: In the Lovable web preview, these are no-ops that return null.
+ * When running in Tauri, they call real Rust backend commands.
+ */
+
+import { toast } from "sonner";
+import type {
+  Alarm,
+  AlarmGroup,
+  AlarmEvent,
+  Settings,
+  IpcErrorResponse,
+} from "@/types/alarm";
+
+const IPC_TIMEOUT_MS = 5000;
+const IS_TAURI = typeof window !== "undefined" && "__TAURI__" in window;
+
+/**
+ * Safe IPC invoke with timeout and error handling.
+ * Returns null on error (shows toast).
+ */
+async function safeInvoke<T>(
+  command: string,
+  args?: Record<string, unknown>
+): Promise<T | null> {
+  if (!IS_TAURI) {
+    console.warn(`[safeInvoke] Not in Tauri — skipping: ${command}`);
+    return null;
+  }
+
+  try {
+    const { invoke } = await import("@tauri-apps/api/core");
+    const result = await Promise.race([
+      invoke<T>(command, args),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("timeout")), IPC_TIMEOUT_MS)
+      ),
+    ]);
+    return result;
+  } catch (error) {
+    const message = getErrorMessage(error);
+    toast.error(message);
+    console.error(`IPC ${command} failed:`, error);
+    return null;
+  }
+}
+
+function getErrorMessage(error: unknown): string {
+  if (typeof error === "string") {
+    return error;
+  }
+  if (error instanceof Error) {
+    if (error.message === "timeout") {
+      return "Operation timed out — try again";
+    }
+    return error.message;
+  }
+  // IPC structured error
+  if (typeof error === "object" && error !== null && "Message" in error) {
+    const ipcError = error as IpcErrorResponse;
+    return mapErrorCodeToMessage(ipcError.Code, ipcError.Message);
+  }
+  return "Something went wrong";
+}
+
+function mapErrorCodeToMessage(code: string, message: string): string {
+  switch (code) {
+    case "Database":
+      return "Failed to save — try again";
+    case "Audio":
+      return "Could not play sound — using default";
+    case "IpcTimeout":
+      return "Operation timed out — try again";
+    case "FileNotFound":
+      return "Sound file missing — using default";
+    case "SoundFileTooLarge":
+      return "Sound file must be under 10MB";
+    case "Validation":
+      return message;
+    default:
+      return message;
+  }
+}
+
+// ── Typed Command Wrappers ───────────────────────────────────────
+
+export async function listAlarms(): Promise<Alarm[]> {
+  return (await safeInvoke<Alarm[]>("list_alarms")) ?? [];
+}
+
+export async function createAlarm(
+  payload: Partial<Alarm>
+): Promise<Alarm | null> {
+  return safeInvoke<Alarm>("create_alarm", { payload });
+}
+
+export async function updateAlarm(alarm: Alarm): Promise<Alarm | null> {
+  return safeInvoke<Alarm>("update_alarm", { alarm });
+}
+
+export async function deleteAlarm(
+  alarmId: string
+): Promise<{ UndoToken: string } | null> {
+  return safeInvoke<{ UndoToken: string }>("delete_alarm", {
+    alarmId,
+  });
+}
+
+export async function undoDeleteAlarm(
+  undoToken: string
+): Promise<Alarm | null> {
+  return safeInvoke<Alarm>("undo_delete_alarm", { undoToken });
+}
+
+export async function toggleAlarm(alarmId: string): Promise<Alarm | null> {
+  return safeInvoke<Alarm>("toggle_alarm", { alarmId });
+}
+
+export async function duplicateAlarm(alarmId: string): Promise<Alarm | null> {
+  return safeInvoke<Alarm>("duplicate_alarm", { alarmId });
+}
+
+export async function listGroups(): Promise<AlarmGroup[]> {
+  return (await safeInvoke<AlarmGroup[]>("list_groups")) ?? [];
+}
+
+export async function createGroup(
+  name: string,
+  color: string
+): Promise<AlarmGroup | null> {
+  return safeInvoke<AlarmGroup>("create_group", { name, color });
+}
+
+export async function updateGroup(
+  group: AlarmGroup
+): Promise<AlarmGroup | null> {
+  return safeInvoke<AlarmGroup>("update_group", { group });
+}
+
+export async function deleteGroup(groupId: string): Promise<void> {
+  await safeInvoke("delete_group", { groupId });
+}
+
+export async function toggleGroup(
+  groupId: string
+): Promise<AlarmGroup | null> {
+  return safeInvoke<AlarmGroup>("toggle_group", { groupId });
+}
+
+export async function getSettings(): Promise<Settings | null> {
+  return safeInvoke<Settings>("get_settings");
+}
+
+export async function updateSetting(
+  key: string,
+  value: string
+): Promise<void> {
+  await safeInvoke("update_setting", { key, value });
+}
+
+export async function listAlarmEvents(
+  limit?: number,
+  offset?: number
+): Promise<AlarmEvent[]> {
+  return (
+    (await safeInvoke<AlarmEvent[]>("list_alarm_events", {
+      limit: limit ?? 100,
+      offset: offset ?? 0,
+    })) ?? []
+  );
+}
+
+export async function clearHistory(): Promise<void> {
+  await safeInvoke("clear_history");
+}
+
+export async function logFromFrontend(
+  level: string,
+  message: string
+): Promise<void> {
+  await safeInvoke("log_from_frontend", { level, message });
+}
