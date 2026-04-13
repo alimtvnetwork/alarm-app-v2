@@ -93,14 +93,19 @@ fn main() {
             let wake_pool = engine_pool_clone;
             let wake_handle = engine_handle;
             let wake_listener = alarm_app::engine::wake_listener::create_wake_listener();
-            let _ = wake_listener.start(Box::new(move || {
-                let pool = wake_pool.clone();
-                let handle = wake_handle.clone();
-                tokio::spawn(async move {
-                    tracing::info!("Wake detected — running missed alarm check");
-                    alarm_app::engine::alarm_engine::on_system_wake(&pool, &handle).await;
-                });
-            }));
+            let stop_signal = alarm_app::engine::wake_listener::new_stop_signal();
+            let stop_for_listener = stop_signal.clone();
+            let _ = wake_listener.start(
+                Box::new(move || {
+                    let pool = wake_pool.clone();
+                    let handle = wake_handle.clone();
+                    tokio::spawn(async move {
+                        tracing::info!("Wake detected — running missed alarm check");
+                        alarm_app::engine::alarm_engine::on_system_wake(&pool, &handle).await;
+                    });
+                }),
+                stop_for_listener,
+            );
 
             tracing::info!("Wake listener started");
 
