@@ -16,6 +16,8 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@tauri-apps/api/event": path.resolve(__dirname, "./src/lib/tauri-event-stub.ts"),
+      "@tauri-apps/api/core": path.resolve(__dirname, "./src/lib/tauri-event-stub.ts"),
     },
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "@tanstack/react-query", "@tanstack/query-core"],
   },
