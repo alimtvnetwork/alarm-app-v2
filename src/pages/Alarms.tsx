@@ -74,7 +74,7 @@ const Alarms = () => {
         }}
       />
 
-      <AlarmDebugPanel />
+      {import.meta.env.DEV && <AlarmDebugPanel />}
     </div>
   );
 };
