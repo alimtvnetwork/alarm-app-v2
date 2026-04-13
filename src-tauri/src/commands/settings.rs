@@ -1,4 +1,4 @@
-use rusqlite;
+use rusqlite::params;
 use tauri::State;
 use tokio::sync::Mutex;
 use std::sync::Arc;

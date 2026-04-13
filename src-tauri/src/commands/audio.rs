@@ -2,7 +2,7 @@
 // list_sounds, set_custom_sound, validate_custom_sound, preview_sound, stop_audio
 
 use serde::{Deserialize, Serialize};
-use tauri;
+
 use tokio::sync::Mutex;
 use std::sync::Arc;
 
