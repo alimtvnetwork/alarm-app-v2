@@ -37,20 +37,6 @@ import { useAlarmStore } from "@/stores/alarm-store";
 const DAY_LABELS = ["S", "M", "T", "W", "T", "F", "S"];
 const DAY_FULL = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-/** Convert 24h "HH:MM" to { h12, minute, period } */
-const parse12h = (time24: string) => {
-  const [h, m] = time24.split(":").map(Number);
-  const period = h >= 12 ? "PM" : "AM";
-  const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
-  return { h12: String(h12).padStart(2, "0"), minute: String(m).padStart(2, "0"), period };
-};
-
-/** Toggle AM↔PM by adding/subtracting 12 hours */
-const togglePeriod = (time24: string): string => {
-  const [h, m] = time24.split(":").map(Number);
-  const newH = h >= 12 ? h - 12 : h + 12;
-  return `${String(newH).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-};
 
 interface AlarmFormProps {
   alarm: Alarm | null;
