@@ -155,28 +155,27 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl px-5 pb-6">
-        <SheetHeader className="pb-1">
-          <SheetTitle className="font-heading text-lg">
+      <SheetContent side="bottom" className="mx-auto max-h-[70vh] max-w-md overflow-y-auto rounded-t-2xl px-4 pb-5">
+        <SheetHeader className="pb-0">
+          <SheetTitle className="font-heading text-base">
             {isEditing ? t("alarmForm.editAlarm") : t("alarmForm.newAlarm")}
           </SheetTitle>
         </SheetHeader>
 
-        <div className="flex flex-col gap-5 pt-2">
+        <div className="flex flex-col gap-3 pt-1">
           {/* Time display — styled card with AM/PM */}
           <button
             type="button"
             onClick={() => timeInputRef.current?.showPicker?.()}
-            className="relative flex items-center justify-center rounded-2xl border-2 border-border bg-secondary/50 px-6 py-5 transition-colors hover:border-primary/40"
+            className="relative flex items-center justify-center rounded-xl border border-border bg-secondary/50 px-4 py-3 transition-colors hover:border-primary/40"
           >
-            <span className="text-5xl font-heading font-bold tracking-tight text-foreground">
+            <span className="text-3xl font-heading font-bold tracking-tight text-foreground">
               {h12}:{minute}
             </span>
-            <span className="ml-2 text-2xl font-heading font-semibold text-muted-foreground">
+            <span className="ml-1.5 text-lg font-heading font-semibold text-muted-foreground">
               {period}
             </span>
-            <Clock className="absolute right-5 h-6 w-6 text-foreground/60" />
-            {/* Hidden native time input */}
+            <Clock className="absolute right-4 h-5 w-5 text-foreground/60" />
             <input
               ref={timeInputRef}
               type="time"
@@ -364,7 +363,7 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
         </div>
 
         {/* Full-width dark create button */}
-        <div className="flex gap-2 pt-5">
+        <div className="flex gap-2 pt-3">
           <Button variant="outline" onClick={onClose} className="flex-1 rounded-xl">
             {t("alarmForm.cancel")}
           </Button>
