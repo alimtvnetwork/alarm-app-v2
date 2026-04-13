@@ -7,3 +7,4 @@ pub mod export_import;
 pub mod challenge;
 pub mod wellness;
 pub mod personalization;
+pub mod snooze;

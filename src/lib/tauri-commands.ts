@@ -185,3 +185,32 @@ export async function logFromFrontend(
 ): Promise<void> {
   await safeInvoke("log_from_frontend", { level, message });
 }
+
+// ── Snooze Commands ──
+
+export interface SnoozeState {
+  AlarmId: string;
+  SnoozeUntil: string;
+  SnoozeCount: number;
+}
+
+export async function snoozeAlarm(
+  alarmId: string,
+  durationMin?: number
+): Promise<SnoozeState | null> {
+  return safeInvoke<SnoozeState>("snooze_alarm", {
+    payload: { AlarmId: alarmId, DurationMin: durationMin },
+  });
+}
+
+export async function getSnoozeState(): Promise<SnoozeState[]> {
+  return (await safeInvoke<SnoozeState[]>("get_snooze_state")) ?? [];
+}
+
+export async function cancelSnooze(alarmId: string): Promise<void> {
+  await safeInvoke("cancel_snooze", { alarmId });
+}
+
+export async function dismissAlarm(alarmId: string): Promise<void> {
+  await safeInvoke("dismiss_alarm", { alarmId });
+}
