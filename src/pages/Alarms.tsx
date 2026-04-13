@@ -75,6 +75,8 @@ const Alarms = () => {
         }}
       />
 
+      <AlarmTestButtons />
+
       {import.meta.env.DEV && <AlarmDebugPanel />}
     </div>
   );
