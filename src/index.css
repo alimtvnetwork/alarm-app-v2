@@ -137,6 +137,8 @@
     --clock-face: 230 20% 14%;
     --clock-hand: 220 20% 90%;
     --clock-tick: 220 80% 60%;
+    --flip-clock-bg: 230 25% 12%;
+    --flip-clock-text: 220 20% 90%;
     --snooze: 38 80% 55%;
     --dismiss: 142 60% 45%;
   }
@@ -163,6 +165,8 @@
     --clock-face: 25 50% 92%;
     --clock-hand: 15 30% 18%;
     --clock-tick: 15 80% 55%;
+    --flip-clock-bg: 15 30% 18%;
+    --flip-clock-text: 25 60% 96%;
     --snooze: 38 92% 50%;
     --dismiss: 142 72% 40%;
   }
@@ -189,6 +193,8 @@
     --clock-face: 200 25% 16%;
     --clock-hand: 195 20% 88%;
     --clock-tick: 185 70% 45%;
+    --flip-clock-bg: 200 30% 14%;
+    --flip-clock-text: 195 20% 88%;
     --snooze: 38 80% 55%;
     --dismiss: 160 60% 45%;
   }
@@ -215,6 +221,8 @@
     --clock-face: 150 18% 14%;
     --clock-hand: 140 15% 88%;
     --clock-tick: 145 55% 42%;
+    --flip-clock-bg: 150 20% 12%;
+    --flip-clock-text: 140 15% 88%;
     --snooze: 38 80% 55%;
     --dismiss: 145 55% 42%;
   }
