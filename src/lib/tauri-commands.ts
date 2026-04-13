@@ -214,3 +214,33 @@ export async function cancelSnooze(alarmId: string): Promise<void> {
 export async function dismissAlarm(alarmId: string): Promise<void> {
   await safeInvoke("dismiss_alarm", { alarmId });
 }
+
+// ── Audio Commands ──
+
+export interface AlarmSound {
+  AlarmSoundId: string;
+  Name: string;
+  FileName: string;
+  Category: string;
+}
+
+export interface SoundValidationResult {
+  IsValid: boolean;
+  Error: string | null;
+}
+
+export async function listSounds(): Promise<AlarmSound[]> {
+  return (await safeInvoke<AlarmSound[]>("list_sounds")) ?? [];
+}
+
+export async function setCustomSound(filePath: string): Promise<AlarmSound | null> {
+  return safeInvoke<AlarmSound>("set_custom_sound", {
+    payload: { FilePath: filePath },
+  });
+}
+
+export async function validateCustomSound(filePath: string): Promise<SoundValidationResult | null> {
+  return safeInvoke<SoundValidationResult>("validate_custom_sound", {
+    payload: { FilePath: filePath },
+  });
+}
