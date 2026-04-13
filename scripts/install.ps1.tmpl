@@ -1,0 +1,64 @@
+# Alarm App Installer — {{VERSION}}
+# Usage: irm https://github.com/alimtvnetwork/alarm-app/releases/latest/download/install.ps1 | iex
+
+$ErrorActionPreference = "Stop"
+$VERSION = "{{VERSION}}"
+$REPO = "alimtvnetwork/alarm-app"
+$BASE_URL = "https://github.com/$REPO/releases/download/$VERSION"
+
+Write-Host ""
+Write-Host "╔══════════════════════════════════════╗"
+Write-Host "║   ⏰ Alarm App Installer $VERSION      ║"
+Write-Host "╚══════════════════════════════════════╝"
+Write-Host ""
+
+# Detect architecture
+$cpuArch = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture
+if ($cpuArch -eq "Arm64") { $arch = "arm64" } else { $arch = "x64" }
+Write-Host "  Detected: Windows $arch"
+
+$ASSET = "alarm-app_${VERSION}_${arch}-setup.msi"
+$ASSET_URL = "$BASE_URL/$ASSET"
+$CHECKSUMS_URL = "$BASE_URL/checksums.txt"
+$TMP_DIR = Join-Path $env:TEMP "alarm-app-install"
+
+New-Item -ItemType Directory -Force -Path $TMP_DIR | Out-Null
+
+# Download installer
+Write-Host "  Downloading: $ASSET"
+Invoke-WebRequest -Uri $ASSET_URL -OutFile "$TMP_DIR\$ASSET" -UseBasicParsing
+$size = [math]::Round((Get-Item "$TMP_DIR\$ASSET").Length / 1MB, 1)
+Write-Host "  ✓ Downloaded ($size MB)"
+
+# Download and verify checksum
+Invoke-WebRequest -Uri $CHECKSUMS_URL -OutFile "$TMP_DIR\checksums.txt" -UseBasicParsing
+$expected = (Get-Content "$TMP_DIR\checksums.txt" | Select-String $ASSET).ToString().Split(" ")[0]
+$actual = (Get-FileHash "$TMP_DIR\$ASSET" -Algorithm SHA256).Hash.ToLower()
+
+if ($expected -ne $actual) {
+    Write-Host "  ✗ Checksum mismatch! Download may be corrupted."
+    Write-Host "    Expected: $expected"
+    Write-Host "    Got:      $actual"
+    Remove-Item -Recurse -Force $TMP_DIR
+    exit 1
+}
+Write-Host "  ✓ Checksum verified (SHA-256)"
+
+# Install
+Write-Host "  ✓ Installing..."
+Start-Process msiexec -ArgumentList "/i `"$TMP_DIR\$ASSET`" /quiet /norestart" -Wait -NoNewWindow
+
+# Verify
+$installPath = "C:\Program Files\Alarm App"
+if (Test-Path $installPath) {
+    Write-Host "  ✓ Installed to $installPath"
+} else {
+    Write-Host "  ⚠ Install path not found — check Start Menu"
+}
+
+# Cleanup
+Remove-Item -Recurse -Force $TMP_DIR
+
+Write-Host ""
+Write-Host "  🎉 Done! Launch from Start Menu → Alarm App"
+Write-Host ""

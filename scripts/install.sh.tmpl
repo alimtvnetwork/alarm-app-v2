@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# Alarm App Installer — {{VERSION}}
+# Usage: curl -fsSL https://github.com/alimtvnetwork/alarm-app/releases/latest/download/install.sh | bash
+
+set -euo pipefail
+
+VERSION="{{VERSION}}"
+REPO="alimtvnetwork/alarm-app"
+BASE_URL="https://github.com/$REPO/releases/download/$VERSION"
+
+echo ""
+echo "╔══════════════════════════════════════╗"
+echo "║   ⏰ Alarm App Installer $VERSION      ║"
+echo "╚══════════════════════════════════════╝"
+echo ""
+
+detect_platform() {
+  OS="$(uname -s)"
+  ARCH="$(uname -m)"
+
+  case "$OS" in
+    Darwin) PLATFORM="macos" ;;
+    Linux)  PLATFORM="linux" ;;
+    *)      echo "  ✗ Unsupported OS: $OS"; exit 1 ;;
+  esac
+
+  case "$ARCH" in
+    x86_64)        ARCH="amd64" ;;
+    aarch64|arm64) ARCH="arm64" ;;
+    *)             echo "  ✗ Unsupported architecture: $ARCH"; exit 1 ;;
+  esac
+}
+
+detect_platform
+echo "  Detected: $PLATFORM $ARCH"
+
+# Select asset
+if [ "$PLATFORM" = "macos" ]; then
+  ASSET="alarm-app_${VERSION}_x64.dmg"
+else
+  ASSET="alarm-app_${VERSION}_${ARCH}.AppImage"
+fi
+
+TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+# Download
+echo "  Downloading: $ASSET"
+curl -fSL "$BASE_URL/$ASSET" -o "$TMP_DIR/$ASSET"
+SIZE=$(du -h "$TMP_DIR/$ASSET" | awk '{print $1}')
+echo "  ✓ Downloaded ($SIZE)"
+
+# Verify checksum
+curl -fSL "$BASE_URL/checksums.txt" -o "$TMP_DIR/checksums.txt"
+EXPECTED=$(grep "$ASSET" "$TMP_DIR/checksums.txt" | awk '{print $1}')
+ACTUAL=$(sha256sum "$TMP_DIR/$ASSET" 2>/dev/null || shasum -a 256 "$TMP_DIR/$ASSET" | awk '{print $1}')
+ACTUAL=$(echo "$ACTUAL" | awk '{print $1}')
+
+if [ "$EXPECTED" != "$ACTUAL" ]; then
+  echo "  ✗ Checksum mismatch! Download may be corrupted."
+  echo "    Expected: $EXPECTED"
+  echo "    Got:      $ACTUAL"
+  exit 1
+fi
+echo "  ✓ Checksum verified (SHA-256)"
+
+# Install
+if [ "$PLATFORM" = "macos" ]; then
+  MOUNT_DIR="$(mktemp -d)"
+  hdiutil attach "$TMP_DIR/$ASSET" -mountpoint "$MOUNT_DIR" -quiet
+  echo "  ✓ Mounted disk image"
+  cp -R "$MOUNT_DIR"/*.app /Applications/
+  hdiutil detach "$MOUNT_DIR" -quiet
+  echo "  ✓ Copied to /Applications/Alarm App.app"
+  echo "  ✓ Unmounted disk image"
+  echo ""
+  echo "  🎉 Done! Launch from Applications → Alarm App"
+else
+  INSTALL_DIR="$HOME/.local/bin"
+  mkdir -p "$INSTALL_DIR"
+  cp "$TMP_DIR/$ASSET" "$INSTALL_DIR/alarm-app"
+  chmod +x "$INSTALL_DIR/alarm-app"
+  echo "  ✓ Installed to $INSTALL_DIR/alarm-app"
+
+  if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
+    echo "  ⚠ Add $INSTALL_DIR to your PATH:"
+    echo "    export PATH=\"\$HOME/.local/bin:\$PATH\""
+  else
+    echo "  ✓ Already in PATH"
+  fi
+  echo ""
+  echo "  🎉 Done! Run: alarm-app"
+fi
+echo ""
