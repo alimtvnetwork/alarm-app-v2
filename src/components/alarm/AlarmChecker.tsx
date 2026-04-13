@@ -10,6 +10,7 @@ import { useAlarmStore } from "@/stores/alarm-store";
 import { detectMissedAlarms } from "@/lib/missed-alarm-detector";
 import { computeNextFireTime } from "@/lib/next-fire-time";
 import { toast } from "sonner";
+import { fireAlarmNotification } from "@/lib/alarm-notification";
 
 const POLL_INTERVAL_MS = 30_000;
 
@@ -46,6 +47,7 @@ const AlarmChecker = () => {
         if (fireTime <= now) {
           firedIdsRef.current.add(alarm.AlarmId);
           fireAlarm(alarm);
+          fireAlarmNotification(alarm.Label, alarm.Time);
 
           // Advance NextFireTime for repeating alarms
           const updated = { ...alarm };

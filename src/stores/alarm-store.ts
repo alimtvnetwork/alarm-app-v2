@@ -8,6 +8,11 @@ import type { Alarm, AlarmGroup } from "@/types/alarm";
 import { RepeatType, DEFAULT_REPEAT_PATTERN } from "@/types/alarm";
 import * as ipc from "@/lib/mock-ipc";
 import { computeNextFireTime } from "@/lib/next-fire-time";
+import {
+  isNotificationSupported,
+  hasAskedPermission,
+  requestNotificationPermission,
+} from "@/lib/alarm-notification";
 
 interface AlarmStore {
   alarms: Alarm[];
@@ -88,6 +93,12 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
     alarm.NextFireTime = computeNextFireTime(alarm, getAlarmTimeZone());
     ipc.createAlarm(alarm);
     set((s) => ({ alarms: [...s.alarms, alarm] }));
+
+    // Prompt for notification permission on first alarm creation
+    if (isNotificationSupported() && !hasAskedPermission()) {
+      requestNotificationPermission();
+    }
+
     return alarm;
   },
 
