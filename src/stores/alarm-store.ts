@@ -1,12 +1,12 @@
 /**
  * Alarm Store — Zustand store for alarm and group CRUD.
- * Uses mock IPC layer (swap for real Tauri invoke in production).
+ * Uses IPC adapter (mock in web, Tauri IPC in native).
  */
 
 import { create } from "zustand";
 import type { Alarm, AlarmGroup } from "@/types/alarm";
 import { RepeatType, DEFAULT_REPEAT_PATTERN } from "@/types/alarm";
-import * as ipc from "@/lib/mock-ipc";
+import * as ipc from "@/lib/ipc-adapter";
 import { computeNextFireTime } from "@/lib/next-fire-time";
 import {
   isNotificationSupported,
@@ -17,29 +17,31 @@ import {
 interface AlarmStore {
   alarms: Alarm[];
   groups: AlarmGroup[];
+  isLoading: boolean;
 
   // Alarm CRUD
-  loadAlarms: () => void;
-  addAlarm: (partial: Partial<Alarm>) => Alarm;
-  updateAlarm: (alarm: Alarm) => void;
-  deleteAlarm: (alarmId: string) => void;
-  toggleAlarm: (alarmId: string, isEnabled: boolean) => void;
-  duplicateAlarm: (alarmId: string) => Alarm | null;
-  reorderAlarms: (alarmIds: string[]) => void;
+  loadAlarms: () => Promise<void>;
+  addAlarm: (partial: Partial<Alarm>) => Promise<Alarm>;
+  updateAlarm: (alarm: Alarm) => Promise<void>;
+  deleteAlarm: (alarmId: string) => Promise<void>;
+  toggleAlarm: (alarmId: string, isEnabled: boolean) => Promise<void>;
+  duplicateAlarm: (alarmId: string) => Promise<Alarm | null>;
+  reorderAlarms: (alarmIds: string[]) => Promise<void>;
 
   // Group CRUD
-  loadGroups: () => void;
-  addGroup: (name: string, color: string) => AlarmGroup;
-  updateGroup: (group: AlarmGroup) => void;
-  deleteGroup: (groupId: string) => void;
+  loadGroups: () => Promise<void>;
+  addGroup: (name: string, color: string) => Promise<AlarmGroup | null>;
+  updateGroup: (group: AlarmGroup) => Promise<void>;
+  deleteGroup: (groupId: string) => Promise<void>;
 }
 
 function generateId(): string {
   return crypto.randomUUID();
 }
 
-function getAlarmTimeZone(): string {
-  return ipc.getSettings().SystemTimezone;
+async function getAlarmTimeZone(): Promise<string> {
+  const settings = await ipc.getSettings();
+  return settings.SystemTimezone;
 }
 
 function createDefaultAlarm(partial: Partial<Alarm>): Alarm {
@@ -75,24 +77,43 @@ function createDefaultAlarm(partial: Partial<Alarm>): Alarm {
 export const useAlarmStore = create<AlarmStore>((set) => ({
   alarms: [],
   groups: [],
+  isLoading: false,
 
-  loadAlarms: () => {
-    const timeZone = getAlarmTimeZone();
-    const alarms = ipc.listAlarms().map((a) => {
-      if (!a.NextFireTime && a.IsEnabled) {
-        a.NextFireTime = computeNextFireTime(a, timeZone);
-        ipc.updateAlarm(a);
-      }
-      return a;
-    });
-    set({ alarms });
+  loadAlarms: async () => {
+    set({ isLoading: true });
+    try {
+      const timeZone = await getAlarmTimeZone();
+      const alarms = await ipc.listAlarms();
+      const updated = await Promise.all(
+        alarms.map(async (a) => {
+          if (!a.NextFireTime && a.IsEnabled) {
+            a.NextFireTime = computeNextFireTime(a, timeZone);
+            await ipc.updateAlarm(a);
+          }
+          return a;
+        })
+      );
+      set({ alarms: updated });
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
-  addAlarm: (partial) => {
+  addAlarm: async (partial) => {
     const alarm = createDefaultAlarm(partial);
-    alarm.NextFireTime = computeNextFireTime(alarm, getAlarmTimeZone());
-    ipc.createAlarm(alarm);
-    set((s) => ({ alarms: [...s.alarms, alarm] }));
+    const timeZone = await getAlarmTimeZone();
+    alarm.NextFireTime = computeNextFireTime(alarm, timeZone);
+
+    if (ipc.isTauri()) {
+      const created = await ipc.createAlarm(alarm);
+      if (created) {
+        set((s) => ({ alarms: [...s.alarms, created] }));
+        return created;
+      }
+    } else {
+      await ipc.createAlarm(alarm);
+      set((s) => ({ alarms: [...s.alarms, alarm] }));
+    }
 
     // Prompt for notification permission on first alarm creation
     if (isNotificationSupported() && !hasAskedPermission()) {
@@ -102,50 +123,44 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
     return alarm;
   },
 
-  updateAlarm: (alarm) => {
-    alarm.NextFireTime = computeNextFireTime(alarm, getAlarmTimeZone());
-    ipc.updateAlarm(alarm);
+  updateAlarm: async (alarm) => {
+    const timeZone = await getAlarmTimeZone();
+    alarm.NextFireTime = computeNextFireTime(alarm, timeZone);
+    await ipc.updateAlarm(alarm);
     set((s) => ({
       alarms: s.alarms.map((a) => (a.AlarmId === alarm.AlarmId ? alarm : a)),
     }));
   },
 
-  deleteAlarm: (alarmId) => {
-    ipc.deleteAlarm(alarmId);
+  deleteAlarm: async (alarmId) => {
+    await ipc.deleteAlarm(alarmId);
     set((s) => ({
       alarms: s.alarms.filter((a) => a.AlarmId !== alarmId),
     }));
   },
 
-  toggleAlarm: (alarmId, isEnabled) => {
-    const updated = ipc.toggleAlarm(alarmId, isEnabled);
+  toggleAlarm: async (alarmId, isEnabled) => {
+    const updated = await ipc.toggleAlarm(alarmId, isEnabled);
     if (updated) {
-      updated.NextFireTime = computeNextFireTime(updated, getAlarmTimeZone());
-      ipc.updateAlarm(updated);
+      const timeZone = await getAlarmTimeZone();
+      updated.NextFireTime = computeNextFireTime(updated, timeZone);
+      await ipc.updateAlarm(updated);
       set((s) => ({
         alarms: s.alarms.map((a) => (a.AlarmId === alarmId ? updated : a)),
       }));
     }
   },
 
-  duplicateAlarm: (alarmId) => {
-    const existing = ipc.getAlarm(alarmId);
-    if (!existing) return null;
-    const now = new Date().toISOString();
-    const duplicate: Alarm = {
-      ...existing,
-      AlarmId: generateId(),
-      Label: `${existing.Label} (copy)`,
-      CreatedAt: now,
-      UpdatedAt: now,
-    };
-    ipc.createAlarm(duplicate);
-    set((s) => ({ alarms: [...s.alarms, duplicate] }));
+  duplicateAlarm: async (alarmId) => {
+    const duplicate = await ipc.duplicateAlarm(alarmId);
+    if (duplicate) {
+      set((s) => ({ alarms: [...s.alarms, duplicate] }));
+    }
     return duplicate;
   },
 
-  reorderAlarms: (alarmIds) => {
-    ipc.reorderAlarms(alarmIds);
+  reorderAlarms: async (alarmIds) => {
+    await ipc.reorderAlarms(alarmIds);
     set((s) => {
       const map = new Map(s.alarms.map((a) => [a.AlarmId, a]));
       const ordered = alarmIds
@@ -156,26 +171,21 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
     });
   },
 
-  loadGroups: () => {
-    set({ groups: ipc.listGroups() });
+  loadGroups: async () => {
+    const groups = await ipc.listGroups();
+    set({ groups });
   },
 
-  addGroup: (name, color) => {
-    const groups = ipc.listGroups();
-    const group: AlarmGroup = {
-      AlarmGroupId: generateId(),
-      Name: name,
-      Color: color,
-      Position: groups.length,
-      IsEnabled: true,
-    };
-    ipc.createGroup(group);
-    set((s) => ({ groups: [...s.groups, group] }));
+  addGroup: async (name, color) => {
+    const group = await ipc.createGroup(name, color);
+    if (group) {
+      set((s) => ({ groups: [...s.groups, group] }));
+    }
     return group;
   },
 
-  updateGroup: (group) => {
-    ipc.updateGroup(group);
+  updateGroup: async (group) => {
+    await ipc.updateGroup(group);
     set((s) => ({
       groups: s.groups.map((g) =>
         g.AlarmGroupId === group.AlarmGroupId ? group : g
@@ -183,8 +193,8 @@ export const useAlarmStore = create<AlarmStore>((set) => ({
     }));
   },
 
-  deleteGroup: (groupId) => {
-    ipc.deleteGroup(groupId);
+  deleteGroup: async (groupId) => {
+    await ipc.deleteGroup(groupId);
     set((s) => ({
       groups: s.groups.filter((g) => g.AlarmGroupId !== groupId),
       alarms: s.alarms.map((a) =>
