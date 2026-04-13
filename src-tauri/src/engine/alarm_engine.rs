@@ -62,34 +62,69 @@ async fn check_missed_alarms_on_start(
     let now = Utc::now();
     let tz = load_timezone(&conn);
 
+    // Check missed alarms
     let due_alarms = query_due_alarms(&conn, &now);
-    let missed_count = due_alarms.len();
-
-    if missed_count == 0 {
-        tracing::info!("Cold start: no missed alarms");
-        return;
+    if !due_alarms.is_empty() {
+        tracing::warn!(count = due_alarms.len(), "Cold start: found missed alarms");
+        for alarm in &due_alarms {
+            log_alarm_event(&conn, &alarm.alarm_id, AlarmEventType::Missed);
+            advance_next_fire_time(&conn, alarm, &tz);
+        }
+        let labels: Vec<String> = due_alarms
+            .iter()
+            .map(|a| if a.label.is_empty() { a.time.clone() } else { a.label.clone() })
+            .collect();
+        emit_missed_alarms(app_handle, &labels);
     }
 
-    tracing::warn!(count = missed_count, "Cold start: found missed alarms");
+    // Recover active snoozes
+    recover_snoozes(&conn, &now, app_handle);
+}
 
-    for alarm in &due_alarms {
-        log_alarm_event(&conn, &alarm.alarm_id, AlarmEventType::Missed);
-        advance_next_fire_time(&conn, alarm, &tz);
-    }
+/// On cold start, re-schedule active snoozes or fire expired ones.
+fn recover_snoozes(
+    conn: &Connection,
+    now: &DateTime<Utc>,
+    app_handle: &tauri::AppHandle,
+) {
+    let mut stmt = match conn.prepare("SELECT * FROM SnoozeState") {
+        Ok(s) => s,
+        Err(_) => return,
+    };
 
-    // Emit missed alarm event to frontend
-    let labels: Vec<String> = due_alarms
-        .iter()
-        .map(|a| {
-            if a.label.is_empty() {
-                a.time.clone()
-            } else {
-                a.label.clone()
-            }
-        })
+    let snoozes: Vec<_> = stmt
+        .query_map([], |row| crate::storage::models::SnoozeStateRow::from_row(row))
+        .unwrap_or_else(|_| panic!("query_map failed"))
+        .filter_map(|r| r.ok())
         .collect();
 
-    emit_missed_alarms(app_handle, &labels);
+    for snooze in snoozes {
+        let expiry = chrono::DateTime::parse_from_rfc3339(&snooze.snooze_until)
+            .map(|dt| dt.with_timezone(&Utc));
+
+        match expiry {
+            Ok(exp) if exp <= *now => {
+                tracing::info!(alarm_id = %snooze.alarm_id, "Snooze expired during downtime — re-firing");
+                use tauri::Emitter;
+                let _ = app_handle.emit("snooze-expired", &snooze.alarm_id);
+            }
+            Ok(exp) => {
+                let remaining = (exp - *now).to_std().unwrap_or_default();
+                let alarm_id = snooze.alarm_id.clone();
+                let handle = app_handle.clone();
+                tokio::spawn(async move {
+                    tokio::time::sleep(tokio::time::Duration::from(remaining)).await;
+                    tracing::info!(alarm_id = %alarm_id, "Recovered snooze expired — re-firing");
+                    use tauri::Emitter;
+                    let _ = handle.emit("snooze-expired", &alarm_id);
+                });
+            }
+            Err(_) => {
+                tracing::warn!(alarm_id = %snooze.alarm_id, "Invalid SnoozeUntil — clearing");
+                let _ = conn.execute("DELETE FROM SnoozeState WHERE AlarmId = ?1", params![snooze.alarm_id]);
+            }
+        }
+    }
 }
 
 // ── Polling Loop ──
