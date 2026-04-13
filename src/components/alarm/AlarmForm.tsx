@@ -66,6 +66,30 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
   const [soundFile, setSoundFile] = useState("classic-beep");
   const [isGradualVolume, setIsGradualVolume] = useState(false);
   const [gradualDuration, setGradualDuration] = useState(30);
+  const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
+  const previewRef = useRef<{ stop: () => void } | null>(null);
+
+  const stopPreview = useCallback(() => {
+    previewRef.current?.stop();
+    previewRef.current = null;
+    setIsPreviewPlaying(false);
+  }, []);
+
+  const togglePreview = useCallback(() => {
+    if (isPreviewPlaying) {
+      stopPreview();
+    } else {
+      stopPreview();
+      previewRef.current = playAlarmSound(soundFile, false, 30);
+      setIsPreviewPlaying(true);
+      // Auto-stop after 3 seconds
+      setTimeout(() => stopPreview(), 3000);
+    }
+  }, [isPreviewPlaying, soundFile, stopPreview]);
+
+  // Stop preview when sheet closes or sound changes
+  useEffect(() => { stopPreview(); }, [soundFile, stopPreview]);
+  useEffect(() => { if (!isOpen) stopPreview(); }, [isOpen, stopPreview]);
   const [challengeType, setChallengeType] = useState<ChallengeType | "none">("none");
   const [challengeDifficulty, setChallengeDifficulty] = useState<ChallengeDifficulty>(
     ChallengeDifficulty.Easy
