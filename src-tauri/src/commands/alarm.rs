@@ -38,7 +38,7 @@ pub struct CreateAlarmPayload {
 pub async fn list_alarms(pool: State<'_, DbPool>) -> Result<Vec<AlarmRow>, AlarmAppError> {
     let conn = pool.lock().await;
     let mut stmt = conn.prepare(
-        "SELECT * FROM Alarms WHERE DeletedAt IS NULL ORDER BY CreatedAt DESC"
+        "SELECT * FROM Alarms WHERE DeletedAt IS NULL ORDER BY Position ASC, CreatedAt DESC"
     )?;
     let alarms = stmt
         .query_map([], AlarmRow::from_row)?
