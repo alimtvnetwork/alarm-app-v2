@@ -125,6 +125,10 @@ export async function duplicateAlarm(alarmId: string): Promise<Alarm | null> {
   return safeInvoke<Alarm>("duplicate_alarm", { alarmId });
 }
 
+export async function reorderAlarms(alarmIds: string[]): Promise<void> {
+  await safeInvoke("reorder_alarms", { alarmIds });
+}
+
 export async function listGroups(): Promise<AlarmGroup[]> {
   return (await safeInvoke<AlarmGroup[]>("list_groups")) ?? [];
 }
