@@ -44,6 +44,14 @@ const Alarms = () => {
 
   return (
     <div className="mx-auto max-w-lg">
+      {/* DEV: Test alarm overlay */}
+      <button
+        onClick={() => useOverlayStore.getState().fireAlarm(MOCK_ALARMS[0])}
+        className="mb-3 flex items-center gap-2 rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive hover:bg-destructive/20"
+      >
+        <Bug className="h-3 w-3" /> Test Alarm Overlay
+      </button>
+
       {/* Alarm card */}
       <div className="rounded-2xl bg-card shadow-md overflow-hidden border border-border/50">
         {/* Dark header */}
