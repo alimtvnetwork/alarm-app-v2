@@ -198,32 +198,27 @@ const AlarmForm = ({ alarm, isOpen, onClose }: AlarmFormProps) => {
         <div className="flex flex-col gap-3 pt-1">
           {/* Time display — styled card with AM/PM */}
           <div className="relative flex items-center justify-center rounded-xl border border-border bg-secondary/50 px-4 py-3">
-            <button
-              type="button"
-              onClick={() => timeInputRef.current?.showPicker?.()}
-              className="flex items-center transition-colors hover:opacity-80"
-            >
+            <label className="flex cursor-pointer items-center transition-colors hover:opacity-80">
               <span className="text-3xl font-heading font-bold tracking-tight text-foreground">
                 {h12}:{minute}
               </span>
               <Clock className="ml-3 h-5 w-5 text-foreground/60" />
-            </button>
+              <input
+                ref={timeInputRef}
+                type="time"
+                value={time}
+                onChange={(e) => e.target.value && setTime(e.target.value)}
+                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+              />
+            </label>
             <button
               type="button"
               onClick={() => setTime(togglePeriod(time))}
-              className="ml-2 rounded-lg bg-primary/20 px-2.5 py-1 text-lg font-heading font-semibold text-primary transition-colors hover:bg-primary/30"
+              className="relative z-10 ml-2 rounded-lg bg-primary/20 px-2.5 py-1 text-lg font-heading font-semibold text-primary transition-colors hover:bg-primary/30"
               aria-label={`Switch to ${period === "AM" ? "PM" : "AM"}`}
             >
               {period}
             </button>
-            <input
-              ref={timeInputRef}
-              type="time"
-              value={time}
-              onChange={(e) => e.target.value && setTime(e.target.value)}
-              className="absolute inset-0 cursor-pointer opacity-0"
-              tabIndex={-1}
-            />
           </div>
 
           {/* Label */}
