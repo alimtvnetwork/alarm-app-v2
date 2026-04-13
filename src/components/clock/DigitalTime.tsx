@@ -15,18 +15,18 @@ interface FlipSegmentProps {
 }
 
 const FlipSegment = ({ value, label }: FlipSegmentProps) => (
-  <div className="flex flex-col items-center gap-1">
-    <span className="text-5xl font-heading font-light tracking-wide text-flip-clock-text leading-none tabular-nums">
+  <div className="flex flex-col items-center gap-0.5">
+    <span className="text-3xl font-heading font-light tracking-wide text-flip-clock-text leading-none tabular-nums">
       {value}
     </span>
-    <span className="text-[0.6rem] font-body font-medium tracking-[0.2em] uppercase text-flip-clock-text/40">
+    <span className="text-[0.5rem] font-body font-medium tracking-[0.15em] uppercase text-flip-clock-text/40">
       {label}
     </span>
   </div>
 );
 
 const Colon = () => (
-  <span className="text-3xl font-heading font-light text-flip-clock-text/25 leading-none mb-4">
+  <span className="text-xl font-heading font-light text-flip-clock-text/25 leading-none mb-3">
     :
   </span>
 );
@@ -44,9 +44,11 @@ const DigitalTime = () => {
 
   const h = now.getHours();
   const m = now.getMinutes();
+  const s = now.getSeconds();
 
   const displayHour = is24Hour ? String(h).padStart(2, "0") : String(h % 12 || 12).padStart(2, "0");
   const displayMin = String(m).padStart(2, "0");
+  const displaySec = String(s).padStart(2, "0");
   const period = is24Hour ? null : (h >= 12 ? "PM" : "AM");
 
   const countdown = getCountdown(alarms, t);
@@ -54,11 +56,13 @@ const DigitalTime = () => {
   return (
     <div className="flex flex-col items-center gap-3 w-full">
       {/* Flip-clock card */}
-      <div className="relative w-full max-w-sm rounded-2xl bg-flip-clock-bg px-8 py-7 shadow-lg">
-        <div className="flex items-center justify-center gap-6">
+      <div className="relative w-full max-w-sm rounded-2xl bg-flip-clock-bg px-5 py-5 shadow-lg">
+        <div className="flex items-center justify-center gap-3">
           <FlipSegment value={displayHour} label={t("clock.hoursLabel", "HOURS")} />
           <Colon />
           <FlipSegment value={displayMin} label={t("clock.minutesLabel", "MINUTES")} />
+          <Colon />
+          <FlipSegment value={displaySec} label={t("clock.secondsLabel", "SECONDS")} />
         </div>
 
         {/* AM/PM badge */}
